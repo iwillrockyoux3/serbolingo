@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="sr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SerboLingo - Learn Serbian to English</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body
+    class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 h-screen flex flex-col overflow-hidden text-[14px] transition-colors duration-300">
+
+    <!-- GOAL MODAL -->
+    <div id="goal-modal" class="fixed inset-0 celebration-overlay hidden flex items-center justify-center p-6">
+        <div id="confetti-container" class="absolute inset-0 pointer-events-none"></div>
+        <div
+            class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 text-center shadow-2xl fade-in relative overflow-hidden border-b-[10px] border-blue-600">
+            <div class="mb-4 text-7xl animate-bounce">🏆</div>
+            <h2 class="text-2xl font-black text-slate-900 mb-2" data-i18n="goal_title">Cilj Ostvaren!</h2>
+            <p class="text-slate-500 font-bold leading-relaxed mb-6" data-i18n="goal_msg">Bravo! Danas si dostigao svoj cilj. Samo tako
+                nastavi! 🚀</p>
+            <button onclick="app.closeGoalModal()"
+                class="w-full py-4 bg-blue-500 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-[0_6px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1 transition-all" data-i18n="goal_continue">Nastavi!</button>
+        </div>
+    </div>
+
+    <!-- AUTH SCREEN -->
+    <div id="view-auth"
+        class="fixed inset-0 bg-white dark:bg-slate-900 z-[100] flex items-center justify-center p-6 transition-colors duration-300">
+        <div class="w-full max-w-xs space-y-6">
+            <div class="text-center">
+                <span class="text-5xl">🇷🇸</span>
+                <h2 id="auth-title" class="mt-4 text-2xl font-extrabold text-slate-900 dark:text-white" data-i18n="auth_title_login">Prijavite se
+                </h2>
+            </div>
+            <div class="space-y-3">
+                <input id="auth-username" type="text" placeholder="Korisničko ime" data-i18n="auth_username" data-i18n-attr="placeholder"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none font-bold">
+                <input id="auth-password" type="password" placeholder="Lozinka" data-i18n="auth_password" data-i18n-attr="placeholder"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none font-bold">
+                
+                <div class="flex items-center gap-2 px-1">
+                    <input type="checkbox" id="auth-remember" class="w-4 h-4 rounded border-slate-300 text-blue-500 cursor-pointer" checked>
+                    <label for="auth-remember" class="text-xs font-bold text-slate-600 dark:text-slate-400 cursor-pointer" data-i18n="auth_remember">Ostanite prijavljeni</label>
+                </div>
+
+                <button onclick="app.handleAuth()" id="auth-submit-btn"
+                    class="w-full py-3 bg-blue-500 text-white rounded-xl font-black shadow-[0_4px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1 transition-all" data-i18n="auth_login_btn">Prijavi
+                    se</button>
+                <div class="text-center">
+                    <button onclick="app.toggleAuthMode()" id="auth-toggle-mode"
+                        class="text-[11px] font-bold text-blue-500 mb-2" data-i18n="auth_toggle_to_register">Nemate nalog? Napravite ga</button>
+                </div>
+                
+                <div class="relative flex py-2 items-center">
+                    <div class="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
+                    <span class="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest" data-i18n="auth_or">ili</span>
+                    <div class="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
+                </div>
+
+                <button onclick="app.handleGuest()"
+                    class="w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 rounded-xl font-black active:translate-y-1 transition-all border-2 border-slate-200 dark:border-slate-700" data-i18n="auth_guest">Probaj besplatno (Gost)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header
+        class="bg-white dark:bg-slate-900 border-b-2 border-slate-200 dark:border-slate-800 z-20 flex-none hidden transition-colors duration-300"
+        id="main-header">
+        <div class="max-w-xl mx-auto px-4 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="app.navigate('home')">
+                <span class="text-2xl">🇷🇸</span>
+                <h1 class="text-base font-black text-slate-700 dark:text-slate-100 tracking-tight">SerboLingo</h1>
+            </div>
+            <div class="flex items-center gap-3 font-black text-xs">
+                <div class="flex items-center text-orange-500"><span class="mr-1">🔥</span><span
+                        id="streak-display">1</span></div>
+                <div class="flex items-center text-blue-500"><span class="mr-1">⚡</span><span id="xp-display">0</span>
+                </div>
+                <div class="flex items-center text-red-500"><span class="mr-1">❤️</span><span
+                        id="hearts-display">5</span></div>
+            </div>
+        </div>
+    </header>
+
+    <main id="app-container" class="flex-1 overflow-y-auto relative max-w-xl mx-auto w-full hidden">
+
+        <!-- View: Home -->
+        <div id="view-home" class="hidden flex-1 p-6 flex flex-col gap-6">
+            
+            <!-- OMNI-BAR SEARCH ENGINE -->
+            <div class="relative z-30">
+                <div class="relative flex items-center w-full group">
+                    <span class="absolute left-4 text-xl">🔍</span>
+                    <input type="text" id="omni-search" placeholder="Traži / Search (npr. Kuća, Dog)" 
+                        oninput="app.handleSearch(this.value)" data-i18n="omni_placeholder" data-i18n-attr="placeholder"
+                        class="w-full pl-12 pr-12 py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-slate-800 dark:text-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.2)] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all placeholder-slate-400 dark:placeholder-slate-500">
+                    <button id="omni-clear" onclick="app.clearSearch()" class="hidden absolute right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-lg p-2 active:scale-90 transition-transform">
+                        ✖
+                    </button>
+                </div>
+                
+                <!-- Search Results Container -->
+                <div id="search-results" class="absolute top-full left-0 right-0 mt-3 flex flex-col gap-2 max-h-[60vh] overflow-y-auto pb-4 overscroll-contain">
+                    <!-- Results injected here -->
+                </div>
+            </div>
+
+            <!-- Daily Goal Card -->
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                <div>
+                    <h2 class="text-base font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight" data-i18n="home_curriculum">
+                        Kurikulum</h2>
+                    <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold" data-i18n="home_curriculum_desc">Izaberite nivo ili kreirajte AI
+                        lekciju.</p>
+                </div>
+                <button onclick="app.generateAILesson()" id="ai-gen-btn"
+                    class="sparkle-btn w-9 h-9 rounded-xl shadow-md flex items-center justify-center text-base">✨</button>
+            </div>
+
+            <div class="space-y-4">
+                <div onclick="app.startLevel('BEGINNER')" class="difficulty-card flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center text-2xl text-white shadow-[0_4px_0_rgb(21,128,61)]">
+                        🌱</div>
+                    <div class="flex-1">
+                        <p
+                            class="text-[10px] font-extrabold text-green-600 dark:text-green-400 uppercase tracking-widest mb-0.5" data-i18n="home_beginner_label">
+                            1. Početni
+                            nivo</p>
+                        <h3 class="font-black text-slate-800 dark:text-slate-200 uppercase text-[14px] tracking-tight" data-i18n="home_beginner_title">
+                            Počni ovde!</h3>
+                        <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold leading-tight" data-i18n="home_beginner_desc">Nauči
+                            pozdrave, osnovne imenice i
+                            prosto sadašnje vreme.</p>
+                    </div>
+                </div>
+                <div onclick="app.startLevel('INTERMEDIATE')" class="difficulty-card flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center text-2xl text-white shadow-[0_4px_0_rgb(194,65,12)]">
+                        🔥</div>
+                    <div class="flex-1">
+                        <p
+                            class="text-[10px] font-extrabold text-orange-600 dark:text-orange-400 uppercase tracking-widest mb-0.5" data-i18n="home_intermediate_label">
+                            2.
+                            Srednji nivo</p>
+                        <h3 class="font-black text-slate-800 dark:text-slate-200 uppercase text-[14px] tracking-tight" data-i18n="home_intermediate_title">
+                            Savlada rečenice</h3>
+                        <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold leading-tight" data-i18n="home_intermediate_desc">Savladaj
+                            složene rečenice (i, ali,
+                            ili) i prošlo vreme.</p>
+                    </div>
+                </div>
+                <div onclick="app.startLevel('ADVANCED')" class="difficulty-card flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center text-2xl text-white shadow-[0_4px_0_rgb(126,34,206)]">
+                        🏆</div>
+                    <div class="flex-1">
+                        <p
+                            class="text-[10px] font-extrabold text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-0.5" data-i18n="home_advanced_label">
+                            3.
+                            Napredni nivo</p>
+                        <h3 class="font-black text-slate-800 dark:text-slate-200 uppercase text-[14px] tracking-tight" data-i18n="home_advanced_title">
+                            Tečan razgovor</h3>
+                        <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold leading-tight" data-i18n="home_advanced_desc">Složena
+                            gramatika, poslovni
+                            termini i brz tečan govor.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS VIEW -->
+        <div id="view-stats" class="hidden p-4 space-y-4 fade-in pb-24">
+            <h2 class="text-lg font-black tracking-tight text-slate-800 dark:text-slate-100" data-i18n="stats_title">Statistika</h2>
+
+            <!-- Activity Chart Card -->
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
+                <div class="flex justify-between items-center mb-1">
+                    <h3 class="font-black text-slate-400 dark:text-slate-500 uppercase text-[9px] tracking-wider" data-i18n="stats_activity">
+                        Aktivnost</h3>
+                    <div class="flex bg-slate-100 dark:bg-slate-700 p-1 rounded-xl gap-1">
+                        <button onclick="app.toggleChart('week')" id="btn-week"
+                            class="chart-toggle-btn active px-3 py-1 text-[9px] font-black rounded-lg" data-i18n="stats_week">Nedelja</button>
+                        <button onclick="app.toggleChart('month')" id="btn-month"
+                            class="chart-toggle-btn px-3 py-1 text-[9px] font-black rounded-lg" data-i18n="stats_month">Mesec</button>
+                    </div>
+                </div>
+
+                <div class="h-40 mb-2"><canvas id="xpChart"></canvas></div>
+
+                <div id="chart-detail-box" class="chart-detail-box">
+                    <div class="flex justify-between items-center h-full">
+                        <div class="ml-2 flex flex-col items-start gap-1">
+                            <h4
+                                class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider" data-i18n="stats_select_day">
+                                Izaberi dan na
+                                grafikonu</h4>
+                            <div class="flex gap-8 items-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="val-container w-12">
+                                        <div id="line-lesson-container"
+                                            class="val-absolute flex items-center justify-center gap-1">
+                                            <div class="detail-line-black"></div>
+                                            <div class="detail-line-black"></div>
+                                        </div>
+                                        <span id="val-lesson"
+                                            class="val-absolute hidden text-[13px] font-black text-slate-700 items-center justify-center">--</span>
+                                    </div>
+                                    <span class="label-blue-alt" data-i18n="stats_lessons">Lekcije</span>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="val-container w-12">
+                                        <div id="line-time-container"
+                                            class="val-absolute flex items-center justify-center gap-1">
+                                            <div class="detail-line-black"></div>
+                                            <div class="detail-line-black"></div>
+                                        </div>
+                                        <span id="val-time"
+                                            class="val-absolute hidden text-[13px] font-black text-slate-700 items-center justify-center">--</span>
+                                    </div>
+                                    <span class="label-blue-alt" data-i18n="stats_time">Vreme</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bar-icon-container mr-4">
+                            <div class="bar-1"></div>
+                            <div class="bar-2"></div>
+                            <div class="bar-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills Analysis Card -->
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm">
+                <h3
+                    class="font-black text-slate-400 dark:text-slate-500 uppercase text-[9px] tracking-wider text-center mb-2" data-i18n="stats_skills">
+                    Analiza
+                    Veština</h3>
+                <div class="h-44"><canvas id="skillsRadarChart"></canvas></div>
+            </div>
+
+            <!-- Daily Goal Card -->
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
+                <div class="relative w-12 h-12">
+                    <svg class="w-12 h-12">
+                        <circle class="text-slate-100 dark:text-slate-700" stroke-width="5" stroke="currentColor"
+                            fill="transparent" r="20" cx="24" cy="24" />
+                        <circle id="goal-ring" class="text-orange-400 progress-ring" stroke-width="5"
+                            stroke-linecap="round" stroke="currentColor" fill="transparent" r="20" cx="24" cy="24"
+                            stroke-dasharray="125.6" stroke-dashoffset="125.6" />
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center text-[10px] font-black dark:text-white"
+                        id="goal-percent">0%</div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-black text-slate-400 dark:text-slate-500 uppercase text-[9px] tracking-wider" data-i18n="stats_daily_goal">Dnevni
+                        cilj</h3>
+                    <p class="text-xs font-black text-slate-700 dark:text-slate-200" id="goal-text">Učitavam...</p>
+                    <div class="flex gap-4 mt-2">
+                        <div>
+                            <p class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase" data-i18n="stats_xp_left">Preostalo XP
+                            </p>
+                            <p class="text-xs font-black text-slate-700 dark:text-slate-200" id="goal-xp-left">50</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase" data-i18n="stats_lesson_left">Lekcija</p>
+                            <p class="text-xs font-black text-slate-700 dark:text-slate-200" id="goal-lessons-left">~3
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div id="goal-icon" class="text-2xl transition-all duration-300">🏆</div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 gap-3 pb-8">
+                <div class="stat-grid-card">
+                    <div class="stat-label" data-i18n="stats_total_xp">Ukupni XP</div>
+                    <div class="stat-value"><span class="text-blue-400 text-sm">⚡</span><span
+                            id="stat-total-xp">0</span></div>
+                </div>
+                <div class="stat-grid-card">
+                    <div class="streak-container">
+                        <div class="streak-side">
+                            <p data-i18n="stats_current">Trenutno</p>
+                            <span id="stat-current-streak">1</span>
+                        </div>
+                        <div class="streak-divider"></div>
+                        <div class="streak-side">
+                            <p data-i18n="stats_best">Najbolje</p>
+                            <span id="stat-best-streak">1</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center gap-1">
+                        <span class="stat-label" data-i18n="stats_streak">Niz dana</span>
+                        <span class="text-xs">🔥</span>
+                    </div>
+                </div>
+                <div class="stat-grid-card">
+                    <div class="stat-label" data-i18n="stats_accuracy">Tačnost</div>
+                    <div class="stat-value"><span class="text-red-500 text-sm">🎯</span><span
+                            id="stat-accuracy">0%</span></div>
+                </div>
+                <div class="stat-grid-card">
+                    <div class="stat-label" data-i18n="stats_lessons">Lekcije</div>
+                    <div class="stat-value"><span class="text-green-500 text-sm">✅</span><span
+                            id="stat-total-lessons">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LESSON VIEW -->
+        <div id="view-lesson" class="hidden h-full flex flex-col bg-white dark:bg-slate-900">
+            <div class="px-5 py-4 flex items-center gap-3">
+                <button onclick="app.endLesson()"
+                    class="text-slate-300 dark:text-slate-600 text-2xl font-black hover:text-slate-400 dark:hover:text-slate-400 transition-colors">✕</button>
+                <div class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div id="lesson-progress-bar" class="h-full bg-green-500 w-0 transition-all duration-500"></div>
+                </div>
+            </div>
+            <div id="lesson-content-area"
+                class="flex-1 overflow-y-auto px-6 pb-40 flex flex-col items-center justify-center text-center fade-in">
+            </div>
+            <div id="lesson-footer"
+                class="p-4 border-t-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 absolute bottom-0 w-full z-10">
+                <div id="feedback-area" class="hidden mb-4 p-4 rounded-xl flex items-start gap-3">
+                    <div id="feedback-icon" class="text-2xl"></div>
+                    <div class="flex-1 text-left">
+                        <h3 id="feedback-title" class="font-black text-sm"></h3>
+                        <p id="feedback-msg" class="text-[11px] font-bold"></p>
+                        <div id="feedback-explanation-container" class="hidden mt-3">
+                            <div id="explanation-buttons" class="flex gap-2">
+                                <button id="btn-explain-offline" onclick="app.showExplanation()"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-[10px] font-black uppercase tracking-wide transition-colors">
+                                    <span>✨</span> <span data-i18n="lesson_explain_offline">OBJASNI MI OVO</span>
+                                </button>
+                                <button id="btn-explain-ai" onclick="app.showAIExplanation()"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-[10px] font-black uppercase tracking-wide transition-colors">
+                                    <span>🤖</span> <span data-i18n="lesson_explain_ai">AI OBJAŠNJENJE</span>
+                                </button>
+                            </div>
+                            <div id="explanation-content" class="hidden">
+                                <button onclick="app.resetExplanationUI()"
+                                    class="mb-2 text-[10px] font-bold text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1">
+                                    ⬅ Nazad
+                                </button>
+                                <div id="explanation-text"
+                                    class="p-3 bg-white/60 dark:bg-slate-800/60 rounded-xl text-[11px] text-slate-600 dark:text-slate-300 font-medium border-l-4 border-purple-400 leading-relaxed max-h-40 overflow-y-auto">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="check-btn" onclick="app.checkAnswer()"
+                    class="w-full py-3 rounded-xl font-black bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 uppercase tracking-widest text-xs"
+                    disabled>Proveri</button>
+                <button id="next-btn" onclick="app.nextQuestion()"
+                    class="hidden w-full py-3 rounded-xl font-black bg-green-500 text-white uppercase tracking-widest text-xs shadow-[0_3px_0_rgb(21,128,61)]">Nastavi</button>
+            </div>
+        </div>
+
+        <!-- PROFILE VIEW -->
+        <div id="view-profile" class="hidden p-4 space-y-6 fade-in pb-24">
+
+            <!-- Profile Header -->
+            <div class="flex flex-col items-center">
+                <div class="relative group">
+                    <button onclick="app.toggleAvatarPicker()"
+                        class="w-24 h-24 bg-slate-200 dark:bg-slate-800 rounded-full border-4 border-blue-500 flex items-center justify-center text-4xl shadow-lg transition-transform active:scale-95">
+                        <span id="profile-avatar">👤</span>
+                        <div
+                            class="absolute bottom-0 right-0 bg-blue-500 text-white p-1.5 rounded-full border-2 border-white dark:border-slate-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path
+                                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                            </svg>
+                        </div>
+                    </button>
+                    <!-- Avatar Picker Modal (Inline for simplicity) -->
+                    <div id="avatar-picker"
+                        class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white dark:bg-slate-800 p-3 rounded-2xl shadow-xl border-2 border-slate-100 dark:border-slate-700 w-64 z-50 grid grid-cols-4 gap-2">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <h2 id="profile-name" class="text-xl font-black mt-3 text-slate-800 dark:text-white">Korisnik</h2>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1"><span data-i18n="profile_member_since">Član od:</span>
+                    <span id="profile-joined">--</span></p>
+            </div>
+
+            <!-- Achievements Section -->
+            <div class="space-y-3">
+                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1" data-i18n="profile_achievements">Dostignuća</h3>
+                <div id="achievements-list" class="space-y-3">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="space-y-3">
+                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1" data-i18n="profile_settings">Opcije</h3>
+                <div
+                    class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+
+                    <!-- Dark Mode Toggle -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-lg">🌙</div>
+                            <span class="font-bold text-sm text-slate-700 dark:text-slate-200" data-i18n="profile_dark_mode">Tamni režim</span>
+                        </div>
+                        <button onclick="app.toggleDarkMode()" id="btn-dark-mode"
+                            class="w-12 h-7 bg-slate-200 dark:bg-blue-500 rounded-full relative transition-colors duration-300">
+                            <div
+                                class="absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform dark:translate-x-5">
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Sound Effects Volume -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
+                            <span data-i18n="profile_sounds">Zvukovi</span>
+                            <span id="vol-sfx-val">100%</span>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.1" value="1" id="vol-sfx"
+                            oninput="app.setVolume('sfx', this.value)"
+                            class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                    </div>
+
+                    <!-- TTS Volume -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
+                            <span data-i18n="profile_tts">Izgovor (AI)</span>
+                            <span id="vol-tts-val">100%</span>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.1" value="1" id="vol-tts"
+                            oninput="app.setVolume('tts', this.value)"
+                            class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Language & Direction Settings -->
+            <div class="space-y-3">
+                <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+
+
+                    <!-- Learning Direction Toggle -->
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2" data-i18n="profile_direction">Smer učenja</p>
+                        <div class="flex gap-2">
+                            <button onclick="app.setLearningDirection('sr_to_en')" data-dir="sr_to_en"
+                                class="dir-btn flex-1 py-2.5 rounded-xl font-black text-[10px] border-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-900/30 transition-all active:scale-95" data-i18n="profile_direction_sr_en">Srpski → Engleski</button>
+                            <button onclick="app.setLearningDirection('en_to_sr')" data-dir="en_to_sr"
+                                class="dir-btn flex-1 py-2.5 rounded-xl font-black text-[10px] border-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 transition-all active:scale-95" data-i18n="profile_direction_en_sr">Engleski → Srpski</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <button onclick="app.logout()"
+                class="w-full p-4 bg-red-50 dark:bg-red-900/20 text-red-500 font-black text-xs rounded-xl border-2 border-red-100 dark:border-red-900/50 uppercase tracking-widest hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors" data-i18n="profile_logout">
+                Odjavi se
+            </button>
+            </button>
+        </div>
+    </main>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bg-white dark:bg-slate-900 border-t-2 border-slate-100 dark:border-slate-800 flex-none z-20 hidden transition-colors duration-300"
+        id="main-nav">
+        <div class="max-w-xl mx-auto flex justify-around py-2">
+            <button onclick="app.navigate('home')" class="nav-btn flex flex-col items-center gap-1 text-blue-500"
+                id="nav-home">
+                <span class="text-lg">📖</span>
+                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_learn">Uči</span>
+            </button>
+            <button onclick="app.navigate('stats')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
+                id="nav-stats">
+                <span class="text-lg">📊</span>
+                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_stats">Statistika</span>
+            </button>
+            <button onclick="app.navigate('profile')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
+                id="nav-profile">
+                <span class="text-lg">👤</span>
+                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_profile">Profil</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- API Key Modal -->
+    <div id="api-key-modal"
+        class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm fade-in">
+        <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl transform transition-all scale-100 border-2 border-white dark:border-slate-700">
+            <div
+                class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl animate-bounce">
+                🔑
+            </div>
+            <h3 class="text-xl font-black text-slate-800 dark:text-white mb-2">Potreban API Ključ</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 font-medium leading-relaxed">
+                Da bi AI funkcije (online) radile, potreban je besplatan Google Gemini API ključ.
+                <a href="https://aistudio.google.com/app/apikey" target="_blank"
+                    class="text-blue-500 hover:underline block mt-3 font-bold text-sm bg-blue-50 dark:bg-blue-900/30 p-2 rounded-lg border border-blue-100 dark:border-blue-800">👉
+                    Preuzmi ključ ovde</a>
+            </p>
+            <input type="text" id="api-key-input" placeholder="Ovde nalepi ključ (AIz...)"
+                class="w-full p-3 mb-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-white font-mono text-xs focus:border-blue-500 outline-none transition-colors">
+            <div class="flex gap-3">
+                <button onclick="app.closeApiKeyModal()"
+                    class="flex-1 py-3 rounded-xl font-black bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Kasnije</button>
+                <button onclick="app.saveApiKeyFromModal()"
+                    class="flex-1 py-3 rounded-xl font-black bg-blue-500 text-white shadow-lg shadow-blue-500/30 hover:bg-blue-600 transition-transform active:scale-95">Sačuvaj</button>
+            </div>
+            <p id="api-modal-error" class="hidden text-red-500 text-[10px] font-bold mt-2"></p>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"
+        class="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 flex flex-col gap-2 w-full max-w-xs pointer-events-none">
+    </div>
+
+    <script src="app.js" charset="UTF-8"></script>
+</body>
+
+</html>
