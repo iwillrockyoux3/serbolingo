@@ -20,6 +20,21 @@
     class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 h-screen flex flex-col overflow-hidden text-[14px] transition-colors duration-300">
 
     <!-- GOAL MODAL -->
+    <div id="lesson-overlay"
+        class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-2xl text-center max-w-sm w-full transform scale-95 transition-transform duration-300">
+            <div class="text-6xl mb-4 animate-bounce">✨</div>
+            <h2 id="lesson-overlay-title" class="text-2xl font-black mb-2 text-slate-800 dark:text-white">Odlično!</h2>
+            <p id="lesson-overlay-desc" class="text-slate-500 dark:text-slate-400 font-bold mb-6">Završili ste lekciju i osvojili +10 XP!</p>
+            <button onclick="app.navigate('home')"
+                class="w-full py-4 rounded-2xl font-black text-white bg-blue-500 border-b-4 border-blue-600 active:border-b-0 active:translate-y-1 hover:bg-blue-400 transition-all uppercase tracking-wider">
+                Nastavi
+            </button>
+        </div>
+    </div>
+
+
+
     <div id="goal-modal" class="fixed inset-0 celebration-overlay hidden flex items-center justify-center p-6">
         <div id="confetti-container" class="absolute inset-0 pointer-events-none"></div>
         <div
@@ -33,42 +48,48 @@
         </div>
     </div>
 
+    <!-- GUIDE MODAL -->
+    <div id="guide-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 z-[200] hidden flex-col justify-end transition-opacity opacity-0 pb-16">
+        <div class="bg-white dark:bg-slate-800 w-full rounded-t-[2.5rem] p-6 shadow-2xl transition-transform translate-y-full h-[70vh] flex flex-col">
+            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6"></div>
+            <h2 id="guide-modal-title" class="text-xl font-black text-slate-800 dark:text-white mb-4 uppercase tracking-wide">💡 Tips</h2>
+            <div id="guide-modal-content" class="flex-1 overflow-y-auto text-slate-600 dark:text-slate-300 text-sm leading-relaxed pr-2">
+                <!-- Populated by JS -->
+            </div>
+            <button onclick="app.closeGuide()" class="mt-4 w-full py-4 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl font-black text-sm uppercase tracking-widest shadow-[0_4px_0_rgb(203,213,225)] dark:shadow-[0_4px_0_rgb(51,65,85)] active:shadow-none active:translate-y-1 transition-all">Razumem! / Got it!</button>
+        </div>
+    </div>
+
     <!-- AUTH SCREEN -->
     <div id="view-auth"
         class="fixed inset-0 bg-white dark:bg-slate-900 z-[100] flex items-center justify-center p-6 transition-colors duration-300">
         <div class="w-full max-w-xs space-y-6">
             <div class="text-center">
                 <span class="text-5xl">🇷🇸</span>
-                <h2 id="auth-title" class="mt-4 text-2xl font-extrabold text-slate-900 dark:text-white" data-i18n="auth_title_login">Prijavite se
-                </h2>
+                <h2 id="auth-title" class="mt-4 text-2xl font-extrabold text-slate-900 dark:text-white">Login / Prijavite se</h2>
             </div>
             <div class="space-y-3">
-                <input id="auth-username" type="text" placeholder="Korisničko ime" data-i18n="auth_username" data-i18n-attr="placeholder"
-                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none font-bold">
-                <input id="auth-password" type="password" placeholder="Lozinka" data-i18n="auth_password" data-i18n-attr="placeholder"
-                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none font-bold">
+
+
+                <input id="auth-username" type="text" placeholder="Username / Korisničko ime"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none font-bold text-sm">
+                <input id="auth-password" type="password" placeholder="Password / Lozinka"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none font-bold text-sm">
                 
-                <div class="flex items-center gap-2 px-1">
+                <div class="flex items-center gap-2 px-1 pb-2">
                     <input type="checkbox" id="auth-remember" class="w-4 h-4 rounded border-slate-300 text-blue-500 cursor-pointer" checked>
-                    <label for="auth-remember" class="text-xs font-bold text-slate-600 dark:text-slate-400 cursor-pointer" data-i18n="auth_remember">Ostanite prijavljeni</label>
+                    <label for="auth-remember" class="text-xs font-bold text-slate-600 dark:text-slate-400 cursor-pointer">Stay logged in / Ostanite prijavljeni</label>
                 </div>
 
                 <button onclick="app.handleAuth()" id="auth-submit-btn"
-                    class="w-full py-3 bg-blue-500 text-white rounded-xl font-black shadow-[0_4px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1 transition-all" data-i18n="auth_login_btn">Prijavi
-                    se</button>
-                <div class="text-center">
+                    class="w-full py-3 bg-blue-500 text-white rounded-xl font-black shadow-[0_4px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1 transition-all">Login / Prijavi se</button>
+                <div class="text-center pt-1">
                     <button onclick="app.toggleAuthMode()" id="auth-toggle-mode"
-                        class="text-[11px] font-bold text-blue-500 mb-2" data-i18n="auth_toggle_to_register">Nemate nalog? Napravite ga</button>
+                        class="text-[11px] font-bold text-blue-500 mb-2">Don't have an account? Create one / Nemate nalog? Napravite ga</button>
                 </div>
                 
-                <div class="relative flex py-2 items-center">
-                    <div class="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
-                    <span class="flex-shrink-0 mx-4 text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest" data-i18n="auth_or">ili</span>
-                    <div class="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
-                </div>
-
                 <button onclick="app.handleGuest()"
-                    class="w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 rounded-xl font-black active:translate-y-1 transition-all border-2 border-slate-200 dark:border-slate-700" data-i18n="auth_guest">Probaj besplatno (Gost)</button>
+                    class="w-full py-3 mt-4 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 rounded-xl font-black active:translate-y-1 transition-all border-2 border-slate-200 dark:border-slate-700">Try free (Guest) / Probaj besplatno (Gost)</button>
             </div>
         </div>
     </div>
@@ -89,6 +110,9 @@
                 </div>
                 <div class="flex items-center text-red-500"><span class="mr-1">❤️</span><span
                         id="hearts-display">5</span></div>
+                <div id="header-xp-boost-container" class="flex items-center bg-yellow-400 text-yellow-900 px-1.5 py-0.5 rounded-md ml-1">
+                    <span class="mr-0.5 text-xs">🚀</span><span id="header-xp-boost-count">0</span>
+                </div>
             </div>
         </div>
     </header>
@@ -129,54 +153,21 @@
                     class="sparkle-btn w-9 h-9 rounded-xl shadow-md flex items-center justify-center text-base">✨</button>
             </div>
 
-            <div class="space-y-4">
-                <div onclick="app.startLevel('BEGINNER')" class="difficulty-card flex items-center gap-4">
-                    <div
-                        class="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center text-2xl text-white shadow-[0_4px_0_rgb(21,128,61)]">
-                        🌱</div>
-                    <div class="flex-1">
-                        <p
-                            class="text-[10px] font-extrabold text-green-600 dark:text-green-400 uppercase tracking-widest mb-0.5" data-i18n="home_beginner_label">
-                            1. Početni
-                            nivo</p>
-                        <h3 class="font-black text-slate-800 dark:text-slate-200 uppercase text-[14px] tracking-tight" data-i18n="home_beginner_title">
-                            Počni ovde!</h3>
-                        <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold leading-tight" data-i18n="home_beginner_desc">Nauči
-                            pozdrave, osnovne imenice i
-                            prosto sadašnje vreme.</p>
-                    </div>
-                </div>
-                <div onclick="app.startLevel('INTERMEDIATE')" class="difficulty-card flex items-center gap-4">
-                    <div
-                        class="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center text-2xl text-white shadow-[0_4px_0_rgb(194,65,12)]">
-                        🔥</div>
-                    <div class="flex-1">
-                        <p
-                            class="text-[10px] font-extrabold text-orange-600 dark:text-orange-400 uppercase tracking-widest mb-0.5" data-i18n="home_intermediate_label">
-                            2.
-                            Srednji nivo</p>
-                        <h3 class="font-black text-slate-800 dark:text-slate-200 uppercase text-[14px] tracking-tight" data-i18n="home_intermediate_title">
-                            Savlada rečenice</h3>
-                        <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold leading-tight" data-i18n="home_intermediate_desc">Savladaj
-                            složene rečenice (i, ali,
-                            ili) i prošlo vreme.</p>
-                    </div>
-                </div>
-                <div onclick="app.startLevel('ADVANCED')" class="difficulty-card flex items-center gap-4">
-                    <div
-                        class="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center text-2xl text-white shadow-[0_4px_0_rgb(126,34,206)]">
-                        🏆</div>
-                    <div class="flex-1">
-                        <p
-                            class="text-[10px] font-extrabold text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-0.5" data-i18n="home_advanced_label">
-                            3.
-                            Napredni nivo</p>
-                        <h3 class="font-black text-slate-800 dark:text-slate-200 uppercase text-[14px] tracking-tight" data-i18n="home_advanced_title">
-                            Tečan razgovor</h3>
-                        <p class="text-slate-400 dark:text-slate-500 text-[11px] font-bold leading-tight" data-i18n="home_advanced_desc">Složena
-                            gramatika, poslovni
-                            termini i brz tečan govor.</p>
-                    </div>
+            <!-- Skill Tree Container (dynamically rendered) -->
+            <div id="skill-tree-container" class="flex flex-col items-center gap-2 pb-4">
+                <!-- Rendered by app.renderSkillTree() -->
+            </div>
+
+            <!-- Practice Mode Button -->
+            <button onclick="app.startPractice()" class="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-black rounded-2xl shadow-lg text-sm uppercase tracking-wider active:scale-95 transition-transform mb-6">
+                🔄 Vežbaj / Practice
+            </button>
+
+            <!-- Daily Quests -->
+            <div>
+                <h3 class="text-sm font-black text-slate-400 uppercase tracking-wider mb-3">Daily Quests</h3>
+                <div id="quests-container" class="space-y-2">
+                    <!-- Rendered by app.renderQuests() -->
                 </div>
             </div>
         </div>
@@ -375,6 +366,142 @@
             </div>
         </div>
 
+        <!-- ARCADE SCREEN -->
+        <div id="view-arcade" class="hidden flex-1 flex flex-col bg-slate-50 dark:bg-slate-900 fade-in" style="height: calc(100vh - 110px);">
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="flex justify-between items-end mb-2">
+                    <h2 class="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-wide">🕹️ <span data-i18n="nav_arcade">Igraonica</span></h2>
+                    <div class="flex items-center gap-1 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-lg shadow-sm font-black text-xs">
+                        <span>🚀 ×</span><span id="xp-boost-count">0</span>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-bold mb-6">Play minigames to earn Double XP Boosts for your Skill Tree!</p>
+                
+                <!-- Chat Launcher -->
+                <div class="bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl p-4 mb-6 shadow-lg shadow-blue-500/30">
+                    <h3 class="text-white font-black text-lg mb-1">🤖 AI Razgovor</h3>
+                    <p class="text-blue-100 text-xs font-medium mb-4">Practice speaking with our AI Tutor.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="RoleplayEngine.startScenario('Ordering coffee at a cafe')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">☕ Cafe</button>
+                        <button onclick="RoleplayEngine.startScenario('Taking a taxi in Belgrade')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">🚕 Taxi</button>
+                        <button onclick="RoleplayEngine.startFreeChat()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">🗣️ Free Chat</button>
+                        <button onclick="RoleplayEngine.startRandom()" class="bg-yellow-400 hover:bg-yellow-300 text-yellow-900 px-3 py-1.5 rounded-xl text-xs font-black shadow-sm transition-colors">🎲 Random</button>
+                    </div>
+                </div>
+
+                <!-- Games Grid -->
+                <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3">🎮 Minigames</h3>
+                <div class="grid grid-cols-2 gap-3 pb-20">
+                    <button onclick="ArcadeEngine.startMillionaire()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-yellow-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🏆</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Milioner</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">15-Q Trivia</p>
+                    </button>
+                    
+                    <button onclick="ArcadeEngine.startMatchPairs()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-blue-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🧩</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Spojnice</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Match Pairs</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startSpeedTyper()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-purple-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">⌨️</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Kucanje</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Speed Typer</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startWhackAWord()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-red-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🔨</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Udari Reč</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Whack-a-Word</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startHangman()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-green-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🔠</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Vešala</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Hangman</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startWordScramble()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-orange-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🔀</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Slagalica</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Word Scramble</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startAudioSurvival()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-cyan-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎧</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Slepi Miš</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Audio Survival</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startMemoryFlip()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-pink-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🃏</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Memorija</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Flip Cards</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startSnake()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-emerald-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🐍</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Zmijica</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Vocab Snake</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startSuddenDeath()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-rose-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">💀</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Sudden Death</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Endless Quiz</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startSentenceBuilder()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-indigo-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🧱</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Rečenica</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Sentence Builder</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startParrot()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-lime-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎙️</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Papagaj</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Pronunciation</p>
+                    </button>
+
+                    <button onclick="ArcadeEngine.startVoiceTranslator()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-teal-400">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🧠</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Prevodilac</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Voice Translate</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Arcade Chat Interface (Overlay) -->
+            <div id="arcade-chat-overlay" class="hidden absolute inset-0 z-50 bg-slate-50 dark:bg-slate-900 flex flex-col h-full">
+                <!-- Header -->
+                <div class="bg-white dark:bg-slate-800 p-4 border-b-2 border-slate-100 dark:border-slate-700 flex items-center gap-4 shrink-0 shadow-sm z-10">
+                    <button onclick="RoleplayEngine.quitChat()" class="w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full text-slate-500 hover:text-red-500 transition-colors">
+                        <span class="text-lg font-black">×</span>
+                    </button>
+                    <h2 id="arcade-chat-title" class="text-lg font-black text-slate-800 dark:text-white truncate"></h2>
+                </div>
+                
+                <!-- History -->
+                <div id="arcade-chat-wrapper" class="flex-1 overflow-y-auto p-4 bg-slate-50 dark:bg-slate-900">
+                    <div id="arcade-chat-history" class="flex flex-col w-full"></div>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="bg-white dark:bg-slate-800 p-3 border-t-2 border-slate-100 dark:border-slate-700 shrink-0 mb-4 pb-8">
+                    <div class="flex gap-2">
+                        <input type="text" id="arcade-chat-input" onkeypress="RoleplayEngine.handleInputKeypress(event)" placeholder="Kucaj na srpskom..." class="flex-1 bg-slate-100 dark:bg-slate-700 border-2 border-transparent focus:border-blue-500 rounded-2xl px-4 py-3 text-slate-800 dark:text-white font-medium outline-none text-sm">
+                        <button onclick="const i = document.getElementById('arcade-chat-input'); if(i) RoleplayEngine.sendMessage(i.value);" class="bg-blue-500 text-white rounded-2xl px-5 font-black uppercase text-xs hover:bg-blue-600 transition-colors shadow-[0_4px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1">Šalji</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Minigame Overlay -->
+            <div id="arcade-game-overlay" class="hidden absolute inset-0 z-50 bg-slate-50 dark:bg-slate-900 flex flex-col h-full">
+                <!-- Dynamically populated by ArcadeEngine -->
+            </div>
+        </div>
+
         <!-- PROFILE VIEW -->
         <div id="view-profile" class="hidden p-4 space-y-6 fade-in pb-24">
 
@@ -399,9 +526,22 @@
                         <!-- Populated by JS -->
                     </div>
                 </div>
-                <h2 id="profile-name" class="text-xl font-black mt-3 text-slate-800 dark:text-white">Korisnik</h2>
+                <div class="flex items-center justify-center gap-2 mt-3">
+                    <h2 id="profile-name" class="text-xl font-black text-slate-800 dark:text-white">Korisnik</h2>
+                    <button onclick="app.editProfileName()" class="text-slate-400 hover:text-blue-500 transition-colors p-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    </button>
+                </div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1"><span data-i18n="profile_member_since">Član od:</span>
                     <span id="profile-joined">--</span></p>
+            </div>
+
+            <!-- Badges Section -->
+            <div class="space-y-3">
+                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1">Badges</h3>
+                <div id="badges-list" class="grid grid-cols-4 gap-2">
+                    <!-- Populated by JS -->
+                </div>
             </div>
 
             <!-- Achievements Section -->
@@ -454,6 +594,30 @@
                             class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
                     </div>
 
+                    <!-- Premium AI TTS Settings -->
+                    <div class="space-y-2 pt-2 border-t-2 border-slate-100 dark:border-slate-700">
+                        <div class="flex justify-between items-center text-xs font-bold text-slate-500 dark:text-slate-400">
+                            <span>Premium AI Voice</span>
+                            <div class="flex gap-2">
+                                <a id="link-gcp" href="https://console.cloud.google.com/apis/credentials" target="_blank" class="text-blue-500 hover:underline">Get GCP Key 🔑</a>
+                                <a id="link-oai" href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-500 hover:underline hidden">Get OpenAI Key 🔑</a>
+                                <a id="link-gem" href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline hidden">Get Gemini Key 🔑</a>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <select id="tts-provider" onchange="app.setTtsProvider(this.value)" class="w-1/3 p-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-white font-bold text-xs focus:border-blue-500 outline-none">
+                                <option value="none">None (Native OS)</option>
+                                <option value="google">Google Cloud</option>
+                                <option value="openai">OpenAI</option>
+                                <option value="gemini">Gemini AI</option>
+                            </select>
+                            <input type="text" id="tts-api-key" placeholder="Paste API key here..."
+                                onchange="app.setTtsApiKey(this.value)"
+                                class="w-2/3 p-2.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-white font-mono text-xs focus:border-blue-500 outline-none transition-colors">
+                        </div>
+                        <p class="text-[9px] text-slate-400 dark:text-slate-500 leading-tight">Optional. Upgrades PC voices. Gemini & Google Cloud (Free Tiers). OpenAI (Paid).</p>
+                    </div>
+
                 </div>
             </div>
 
@@ -490,8 +654,13 @@
         <div class="max-w-xl mx-auto flex justify-around py-2">
             <button onclick="app.navigate('home')" class="nav-btn flex flex-col items-center gap-1 text-blue-500"
                 id="nav-home">
-                <span class="text-lg">📖</span>
+                <span class="text-2xl mb-1 mt-1 block">🏠</span>
                 <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_learn">Uči</span>
+            </button>
+            <button onclick="app.navigate('arcade')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
+                id="nav-arcade">
+                <span class="text-2xl mb-1 mt-1 block">🕹️</span>
+                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_arcade">Igraonica</span>
             </button>
             <button onclick="app.navigate('stats')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
                 id="nav-stats">
@@ -534,11 +703,40 @@
         </div>
     </div>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container"
-        class="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 flex flex-col gap-2 w-full max-w-xs pointer-events-none">
+    <!-- Voice Recommendation Modal -->
+    <div id="voice-recommendation-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm fade-in">
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl border-2 border-white dark:border-slate-700">
+            <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl animate-bounce">
+                🤖
+            </div>
+            <h3 class="text-xl font-black text-slate-800 dark:text-white mb-2">Robotic Voice Detected!</h3>
+            <div class="text-xs text-slate-500 dark:text-slate-400 mb-6 font-medium leading-relaxed space-y-2">
+                <p>It sounds like you are offline or using a basic robotic voice for Serbian.</p>
+                <p class="font-bold text-slate-700 dark:text-slate-300">Windows has a high-quality, free Serbian voice you can install in 1 click!</p>
+                <p class="bg-slate-100 dark:bg-slate-700 p-2 rounded-lg text-left mt-2 border border-slate-200 dark:border-slate-600">
+                    1. Click "Open Settings" below.<br>
+                    2. Look for "Add voices" and search for "Serbian".<br>
+                    3. Click Add. Once it downloads, restart your browser!
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="document.getElementById('voice-recommendation-modal').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">No Thanks</button>
+                <a href="ms-settings:speech" target="_blank" onclick="document.getElementById('voice-recommendation-modal').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black bg-blue-500 text-white shadow-lg shadow-blue-500/30 hover:bg-blue-600 transition-transform active:scale-95 block leading-tight pt-3.5">Open Settings</a>
+            </div>
+        </div>
     </div>
 
+    <!-- Toast Notification Container -->
+    <div id="toast-container"
+        class="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-full max-w-xs pointer-events-none">
+    </div>
+
+    <script src="seed-data.js" charset="UTF-8"></script>
+    <script src="db.js" charset="UTF-8"></script>
+    <script src="question-engine.js" charset="UTF-8"></script>
+    <script src="skill-tree.js" charset="UTF-8"></script>
+    <script src="roleplay.js" charset="UTF-8"></script>
+    <script src="arcade.js" charset="UTF-8"></script>
     <script src="app.js" charset="UTF-8"></script>
 </body>
 

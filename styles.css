@@ -296,3 +296,154 @@ body {
     z-index: 201;
     animation: confetti-fall 4s linear forwards;
 }
+
+/* ===================== ARCADE GAME ANIMATIONS ===================== */
+
+/* Speed Typer: Falling words */
+@keyframes arcade-fall {
+    0% { top: -50px; opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: calc(100% - 60px); opacity: 0.3; }
+}
+
+.arcade-falling-word {
+    position: absolute;
+    left: var(--fall-x, 50%);
+    animation: arcade-fall var(--fall-duration, 4s) linear forwards;
+    pointer-events: none;
+}
+
+/* Whack-a-Word: Flash in/out */
+@keyframes arcade-flash-in {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes arcade-flash-out {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.3); opacity: 0; }
+}
+
+.arcade-cell-flash {
+    animation: arcade-flash-in 0.2s ease-out forwards;
+}
+
+/* Memory Flip: Card flip */
+@keyframes arcade-flip {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(180deg); }
+}
+
+.arcade-card {
+    perspective: 600px;
+    cursor: pointer;
+}
+
+.arcade-card-inner {
+    transition: transform 0.4s ease;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.arcade-card-inner.flipped {
+    transform: rotateY(180deg);
+}
+
+.arcade-card-front, .arcade-card-back {
+    backface-visibility: hidden;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arcade-card-back {
+    transform: rotateY(180deg);
+}
+
+/* Correct/Incorrect flash */
+@keyframes arcade-correct-flash {
+    0% { background-color: rgb(34, 197, 94); }
+    100% { background-color: transparent; }
+}
+
+@keyframes arcade-incorrect-flash {
+    0% { background-color: rgb(239, 68, 68); }
+    100% { background-color: transparent; }
+}
+
+.arcade-correct { animation: arcade-correct-flash 0.5s ease-out; }
+.arcade-incorrect { animation: arcade-incorrect-flash 0.5s ease-out; }
+
+/* XP Boost glow */
+@keyframes arcade-glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(250, 204, 21, 0.4); }
+    50% { box-shadow: 0 0 20px rgba(250, 204, 21, 0.8), 0 0 40px rgba(250, 204, 21, 0.3); }
+}
+
+.arcade-glow { animation: arcade-glow 2s ease-in-out infinite; }
+
+/* Millionaire prize pulse */
+@keyframes arcade-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.arcade-pulse { animation: arcade-pulse 0.6s ease-in-out; }
+
+/* Millionaire 50/50 crossed out */
+.arcade-crossed-out {
+    text-decoration: line-through;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* Snake grid cell */
+.arcade-snake-cell {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    font-weight: 900;
+    border-radius: 4px;
+    transition: background-color 0.1s;
+}
+
+/* Word explode (speed typer correct) */
+@keyframes arcade-explode {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+.arcade-explode { animation: arcade-explode 0.3s ease-out forwards; }
+
+/* Hangman swing */
+@keyframes arcade-swing {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    75% { transform: rotate(-5deg); }
+}
+
+.arcade-hangman-swing { animation: arcade-swing 2s ease-in-out infinite; }
+
+/* Scramble letter pop */
+@keyframes arcade-letter-pop {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.arcade-letter-pop { animation: arcade-letter-pop 0.2s ease-out; }
+
+/* Mic recording pulse */
+@keyframes arcade-mic-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    50% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+}
+
+.arcade-mic-active { animation: arcade-mic-pulse 1s ease-in-out infinite; }
