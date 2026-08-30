@@ -1,5 +1,5 @@
 const DB_NAME = 'SerboLingoDB';
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 
 const db = {
     _db: null,
