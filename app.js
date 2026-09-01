@@ -31,6 +31,7 @@ const UI_STRINGS = {
 
     // Header & Nav
     nav_learn: { en: 'Learn', sr_lat: 'Uči', sr_cyr: 'Учи' },
+    nav_arcade: { en: 'Arcade', sr_lat: 'Igraonica', sr_cyr: 'Играоница' },
     nav_roleplay: { en: 'Chat', sr_lat: 'Razgovor', sr_cyr: 'Разговор' },
     nav_stats: { en: 'Stats', sr_lat: 'Statistika', sr_cyr: 'Статистика' },
     nav_profile: { en: 'Profile', sr_lat: 'Profil', sr_cyr: 'Профил' },
@@ -658,38 +659,89 @@ const app = {
             if (!skill) return '';
             const colors = CROWN_COLORS[skill.crown] || CROWN_COLORS[0];
             const isLocked = skill.locked;
-            const crownLabel = skill.crown > 0 ? '👑'.repeat(Math.min(skill.crown, 5)) : '';
+            const crownLabel = skill.crown > 0 ? '\u{1F451}'.repeat(Math.min(skill.crown, 5)) : '';
             const optionalBadge = skill.optional ? '<span class="text-[8px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-400 px-1 py-0.5 rounded-md uppercase">Opt</span>' : '';
             
             const displayName = isSrToEn ? skill.name : skill.nameEn;
             const widthClass = isRowItem ? 'flex-1 w-full min-w-0 relative' : 'w-full max-w-xs relative';
             
-            const guideBtn = skill.guideHtml ? `<button onclick="app.showGuide('${skill.id}'); event.stopPropagation();" class="text-[10px] font-black bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full px-2 py-1 absolute -top-2 -right-2 border-2 border-white dark:border-slate-900 z-10 shadow-sm transition-colors">💡 TIPS</button>` : '';
+            const guideBtn = skill.guideHtml ? `<button onclick="app.showGuide('${skill.id}'); event.stopPropagation();" class="text-[10px] font-black bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full px-2 py-1 absolute -top-2 -right-2 border-2 border-white dark:border-slate-900 z-10 shadow-sm transition-colors">\u{1F4A1} TIPS</button>` : '';
             
             if (isLocked) {
-                return `<div class="${widthClass} opacity-50 cursor-not-allowed"><div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 p-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 h-full"><div class="w-12 h-12 flex-shrink-0 ${colors.bg} rounded-2xl flex items-center justify-center text-xl ${colors.shadow}">🔒</div><div class="flex-1 min-w-0"><div class="flex items-center gap-1"><p class="font-black text-slate-400 dark:text-slate-500 text-[13px] truncate">${displayName}</p></div><div class="mt-0.5">${optionalBadge}</div></div></div></div>`;
+                return `<div class="${widthClass} opacity-50 cursor-not-allowed"><div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 p-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 h-full"><div class="w-12 h-12 flex-shrink-0 ${colors.bg} rounded-2xl flex items-center justify-center text-xl ${colors.shadow}">\u{1F512}</div><div class="flex-1 min-w-0"><div class="flex items-center gap-1"><p class="font-black text-slate-400 dark:text-slate-500 text-[13px] truncate">${displayName}</p></div><div class="mt-0.5">${optionalBadge}</div></div></div></div>`;
             }
             return `<div class="${widthClass} cursor-pointer group" onclick="app.startSkillLesson('${skill.id}')">${guideBtn}<div class="flex items-center gap-3 bg-white dark:bg-slate-800 p-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm group-hover:border-blue-400 dark:group-hover:border-blue-500 active:scale-[0.97] transition-all h-full"><div class="w-12 h-12 flex-shrink-0 ${colors.bg} rounded-2xl flex items-center justify-center text-xl ${colors.text} ${colors.shadow} transition-colors">${skill.emoji}</div><div class="flex-1 min-w-0"><div class="flex items-center gap-1"><p class="font-black text-slate-800 dark:text-slate-100 text-[13px] truncate">${displayName}</p></div><div class="flex items-center gap-1 mt-0.5">${optionalBadge} <span class="text-[9px] tracking-tighter">${crownLabel}</span></div><div class="mt-1.5 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden w-full"><div class="h-full ${skill.crown >= 5 ? 'bg-yellow-400' : 'bg-green-400'} rounded-full transition-all" style="width: ${skill.crown >= 5 ? 100 : (skill.lessonsInCrown / SkillTreeEngine.getLessonsPerCrown()) * 100}%"></div></div></div></div></div>`;
         };
 
-        const alphabetNode = skills.find(s => s.id === 'alphabet');
-        const numbersNode = skills.find(s => s.id === 'numbers');
-        const otherSkills = skills.filter(s => s.id !== 'alphabet' && s.id !== 'numbers');
+        // Define tier groupings for the game map
+        const tiers = [
+            { label: 'Foundation', labelEn: 'Foundation', ids: ['alphabet', 'basics', 'phrases', 'numbers', 'colors'] },
+            { label: 'World 1', labelEn: 'World 1', ids: ['family', 'household', 'animals', 'nature', 'food'] },
+            { label: 'Action', labelEn: 'Action', ids: ['clothing', 'verbs', 'adjectives', 'emotions'] },
+            { label: 'Self & Health', labelEn: 'Self & Health', ids: ['body', 'health', 'sports'] },
+            { label: 'Time & Weather', labelEn: 'Time & Weather', ids: ['time', 'days', 'months', 'weather'] },
+            { label: 'World 2', labelEn: 'World 2', ids: ['directions', 'travel', 'education', 'technology', 'business'] },
+            { label: 'Advanced', labelEn: 'Advanced', ids: ['dating', 'slang'] }
+        ];
 
         let html = '';
-        
-        // Top row
-        if (alphabetNode && numbersNode) {
-            html += `<div class="flex justify-center gap-2 w-full max-w-xs mb-1">
-                ${renderNode(alphabetNode, true)}
-                ${renderNode(numbersNode, true)}
-            </div>`;
-        }
 
-        html += otherSkills.map((skill, index) => {
-            const connector = '<div class="w-1 h-5 bg-slate-200 dark:bg-slate-700 rounded-full my-1"></div>';
-            return `<div class="flex flex-col items-center w-full">${connector}${renderNode(skill, false)}</div>`;
-        }).join('');
+        tiers.forEach((tier, tierIndex) => {
+            const tierSkills = tier.ids.map(id => skills.find(s => s.id === id)).filter(Boolean);
+            if (tierSkills.length === 0) return;
+
+            // Check if any skill in tier is unlocked for visual styling
+            const anyUnlocked = tierSkills.some(s => !s.locked);
+            const tierOpacity = anyUnlocked ? '' : 'opacity-60';
+
+            // Tier connector (dotted line between tiers)
+            if (tierIndex > 0) {
+                html += `<div class="flex flex-col items-center my-1">
+                    <div class="w-0.5 h-3 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+                    <div class="w-0.5 h-1 bg-slate-300 dark:bg-slate-600 rounded-full mt-1"></div>
+                    <div class="w-0.5 h-3 bg-slate-300 dark:bg-slate-600 rounded-full mt-1"></div>
+                </div>`;
+            }
+
+            // Tier header label
+            const tierLabel = isSrToEn ? tier.label : tier.labelEn;
+            html += `<div class="w-full max-w-xs ${tierOpacity}">
+                <div class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest text-center mb-2 mt-1">${tierLabel}</div>`;
+
+            // Render skills within this tier
+            // First two in a row if tier has 4+ items, then rest vertically
+            if (tierSkills.length >= 4) {
+                // Top pair side-by-side
+                html += `<div class="flex justify-center gap-2 w-full mb-1">
+                    ${renderNode(tierSkills[0], true)}
+                    ${renderNode(tierSkills[1], true)}
+                </div>`;
+                // Rest vertically with connectors
+                for (let i = 2; i < tierSkills.length; i++) {
+                    html += `<div class="flex flex-col items-center w-full">
+                        <div class="w-1 h-4 bg-slate-200 dark:bg-slate-700 rounded-full my-0.5"></div>
+                        ${renderNode(tierSkills[i], false)}
+                    </div>`;
+                }
+            } else if (tierSkills.length >= 2) {
+                // Side-by-side pair
+                html += `<div class="flex justify-center gap-2 w-full mb-1">
+                    ${renderNode(tierSkills[0], true)}
+                    ${renderNode(tierSkills[1], true)}
+                </div>`;
+                for (let i = 2; i < tierSkills.length; i++) {
+                    html += `<div class="flex flex-col items-center w-full">
+                        <div class="w-1 h-4 bg-slate-200 dark:bg-slate-700 rounded-full my-0.5"></div>
+                        ${renderNode(tierSkills[i], false)}
+                    </div>`;
+                }
+            } else {
+                // Single node
+                html += `<div class="flex flex-col items-center w-full">${renderNode(tierSkills[0], false)}</div>`;
+            }
+
+            html += `</div>`; // Close tier wrapper
+        });
 
         container.innerHTML = html;
     },
@@ -697,17 +749,18 @@ const app = {
         const skill = SKILL_TREE.find(s => s.id === skillId);
         if (!skill) return;
         if (!SkillTreeEngine.isUnlocked(skillId)) {
-            app.showToast('🔒 Završi prethodne lekcije prvo!', 'error');
+            app.showToast('\u{1F512} ZavrÅ¡i prethodne lekcije prvo!', 'error');
             return;
         }
-        if (state.user && state.user.isGuest && skillId !== 'basics' && skillId !== 'alphabet' && skillId !== 'numbers') {
+        const guestAllowed = ['basics', 'alphabet', 'numbers', 'colors', 'phrases'];
+        if (state.user && state.user.isGuest && !guestAllowed.includes(skillId)) {
             app.showToast(t('toast_guest_level'), 'error');
             return;
         }
         try {
             ACTIVE_LESSON = await window.QuestionEngine.generateLesson(skill.category, window.appDb, 10);
             if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
-                app.showToast('Nema dovoljno reči u bazi za ovu lekciju.', 'error');
+                app.showToast('Nema dovoljno reÄi u bazi za ovu lekciju.', 'error');
                 return;
             }
             state.currentLevelKey = skillId;
@@ -725,7 +778,7 @@ const app = {
     startPractice: async () => {
         const unlockedSkills = SKILL_TREE.filter(s => SkillTreeEngine.isUnlocked(s.id) && SkillTreeEngine.getCrownLevel(s.id) >= 1);
         if (unlockedSkills.length === 0) {
-            app.showToast('Završi bar jednu lekciju prvo! / Complete at least one lesson first!', 'error');
+            app.showToast('ZavrÅ¡i bar jednu lekciju prvo! / Complete at least one lesson first!', 'error');
             return;
         }
         
@@ -734,11 +787,11 @@ const app = {
             ACTIVE_LESSON = await window.QuestionEngine.generatePracticeLesson(unlockedCategories, window.appDb, state.mistakeLog, 10);
             
             if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
-                app.showToast('Nema reči za vežbu.', 'error');
+                app.showToast('Nema reÄi za veÅ¾bu.', 'error');
                 return;
             }
             state.currentLevelKey = 'PRACTICE';
-            state.currentSkillId = randomSkill.id;
+            state.currentSkillId = unlockedSkills[0].id;
             state.currentLessonIndex = 0;
             state.lastLessonMistakes = 0;
             app.saveStats();
@@ -2079,30 +2132,52 @@ const app = {
         if (state.streak > state.maxStreak) state.maxStreak = state.streak; 
         localStorage.setItem('serbolingo_stats_' + (state.user ? state.user.name : 'guest'), JSON.stringify(state)); 
     },
+    toastQueue: [],
+    isToastPlaying: false,
     showToast: (msg, type = 'info') => {
+        app.toastQueue.push({msg, type});
+        if (!app.isToastPlaying) {
+            app.playNextToast();
+        }
+    },
+    playNextToast: () => {
+        if (app.toastQueue.length === 0) {
+            app.isToastPlaying = false;
+            return;
+        }
+        app.isToastPlaying = true;
+        const {msg, type} = app.toastQueue.shift();
+        
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         
         let bgColor = 'bg-blue-500';
         let icon = 'ℹ️';
         if (type === 'success') { bgColor = 'bg-green-500'; icon = '✅'; }
-        if (type === 'error') { bgColor = 'bg-red-500'; icon = '🔒'; }
+        if (type === 'error') { bgColor = 'bg-red-500'; icon = '❌'; }
         
-        toast.className = `${bgColor} text-white px-4 py-3 rounded-xl shadow-lg font-bold text-[11px] flex items-center gap-2 transform transition-all duration-300 translate-y-full opacity-0 pointer-events-auto max-w-full mx-4`;
-        toast.innerHTML = `<span class="text-lg">${icon}</span> <span class="flex-1">${msg}</span>`;
+        // Highly compact styling
+        toast.className = `${bgColor} text-white px-2.5 py-1 rounded-md shadow font-black text-[10px] flex items-center gap-1.5 transform transition-all duration-300 translate-y-[-10px] opacity-0 pointer-events-auto whitespace-nowrap`;
+        toast.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
         
+        container.innerHTML = '';
         container.appendChild(toast);
         
         // Animate in
         requestAnimationFrame(() => {
-            toast.classList.remove('translate-y-full', 'opacity-0');
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-[-10px]', 'opacity-0');
+            });
         });
         
-        // Remove after 4 seconds
+        // Remove after 2 seconds, then trigger next
         setTimeout(() => {
-            toast.classList.add('opacity-0', 'translate-y-2');
-            setTimeout(() => toast.remove(), 300);
-        }, 4000);
+            toast.classList.add('opacity-0', 'translate-y-[-10px]');
+            setTimeout(() => {
+                if (toast.parentNode) toast.remove();
+                app.playNextToast();
+            }, 300);
+        }, 2000);
     },
     // ─── OMNI-BAR SEARCH ENGINE ───
     handleSearch: (query) => {
@@ -2260,7 +2335,9 @@ const app = {
         app.updateStatsUI();
         
         // Refresh roleplay list if we are currently looking at it
-        if (window.RoleplayEngine) window.RoleplayEngine.renderScenarioList();
+        if (window.RoleplayEngine && typeof window.RoleplayEngine.renderScenarioList === 'function') {
+            window.RoleplayEngine.renderScenarioList();
+        }
     },
     playSound: (type) => {
         if (!app.audioCtx) app.audioCtx = new (window.AudioContext || window.webkitAudioContext)();

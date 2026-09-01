@@ -390,7 +390,7 @@ const ArcadeEngine = {
                 el.className = 'absolute bg-blue-600 px-4 py-2 rounded shadow font-bold';
                 el.textContent = w.source;
                 el.style.left = Math.max(5, Math.random() * 70) + '%';
-                el.style.animation = \`fallDown \${fallDuration}s linear forwards\`;
+                el.style.animation = `fallDown ${fallDuration}s linear forwards`;
                 
                 const wordObj = { ...w, el, matched: false };
                 activeWords.push(wordObj);
@@ -581,7 +581,7 @@ const ArcadeEngine = {
                 }
                 if (wrong >= maxWrong) {
                     this._playSound('incorrect');
-                    overlay.innerHTML = this._renderGameOver('Hangman', \`Failed! Word was: \${answer}\`, 'startHangman');
+                    overlay.innerHTML = this._renderGameOver('Hangman', `Failed! Word was: ${answer}`, 'startHangman');
                     return;
                 }
                 
@@ -1016,11 +1016,11 @@ const ArcadeEngine = {
             
             let html = '';
             snake.forEach((s, i) => {
-                html += \`<div class="absolute bg-green-500 rounded-sm" style="left: \${(s.x/grid)*100}%; top: \${(s.y/grid)*100}%; width: \${100/grid}%; height: \${100/grid}%;"></div>\`;
+                html += `<div class="absolute bg-green-500 rounded-sm" style="left: ${(s.x/grid)*100}%; top: ${(s.y/grid)*100}%; width: ${100/grid}%; height: ${100/grid}%;"></div>`;
             });
             
             foods.forEach(f => {
-                html += \`<div class="absolute flex items-center justify-center text-xs font-bold text-white bg-red-600 rounded whitespace-nowrap overflow-hidden" style="left: \${(f.x/grid)*100}%; top: \${(f.y/grid)*100}%; width: \${100/grid * 3}%; height: \${100/grid}%; transform: translateX(-33%); z-index: 10;">\${f.word.target}</div>\`;
+                html += `<div class="absolute flex items-center justify-center text-xs font-bold text-white bg-red-600 rounded whitespace-nowrap overflow-hidden" style="left: ${(f.x/grid)*100}%; top: ${(f.y/grid)*100}%; width: ${100/grid * 3}%; height: ${100/grid}%; transform: translateX(-33%); z-index: 10;">${f.word.target}</div>`;
             });
             
             container.innerHTML = html;
@@ -1264,7 +1264,7 @@ const ArcadeEngine = {
                     }, 1500);
                 } else {
                     this._playSound('incorrect');
-                    if(resEl) resEl.innerHTML = \`❌ <span class="text-red-400">Heard: "\${transcript}"</span>\`;
+                    if(resEl) resEl.innerHTML = `❌ <span class="text-red-400">Heard: "${transcript}"</span>`;
                 }
             };
             
@@ -1361,7 +1361,7 @@ const ArcadeEngine = {
                     }, 1500);
                 } else {
                     this._playSound('incorrect');
-                    if(resEl) resEl.innerHTML = \`❌ <span class="text-red-400">Heard "\${transcript}", expected "\${targetText}"</span>\`;
+                    if(resEl) resEl.innerHTML = `❌ <span class="text-red-400">Heard "${transcript}", expected "${targetText}"</span>`;
                 }
             };
             

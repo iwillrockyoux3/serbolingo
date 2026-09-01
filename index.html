@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SerboLingo - Learn Serbian to English</title>
+    <script>
+        window.addEventListener('error', function(e) {
+            alert("JS Error: " + e.message + "\nLine: " + e.lineno);
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            alert("Promise Error: " + (e.reason && e.reason.message ? e.reason.message : e.reason));
+        });
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -728,7 +736,7 @@
 
     <!-- Toast Notification Container -->
     <div id="toast-container"
-        class="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-full max-w-xs pointer-events-none">
+        class="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center pointer-events-none">
     </div>
 
     <script src="seed-data.js" charset="UTF-8"></script>
