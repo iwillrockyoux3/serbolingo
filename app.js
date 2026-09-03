@@ -673,15 +673,13 @@ const app = {
             return `<div class="${widthClass} cursor-pointer group" onclick="app.startSkillLesson('${skill.id}')">${guideBtn}<div class="flex items-center gap-3 bg-white dark:bg-slate-800 p-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm group-hover:border-blue-400 dark:group-hover:border-blue-500 active:scale-[0.97] transition-all h-full"><div class="w-12 h-12 flex-shrink-0 ${colors.bg} rounded-2xl flex items-center justify-center text-xl ${colors.text} ${colors.shadow} transition-colors">${skill.emoji}</div><div class="flex-1 min-w-0"><div class="flex items-center gap-1"><p class="font-black text-slate-800 dark:text-slate-100 text-[13px] truncate">${displayName}</p></div><div class="flex items-center gap-1 mt-0.5">${optionalBadge} <span class="text-[9px] tracking-tighter">${crownLabel}</span></div><div class="mt-1.5 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden w-full"><div class="h-full ${skill.crown >= 5 ? 'bg-yellow-400' : 'bg-green-400'} rounded-full transition-all" style="width: ${skill.crown >= 5 ? 100 : (skill.lessonsInCrown / SkillTreeEngine.getLessonsPerCrown()) * 100}%"></div></div></div></div></div>`;
         };
 
-        // Define tier groupings for the game map
         const tiers = [
-            { label: 'Foundation', labelEn: 'Foundation', ids: ['alphabet', 'basics', 'phrases', 'numbers', 'colors'] },
-            { label: 'World 1', labelEn: 'World 1', ids: ['family', 'household', 'animals', 'nature', 'food'] },
-            { label: 'Action', labelEn: 'Action', ids: ['clothing', 'verbs', 'adjectives', 'emotions'] },
-            { label: 'Self & Health', labelEn: 'Self & Health', ids: ['body', 'health', 'sports'] },
-            { label: 'Time & Weather', labelEn: 'Time & Weather', ids: ['time', 'days', 'months', 'weather'] },
-            { label: 'World 2', labelEn: 'World 2', ids: ['directions', 'travel', 'education', 'technology', 'business'] },
-            { label: 'Advanced', labelEn: 'Advanced', ids: ['dating', 'slang'] }
+            { label: 'Foundation', labelEn: 'Foundation', ids: ['alphabet', 'numbers', 'colors', 'basics', 'phrases', 'verbs', 'pronouns', 'adjectives', 'gender'] },
+            { label: 'Daily Life', labelEn: 'Daily Life', ids: ['food', 'cases_intro', 'family', 'household', 'time', 'days', 'months'] },
+            { label: 'Survival & Self', labelEn: 'Survival & Self', ids: ['directions', 'prepositions', 'weather', 'body', 'health', 'emotions', 'conjunctions'] },
+            { label: 'The World', labelEn: 'The World', ids: ['travel', 'adverbs', 'clothing', 'animals', 'nature', 'sports', 'past_tense'] },
+            { label: 'Modern Life', labelEn: 'Modern Life', ids: ['education', 'technology', 'business', 'advanced_adj', 'future_tense'] },
+            { label: 'Advanced', labelEn: 'Advanced', ids: ['dating', 'slang', 'particles'] }
         ];
 
         let html = '';
@@ -708,36 +706,30 @@ const app = {
             html += `<div class="w-full max-w-xs ${tierOpacity}">
                 <div class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest text-center mb-2 mt-1">${tierLabel}</div>`;
 
-            // Render skills within this tier
-            // First two in a row if tier has 4+ items, then rest vertically
-            if (tierSkills.length >= 4) {
-                // Top pair side-by-side
-                html += `<div class="flex justify-center gap-2 w-full mb-1">
-                    ${renderNode(tierSkills[0], true)}
-                    ${renderNode(tierSkills[1], true)}
-                </div>`;
-                // Rest vertically with connectors
-                for (let i = 2; i < tierSkills.length; i++) {
-                    html += `<div class="flex flex-col items-center w-full">
-                        <div class="w-1 h-4 bg-slate-200 dark:bg-slate-700 rounded-full my-0.5"></div>
-                        ${renderNode(tierSkills[i], false)}
-                    </div>`;
-                }
-            } else if (tierSkills.length >= 2) {
-                // Side-by-side pair
-                html += `<div class="flex justify-center gap-2 w-full mb-1">
-                    ${renderNode(tierSkills[0], true)}
-                    ${renderNode(tierSkills[1], true)}
-                </div>`;
-                for (let i = 2; i < tierSkills.length; i++) {
-                    html += `<div class="flex flex-col items-center w-full">
-                        <div class="w-1 h-4 bg-slate-200 dark:bg-slate-700 rounded-full my-0.5"></div>
-                        ${renderNode(tierSkills[i], false)}
-                    </div>`;
+            // Custom rendering for Foundation vs the rest
+            if (tier.labelEn === 'Foundation') {
+                // Render all as pairs
+                for (let i = 0; i < tierSkills.length; i += 2) {
+                    if (i > 0) {
+                        html += `<div class="flex justify-center w-full"><div class="w-1 h-4 bg-slate-200 dark:bg-slate-700 rounded-full my-0.5"></div></div>`;
+                    }
+                    html += `<div class="flex justify-center gap-2 w-full mb-1">
+                        ${renderNode(tierSkills[i], true)}`;
+                    if (tierSkills[i+1]) {
+                        html += renderNode(tierSkills[i+1], true);
+                    } else {
+                        html += `<div class="flex-1 w-full min-w-0"></div>`; // spacer
+                    }
+                    html += `</div>`;
                 }
             } else {
-                // Single node
-                html += `<div class="flex flex-col items-center w-full">${renderNode(tierSkills[0], false)}</div>`;
+                // Render all sequentially (single column)
+                for (let i = 0; i < tierSkills.length; i++) {
+                    if (i > 0) {
+                        html += `<div class="flex flex-col items-center w-full"><div class="w-1 h-4 bg-slate-200 dark:bg-slate-700 rounded-full my-0.5"></div></div>`;
+                    }
+                    html += `<div class="flex flex-col items-center w-full">${renderNode(tierSkills[i], false)}</div>`;
+                }
             }
 
             html += `</div>`; // Close tier wrapper
@@ -2156,8 +2148,8 @@ const app = {
         if (type === 'success') { bgColor = 'bg-green-500'; icon = '✅'; }
         if (type === 'error') { bgColor = 'bg-red-500'; icon = '❌'; }
         
-        // Highly compact styling
-        toast.className = `${bgColor} text-white px-2.5 py-1 rounded-md shadow font-black text-[10px] flex items-center gap-1.5 transform transition-all duration-300 translate-y-[-10px] opacity-0 pointer-events-auto whitespace-nowrap`;
+        // Highly compact styling changed to wider/centered styling
+        toast.className = `${bgColor} text-white px-4 py-2 rounded-lg shadow-md font-black text-[11px] flex items-center justify-center gap-2 transform transition-all duration-300 translate-y-[-10px] opacity-0 pointer-events-auto w-[220px] max-w-[280px] text-center`;
         toast.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
         
         container.innerHTML = '';
@@ -2170,14 +2162,14 @@ const app = {
             });
         });
         
-        // Remove after 2 seconds, then trigger next
+        // Remove after 3.5 seconds, then trigger next
         setTimeout(() => {
             toast.classList.add('opacity-0', 'translate-y-[-10px]');
             setTimeout(() => {
                 if (toast.parentNode) toast.remove();
                 app.playNextToast();
             }, 300);
-        }, 2000);
+        }, 3500);
     },
     // ─── OMNI-BAR SEARCH ENGINE ───
     handleSearch: (query) => {

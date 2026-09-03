@@ -1,4 +1,100 @@
 window.SEED_DATA = [
+    // --- CATEGORY: PRONOUNS ---
+    {"id": "pro1", "en": "I", "sr_lat": "ja", "category": "pronouns", "difficulty": 1, "pos": "pronoun", "emoji": "🙋", "phonetic": "yah", "example_en": "I am here.", "example_sr": "Ja sam ovde."},
+    {"id": "pro2", "en": "you (singular)", "sr_lat": "ti", "category": "pronouns", "difficulty": 1, "pos": "pronoun", "emoji": "👉", "phonetic": "tee", "example_en": "You are my friend.", "example_sr": "Ti si moj prijatelj."},
+    {"id": "pro3", "en": "he", "sr_lat": "on", "category": "pronouns", "difficulty": 1, "pos": "pronoun", "emoji": "👨", "phonetic": "ohn", "example_en": "He is tall.", "example_sr": "On je visok."},
+    {"id": "pro4", "en": "she", "sr_lat": "ona", "category": "pronouns", "difficulty": 1, "pos": "pronoun", "emoji": "👩", "phonetic": "oh-nah", "example_en": "She is reading.", "example_sr": "Ona čita."},
+    {"id": "pro5", "en": "it", "sr_lat": "ono", "category": "pronouns", "difficulty": 1, "pos": "pronoun", "emoji": "🧸", "phonetic": "oh-noh", "example_en": "It is a dog.", "example_sr": "Ono je pas."},
+    {"id": "pro6", "en": "we", "sr_lat": "mi", "category": "pronouns", "difficulty": 1, "pos": "pronoun", "emoji": "👨‍👩‍👧‍👦", "phonetic": "mee", "example_en": "We are going home.", "example_sr": "Mi idemo kući."},
+    {"id": "pro7", "en": "you (plural/formal)", "sr_lat": "vi", "category": "pronouns", "difficulty": 1, "pos": "pronoun", "emoji": "👥", "phonetic": "vee", "example_en": "Are you all ready?", "example_sr": "Da li ste vi spremni?"},
+    {"id": "pro8", "en": "they", "sr_lat": "oni", "category": "pronouns", "difficulty": 1, "pos": "pronoun", "emoji": "👨‍👨‍👦", "phonetic": "oh-nee", "example_en": "They are working.", "example_sr": "Oni rade."},
+
+    // --- CATEGORY: GRAMMAR (GENDER EXAMPLES) ---
+    {"id": "gen1", "en": "boy (masculine)", "sr_lat": "dečak", "category": "gender", "difficulty": 1, "pos": "noun", "emoji": "👦", "phonetic": "deh-chak", "example_en": "The boy is happy.", "example_sr": "Dečak je srećan."},
+    {"id": "gen2", "en": "girl (feminine)", "sr_lat": "devojčica", "category": "gender", "difficulty": 1, "pos": "noun", "emoji": "👧", "phonetic": "deh-voy-chee-tsa", "example_en": "The girl is happy.", "example_sr": "Devojčica je srećna."},
+    {"id": "gen3", "en": "child (neuter)", "sr_lat": "dete", "category": "gender", "difficulty": 1, "pos": "noun", "emoji": "🧒", "phonetic": "deh-teh", "example_en": "The child is happy.", "example_sr": "Dete je srećno."},
+    {"id": "gen4", "en": "happy (masculine)", "sr_lat": "srećan", "category": "gender", "difficulty": 1, "pos": "adjective", "emoji": "😀", "phonetic": "sreh-chan", "example_en": "He is a happy boy.", "example_sr": "On je srećan dečak."},
+
+    // --- CATEGORY: CASES INTRO (PADEŽI) ---
+    {"id": "cas1", "en": "boy (nominative)", "sr_lat": "dečak", "category": "cases_intro", "difficulty": 2, "pos": "noun", "emoji": "📐", "phonetic": "DEH-chak", "example_en": "The boy reads.", "example_sr": "Dečak čita."},
+    {"id": "cas2", "en": "boy's (genitive)", "sr_lat": "dečaka", "category": "cases_intro", "difficulty": 2, "pos": "noun", "emoji": "📐", "phonetic": "DEH-chah-kah", "example_en": "The boy's book.", "example_sr": "Knjiga dečaka."},
+    {"id": "cas3", "en": "to the boy (dative)", "sr_lat": "dečaku", "category": "cases_intro", "difficulty": 2, "pos": "noun", "emoji": "📐", "phonetic": "DEH-chah-koo", "example_en": "I give to the boy.", "example_sr": "Dajem dečaku."},
+    {"id": "cas4", "en": "I see the boy (accusative)", "sr_lat": "dečaka", "category": "cases_intro", "difficulty": 2, "pos": "noun", "emoji": "📐", "phonetic": "DEH-chah-kah", "example_en": "I see the boy.", "example_sr": "Vidim dečaka."},
+    {"id": "cas5", "en": "with the boy (instrumental)", "sr_lat": "dečakom", "category": "cases_intro", "difficulty": 2, "pos": "noun", "emoji": "📐", "phonetic": "DEH-chah-kom", "example_en": "With the boy.", "example_sr": "Sa dečakom."},
+    {"id": "cas6", "en": "about the boy (locative)", "sr_lat": "dečaku", "category": "cases_intro", "difficulty": 2, "pos": "noun", "emoji": "📐", "phonetic": "DEH-chah-koo", "example_en": "About the boy.", "example_sr": "O dečaku."},
+    {"id": "cas7", "en": "woman (nominative)", "sr_lat": "žena", "category": "cases_intro", "difficulty": 2, "pos": "noun", "emoji": "📐", "phonetic": "ZHEH-nah", "example_en": "The woman works.", "example_sr": "Žena radi."},
+    {"id": "cas8", "en": "woman's (genitive)", "sr_lat": "žene", "category": "cases_intro", "difficulty": 2, "pos": "noun", "emoji": "📐", "phonetic": "ZHEH-neh", "example_en": "The woman's bag.", "example_sr": "Torba žene."},
+
+    // --- CATEGORY: PREPOSITIONS (PREDLOZI) ---
+    {"id": "prep1", "en": "in", "sr_lat": "u", "category": "prepositions", "difficulty": 2, "pos": "preposition", "emoji": "📍", "phonetic": "oo", "example_en": "I am in the house.", "example_sr": "Ja sam u kući."},
+    {"id": "prep2", "en": "on", "sr_lat": "na", "category": "prepositions", "difficulty": 2, "pos": "preposition", "emoji": "📍", "phonetic": "nah", "example_en": "The book is on the table.", "example_sr": "Knjiga je na stolu."},
+    {"id": "prep3", "en": "from", "sr_lat": "iz", "category": "prepositions", "difficulty": 2, "pos": "preposition", "emoji": "📍", "phonetic": "eez", "example_en": "He is from Serbia.", "example_sr": "On je iz Srbije."},
+    {"id": "prep4", "en": "with", "sr_lat": "sa", "category": "prepositions", "difficulty": 2, "pos": "preposition", "emoji": "📍", "phonetic": "sah", "example_en": "I am with my brother.", "example_sr": "Ja sam sa bratom."},
+    {"id": "prep5", "en": "without", "sr_lat": "bez", "category": "prepositions", "difficulty": 2, "pos": "preposition", "emoji": "📍", "phonetic": "behz", "example_en": "Without water.", "example_sr": "Bez vode."},
+    {"id": "prep6", "en": "under", "sr_lat": "ispod", "category": "prepositions", "difficulty": 2, "pos": "preposition", "emoji": "📍", "phonetic": "EES-pod", "example_en": "Under the table.", "example_sr": "Ispod stola."},
+    {"id": "prep7", "en": "above", "sr_lat": "iznad", "category": "prepositions", "difficulty": 2, "pos": "preposition", "emoji": "📍", "phonetic": "EEZ-nad", "example_en": "Above the door.", "example_sr": "Iznad vrata."},
+    {"id": "prep8", "en": "between", "sr_lat": "između", "category": "prepositions", "difficulty": 2, "pos": "preposition", "emoji": "📍", "phonetic": "eez-MEH-joo", "example_en": "Between us.", "example_sr": "Između nas."},
+
+    // --- CATEGORY: CONJUNCTIONS (VEZNICI) ---
+    {"id": "conj1", "en": "and", "sr_lat": "i", "category": "conjunctions", "difficulty": 1, "pos": "conjunction", "emoji": "🔗", "phonetic": "ee", "example_en": "Me and you.", "example_sr": "Ja i ti."},
+    {"id": "conj2", "en": "but", "sr_lat": "ali", "category": "conjunctions", "difficulty": 1, "pos": "conjunction", "emoji": "🔗", "phonetic": "AH-lee", "example_en": "Beautiful but expensive.", "example_sr": "Lep ali skup."},
+    {"id": "conj3", "en": "or", "sr_lat": "ili", "category": "conjunctions", "difficulty": 1, "pos": "conjunction", "emoji": "🔗", "phonetic": "EE-lee", "example_en": "Coffee or tea?", "example_sr": "Kafa ili čaj?"},
+    {"id": "conj4", "en": "because", "sr_lat": "jer", "category": "conjunctions", "difficulty": 2, "pos": "conjunction", "emoji": "🔗", "phonetic": "yehr", "example_en": "I'm going because I must.", "example_sr": "Idem jer moram."},
+    {"id": "conj5", "en": "that / to", "sr_lat": "da", "category": "conjunctions", "difficulty": 2, "pos": "conjunction", "emoji": "🔗", "phonetic": "dah", "example_en": "I want to eat.", "example_sr": "Želim da jedem."},
+    {"id": "conj6", "en": "if", "sr_lat": "ako", "category": "conjunctions", "difficulty": 2, "pos": "conjunction", "emoji": "🔗", "phonetic": "AH-koh", "example_en": "If it rains...", "example_sr": "Ako pada kiša..."},
+    {"id": "conj7", "en": "while", "sr_lat": "dok", "category": "conjunctions", "difficulty": 2, "pos": "conjunction", "emoji": "🔗", "phonetic": "dohk", "example_en": "While I sleep.", "example_sr": "Dok spavam."},
+    {"id": "conj8", "en": "when", "sr_lat": "kad", "category": "conjunctions", "difficulty": 2, "pos": "conjunction", "emoji": "🔗", "phonetic": "kahd", "example_en": "When I come home.", "example_sr": "Kad dođem kući."},
+
+    // --- CATEGORY: ADVERBS (PRILOZI) ---
+    {"id": "adv1", "en": "quickly", "sr_lat": "brzo", "category": "adverbs", "difficulty": 2, "pos": "adverb", "emoji": "⚡", "phonetic": "BRZ-oh", "example_en": "He runs quickly.", "example_sr": "On trči brzo."},
+    {"id": "adv2", "en": "slowly", "sr_lat": "polako", "category": "adverbs", "difficulty": 2, "pos": "adverb", "emoji": "⚡", "phonetic": "POH-lah-koh", "example_en": "Speak slowly.", "example_sr": "Govori polako."},
+    {"id": "adv3", "en": "well", "sr_lat": "dobro", "category": "adverbs", "difficulty": 1, "pos": "adverb", "emoji": "⚡", "phonetic": "DOH-broh", "example_en": "She sings well.", "example_sr": "Ona peva dobro."},
+    {"id": "adv4", "en": "badly", "sr_lat": "loše", "category": "adverbs", "difficulty": 2, "pos": "adverb", "emoji": "⚡", "phonetic": "LOH-sheh", "example_en": "He plays badly.", "example_sr": "On igra loše."},
+    {"id": "adv5", "en": "always", "sr_lat": "uvek", "category": "adverbs", "difficulty": 1, "pos": "adverb", "emoji": "⚡", "phonetic": "OO-vek", "example_en": "I'm always late.", "example_sr": "Uvek kasnim."},
+    {"id": "adv6", "en": "never", "sr_lat": "nikad", "category": "adverbs", "difficulty": 1, "pos": "adverb", "emoji": "⚡", "phonetic": "NEE-kahd", "example_en": "He never lies.", "example_sr": "Nikad ne laže."},
+    {"id": "adv7", "en": "here", "sr_lat": "ovde", "category": "adverbs", "difficulty": 1, "pos": "adverb", "emoji": "⚡", "phonetic": "OHV-deh", "example_en": "I am here.", "example_sr": "Ja sam ovde."},
+    {"id": "adv8", "en": "there", "sr_lat": "tamo", "category": "adverbs", "difficulty": 1, "pos": "adverb", "emoji": "⚡", "phonetic": "TAH-moh", "example_en": "He is there.", "example_sr": "On je tamo."},
+
+    // --- CATEGORY: PAST TENSE (PROŠLO VREME) ---
+    {"id": "pt1", "en": "I worked (masc)", "sr_lat": "radio sam", "category": "past_tense", "difficulty": 3, "pos": "verb", "emoji": "⏪", "phonetic": "RAH-dee-oh sahm", "example_en": "I worked yesterday.", "example_sr": "Juče sam radio."},
+    {"id": "pt2", "en": "I worked (fem)", "sr_lat": "radila sam", "category": "past_tense", "difficulty": 3, "pos": "verb", "emoji": "⏪", "phonetic": "RAH-dee-lah sahm", "example_en": "I worked yesterday.", "example_sr": "Juče sam radila."},
+    {"id": "pt3", "en": "he read", "sr_lat": "čitao je", "category": "past_tense", "difficulty": 3, "pos": "verb", "emoji": "⏪", "phonetic": "CHEE-tah-oh yeh", "example_en": "He read the book.", "example_sr": "Čitao je knjigu."},
+    {"id": "pt4", "en": "she read", "sr_lat": "čitala je", "category": "past_tense", "difficulty": 3, "pos": "verb", "emoji": "⏪", "phonetic": "CHEE-tah-lah yeh", "example_en": "She read the book.", "example_sr": "Čitala je knjigu."},
+    {"id": "pt5", "en": "we ate", "sr_lat": "jeli smo", "category": "past_tense", "difficulty": 3, "pos": "verb", "emoji": "⏪", "phonetic": "YEH-lee smoh", "example_en": "We ate lunch.", "example_sr": "Jeli smo ručak."},
+    {"id": "pt6", "en": "they came", "sr_lat": "došli su", "category": "past_tense", "difficulty": 3, "pos": "verb", "emoji": "⏪", "phonetic": "DOSH-lee soo", "example_en": "They came home.", "example_sr": "Došli su kući."},
+    {"id": "pt7", "en": "I saw (masc)", "sr_lat": "video sam", "category": "past_tense", "difficulty": 3, "pos": "verb", "emoji": "⏪", "phonetic": "VEE-deh-oh sahm", "example_en": "I saw him.", "example_sr": "Video sam ga."},
+    {"id": "pt8", "en": "she went", "sr_lat": "otišla je", "category": "past_tense", "difficulty": 3, "pos": "verb", "emoji": "⏪", "phonetic": "oh-TEESH-lah yeh", "example_en": "She went to school.", "example_sr": "Otišla je u školu."},
+
+    // --- CATEGORY: FUTURE TENSE (BUDUĆE VREME) ---
+    {"id": "ft1", "en": "I will work", "sr_lat": "radiću", "category": "future_tense", "difficulty": 3, "pos": "verb", "emoji": "⏩", "phonetic": "RAH-dee-choo", "example_en": "I will work tomorrow.", "example_sr": "Radiću sutra."},
+    {"id": "ft2", "en": "you will eat", "sr_lat": "ješćeš", "category": "future_tense", "difficulty": 3, "pos": "verb", "emoji": "⏩", "phonetic": "YESH-chesh", "example_en": "You will eat later.", "example_sr": "Ješćeš kasnije."},
+    {"id": "ft3", "en": "he will come", "sr_lat": "doći će", "category": "future_tense", "difficulty": 3, "pos": "verb", "emoji": "⏩", "phonetic": "DOH-chee cheh", "example_en": "He will come tomorrow.", "example_sr": "Doći će sutra."},
+    {"id": "ft4", "en": "we will go", "sr_lat": "ićićemo", "category": "future_tense", "difficulty": 3, "pos": "verb", "emoji": "⏩", "phonetic": "EE-chee-cheh-moh", "example_en": "We will go to the store.", "example_sr": "Ićićemo u prodavnicu."},
+    {"id": "ft5", "en": "they will sleep", "sr_lat": "spavaće", "category": "future_tense", "difficulty": 3, "pos": "verb", "emoji": "⏩", "phonetic": "SPAH-vah-cheh", "example_en": "They will sleep here.", "example_sr": "Spavaće ovde."},
+    {"id": "ft6", "en": "I will learn", "sr_lat": "učiću", "category": "future_tense", "difficulty": 3, "pos": "verb", "emoji": "⏩", "phonetic": "OO-chee-choo", "example_en": "I will learn Serbian.", "example_sr": "Učiću srpski."},
+    {"id": "ft7", "en": "she will sing", "sr_lat": "pevaće", "category": "future_tense", "difficulty": 3, "pos": "verb", "emoji": "⏩", "phonetic": "PEH-vah-cheh", "example_en": "She will sing tonight.", "example_sr": "Pevaće večeras."},
+    {"id": "ft8", "en": "you will see", "sr_lat": "videćeš", "category": "future_tense", "difficulty": 3, "pos": "verb", "emoji": "⏩", "phonetic": "VEE-deh-chesh", "example_en": "You will see later.", "example_sr": "Videćeš kasnije."},
+
+    // --- CATEGORY: ADVANCED ADJECTIVES ---
+    {"id": "aadj1", "en": "beautiful", "sr_lat": "lep", "category": "advanced_adj", "difficulty": 2, "pos": "adjective", "emoji": "🎯", "phonetic": "lehp", "example_en": "A beautiful day.", "example_sr": "Lep dan."},
+    {"id": "aadj2", "en": "ugly", "sr_lat": "ružan", "category": "advanced_adj", "difficulty": 2, "pos": "adjective", "emoji": "🎯", "phonetic": "ROO-zhahn", "example_en": "An ugly building.", "example_sr": "Ružna zgrada."},
+    {"id": "aadj3", "en": "old (thing)", "sr_lat": "star", "category": "advanced_adj", "difficulty": 2, "pos": "adjective", "emoji": "🎯", "phonetic": "stahr", "example_en": "An old house.", "example_sr": "Stara kuća."},
+    {"id": "aadj4", "en": "new", "sr_lat": "nov", "category": "advanced_adj", "difficulty": 2, "pos": "adjective", "emoji": "🎯", "phonetic": "nohv", "example_en": "A new car.", "example_sr": "Nov auto."},
+    {"id": "aadj5", "en": "wooden", "sr_lat": "drven", "category": "advanced_adj", "difficulty": 3, "pos": "adjective", "emoji": "🎯", "phonetic": "DRV-ehn", "example_en": "A wooden table.", "example_sr": "Drven sto."},
+    {"id": "aadj6", "en": "Serbian", "sr_lat": "srpski", "category": "advanced_adj", "difficulty": 2, "pos": "adjective", "emoji": "🎯", "phonetic": "SRPS-kee", "example_en": "Serbian language.", "example_sr": "Srpski jezik."},
+    {"id": "aadj7", "en": "German", "sr_lat": "nemački", "category": "advanced_adj", "difficulty": 2, "pos": "adjective", "emoji": "🎯", "phonetic": "NEH-mahch-kee", "example_en": "A German car.", "example_sr": "Nemački auto."},
+    {"id": "aadj8", "en": "metal", "sr_lat": "metalni", "category": "advanced_adj", "difficulty": 3, "pos": "adjective", "emoji": "🎯", "phonetic": "MEH-tahl-nee", "example_en": "A metal door.", "example_sr": "Metalna vrata."},
+
+    // --- CATEGORY: PARTICLES & INTERJECTIONS ---
+    {"id": "part1", "en": "(question marker)", "sr_lat": "li", "category": "particles", "difficulty": 2, "pos": "particle", "emoji": "💥", "phonetic": "lee", "example_en": "Do you know?", "example_sr": "Da li znaš?"},
+    {"id": "part2", "en": "right? / isn't it?", "sr_lat": "zar ne", "category": "particles", "difficulty": 2, "pos": "particle", "emoji": "💥", "phonetic": "zahr neh", "example_en": "Right?", "example_sr": "Zar ne?"},
+    {"id": "part3", "en": "really / truly", "sr_lat": "baš", "category": "particles", "difficulty": 2, "pos": "particle", "emoji": "💥", "phonetic": "bahsh", "example_en": "Really nice!", "example_sr": "Baš lepo!"},
+    {"id": "part4", "en": "even", "sr_lat": "čak", "category": "particles", "difficulty": 2, "pos": "particle", "emoji": "💥", "phonetic": "chahk", "example_en": "Even he.", "example_sr": "Čak i on."},
+    {"id": "part5", "en": "oh no! / ouch!", "sr_lat": "jao", "category": "particles", "difficulty": 1, "pos": "interjection", "emoji": "💥", "phonetic": "yah-oh", "example_en": "Oh no!", "example_sr": "Jao!"},
+    {"id": "part6", "en": "hey!", "sr_lat": "ej", "category": "particles", "difficulty": 1, "pos": "interjection", "emoji": "💥", "phonetic": "ey", "example_en": "Hey!", "example_sr": "Ej!"},
+    {"id": "part7", "en": "well done!", "sr_lat": "bravo", "category": "particles", "difficulty": 1, "pos": "interjection", "emoji": "💥", "phonetic": "BRAH-voh", "example_en": "Well done!", "example_sr": "Bravo!"},
+    {"id": "part8", "en": "phew!", "sr_lat": "uf", "category": "particles", "difficulty": 1, "pos": "interjection", "emoji": "💥", "phonetic": "oof", "example_en": "Phew!", "example_sr": "Uf!"},
+
     // --- CATEGORY: BASICS (GREETINGS & ESSENTIALS) ---
     {"id": "b1", "en": "hello", "sr_lat": "zdravo", "category": "basics", "difficulty": 1, "pos": "phrase", "emoji": "👋", "phonetic": "ZDRAH-voh", "example_en": "Hello, how are you?", "example_sr": "Zdravo, kako si?"},
     {"id": "b2", "en": "goodbye", "sr_lat": "doviđenja", "category": "basics", "difficulty": 1, "pos": "phrase", "emoji": "👋", "phonetic": "doh-vee-JEH-nyah", "example_en": "Goodbye, see you tomorrow.", "example_sr": "Doviđenja, vidimo se sutra."},
