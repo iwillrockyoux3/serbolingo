@@ -677,9 +677,9 @@ const app = {
             { label: 'Foundation', labelEn: 'Foundation', ids: ['alphabet', 'numbers', 'colors', 'basics', 'phrases', 'verbs', 'pronouns', 'adjectives', 'gender'] },
             { label: 'Daily Life', labelEn: 'Daily Life', ids: ['food', 'cases_intro', 'family', 'household', 'time', 'days', 'months'] },
             { label: 'Survival & Self', labelEn: 'Survival & Self', ids: ['directions', 'prepositions', 'weather', 'body', 'health', 'emotions', 'conjunctions'] },
-            { label: 'The World', labelEn: 'The World', ids: ['travel', 'adverbs', 'clothing', 'animals', 'nature', 'sports', 'past_tense'] },
-            { label: 'Modern Life', labelEn: 'Modern Life', ids: ['education', 'technology', 'business', 'advanced_adj', 'future_tense'] },
-            { label: 'Advanced', labelEn: 'Advanced', ids: ['dating', 'slang', 'particles'] }
+            { label: 'The World', labelEn: 'The World', ids: ['travel', 'adverbs', 'clothing', 'comparatives', 'animals', 'nature', 'sports', 'past_tense'] },
+            { label: 'Modern Life', labelEn: 'Modern Life', ids: ['education', 'technology', 'business', 'advanced_adj', 'punctuation', 'future_tense'] },
+            { label: 'Advanced', labelEn: 'Advanced', ids: ['dating', 'slang', 'particles', 'spelling'] }
         ];
 
         let html = '';
@@ -761,6 +761,32 @@ const app = {
             state.lastLessonMistakes = 0;
             app.saveStats();
             app.navigate('lesson');
+            
+            // Tutorial popup for specialized lessons (first time only)
+            const tutorialMessages = {
+                'spelling': { title: '\u{1F50D} Spelling Training', body: 'In this lesson you will spell words letter-by-letter! Type them out or use the mic to spell out loud. If you make a mistake, tap "Hear Spelling" to hear the correct answer.' },
+                'punctuation': { title: '\u{270D}\u{FE0F} Punctuation Training', body: 'Tap a punctuation mark from the bank below, then tap the empty slot in the sentence where it belongs. Fill all slots to check your answer!' },
+                'comparatives': { title: '\u{2696}\u{FE0F} Grammar Training', body: 'In this lesson you will fill in blanks and speak full sentences to practice comparatives and superlatives. No multiple choice here!' }
+            };
+            const tut = tutorialMessages[skill.category];
+            if (tut) {
+                const tutKey = `tutorial_seen_${skill.category}`;
+                if (!localStorage.getItem(tutKey)) {
+                    localStorage.setItem(tutKey, 'true');
+                    // Show a simple overlay
+                    const overlay = document.createElement('div');
+                    overlay.className = 'fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-6 fade-in';
+                    overlay.innerHTML = `
+                        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl border-2 border-white dark:border-slate-700">
+                            <h2 class="text-xl font-black text-slate-800 dark:text-white mb-3">${tut.title}</h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">${tut.body}</p>
+                            <button onclick="this.closest('.fixed').remove()" class="w-full py-3 bg-blue-500 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-[0_4px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1 transition-all">Got it!</button>
+                        </div>
+                    `;
+                    document.body.appendChild(overlay);
+                }
+            }
+            
             app.renderQuestion();
         } catch (e) {
             console.error('Error starting skill lesson:', e);
@@ -1012,6 +1038,86 @@ const app = {
                     </div>
                 </div>
             `;
+        } else if (l.type === 'spelling_voice') {
+            const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+            const speakQuestion = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
+            const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
+            const targetLang = (isSrToEn && l.targetLang_rev) ? l.targetLang_rev : l.targetLang;
+            
+            const qParts = speakQuestion.split('\n');
+            const qHeader = qParts[0];
+            const qWord = qParts[1] || '';
+            const qSub = qParts[2] || '';
+
+            // Build letter display
+            const letters = correctText.split('');
+            const letterDisplay = letters.map((ch, i) => `<span class="inline-block w-8 h-10 mx-0.5 border-b-4 border-slate-300 dark:border-slate-600 text-center text-xl font-black text-transparent spelling-letter" data-idx="${i}">${ch}</span>`).join('');
+
+            area.innerHTML = `
+                <div class="text-center w-full max-w-xs">
+                    <h2 class="text-lg font-bold text-slate-500 dark:text-slate-400 mb-2">${qHeader}</h2>
+                    <div class="text-2xl font-black text-slate-800 dark:text-white mb-4">${qWord}</div>
+                    
+                    <div class="flex flex-wrap justify-center mb-6" id="spelling-letter-display">
+                        ${letterDisplay}
+                    </div>
+
+                    <div class="flex flex-col items-center gap-4">
+                        <button id="mic-btn" onclick="app.startMicRecognition('${targetLang}')" class="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-3xl shadow-md transition-all active:scale-95">
+                            \u{1F3A4}
+                        </button>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${qSub}</p>
+                        
+                        <div id="transcription-box" class="min-h-[60px] w-full p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border-2 border-slate-100 dark:border-slate-700 text-center flex flex-col items-center justify-center">
+                            <p class="text-xs font-bold text-slate-400 uppercase mb-1 hidden" id="transcription-label">You said:</p>
+                            <p id="transcription-text" class="text-lg font-black text-slate-700 dark:text-white">...</p>
+                        </div>
+
+                        <button onclick="app.playSpelledOut('${correctText.replace(/'/g, "\\'")}', '${targetLang}')" class="px-4 py-2 bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 rounded-xl text-xs font-bold border-2 border-amber-200 dark:border-amber-700 active:scale-95 transition-transform">
+                            \u{1F50A} Hear Spelling
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else if (l.type === 'drag_punctuation') {
+            const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+            const sentence = (isSrToEn && l.sentence_rev) ? l.sentence_rev : l.sentence;
+            const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
+            const marks = (isSrToEn && l.marks_rev) ? l.marks_rev : l.marks;
+            
+            // Available punctuation marks to drag
+            const allPunc = ['.', '?', '!', ',', ':', ';'];
+            // Include marks that are correct + some distractors
+            const distractors = allPunc.filter(p => !marks.includes(p)).slice(0, 2);
+            const puncBank = QuestionEngine.shuffle([...marks, ...distractors]);
+
+            // Build the sentence with clickable slots
+            let slotIndex = 0;
+            const sentenceHtml = sentence.replace(/<span class="punc-slot[^"]*"><\/span>/g, () => {
+                const idx = slotIndex++;
+                return `<span class="punc-slot inline-block w-8 h-8 mx-1 border-b-2 border-dashed border-blue-400 dark:border-blue-500 text-center text-lg font-black text-blue-600 dark:text-blue-400 cursor-pointer rounded bg-blue-50 dark:bg-blue-900/30 align-bottom" data-slot="${idx}" onclick="app.placePunctuation(${idx})"></span>`;
+            });
+
+            state.puncState = {
+                selectedMark: null,
+                placed: new Array(marks.length).fill(''),
+                correct: marks
+            };
+
+            area.innerHTML = `
+                <div class="text-center w-full max-w-sm">
+                    <h2 class="text-lg font-black mb-2 text-slate-700 dark:text-slate-100">${questionText}</h2>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mb-6">Tap a mark, then tap the slot</p>
+                    
+                    <div class="text-xl font-bold text-slate-800 dark:text-white leading-relaxed mb-8 p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border-2 border-slate-100 dark:border-slate-700" id="punc-sentence">
+                        ${sentenceHtml}
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3 justify-center" id="punc-bank">
+                        ${puncBank.map((p, i) => `<button id="punc-mark-${i}" onclick="app.selectPuncMark(this, '${p}')" class="w-14 h-14 bg-white dark:bg-slate-800 border-3 border-slate-200 dark:border-slate-700 rounded-2xl font-black text-2xl text-slate-700 dark:text-slate-200 shadow-sm active:scale-95 transition-all hover:border-blue-400">${p}</button>`).join('')}
+                    </div>
+                </div>
+            `;
         } else {
             // Apply bidirectional learning for standard questions (multiple_choice)
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
@@ -1102,6 +1208,59 @@ const app = {
                 app.checkAnswer(); // Trigger grade (will fail)
             }
         }
+    },
+    // --- PUNCTUATION DRAG & DROP HELPERS ---
+    selectPuncMark: (btn, mark) => {
+        // Deselect all
+        document.querySelectorAll('#punc-bank button').forEach(b => {
+            b.classList.remove('border-blue-500', 'bg-blue-100', 'dark:bg-blue-900', 'ring-2', 'ring-blue-400');
+            b.classList.add('border-slate-200', 'dark:border-slate-700');
+        });
+        // Select this one
+        btn.classList.remove('border-slate-200', 'dark:border-slate-700');
+        btn.classList.add('border-blue-500', 'bg-blue-100', 'dark:bg-blue-900', 'ring-2', 'ring-blue-400');
+        state.puncState.selectedMark = mark;
+    },
+    placePunctuation: (slotIdx) => {
+        if (!state.puncState.selectedMark) {
+            app.showToast('Tap a punctuation mark first!', 'error');
+            return;
+        }
+        const slot = document.querySelector(`[data-slot="${slotIdx}"]`);
+        if (!slot) return;
+
+        state.puncState.placed[slotIdx] = state.puncState.selectedMark;
+        slot.textContent = state.puncState.selectedMark;
+        slot.classList.remove('border-dashed', 'border-blue-400', 'dark:border-blue-500');
+        slot.classList.add('border-solid', 'border-green-400', 'dark:border-green-500', 'bg-green-50', 'dark:bg-green-900/30');
+
+        // Check if all slots are filled
+        const allFilled = state.puncState.placed.every(p => p !== '');
+        if (allFilled) {
+            app.enableCheckBtn();
+        }
+    },
+    // --- AUDIO SPELLED OUT HELPER ---
+    playSpelledOut: (word, lang) => {
+        // Spell out the word letter by letter, then say the whole word
+        const letters = word.split('');
+        let delay = 0;
+        letters.forEach((ch, i) => {
+            setTimeout(() => {
+                app.speakPhrase(ch, lang);
+                // Reveal the letter in the display
+                const span = document.querySelector(`.spelling-letter[data-idx="${i}"]`);
+                if (span) {
+                    span.classList.remove('text-transparent');
+                    span.classList.add('text-green-600', 'dark:text-green-400');
+                }
+            }, delay);
+            delay += 700;
+        });
+        // Say the full word at the end
+        setTimeout(() => {
+            app.speakPhrase(word, lang);
+        }, delay + 300);
     },
     selectMatchingPair: (btn, id, side) => {
         if (btn.disabled) return;
@@ -1581,6 +1740,51 @@ const app = {
             } else if (l.type === 'matching_pairs') {
                 // If it reached checkAnswer, it means they matched everything successfully
                 isC = true;
+            } else if (l.type === 'spelling_voice') {
+                const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+                const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
+                const targetLang = (isSrToEn && l.targetLang_rev) ? l.targetLang_rev : l.targetLang;
+                
+                let userS = normalize(state.userSelection || "");
+                let cText = normalize(correctText);
+                
+                // Allow exact match, or if they spelled it out then said the word (kucakuca)
+                isC = (userS === cText) || (userS === cText + cText) || userS.endsWith(cText);
+                
+                // Reveal all letters on check
+                document.querySelectorAll('.spelling-letter').forEach(span => {
+                    span.classList.remove('text-transparent');
+                    if (isC) {
+                        span.classList.add('text-green-600', 'dark:text-green-400');
+                    } else {
+                        span.classList.add('text-red-600', 'dark:text-red-400');
+                    }
+                });
+                
+                // If wrong, auto-play the correct spelling so user can hear it
+                if (!isC) {
+                    setTimeout(() => app.playSpelledOut(correctText, targetLang), 500);
+                }
+            } else if (l.type === 'drag_punctuation') {
+                // Compare the placed marks array against the correct marks array
+                const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+                const correctMarks = (isSrToEn && l.marks_rev) ? l.marks_rev : l.marks;
+                const placed = state.puncState.placed;
+                
+                isC = placed.length === correctMarks.length && placed.every((p, i) => p === correctMarks[i]);
+                
+                // Color the slots
+                document.querySelectorAll('.punc-slot').forEach((slot, i) => {
+                    if (placed[i] === correctMarks[i]) {
+                        slot.classList.add('text-green-600', 'bg-green-50', 'dark:text-green-400', 'dark:bg-green-900/30');
+                    } else {
+                        slot.textContent = correctMarks[i] || '?';
+                        slot.classList.add('text-red-600', 'bg-red-50', 'dark:text-red-400', 'dark:bg-red-900/30');
+                    }
+                });
+                
+                // Disable the bank
+                document.querySelectorAll('#punc-bank button').forEach(b => b.disabled = true);
             } else if (l.type === 'picture_choice' || l.type === 'listening' || l.type === 'dialogue') {
                 // These all use selectOption, same pattern as multiple_choice
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';

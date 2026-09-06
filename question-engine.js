@@ -87,6 +87,20 @@ const QuestionEngine = {
         };
     },
 
+    // Generates a Speaking question for full sentences (e.g. grammar)
+    generateSpeakingSentence(word) {
+        if (!word.example_en || !word.example_sr) return null;
+        return {
+            type: 'speaking',
+            q: `Say this sentence in Serbian:\n"${word.example_en}"\n(Tap mic to speak)`,
+            q_rev: `Say this sentence in English:\n"${word.example_sr}"\n(Tap mic to speak)`,
+            correct: word.example_sr,
+            correct_rev: word.example_en,
+            targetLang: 'sr-RS',
+            targetLang_rev: 'en-US'
+        };
+    },
+
     // Generates a Picture Choice question (Emoji Choice)
     generatePictureChoice(word, allWords) {
         // Needs 3 distractors with emojis
@@ -184,6 +198,55 @@ const QuestionEngine = {
             correct_rev: word.example_en.replace(/[.,!?]/g, ''),
             explanation: `💡 The correct order is: "${word.example_sr}"`,
             explanation_rev: `💡 The correct order is: "${word.example_en}"`
+        };
+    },
+
+    // Generates a Spelling Voice question object
+    generateSpellingVoice(word) {
+        return {
+            type: 'spelling_voice',
+            q: `Spell out loud:\n"${word.en}"\n(Tap mic)`,
+            q_rev: `Slovkaj naglas:\n"${word.sr_lat}"\n(Tap mic)`,
+            correct: word.sr_lat,
+            correct_rev: word.en,
+            targetLang: 'sr-RS',
+            targetLang_rev: 'en-US',
+            explanation: `💡 Listen to the correct spelling!`,
+            explanation_rev: `💡 Slušaj pravilno sricanje!`
+        };
+    },
+
+    // Generates a Drag Punctuation question object
+    generateDragPunctuation(word) {
+        // Find punctuation marks in the sentence and replace them with ___
+        const extractPunctuation = (text) => {
+            const puncRegex = /([.,!?;:])/g;
+            let stripped = text;
+            let puncMarks = [];
+            let match;
+            while ((match = puncRegex.exec(text)) !== null) {
+                puncMarks.push(match[1]);
+            }
+            // Replace with a span slot we can target
+            stripped = text.replace(puncRegex, '<span class="punc-slot inline-block w-8 h-8 mx-1 border-b-2 border-dashed border-slate-400"></span>');
+            return { text: stripped, marks: puncMarks, original: text };
+        };
+
+        const enData = extractPunctuation(word.example_en || word.en);
+        const srData = extractPunctuation(word.example_sr || word.sr_lat);
+
+        return {
+            type: 'drag_punctuation',
+            q: `Add punctuation:`,
+            q_rev: `Dodaj interpunkciju:`,
+            sentence: enData.text,
+            sentence_rev: srData.text,
+            marks: enData.marks,
+            marks_rev: srData.marks,
+            correct: enData.original,
+            correct_rev: srData.original,
+            explanation: `💡 Correct: ${enData.original}`,
+            explanation_rev: `💡 Tačno: ${srData.original}`
         };
     },
 
@@ -286,8 +349,47 @@ const QuestionEngine = {
             return [];
         }
 
-        const selectedWords = this.shuffle(allWords).slice(0, count);
+        let selectedWords = this.shuffle(allWords).slice(0, count);
         
+        // Sort by difficulty (progression: easy to hard)
+        selectedWords.sort((a, b) => (a.difficulty || 1) - (b.difficulty || 1));
+        
+        // SPECIALIZED TRAINING MECHANICS
+        if (categoryName === 'spelling') {
+            return selectedWords.map((word, i) => {
+                if (i % 2 === 0) return this.generateHangman(word); // typing
+                else return this.generateSpellingVoice(word); // voice
+            }).filter(q => q !== null).map(q => { q.wordId = q.wordId || selectedWords.find(w=>w.sr_lat === q.correct || w.en === q.correct_rev)?.id; return q; });
+        }
+        
+        if (categoryName === 'punctuation') {
+            return selectedWords.map(word => {
+                let q = this.generateDragPunctuation(word);
+                q.wordId = word.id;
+                return q;
+            });
+        }
+        
+        if (categoryName === 'comparatives') {
+            return selectedWords.map((word, i) => {
+                let q;
+                if (i % 3 === 0 && word.example_en && word.example_sr) {
+                    q = this.generateFillBlank(word);
+                } else if (i % 3 === 1 && word.example_en && word.example_sr) {
+                    q = this.generateWordOrder(word);
+                } else if (i % 3 === 2 && word.example_en && word.example_sr) {
+                    q = this.generateSpeakingSentence(word);
+                }
+                
+                // Fallbacks if example sentences are missing or random assignment failed
+                if (!q) {
+                    q = this.generateWordOrder(word) || this.generateMultipleChoice(word, allWords);
+                }
+                q.wordId = word.id;
+                return q;
+            });
+        }
+
         // Sometimes inject a matching pairs question (takes 4 words)
         const injectMatching = Math.random() < 0.4;
         // Sometimes inject a dialogue question
