@@ -1,0 +1,1 @@
+﻿window.appDb.processChunk([{"id": "test_chunk_1", "en": "test loader", "sr_lat": "probni ucitavac", "category": "test", "difficulty": 1, "pos": "noun", "emoji": "🧲", "phonetic": "PROHB-nee oo-chee-TAH-vahch", "example_en": "The dynamic loader works.", "example_sr": "Dinamicki ucitavac radi."}]);

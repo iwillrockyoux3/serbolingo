@@ -1,0 +1,72 @@
+// [SHIELD_DAEMON: VALIDATED]
+// Serbian Alphabet Data for all 4 script learning modes
+// Each letter maps to: uppercase, lowercase, a common word, emoji, English translation
+
+const ALPHABET_DATA = {
+    latin: [
+        { upper: 'A', lower: 'a', word: 'Avion', emoji: '✈️', en: 'Airplane', sound: 'ah' },
+        { upper: 'B', lower: 'b', word: 'Banana', emoji: '🍌', en: 'Banana', sound: 'beh' },
+        { upper: 'C', lower: 'c', word: 'Cvet', emoji: '🌸', en: 'Flower', sound: 'tseh' },
+        { upper: 'Č', lower: 'č', word: 'Čokolada', emoji: '🍫', en: 'Chocolate', sound: 'cheh' },
+        { upper: 'Ć', lower: 'ć', word: 'Ćevapi', emoji: '🥩', en: 'Grilled Meat', sound: 'tyeh' },
+        { upper: 'D', lower: 'd', word: 'Drvo', emoji: '🌳', en: 'Tree', sound: 'deh' },
+        { upper: 'Dž', lower: 'dž', word: 'Džep', emoji: '👖', en: 'Pocket', sound: 'jeh' },
+        { upper: 'Đ', lower: 'đ', word: 'Đak', emoji: '🎓', en: 'Student', sound: 'dyeh' },
+        { upper: 'E', lower: 'e', word: 'Evropa', emoji: '🌍', en: 'Europe', sound: 'eh' },
+        { upper: 'F', lower: 'f', word: 'Fudbal', emoji: '⚽', en: 'Football', sound: 'ef' },
+        { upper: 'G', lower: 'g', word: 'Gora', emoji: '🏔️', en: 'Mountain', sound: 'geh' },
+        { upper: 'H', lower: 'h', word: 'Hleb', emoji: '🍞', en: 'Bread', sound: 'hah' },
+        { upper: 'I', lower: 'i', word: 'Igra', emoji: '🎮', en: 'Game', sound: 'ee' },
+        { upper: 'J', lower: 'j', word: 'Jabuka', emoji: '🍎', en: 'Apple', sound: 'yeh' },
+        { upper: 'K', lower: 'k', word: 'Knjiga', emoji: '📖', en: 'Book', sound: 'kah' },
+        { upper: 'L', lower: 'l', word: 'Lav', emoji: '🦁', en: 'Lion', sound: 'el' },
+        { upper: 'Lj', lower: 'lj', word: 'Ljubav', emoji: '❤️', en: 'Love', sound: 'lyeh' },
+        { upper: 'M', lower: 'm', word: 'Mačka', emoji: '🐱', en: 'Cat', sound: 'em' },
+        { upper: 'N', lower: 'n', word: 'Nos', emoji: '👃', en: 'Nose', sound: 'en' },
+        { upper: 'Nj', lower: 'nj', word: 'Njiva', emoji: '🌾', en: 'Field', sound: 'nyeh' },
+        { upper: 'O', lower: 'o', word: 'Oko', emoji: '👁️', en: 'Eye', sound: 'oh' },
+        { upper: 'P', lower: 'p', word: 'Pas', emoji: '🐕', en: 'Dog', sound: 'peh' },
+        { upper: 'R', lower: 'r', word: 'Riba', emoji: '🐟', en: 'Fish', sound: 'er' },
+        { upper: 'S', lower: 's', word: 'Sunce', emoji: '☀️', en: 'Sun', sound: 'es' },
+        { upper: 'Š', lower: 'š', word: 'Škola', emoji: '🏫', en: 'School', sound: 'shah' },
+        { upper: 'T', lower: 't', word: 'Telefon', emoji: '📱', en: 'Phone', sound: 'teh' },
+        { upper: 'U', lower: 'u', word: 'Usta', emoji: '👄', en: 'Mouth', sound: 'oo' },
+        { upper: 'V', lower: 'v', word: 'Voda', emoji: '💧', en: 'Water', sound: 'veh' },
+        { upper: 'Z', lower: 'z', word: 'Zvezda', emoji: '⭐', en: 'Star', sound: 'zeh' },
+        { upper: 'Ž', lower: 'ž', word: 'Žaba', emoji: '🐸', en: 'Frog', sound: 'zheh' }
+    ],
+    cyrillic: [
+        { upper: 'А', lower: 'а', word: 'Авион', wordLat: 'Avion', emoji: '✈️', en: 'Airplane', sound: 'ah', latinUpper: 'A' },
+        { upper: 'Б', lower: 'б', word: 'Банана', wordLat: 'Banana', emoji: '🍌', en: 'Banana', sound: 'beh', latinUpper: 'B' },
+        { upper: 'В', lower: 'в', word: 'Вода', wordLat: 'Voda', emoji: '💧', en: 'Water', sound: 'veh', latinUpper: 'V' },
+        { upper: 'Г', lower: 'г', word: 'Гора', wordLat: 'Gora', emoji: '🏔️', en: 'Mountain', sound: 'geh', latinUpper: 'G' },
+        { upper: 'Д', lower: 'д', word: 'Дрво', wordLat: 'Drvo', emoji: '🌳', en: 'Tree', sound: 'deh', latinUpper: 'D' },
+        { upper: 'Ђ', lower: 'ђ', word: 'Ђак', wordLat: 'Đak', emoji: '🎓', en: 'Student', sound: 'dyeh', latinUpper: 'Đ' },
+        { upper: 'Е', lower: 'е', word: 'Европа', wordLat: 'Evropa', emoji: '🌍', en: 'Europe', sound: 'eh', latinUpper: 'E' },
+        { upper: 'Ж', lower: 'ж', word: 'Жаба', wordLat: 'Žaba', emoji: '🐸', en: 'Frog', sound: 'zheh', latinUpper: 'Ž' },
+        { upper: 'З', lower: 'з', word: 'Звезда', wordLat: 'Zvezda', emoji: '⭐', en: 'Star', sound: 'zeh', latinUpper: 'Z' },
+        { upper: 'И', lower: 'и', word: 'Игра', wordLat: 'Igra', emoji: '🎮', en: 'Game', sound: 'ee', latinUpper: 'I' },
+        { upper: 'Ј', lower: 'ј', word: 'Јабука', wordLat: 'Jabuka', emoji: '🍎', en: 'Apple', sound: 'yeh', latinUpper: 'J' },
+        { upper: 'К', lower: 'к', word: 'Књига', wordLat: 'Knjiga', emoji: '📖', en: 'Book', sound: 'kah', latinUpper: 'K' },
+        { upper: 'Л', lower: 'л', word: 'Лав', wordLat: 'Lav', emoji: '🦁', en: 'Lion', sound: 'el', latinUpper: 'L' },
+        { upper: 'Љ', lower: 'љ', word: 'Љубав', wordLat: 'Ljubav', emoji: '❤️', en: 'Love', sound: 'lyeh', latinUpper: 'Lj' },
+        { upper: 'М', lower: 'м', word: 'Мачка', wordLat: 'Mačka', emoji: '🐱', en: 'Cat', sound: 'em', latinUpper: 'M' },
+        { upper: 'Н', lower: 'н', word: 'Нос', wordLat: 'Nos', emoji: '👃', en: 'Nose', sound: 'en', latinUpper: 'N' },
+        { upper: 'Њ', lower: 'њ', word: 'Њива', wordLat: 'Njiva', emoji: '🌾', en: 'Field', sound: 'nyeh', latinUpper: 'Nj' },
+        { upper: 'О', lower: 'о', word: 'Око', wordLat: 'Oko', emoji: '👁️', en: 'Eye', sound: 'oh', latinUpper: 'O' },
+        { upper: 'П', lower: 'п', word: 'Пас', wordLat: 'Pas', emoji: '🐕', en: 'Dog', sound: 'peh', latinUpper: 'P' },
+        { upper: 'Р', lower: 'р', word: 'Риба', wordLat: 'Riba', emoji: '🐟', en: 'Fish', sound: 'er', latinUpper: 'R' },
+        { upper: 'С', lower: 'с', word: 'Сунце', wordLat: 'Sunce', emoji: '☀️', en: 'Sun', sound: 'es', latinUpper: 'S' },
+        { upper: 'Т', lower: 'т', word: 'Телефон', wordLat: 'Telefon', emoji: '📱', en: 'Phone', sound: 'teh', latinUpper: 'T' },
+        { upper: 'Ћ', lower: 'ћ', word: 'Ћевапи', wordLat: 'Ćevapi', emoji: '🥩', en: 'Grilled Meat', sound: 'tyeh', latinUpper: 'Ć' },
+        { upper: 'У', lower: 'у', word: 'Уста', wordLat: 'Usta', emoji: '👄', en: 'Mouth', sound: 'oo', latinUpper: 'U' },
+        { upper: 'Ф', lower: 'ф', word: 'Фудбал', wordLat: 'Fudbal', emoji: '⚽', en: 'Football', sound: 'ef', latinUpper: 'F' },
+        { upper: 'Х', lower: 'х', word: 'Хлеб', wordLat: 'Hleb', emoji: '🍞', en: 'Bread', sound: 'hah', latinUpper: 'H' },
+        { upper: 'Ц', lower: 'ц', word: 'Цвет', wordLat: 'Cvet', emoji: '🌸', en: 'Flower', sound: 'tseh', latinUpper: 'C' },
+        { upper: 'Ч', lower: 'ч', word: 'Чоколада', wordLat: 'Čokolada', emoji: '🍫', en: 'Chocolate', sound: 'cheh', latinUpper: 'Č' },
+        { upper: 'Џ', lower: 'џ', word: 'Џеп', wordLat: 'Džep', emoji: '👖', en: 'Pocket', sound: 'jeh', latinUpper: 'Dž' },
+        { upper: 'Ш', lower: 'ш', word: 'Школа', wordLat: 'Škola', emoji: '🏫', en: 'School', sound: 'shah', latinUpper: 'Š' }
+    ]
+};
+
+window.ALPHABET_DATA = ALPHABET_DATA;

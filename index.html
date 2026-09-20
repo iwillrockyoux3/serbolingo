@@ -7,10 +7,11 @@
     <title>SerboLingo - Learn Serbian to English</title>
     <script>
         window.addEventListener('error', function(e) {
-            alert("JS Error: " + e.message + "\nLine: " + e.lineno);
+            if (e.message === 'Script error.' && !e.filename) return;
+            console.error('JS Error:', e.message, 'File:', e.filename, 'Line:', e.lineno, 'Col:', e.colno, 'Stack:', e.error && e.error.stack);
         });
         window.addEventListener('unhandledrejection', function(e) {
-            alert("Promise Error: " + (e.reason && e.reason.message ? e.reason.message : e.reason));
+            console.error('Promise Error:', e.reason);
         });
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,6 +22,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -53,6 +55,47 @@
                 nastavi! 🚀</p>
             <button onclick="app.closeGoalModal()"
                 class="w-full py-4 bg-blue-500 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-[0_6px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1 transition-all" data-i18n="goal_continue">Nastavi!</button>
+        </div>
+    </div>
+
+    <!-- ALPHABET SELECTION MODAL -->
+    <div id="alphabet-selection-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 z-[200] flex-col justify-end transition-opacity opacity-0 pb-16">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-xl mx-auto rounded-t-3xl shadow-2xl overflow-hidden transform transition-transform translate-y-full flex flex-col max-h-[85vh]" id="alphabet-modal-content">
+            <div class="p-4 flex justify-between items-center border-b-2 border-slate-100 dark:border-slate-700">
+                <h2 class="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">Izaberi Pismo</h2>
+                <button onclick="app.closeAlphabetModal()" class="w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-black">✕</button>
+            </div>
+            <div class="p-4 overflow-y-auto space-y-4">
+                
+                <!-- Tips Button -->
+                <button onclick="app.showGuide('alphabet'); app.closeAlphabetModal();" class="w-full py-3 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 font-black rounded-2xl shadow-sm hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+                    <span class="text-lg">💡</span> Vidi Tabele / View Charts
+                </button>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Printed Latin -->
+                    <button onclick="app.startAlphabetMode('alphabet_lat_print')" class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-left hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors group flex flex-col items-center text-center">
+                        <div class="text-4xl mb-2 font-black text-slate-700 dark:text-slate-200">Aa</div>
+                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Latinica<br>Štampana</div>
+                    </button>
+                    <!-- Cursive Latin -->
+                    <button onclick="app.startAlphabetMode('alphabet_lat_cur')" class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-left hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors group flex flex-col items-center text-center">
+                        <div class="text-5xl mb-1 font-cursive text-slate-700 dark:text-slate-200" style="line-height: 1;">Aa</div>
+                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Latinica<br>Pisana</div>
+                    </button>
+                    <!-- Printed Cyrillic -->
+                    <button onclick="app.startAlphabetMode('alphabet_cyr_print')" class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-left hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors group flex flex-col items-center text-center">
+                        <div class="text-4xl mb-2 font-black text-slate-700 dark:text-slate-200">Аа</div>
+                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Ćirilica<br>Štampana</div>
+                    </button>
+                    <!-- Cursive Cyrillic -->
+                    <button onclick="app.startAlphabetMode('alphabet_cyr_cur')" class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-left hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors group flex flex-col items-center text-center">
+                        <div class="text-5xl mb-1 font-cursive text-slate-700 dark:text-slate-200" style="line-height: 1;">Аа</div>
+                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Ćirilica<br>Pisana</div>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -107,11 +150,15 @@
         class="bg-white dark:bg-slate-900 border-b-2 border-slate-200 dark:border-slate-800 z-20 flex-none hidden transition-colors duration-300"
         id="main-header">
         <div class="max-w-xl mx-auto px-4 py-2.5 flex justify-between items-center">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="app.navigate('home')">
+            <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="app.navigate('home')">
                 <span class="text-2xl">🇷🇸</span>
                 <h1 class="text-base font-black text-slate-700 dark:text-slate-100 tracking-tight">SerboLingo</h1>
             </div>
-            <div class="flex items-center gap-3 font-black text-xs">
+            <div class="flex-1 relative z-50 mx-2 h-8">
+                <div id="toast-container" class="absolute -top-1 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none w-full max-w-[140px]"></div>
+            </div>
+            
+            <div class="flex items-center gap-3 font-black text-xs shrink-0">
                 <div class="flex items-center text-orange-500"><span class="mr-1">🔥</span><span
                         id="streak-display">1</span></div>
                 <div class="flex items-center text-blue-500"><span class="mr-1">⚡</span><span id="xp-display">0</span>
@@ -397,6 +444,15 @@
                     </div>
                 </div>
 
+                <!-- Karaoke Launcher -->
+                <button onclick="Karaoke.openMenu()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl p-4 mb-6 shadow-lg shadow-emerald-500/30 text-left active:scale-95 transition-transform flex items-center justify-between">
+                    <div>
+                        <h3 class="text-white font-black text-lg mb-1 flex items-center gap-2">🎤 Karaoke Reader</h3>
+                        <p class="text-emerald-100 text-xs font-medium">Practice reading & pronunciation.</p>
+                    </div>
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl text-white">▶️</div>
+                </button>
+
                 <!-- Games Grid -->
                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3">🎮 Minigames</h3>
                 <div class="grid grid-cols-2 gap-3 pb-20">
@@ -507,6 +563,105 @@
             <!-- Minigame Overlay -->
             <div id="arcade-game-overlay" class="hidden absolute inset-0 z-50 bg-slate-50 dark:bg-slate-900 flex flex-col h-full">
                 <!-- Dynamically populated by ArcadeEngine -->
+            </div>
+        </div>
+
+        <!-- EXPLORE VIEW (Media Hub) -->
+        <div id="view-explore" class="hidden p-4 space-y-4 fade-in pb-24">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-black tracking-tight text-slate-800 dark:text-slate-100" data-i18n="explore_title">Istraži</h2>
+                    <p class="text-xs text-slate-500 font-medium" data-i18n="explore_desc">Media & Culture Hub</p>
+                </div>
+                <div class="text-4xl">🌍</div>
+            </div>
+
+            <!-- Search Area with Smart Modes -->
+            <div class="space-y-2">
+                <div class="relative w-full shadow-sm rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-blue-400 dark:focus-within:border-blue-500 transition-colors">
+                    <input type="text" id="explore-search-input" onkeyup="if(event.key === 'Enter') ExploreHub.doSearch()" placeholder="Pretraži (npr. 'Naručivanje hrane')" data-i18n="explore_search_placeholder" data-i18n-attr="placeholder" class="w-full bg-transparent py-3 pl-4 pr-12 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none font-medium">
+                    <button onclick="ExploreHub.doSearch()" class="absolute right-0 top-0 bottom-0 px-4 text-slate-400 hover:text-blue-500 transition-colors">
+                        🔍
+                    </button>
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button id="explore-btn-yt" onclick="ExploreHub.setMode('youtube')" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-red-100 dark:hover:bg-red-900/30" data-i18n="explore_btn_yt">
+                        🌐 YouTube
+                    </button>
+                    <button id="explore-btn-ai" onclick="ExploreHub.setMode('ai')" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-purple-100 dark:hover:bg-purple-900/30" data-i18n="explore_btn_ai">
+                        ✨ AI Generiši
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex bg-slate-100 dark:bg-slate-800 rounded-xl p-1 gap-1 sticky top-0 z-10 shadow-sm border border-slate-200 dark:border-slate-700">
+                <button onclick="ExploreHub.switchTab('video')" id="tab-video" class="flex-1 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-colors bg-white dark:bg-slate-700 text-blue-600 shadow-sm" data-i18n="explore_tab_video">
+                    📺 Video
+                </button>
+                <button onclick="ExploreHub.switchTab('pictures')" id="tab-pictures" class="flex-1 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-colors text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50" data-i18n="explore_tab_pictures">
+                    🖼️ Slike
+                </button>
+                <button onclick="ExploreHub.switchTab('articles')" id="tab-articles" class="flex-1 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-colors text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50" data-i18n="explore_tab_articles">
+                    📄 Tekst
+                </button>
+                <button onclick="ExploreHub.switchTab('extra')" id="tab-extra" class="flex-1 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-colors text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50" data-i18n="explore_tab_extra">
+                    🍿 Extra
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div id="explore-content" class="space-y-4 min-h-[300px]">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- KARAOKE VIEW (Bilingual Reader) -->
+        <div id="view-karaoke" class="hidden p-4 space-y-4 fade-in pb-24 h-full flex flex-col bg-white dark:bg-slate-900">
+            <div class="flex items-center justify-between pb-2 border-b-2 border-slate-100 dark:border-slate-800">
+                <div>
+                    <h2 class="text-xl font-black tracking-tight text-slate-800 dark:text-slate-100" id="karaoke-title">Karaoke Reader</h2>
+                    <p class="text-xs text-slate-500 font-medium" id="karaoke-desc">Listen and Read</p>
+                </div>
+                <button onclick="app.navigate('arcade')" class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-xl text-slate-600 dark:text-slate-300 active:scale-95 transition-transform hover:bg-slate-200 dark:hover:bg-slate-700">❌</button>
+            </div>
+            
+            <!-- Controls -->
+            <div class="flex justify-center items-center gap-4 bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
+                <button id="karaoke-play-btn" onclick="Karaoke.togglePlay()" class="w-48 h-14 bg-blue-500 text-white rounded-2xl flex items-center justify-center font-black shadow-lg active:scale-95 transition-transform shadow-blue-500/30">🎙️ START READING</button>
+                <button onclick="Karaoke.reset()" class="w-14 h-14 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-2xl flex items-center justify-center text-lg font-black active:scale-95 transition-transform">🔄</button>
+            </div>
+
+            <!-- Reading Area -->
+            <div class="flex-1 overflow-y-auto space-y-6" id="karaoke-text-container">
+                <!-- Text populated by JS -->
+            </div>
+        </div>
+
+        <!-- MISTAKES VIEW -->
+        <div id="view-mistakes" class="hidden p-4 space-y-4 fade-in pb-24">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-black tracking-tight text-slate-800 dark:text-slate-100" data-i18n="mistakes_title">Moje Greške</h2>
+                    <p class="text-xs text-slate-500 font-medium" data-i18n="mistakes_desc">Mistake Vault</p>
+                </div>
+                <div class="text-4xl">🧠</div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="mistakes-empty-state" class="hidden bg-slate-100 dark:bg-slate-800 p-8 rounded-3xl text-center space-y-3 border-2 border-slate-200 dark:border-slate-700">
+                <div class="text-5xl mb-4">🏆</div>
+                <h3 class="font-black text-slate-800 dark:text-white" data-i18n="mistakes_empty">Nema grešaka!</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="mistakes_empty_desc">Trenutno nemate reči za ponavljanje. Odličan posao!</p>
+            </div>
+
+            <!-- Review Button -->
+            <button id="mistakes-review-btn" onclick="app.startMistakeReview()" class="hidden w-full py-4 bg-gradient-to-r from-orange-400 to-red-500 text-white font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-sm uppercase tracking-wider mb-4">
+                ⚡ Clear Weaknesses (<span id="mistakes-count-badge">0</span>)
+            </button>
+
+            <!-- Words List -->
+            <div id="mistakes-list" class="space-y-2 mt-4">
+                <!-- Dynamically populated list of words -->
             </div>
         </div>
 
@@ -670,6 +825,16 @@
                 <span class="text-2xl mb-1 mt-1 block">🕹️</span>
                 <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_arcade">Igraonica</span>
             </button>
+            <button onclick="app.navigate('explore')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
+                id="nav-explore">
+                <span class="text-2xl mb-1 mt-1 block">🧭</span>
+                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_explore">Istraži</span>
+            </button>
+            <button onclick="app.navigate('mistakes')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
+                id="nav-mistakes">
+                <span class="text-lg mt-1 block">🧠</span>
+                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_mistakes">Greške</span>
+            </button>
             <button onclick="app.navigate('stats')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
                 id="nav-stats">
                 <span class="text-lg">📊</span>
@@ -734,13 +899,34 @@
         </div>
     </div>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container"
-        class="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center pointer-events-none">
+    <!-- YouTube API Key Modal -->
+    <div id="yt-key-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm fade-in">
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl border-2 border-white dark:border-slate-700">
+            <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                🌐
+            </div>
+            <h3 class="text-xl font-black text-slate-800 dark:text-white mb-2">YouTube API Key</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                Da biste pretraživali YouTube u aplikaciji, potreban vam je besplatan YouTube Data API v3 ključ.
+            </p>
+            <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="text-blue-500 text-xs font-bold mb-4 block underline hover:text-blue-600">
+                👉 Preuzmi ključ ovde
+            </a>
+            <input type="text" id="yt-key-input" placeholder="Nalepi ključ ovde (AIz...)" class="w-full bg-slate-100 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 mb-4 text-sm focus:border-blue-500 outline-none">
+            <div class="flex gap-2">
+                <button onclick="document.getElementById('yt-key-modal').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">Kasnije</button>
+                <button onclick="ExploreHub.saveYTKey()" class="flex-1 py-3 rounded-xl font-black bg-blue-500 text-white hover:bg-blue-600">Sačuvaj</button>
+            </div>
+        </div>
     </div>
+
+
 
     <script src="seed-data.js" charset="UTF-8"></script>
     <script src="db.js" charset="UTF-8"></script>
+    <script src="alphabet-data.js" charset="UTF-8"></script>
+    <script src="explore-hub.js" charset="UTF-8"></script>
+    <script src="karaoke.js" charset="UTF-8"></script>
     <script src="question-engine.js" charset="UTF-8"></script>
     <script src="skill-tree.js" charset="UTF-8"></script>
     <script src="roleplay.js" charset="UTF-8"></script>

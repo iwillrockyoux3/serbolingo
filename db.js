@@ -120,6 +120,42 @@ const db = {
         });
     },
 
+    searchWords(query) {
+        return new Promise((resolve, reject) => {
+            const timeoutId = setTimeout(() => resolve([]), 1000);
+            try {
+                const transaction = this._db.transaction(['dictionary'], 'readonly');
+                const store = transaction.objectStore('dictionary');
+                const request = store.getAll();
+                request.onsuccess = () => {
+                    clearTimeout(timeoutId);
+                    const q = query.toLowerCase();
+                    const results = (request.result || []).filter(w => 
+                        w.en.toLowerCase().includes(q) || 
+                        w.sr_lat.toLowerCase().includes(q) || 
+                        (w.sr_cyr && w.sr_cyr.toLowerCase().includes(q))
+                    );
+                    resolve(results);
+                };
+                request.onerror = () => { clearTimeout(timeoutId); resolve([]); };
+            } catch(e) {
+                clearTimeout(timeoutId);
+                resolve([]);
+            }
+        });
+    },
+
+    getWord(id) {
+        return new Promise((resolve, reject) => {
+            const transaction = this._db.transaction(['dictionary'], 'readonly');
+            const store = transaction.objectStore('dictionary');
+            const request = store.get(id);
+
+            request.onsuccess = () => resolve(request.result || null);
+            request.onerror = () => reject(request.error);
+        });
+    },
+
     getWordsByCategory(category) {
         return new Promise((resolve, reject) => {
             const transaction = this._db.transaction(['dictionary'], 'readonly');
@@ -129,6 +165,60 @@ const db = {
 
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
+        });
+    },
+
+    // --- DYNAMIC BACKGROUND LOADER (For 5000+ words) ---
+    // Since fetch() fails on file:/// URIs, we use dynamic script injection
+    processChunk(dataChunk) {
+        return new Promise((resolve, reject) => {
+            if (!this._db) {
+                console.warn("DB not ready, cannot process chunk.");
+                return resolve(false);
+            }
+            try {
+                const transaction = this._db.transaction(['dictionary'], 'readwrite');
+                const store = transaction.objectStore('dictionary');
+
+                dataChunk.forEach(word => store.put(word));
+
+                transaction.oncomplete = () => {
+                    console.log(`[Background Loader] Successfully injected ${dataChunk.length} words into IndexedDB.`);
+                    resolve(true);
+                };
+
+                transaction.onerror = (event) => {
+                    console.error("[Background Loader] Chunk injection failed:", event.target.error);
+                    resolve(false);
+                };
+            } catch (e) {
+                console.error("[Background Loader] Transaction error:", e);
+                resolve(false);
+            }
+        });
+    },
+
+    loadChunk(filename) {
+        return new Promise((resolve, reject) => {
+            console.log(`[Background Loader] Requesting chunk: ${filename}`);
+            const script = document.createElement('script');
+            script.src = `data/${filename}`;
+            script.charset = 'UTF-8';
+            
+            script.onload = () => {
+                // The script will automatically call processChunk()
+                // Once loaded, we remove the node to free up DOM memory
+                document.head.removeChild(script);
+                resolve(true);
+            };
+
+            script.onerror = () => {
+                console.warn(`[Background Loader] Failed to load chunk: ${filename}`);
+                document.head.removeChild(script);
+                resolve(false);
+            };
+
+            document.head.appendChild(script);
         });
     }
 };

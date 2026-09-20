@@ -447,3 +447,4 @@ body {
 }
 
 .arcade-mic-active { animation: arcade-mic-pulse 1s ease-in-out infinite; }
+.font-cursive { font-family: 'Caveat', cursive; font-size: 1.5em; letter-spacing: 1px; }

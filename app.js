@@ -33,8 +33,54 @@ const UI_STRINGS = {
     nav_learn: { en: 'Learn', sr_lat: 'Uči', sr_cyr: 'Учи' },
     nav_arcade: { en: 'Arcade', sr_lat: 'Igraonica', sr_cyr: 'Играоница' },
     nav_roleplay: { en: 'Chat', sr_lat: 'Razgovor', sr_cyr: 'Разговор' },
-    nav_stats: { en: 'Stats', sr_lat: 'Statistika', sr_cyr: 'Статистика' },
-    nav_profile: { en: 'Profile', sr_lat: 'Profil', sr_cyr: 'Профил' },
+    nav_stats: { en: 'Stats', sr_lat: 'Statistika', sr_cyr: '\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430' },
+    nav_profile: { en: 'Profile', sr_lat: 'Profil', sr_cyr: '\u041f\u0440\u043e\u0444\u0438\u043b' },
+    nav_mistakes: { en: 'Mistakes', sr_lat: 'Gre\u0161ke', sr_cyr: '\u0413\u0440\u0435\u0448\u043a\u0435' },
+    nav_explore: { en: 'Explore', sr_lat: 'Istraži', sr_cyr: 'Истражи' },
+    
+    // Explore View
+    explore_title: { en: 'Explore', sr_lat: 'Istraži', sr_cyr: 'Истражи' },
+    explore_desc: { en: 'Media & Culture Hub', sr_lat: 'Mediji & Kultura', sr_cyr: 'Медији & Култура' },
+    explore_search_placeholder: { en: 'Search (e.g. \'Ordering food\')', sr_lat: 'Pretraži (npr. \'Naručivanje hrane\')', sr_cyr: 'Претражи (нпр. \'Наручивање хране\')' },
+    explore_tab_video: { en: '📺 Video', sr_lat: '📺 Video', sr_cyr: '📺 Видео' },
+    explore_tab_pictures: { en: '🖼️ Pictures', sr_lat: '🖼️ Slike', sr_cyr: '🖼️ Слике' },
+    explore_tab_articles: { en: '📄 Text', sr_lat: '📄 Tekst', sr_cyr: '📄 Текст' },
+    explore_tab_extra: { en: '🍿 Extra', sr_lat: '🍿 Extra', sr_cyr: '🍿 Екстра' },
+    explore_btn_yt: { en: '🌐 YouTube', sr_lat: '🌐 YouTube', sr_cyr: '🌐 YouTube' },
+    explore_btn_ai: { en: '✨ AI Generate', sr_lat: '✨ AI Generiši', sr_cyr: '✨ АИ Генериши' },
+    explore_suggested: { en: '✨ Suggested for you this week', sr_lat: '✨ Predloženo za tebe ove nedelje', sr_cyr: '✨ Предложено за тебе ове недеље' },
+    explore_results_for: { en: 'Results for', sr_lat: 'Rezultati za', sr_cyr: 'Резултати за' },
+    explore_no_local_results: { en: 'No local results for', sr_lat: 'Nema lokalnih rezultata za', sr_cyr: 'Нема локалних резултата за' },
+    explore_try_youtube_or_ai: { en: 'Try searching YouTube or generating an AI lesson!', sr_lat: 'Probajte sa YouTube pretragom ili AI generisanjem!', sr_cyr: 'Пробајте са YouTube претрагом или АИ генерисањем!' },
+    explore_search_youtube_btn: { en: '🌐 Search YouTube', sr_lat: '🌐 Pretraži YouTube', sr_cyr: '🌐 Претражи YouTube' },
+    explore_generate_ai_btn: { en: '✨ Generate AI Lesson', sr_lat: '✨ AI Generiši Lekciju', sr_cyr: '✨ АИ Генериши Лекцију' },
+    explore_youtube_results_for: { en: '🌐 YouTube results for', sr_lat: '🌐 YouTube rezultati za', sr_cyr: '🌐 YouTube резултати за' },
+    explore_ai_generating: { en: 'AI is generating a lesson...', sr_lat: 'AI generiše lekciju...', sr_cyr: 'АИ генерише лекцију...' },
+    explore_ai_creating_about: { en: 'Creating a lesson about', sr_lat: 'Kreiranje lekcije o', sr_cyr: 'Креирање лекције о' },
+    explore_back_to_list: { en: '← Back to list', sr_lat: '← Nazad na listu', sr_cyr: '← Назад на листу' },
+    explore_ai_generated_lesson: { en: '✨ AI GENERATED LESSON', sr_lat: '✨ AI GENERISANA LEKCIJA', sr_cyr: '✨ АИ ГЕНЕРИСАНА ЛЕКЦИЈА' },
+    explore_youtube_quota: { en: 'YouTube API quota exceeded', sr_lat: 'YouTube API kvota istekla', sr_cyr: 'YouTube API квота истекла' },
+    explore_youtube_quota_desc: { en: 'Daily limit reached. Try again tomorrow or use AI generation.', sr_lat: 'Dnevni limit pretrage je dostignut. Pokušajte ponovo sutra ili koristite AI generisanje.', sr_cyr: 'Дневни лимит претраге је достигнут. Покушајте поново сутра или користите АИ генерисање.' },
+    explore_search_error: { en: 'Search Error', sr_lat: 'Greška prilikom pretrage', sr_cyr: 'Грешка приликом претраге' },
+    explore_check_api_key: { en: 'Check API key', sr_lat: 'Proverite API ključ', sr_cyr: 'Проверите API кључ' },
+    explore_not_educational: { en: 'Content is not educational', sr_lat: 'Sadržaj nije edukativnog karaktera', sr_cyr: 'Садржај није едукативног карактера' },
+    explore_not_educational_desc: { en: 'Search for educational topics only (language, grammar, culture...).', sr_lat: 'Pretražujte samo edukativne teme (jezik, gramatika, kultura...).', sr_cyr: 'Претражујте само едукативне теме (језик, граматика, култура...).' },
+    explore_ai_not_educational_desc: { en: 'AI can only generate educational lessons.', sr_lat: 'AI može da generiše samo edukativne lekcije.', sr_cyr: 'АИ може да генерише само едукативне лекције.' },
+    explore_no_yt_results_for: { en: 'No YouTube results for', sr_lat: 'Nema YouTube rezultata za', sr_cyr: 'Нема YouTube резултата за' },
+    explore_generate_ai_instead: { en: '✨ Generate AI Lesson instead', sr_lat: '✨ AI Generiši Lekciju umesto toga', sr_cyr: '✨ АИ Генериши Лекцију уместо тога' },
+    explore_generation_error: { en: 'Generation Error', sr_lat: 'Greška prilikom generisanja', sr_cyr: 'Грешка приликом генерисања' },
+    explore_yt_key_title: { en: 'YouTube API Key', sr_lat: 'YouTube API Ključ', sr_cyr: 'YouTube API Кључ' },
+    explore_yt_key_desc: { en: 'Enter a free YouTube Data API key to search millions of educational videos directly in the app.', sr_lat: 'Unesite besplatan YouTube Data API ključ da bi pretraživali milione edukativnih videa direktno u aplikaciji.', sr_cyr: 'Унесите бесплатан YouTube Data API кључ да би претраживали милионе едукативних видеа директно у апликацији.' },
+    explore_yt_key_link: { en: '👉 Click here to get a free API key', sr_lat: '👉 Kliknite ovde da dobijete besplatan API ključ', sr_cyr: '👉 Кликните овде да добијете бесплатан API кључ' },
+    explore_yt_key_save: { en: 'Save', sr_lat: 'Sačuvaj', sr_cyr: 'Сачувај' },
+    explore_yt_key_cancel: { en: 'Cancel', sr_lat: 'Otkaži', sr_cyr: 'Откажи' },
+    explore_yt_key_saved: { en: 'YouTube API key saved!', sr_lat: 'YouTube API ključ sačuvan!', sr_cyr: 'YouTube API кључ сачуван!' },
+    explore_gemini_key_prompt: { en: 'Enter your Gemini API key for AI lesson generation.', sr_lat: 'Unesite Gemini API ključ za AI generisanje lekcija.', sr_cyr: 'Унесите Gemini API кључ за АИ генерисање лекција.' },
+    // Mistake Vault View
+    mistakes_title: { en: 'My Mistakes', sr_lat: 'Moje Gre\u0161ke', sr_cyr: '\u041c\u043e\u0458\u0435 \u0413\u0440\u0435\u0448\u043a\u0435' },
+    mistakes_desc: { en: 'Mistake Vault', sr_lat: 'Trezor Gre\u0161aka', sr_cyr: '\u0422\u0440\u0435\u0437\u043e\u0440 \u0413\u0440\u0435\u0448\u0430\u043a\u0430' },
+    mistakes_empty: { en: 'No mistakes!', sr_lat: 'Nema gre\u0161aka!', sr_cyr: '\u041d\u0435\u043c\u0430 \u0433\u0440\u0435\u0448\u0430\u043a\u0430!' },
+    mistakes_empty_desc: { en: 'You have no words to review. Great job!', sr_lat: 'Trenutno nemate re\u010di za ponavljanje. Odli\u010dan posao!', sr_cyr: '\u0422\u0440\u0435\u043d\u0443\u0442\u043d\u043e \u043d\u0435\u043c\u0430\u0442\u0435 \u0440\u0435\u0447\u0438 \u0437\u0430 \u043f\u043e\u043d\u0430\u0432\u0459\u0430\u045a\u0435. \u041e\u0434\u043b\u0438\u0447\u0430\u043d \u043f\u043e\u0441\u0430\u043e!' },
 
     // Home View
     home_curriculum: { en: 'Curriculum', sr_lat: 'Kurikulum', sr_cyr: 'Курикулум' },
@@ -586,11 +632,15 @@ const app = {
         }
     },
     navigate: (vid) => {
-        ['view-home', 'view-lesson', 'view-stats', 'view-profile', 'view-arcade'].forEach(id => {
+        ['view-home', 'view-lesson', 'view-stats', 'view-profile', 'view-arcade', 'view-mistakes', 'view-explore', 'view-karaoke'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.add('hidden');
         });
         document.getElementById(`view-${vid}`).classList.remove('hidden');
+
+        if (vid === 'explore') {
+            if (window.ExploreHub) ExploreHub.init();
+        }
 
         if (vid === 'home') {
             app.renderSkillTree();
@@ -611,6 +661,9 @@ const app = {
             if (boostEl && state.inventory) {
                 boostEl.textContent = state.inventory.xpBoosts || 0;
             }
+        }
+        if (vid === 'mistakes') {
+            app.renderMistakes();
         }
 
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-blue-500', 'text-slate-400'));
@@ -738,6 +791,10 @@ const app = {
         container.innerHTML = html;
     },
     startSkillLesson: async (skillId) => {
+        if (skillId === 'alphabet') {
+            app.showAlphabetModal();
+            return;
+        }
         const skill = SKILL_TREE.find(s => s.id === skillId);
         if (!skill) return;
         if (!SkillTreeEngine.isUnlocked(skillId)) {
@@ -818,6 +875,77 @@ const app = {
         } catch (e) {
             console.error('Error starting practice:', e);
             app.navigate('home');
+        }
+    },
+    renderMistakes: async () => {
+        const listEl = document.getElementById('mistakes-list');
+        const emptyEl = document.getElementById('mistakes-empty-state');
+        const btnEl = document.getElementById('mistakes-review-btn');
+        const badgeEl = document.getElementById('mistakes-count-badge');
+        
+        listEl.innerHTML = '';
+        
+        const mistakeIds = Object.keys(state.mistakeLog || {});
+        if (mistakeIds.length === 0) {
+            emptyEl.classList.remove('hidden');
+            btnEl.classList.add('hidden');
+            return;
+        }
+        
+        emptyEl.classList.add('hidden');
+        btnEl.classList.remove('hidden');
+        badgeEl.textContent = mistakeIds.length;
+        
+        mistakeIds.sort((a, b) => state.mistakeLog[b] - state.mistakeLog[a]);
+        
+        const displayIds = mistakeIds.slice(0, 50);
+        
+        for (const id of displayIds) {
+            const word = await window.appDb.getWord(id);
+            if (!word) continue;
+            const weight = state.mistakeLog[id];
+            
+            const isToEn = state.settings.learningDirection === 'sr_to_en';
+            const primary = isToEn ? word.en : word.sr;
+            const secondary = isToEn ? word.sr : word.en;
+            
+            const item = document.createElement('div');
+            item.className = 'bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border-2 border-slate-100 dark:border-slate-700 flex justify-between items-center transition-all hover:border-blue-200 dark:hover:border-blue-800';
+            
+            item.innerHTML = `
+                <div>
+                    <h4 class="font-black text-slate-800 dark:text-white text-lg">${primary}</h4>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">${secondary}</p>
+                </div>
+                <div class="flex flex-col items-end gap-2">
+                    <span class="text-[10px] font-black uppercase tracking-wider px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg">Weight: ${weight}</span>
+                    <button onclick="app.toggleFlashcard('${id}'); setTimeout(() => app.renderMistakes(), 100);" class="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 transition-colors">Ukloni ✖</button>
+                </div>
+            `;
+            listEl.appendChild(item);
+        }
+    },
+    startMistakeReview: async () => {
+        const mistakeIds = Object.keys(state.mistakeLog || {});
+        if (mistakeIds.length === 0) return;
+        
+        try {
+            ACTIVE_LESSON = await window.QuestionEngine.generateMistakeReviewLesson(window.appDb, state.mistakeLog, 10);
+            
+            if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
+                app.showToast('Greška pri kreiranju lekcije.', 'error');
+                return;
+            }
+            state.currentLevelKey = 'PRACTICE';
+            state.currentSkillId = 'mistakes'; // Special flag
+            state.currentLessonIndex = 0;
+            state.lastLessonMistakes = 0;
+            app.saveStats();
+            app.navigate('lesson');
+            app.renderQuestion();
+        } catch (e) {
+            console.error('Error starting mistake review:', e);
+            app.navigate('mistakes');
         }
     },
     renderQuestion: () => {
@@ -916,6 +1044,155 @@ const app = {
                     </div>
                 </div>
             `;
+        } else if (l.type.startsWith('alphabet_')) {
+            const fontClass = l.isCursive ? 'font-cursive' : '';
+            const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+            const txt = {
+                whichWord: isSrToEn ? 'Koja slika predstavlja ovo slovo?' : 'Which picture does this letter represent?',
+                whichLetter: isSrToEn ? 'Koje slovo čuješ?' : 'Which letter do you hear?',
+                sayWord: isSrToEn ? 'Izgovori reč' : 'Say the word',
+                youSaid: isSrToEn ? 'Rekli ste:' : 'You said:',
+                matchPairs: isSrToEn ? 'Poveži slova sa slikama' : 'Match letters to pictures'
+            };
+            if (l.type === 'alphabet_picture') {
+                area.innerHTML = `
+                    <div class="text-center w-full max-w-xs flex flex-col items-center">
+                        <div class="text-[120px] leading-none text-slate-800 dark:text-white mb-2 ${fontClass}">${l.targetLetter.upper}</div>
+                        <h2 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-6 uppercase tracking-widest">${txt.whichWord}</h2>
+                        <div class="grid grid-cols-2 gap-3 w-full">
+                            ${l.options.map((opt, i) => `
+                                <button onclick="app.selectOption(this, '${opt.upper}')" id="opt-${i}"
+                                    class="option-btn p-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm text-center active:scale-95 transition-all hover:border-blue-400 flex items-center justify-center">
+                                    <div class="text-6xl">${opt.emoji}</div>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (l.type === 'alphabet_listen') {
+                area.innerHTML = `
+                    <div class="text-center w-full max-w-xs flex flex-col items-center">
+                        <div class="w-32 h-32 mb-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-7xl shadow-inner border-4 border-white dark:border-slate-800">${l.targetLetter.emoji}</div>
+                        <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 mb-6 uppercase tracking-widest">${txt.whichLetter}</h3>
+                        <div class="grid grid-cols-2 gap-3 w-full">
+                            ${l.options.map((opt, i) => `
+                                <button onclick="app.selectOption(this, '${opt.upper}')" id="opt-${i}"
+                                    class="option-btn p-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm text-center active:scale-95 transition-all hover:border-blue-400 flex items-center justify-center">
+                                    <div class="text-5xl font-black text-slate-800 dark:text-white ${fontClass}">${opt.upper}</div>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                // Play audio automatically
+                setTimeout(() => app.speakPhrase(l.targetLetter.word, 'sr-RS'), 300);
+            } else if (l.type === 'alphabet_voice') {
+                area.innerHTML = `
+                    <div class="text-center w-full max-w-xs flex flex-col items-center">
+                        <div class="text-[120px] leading-none text-slate-800 dark:text-white mb-2 ${fontClass}">${l.targetLetter.upper}</div>
+                        <div class="flex items-center gap-2 mb-8 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-full border-2 border-slate-200 dark:border-slate-700">
+                            <span class="text-2xl">${l.targetLetter.emoji}</span>
+                            <span class="text-xl font-black text-slate-700 dark:text-slate-200">${l.targetLetter.word}</span>
+                        </div>
+                        <h2 class="text-xs font-bold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest">${txt.sayWord}</h2>
+                        
+                        <button id="mic-btn" onclick="app.startMicRecognition('sr-RS')" class="w-24 h-24 rounded-full bg-blue-100 dark:bg-blue-900 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-4xl shadow-md transition-all active:scale-95">
+                            🎙️
+                        </button>
+                        
+                        <div id="transcription-box" class="mt-6 min-h-[60px] w-full p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border-2 border-slate-100 dark:border-slate-700 text-center flex flex-col items-center justify-center">
+                            <p class="text-xs font-bold text-slate-400 uppercase mb-1 hidden" id="transcription-label">${txt.youSaid}</p>
+                            <p id="transcription-text" class="text-lg font-black text-slate-700 dark:text-white">...</p>
+                        </div>
+                    </div>
+                `;
+            } else if (l.type === 'alphabet_match') {
+                state.matchingState = {
+                    selectedLeft: null,
+                    selectedRight: null,
+                    matched: 0,
+                    totalPairs: l.pairsData.length
+                };
+                
+                const leftCol = [...l.pairsData].sort(() => 0.5 - Math.random());
+                const rightCol = [...l.pairsData].sort(() => 0.5 - Math.random());
+                
+                area.innerHTML = `
+                    <h2 class="text-xl font-black mb-6 text-slate-700 dark:text-slate-100 text-center">${txt.matchPairs}</h2>
+                    <div class="flex gap-4 w-full max-w-sm">
+                        <div class="flex-1 flex flex-col gap-3">
+                            ${leftCol.map((d, i) => `<button id="match-l-${d.upper}" onclick="app.selectMatchingPair(this, '${d.upper}', 'left')" class="w-full py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-black text-4xl text-slate-800 dark:text-white shadow-sm transition-all ${fontClass}">${d.upper}</button>`).join('')}
+                        </div>
+                        <div class="flex-1 flex flex-col gap-3">
+                            ${rightCol.map((d, i) => `<button id="match-r-${d.upper}" onclick="app.selectMatchingPair(this, '${d.upper}', 'right')" class="w-full py-2 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm transition-all flex items-center justify-center"><span class="text-5xl">${d.emoji}</span></button>`).join('')}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('check-btn').classList.add('hidden');
+            }
+        } else if (l.type === 'whiteboard') {
+            const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+            // Bilingual text
+            const txt = {
+                clear: isSrToEn ? 'Obriši' : 'Clear',
+                good: isSrToEn ? 'Dobro je!' : 'I got it right!',
+                bad: isSrToEn ? 'Pogrešio sam' : 'I messed up'
+            };
+            
+            // Set up prompt and target text based on question context
+            let targetText = l.target;
+            let promptText = l.q;
+            let subText = l.q_sub || '';
+            let fontClass = l.isCursive ? 'font-cursive' : '';
+            
+            if (isSrToEn && l.target_rev) {
+                targetText = l.target_rev;
+                promptText = l.q_rev;
+                subText = l.q_sub_rev || '';
+            }
+
+            // For full sentences, scale down the font size of the overlay
+            let textSizeClass = targetText.length > 5 ? 'text-5xl' : 'text-[120px]';
+
+            area.innerHTML = `
+                <div class="text-center w-full max-w-sm flex flex-col items-center">
+                    <h2 class="text-xl font-black text-slate-700 dark:text-slate-100 mb-1">${promptText}</h2>
+                    ${subText ? `<p class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">${subText}</p>` : ''}
+                    
+                    <div class="relative w-full h-64 bg-white dark:bg-slate-900 border-4 border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm mb-4" id="canvas-container">
+                        <!-- Grid background for writing practice -->
+                        <div class="absolute inset-0 flex flex-col justify-evenly pointer-events-none opacity-20">
+                            <div class="w-full h-[2px] bg-blue-500 border-dashed"></div>
+                            <div class="w-full h-[2px] bg-red-500"></div>
+                            <div class="w-full h-[2px] bg-blue-500 border-dashed"></div>
+                        </div>
+                        
+                        <!-- The overlay that shows the perfect text after check -->
+                        <div id="whiteboard-overlay" class="absolute inset-0 flex items-center justify-center ${textSizeClass} text-center leading-tight font-black text-green-500 opacity-0 pointer-events-none transition-opacity duration-700 ${fontClass} drop-shadow-md px-4" style="z-index: 10;">
+                            ${targetText}
+                        </div>
+                        <canvas id="drawing-canvas" class="w-full h-full cursor-crosshair touch-none" style="z-index: 5; position: relative;"></canvas>
+                    </div>
+                    
+                    <button id="clear-canvas-btn" onclick="app.clearCanvas()" class="px-6 py-2 bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300 font-bold active:scale-95 mb-4 shadow-sm transition-transform">${txt.clear}</button>
+                    
+                    <div id="self-grade-btns" class="hidden w-full gap-4">
+                        <button onclick="app.selfGradeWhiteboard(true)" class="flex-1 py-4 bg-green-500 text-white rounded-xl font-black text-lg active:scale-95 shadow-lg flex justify-center items-center gap-2">🟢 ${txt.good}</button>
+                        <button onclick="app.selfGradeWhiteboard(false)" class="flex-1 py-4 bg-red-500 text-white rounded-xl font-black text-lg active:scale-95 shadow-lg flex justify-center items-center gap-2">🔴 ${txt.bad}</button>
+                    </div>
+                </div>
+            `;
+            
+            // Auto-enable check button because user might not draw anything or we just trust them to hit check when ready
+            app.enableCheckBtn();
+            
+            // Play audio if provided
+            if (l.audioWord) {
+                 setTimeout(() => app.speakPhrase(l.audioWord, l.audioLang), 300);
+            }
+            
+            // Init canvas
+            setTimeout(() => app.initCanvas(), 50);
         } else if (l.type === 'hangman') {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
@@ -1363,6 +1640,84 @@ const app = {
         // When enabled, it switches to bg-blue-500.
         btn.classList.remove('dark:bg-slate-800', 'dark:text-slate-600');
     },
+    
+    // ======== WHITEBOARD CANVAS ENGINE (Priority 7) ========
+    initCanvas: () => {
+        const canvas = document.getElementById('drawing-canvas');
+        if (!canvas) return;
+        const container = document.getElementById('canvas-container');
+        
+        // Set actual pixel dimensions to match CSS layout
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.strokeStyle = document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#1e293b';
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        let drawing = false;
+        
+        const getPos = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            if (e.touches) {
+                return { x: (e.touches[0].clientX - rect.left) * scaleX, y: (e.touches[0].clientY - rect.top) * scaleY };
+            }
+            return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+        };
+        
+        const startDraw = (e) => {
+            e.preventDefault();
+            drawing = true;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        };
+        
+        const draw = (e) => {
+            e.preventDefault();
+            if (!drawing) return;
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        };
+        
+        const stopDraw = (e) => {
+            if (e) e.preventDefault();
+            drawing = false;
+        };
+        
+        // Mouse events
+        canvas.addEventListener('mousedown', startDraw);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDraw);
+        canvas.addEventListener('mouseleave', stopDraw);
+        
+        // Touch events (mobile)
+        canvas.addEventListener('touchstart', startDraw, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', stopDraw, { passive: false });
+        canvas.addEventListener('touchcancel', stopDraw, { passive: false });
+        
+        // Store ctx reference for clearCanvas
+        state.canvasCtx = ctx;
+    },
+    
+    clearCanvas: () => {
+        const canvas = document.getElementById('drawing-canvas');
+        if (!canvas || !state.canvasCtx) return;
+        state.canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+    },
+    
+    selfGradeWhiteboard: (correct) => {
+        state.userSelection = correct;
+        app.checkAnswer();
+    },
+    // ======== END WHITEBOARD ENGINE ========
+
     speakPhrase: (text, lang = 'en-US') => {
         try {
             window.speechSynthesis.cancel();
@@ -1694,11 +2049,33 @@ const app = {
                 return str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
             };
 
-            if (l.type === 'speaking') {
-                const isSrToEn = state.settings.learningDirection === 'sr_to_en';
-                const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
-                isC = normalize(state.userSelection || "") === normalize(correctText);
-            } else if (l.type === 'fill_blank') {
+            if (l.type.startsWith('alphabet_')) {
+                if (l.type === 'alphabet_match') {
+                    isC = true; // Auto-checked in matching
+                } else if (l.type === 'alphabet_voice') {
+                    const expectedWord = normalize(l.targetLetter.word);
+                    const userSaid = normalize(state.userSelection || "");
+                    // They might say the letter and then the word, e.g. "d delfin". We just check if the anchor word is inside.
+                    isC = userSaid.includes(expectedWord);
+                } else {
+                    isC = state.userSelection === l.targetLetter.upper;
+                }
+            } else if (l.type === 'whiteboard') {
+                if (state.userSelection === null || state.userSelection === undefined) {
+                    // Phase 1: Reveal overlay and prompt self-grade
+                    document.getElementById('whiteboard-overlay').classList.remove('opacity-0');
+                    document.getElementById('check-btn').classList.add('hidden');
+                    document.getElementById('clear-canvas-btn').classList.add('hidden');
+                    
+                    const gradeBtns = document.getElementById('self-grade-btns');
+                    gradeBtns.classList.remove('hidden');
+                    gradeBtns.classList.add('flex');
+                    return; // Stop here, wait for selfGradeWhiteboard
+                } else {
+                    // Phase 2: Grading complete
+                    isC = !!state.userSelection;
+                }
+            } else if (l.type === 'speaking') {
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';
                 const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
                 isC = normalize(state.userSelection || "") === normalize(correctText);
@@ -1890,7 +2267,17 @@ const app = {
             document.getElementById('feedback-title').innerText = isC ? "Bravo!" : "Netačno";
             document.getElementById('feedback-title').className = `font-black text-sm ${isC ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`;
 
-            document.getElementById('feedback-msg').innerText = isC ? "+10 XP" : `Tačno: ${l.correct}`;
+            let displayCorrect = l.correct;
+            const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+            if (l.type.startsWith('alphabet_') && l.targetLetter) {
+                displayCorrect = l.targetLetter.upper;
+            } else if (l.type === 'whiteboard') {
+                displayCorrect = (isSrToEn && l.target_rev) ? l.target_rev : l.target;
+            } else if (isSrToEn && l.correct_rev) {
+                displayCorrect = l.correct_rev;
+            }
+
+            document.getElementById('feedback-msg').innerText = isC ? "+10 XP" : `Tačno: ${displayCorrect}`;
             document.getElementById('feedback-msg').className = `text-[11px] font-bold ${isC ? 'text-green-600 dark:text-green-300' : 'text-red-600 dark:text-red-300'}`;
 
             document.getElementById('feedback-icon').innerText = isC ? "✅" : "❌";
@@ -1991,7 +2378,11 @@ const app = {
             app.showToast(t('toast_guest_finish'), 'success');
         }
         
-        app.navigate('home');
+        if (state.currentSkillId === 'mistakes') {
+            app.navigate('mistakes');
+        } else {
+            app.navigate('home');
+        }
     },
     checkAchievements: () => {
         let newUnlock = false;
@@ -2005,13 +2396,66 @@ const app = {
             app.saveStats();
         }
     },
+    showAlphabetModal: () => {
+        const modal = document.getElementById('alphabet-selection-modal');
+        const content = document.getElementById('alphabet-modal-content');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        requestAnimationFrame(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('translate-y-full');
+        });
+    },
+    closeAlphabetModal: () => {
+        const modal = document.getElementById('alphabet-selection-modal');
+        const content = document.getElementById('alphabet-modal-content');
+        
+        modal.classList.add('opacity-0');
+        content.classList.add('translate-y-full');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    },
+    startAlphabetMode: async (modeKey) => {
+        app.closeAlphabetModal();
+        // Fallback to start the normal 'alphabet' lesson for now. 
+        // We will build the dedicated cursive logic and data next.
+        // But we store the chosen mode to apply the specific fonts and filtering.
+        state.alphabetMode = modeKey; 
+        
+        try {
+            ACTIVE_LESSON = await window.QuestionEngine.generateAlphabetLesson(modeKey, 10);
+            if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
+                app.showToast('Nema dovoljno reči u bazi za ovu lekciju.', 'error');
+                return;
+            }
+            state.currentLevelKey = 'alphabet';
+            state.currentSkillId = 'alphabet';
+            state.currentLessonIndex = 0;
+            state.lastLessonMistakes = 0;
+            app.saveStats();
+            app.navigate('lesson');
+            app.renderQuestion();
+        } catch (e) {
+            console.error(e);
+            app.showToast('Greška!', 'error');
+        }
+    },
     showGuide: (skillId) => {
         const skill = SKILL_TREE.find(s => s.id === skillId);
-        if (!skill || !skill.guideHtml) return;
+        if (!skill) return;
+        
+        // Pick the correct guide based on learning direction
+        const dir = state.settings.learningDirection || 'en_to_sr';
+        const guideContent = (dir === 'sr_to_en' && skill.guideHtmlSr) ? skill.guideHtmlSr : skill.guideHtml;
+        if (!guideContent) return;
 
         const modal = document.getElementById('guide-modal');
-        document.getElementById('guide-modal-title').innerText = `💡 ${skill.name} / ${skill.nameEn}`;
-        document.getElementById('guide-modal-content').innerHTML = skill.guideHtml;
+        document.getElementById('guide-modal-title').innerText = `\u{1F4A1} ${skill.name} / ${skill.nameEn}`;
+        document.getElementById('guide-modal-content').innerHTML = guideContent;
         
         modal.classList.remove('hidden');
         modal.style.display = 'flex';
@@ -2352,8 +2796,8 @@ const app = {
         if (type === 'success') { bgColor = 'bg-green-500'; icon = '✅'; }
         if (type === 'error') { bgColor = 'bg-red-500'; icon = '❌'; }
         
-        // Highly compact styling changed to wider/centered styling
-        toast.className = `${bgColor} text-white px-4 py-2 rounded-lg shadow-md font-black text-[11px] flex items-center justify-center gap-2 transform transition-all duration-300 translate-y-[-10px] opacity-0 pointer-events-auto w-[220px] max-w-[280px] text-center`;
+        // Highly compact styling changed to wrap text vertically and fit perfectly between header elements
+        toast.className = `${bgColor} text-white px-2 py-1.5 rounded-lg shadow-md font-bold text-[10px] flex items-center justify-center gap-1 transform transition-all duration-300 translate-y-[-10px] opacity-0 pointer-events-auto w-[140px] text-center leading-tight break-words`;
         toast.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
         
         container.innerHTML = '';
@@ -2487,7 +2931,7 @@ const app = {
         sessionStorage.clear(); 
         location.reload(); 
     },
-    endLesson: () => { if (confirm(t('lesson_quit'))) app.navigate('home'); },
+    endLesson: () => { if (confirm(t('lesson_quit'))) app.navigate(state.currentSkillId === 'mistakes' ? 'mistakes' : 'home'); },
     // ─── LOCALIZATION ENGINE ───
     applyLanguage: () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -2533,6 +2977,11 @@ const app = {
         // Refresh roleplay list if we are currently looking at it
         if (window.RoleplayEngine && typeof window.RoleplayEngine.renderScenarioList === 'function') {
             window.RoleplayEngine.renderScenarioList();
+        }
+        
+        // Refresh Explore Hub to load the correct library
+        if (window.ExploreHub && typeof window.ExploreHub.refresh === 'function') {
+            window.ExploreHub.refresh();
         }
     },
     playSound: (type) => {
@@ -2613,6 +3062,26 @@ const app = {
             }
         }
         
+        if (!text && (l.type.startsWith('alphabet_') || l.type === 'whiteboard')) {
+            const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+            const tgt = l.targetLetter || l;
+            if (tgt.word && tgt.word.en) {
+                // it's a standard word object
+                text = isSrToEn 
+                    ? `Slovo predstavlja reč "${tgt.word.sr}" (${tgt.word.en}).` 
+                    : `The letter stands for the word "${tgt.word.sr}" (${tgt.word.en}).`;
+            } else if (tgt.upper) {
+                // it's from ALPHABET_DATA directly
+                text = isSrToEn
+                    ? `Ovo slovo predstavlja reč "${tgt.word}" (${tgt.en}).`
+                    : `This letter stands for the word "${tgt.word}" (${tgt.en}).`;
+            } else if (l.audioWord) {
+                text = isSrToEn
+                    ? `Tražena reč je bila "${l.audioWord}".`
+                    : `The required word was "${l.audioWord}".`;
+            }
+        }
+        
         const finalText = text || (state.settings.appLanguage === 'en' ? "No explanation available." : "Nema dodatnog objašnjenja.");
         const headerText = state.settings.appLanguage === 'en' ? "💡 Offline Explanation (Prepared)" : "💡 Offline Objašnjenje (Pripremljeno)";
         
@@ -2649,8 +3118,15 @@ const app = {
             const lang = isEnToSr ? "English" : "Serbian";
             
             // Reconstruct the exact question text the user saw
-            const questionText = (state.settings.learningDirection === 'sr_to_en' && l.q_rev) ? l.q_rev : l.q;
-            const correctText = (state.settings.learningDirection === 'sr_to_en' && l.correct_rev) ? l.correct_rev : l.correct;
+            let questionText = (state.settings.learningDirection === 'sr_to_en' && l.q_rev) ? l.q_rev : l.q;
+            let correctText = (state.settings.learningDirection === 'sr_to_en' && l.correct_rev) ? l.correct_rev : l.correct;
+            
+            if (l.type && l.type.startsWith('alphabet_') && l.targetLetter) {
+                correctText = l.targetLetter.upper;
+                if (!questionText) questionText = l.targetLetter.word;
+            } else if (l.type === 'whiteboard') {
+                correctText = (state.settings.learningDirection === 'sr_to_en' && l.target_rev) ? l.target_rev : l.target;
+            }
             
             let promptText = "";
             if (l.type === 'multiple_choice' || !l.type) {
@@ -2736,7 +3212,8 @@ CRITICAL CONSTRAINTS:
     resetExplanationUI: () => {
         document.getElementById('explanation-content').classList.add('hidden');
         document.getElementById('explanation-buttons').classList.remove('hidden');
-    }
+    },
+
 };
 window.app = app;
 window.appState = state;

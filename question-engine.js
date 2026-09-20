@@ -493,6 +493,143 @@ const QuestionEngine = {
         }).filter(q => q !== null);
         
         return lessonQuestions.slice(0, count);
+    },
+
+    async generateMistakeReviewLesson(dbInstance, mistakeLog, count = 10) {
+        const allWords = await dbInstance.getAllWords();
+        if (!allWords || allWords.length === 0) return [];
+        
+        let mistakeIds = Object.keys(mistakeLog || {});
+        if (mistakeIds.length === 0) return [];
+        
+        // Sort IDs by mistake count descending
+        mistakeIds.sort((a, b) => mistakeLog[b] - mistakeLog[a]);
+        const selectedIds = mistakeIds.slice(0, count);
+        
+        let selectedWords = allWords.filter(w => selectedIds.includes(w.id));
+        selectedWords = this.shuffle(selectedWords);
+
+        const lessonQuestions = selectedWords.map((word) => {
+            const rand = Math.random();
+            let q = null;
+            
+            if (word.example_en && word.example_sr) {
+                if (rand < 0.15) q = this.generateFillBlank(word);
+                else if (rand < 0.30) q = this.generateWordOrder(word);
+            }
+            
+            if (!q) {
+                if (rand > 0.90) q = this.generateHangman(word);
+                else if (rand > 0.78) q = this.generateSpeaking(word);
+                else if (rand > 0.65 && word.emoji) q = this.generatePictureChoice(word, allWords);
+                else if (rand > 0.50) q = this.generateListening(word, allWords);
+                else q = this.generateMultipleChoice(word, allWords);
+            }
+            
+            if (q) q.wordId = word.id;
+            return q;
+        }).filter(q => q !== null);
+        
+        return lessonQuestions.slice(0, count);
+    },
+
+    // Priority 6: Dedicated Alphabet Lesson Generator
+    generateAlphabetLesson: async function (mode, count = 10) {
+        // mode: 'alphabet_lat_print', 'alphabet_lat_cur', 'alphabet_cyr_print', 'alphabet_cyr_cur'
+        const isCyrillic = mode.includes('cyr');
+        const isCursive = mode.includes('cur');
+        
+        const dataSet = isCyrillic ? window.ALPHABET_DATA.cyrillic : window.ALPHABET_DATA.latin;
+        
+        // Shuffle and pick letters for the lesson
+        let shuffledSet = [...dataSet].sort(() => 0.5 - Math.random());
+        let lessonLetters = shuffledSet.slice(0, count);
+        
+        let questions = [];
+        
+        lessonLetters.forEach(letter => {
+            const r = Math.random();
+            let type = '';
+            if (r < 0.25) {
+                type = 'alphabet_picture';
+            } else if (r < 0.45) {
+                type = 'alphabet_voice';
+            } else if (r < 0.65) {
+                type = 'alphabet_listen';
+            } else if (r < 0.8) {
+                type = 'whiteboard';
+            } else {
+                type = 'alphabet_match';
+            }
+            
+            // Generate distractor options
+            let options = [];
+            while(options.length < 3) {
+                let distractor = dataSet[Math.floor(Math.random() * dataSet.length)];
+                if (distractor.upper !== letter.upper && !options.find(o => o.upper === distractor.upper)) {
+                    options.push(distractor);
+                }
+            }
+            options.push(letter);
+            options.sort(() => 0.5 - Math.random());
+            
+            let q = {
+                type: type,
+                targetLetter: letter,
+                options: options,
+                isCyrillic: isCyrillic,
+                isCursive: isCursive,
+                // Pass standard word object fields for compatibility with existing render functions where possible
+                word: {
+                    sr: letter.upper + letter.lower, 
+                    en: letter.word + ' ' + letter.emoji,
+                    category: 'alphabet'
+                }
+            };
+            
+            if (type === 'alphabet_match') {
+                // Generate 4 pairs for a matching question
+                let used = [letter];
+                while(used.length < 4) {
+                    let d = dataSet[Math.floor(Math.random() * dataSet.length)];
+                    if (!used.find(u => u.upper === d.upper)) {
+                        used.push(d);
+                    }
+                }
+                q.pairsData = used;
+            }
+            
+            if (type === 'whiteboard') {
+                // Randomly decide: draw the letter OR draw the whole word
+                const drawWord = Math.random() < 0.4;
+                
+                if (drawWord) {
+                    // Draw the full word (e.g., "Delfin")
+                    q.target = letter.word;
+                    q.target_rev = letter.en || letter.word;
+                    q.q = letter.emoji;
+                    q.q_rev = letter.emoji;
+                    q.q_sub = isCyrillic ? 'Napišite reč' : 'Napišite reč';
+                    q.q_sub_rev = 'Write the word';
+                    q.audioWord = letter.word;
+                    q.audioLang = 'sr-RS';
+                } else {
+                    // Draw the single letter (e.g., "D")
+                    q.target = letter.upper;
+                    q.target_rev = letter.upper;
+                    q.q = letter.emoji;
+                    q.q_rev = letter.emoji;
+                    q.q_sub = isCyrillic ? 'Napišite slovo' : 'Napišite slovo';
+                    q.q_sub_rev = 'Write the letter';
+                    q.audioWord = letter.word;
+                    q.audioLang = 'sr-RS';
+                }
+            }
+            
+            questions.push(q);
+        });
+        
+        return questions;
     }
 };
 
