@@ -1,7 +1,6 @@
 // [SHIELD_DAEMON: VALIDATED]
 // Priority 17: Hands-Free / Commute Audio Mode (Pimsleur-Style)
-// Uses Google Translate TTS (GTX) for reliable audio.
-// Persistent Mic session to avoid permission spam.
+// Dual Modes: Listen vs Answer (mic). Quantity + Infinity controls.
 
 window.CommuteEngine = (function() {
     let playlist = [];
@@ -10,11 +9,15 @@ window.CommuteEngine = (function() {
     let pauseTime = 3000;
     let loopActive = false;
     
-    // Voice Recognition state
+    // Session State
+    let sessionMode = 'listen'; // 'listen' or 'answer'
+    let isInfinite = false;
+    let quantity = 50;
+
     let micEnabled = false;
     let recognition = null;
     let currentExpectedAnswer = null;
-    let listeningForAnswer = false; // flag to process or ignore mic data
+    let listeningForAnswer = false;
     let answerFound = false;
 
     const el = (id) => document.getElementById(id);
@@ -30,11 +33,11 @@ window.CommuteEngine = (function() {
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRec();
             recognition.lang = 'sr-RS';
-            recognition.continuous = true; // Keep alive to avoid permission spam
+            recognition.continuous = true;
             recognition.interimResults = false;
             
             recognition.onresult = (e) => {
-                if (!listeningForAnswer || !currentExpectedAnswer) return; // Ignore if TTS is speaking
+                if (!listeningForAnswer || !currentExpectedAnswer) return;
                 
                 const results = [];
                 for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -45,14 +48,13 @@ window.CommuteEngine = (function() {
                 const correct = results.some(r => r === expected || r.includes(expected) || expected.includes(r));
 
                 if (correct) {
-                    answerFound = true; // Tell the loop we got it!
+                    answerFound = true;
                     const srEl = el('commute-current-sr');
                     srEl.classList.add('text-green-400');
                     setTimeout(() => srEl.classList.remove('text-green-400'), 1500);
                 }
             };
 
-            // Auto-restart if it dies while mic is supposed to be enabled
             recognition.onend = () => {
                 if (micEnabled && isPlaying) {
                     try { recognition.start(); } catch(err) {}
@@ -132,20 +134,32 @@ window.CommuteEngine = (function() {
             return;
         }
 
-        playlist = [];
+        let pool = [];
 
         if (cat === 'mistakes') {
             const mistakes = (window.state && window.state.mistakeLog) || {};
-            playlist = allWords.filter(w => mistakes[w.id]);
+            pool = allWords.filter(w => mistakes[w.id]);
         } else if (cat === 'favorites') {
             const favs = (window.state && window.state.favorites) || {};
-            playlist = allWords.filter(w => favs[w.id]);
+            pool = allWords.filter(w => favs[w.id]);
         } else if (cat === 'phrases') {
-            playlist = allWords.filter(w => w.category === 'phrases' || ((w.sr || w.sr_lat) && (w.sr || w.sr_lat).includes(' ')));
+            pool = allWords.filter(w => w.category === 'phrases' || ((w.sr || w.sr_lat) && (w.sr || w.sr_lat).includes(' ')));
+        } else {
+            pool = [...allWords];
         }
 
-        if (playlist.length === 0) {
-            playlist = [...allWords].sort(() => 0.5 - Math.random()).slice(0, 50);
+        if (pool.length === 0) {
+            pool = [...allWords]; // fallback if category is empty
+        }
+
+        // Shuffle the pool for randomness
+        pool.sort(() => 0.5 - Math.random());
+
+        // Apply Quantity Limit unless Infinite is ON
+        if (isInfinite) {
+            playlist = pool; // Use full pool
+        } else {
+            playlist = pool.slice(0, quantity);
         }
 
         currentIndex = 0;
@@ -155,18 +169,79 @@ window.CommuteEngine = (function() {
     function updateDisplay() {
         if (!playlist[currentIndex]) return;
         const word = playlist[currentIndex];
+        
         el('commute-current-sr').innerText = (word.sr || word.sr_lat) || '—';
         el('commute-current-en').innerText = word.en || '—';
+        
         el('commute-current-sr').classList.remove('opacity-30', 'text-green-400', 'text-red-400');
         el('commute-current-en').classList.remove('opacity-30');
 
         const counter = el('commute-counter');
-        if (counter) counter.innerText = (currentIndex + 1) + " / " + playlist.length;
+        if (counter) {
+            if (isInfinite) {
+                counter.innerText = `∞ Infinity Mode (${currentIndex + 1})`;
+            } else {
+                counter.innerText = `${currentIndex + 1} / ${playlist.length}`;
+            }
+        }
+    }
+
+    // ── Mode & Settings ──
+    function setMode(mode) {
+        sessionMode = mode;
+        micEnabled = (mode === 'answer');
+
+        // UI Tabs update
+        const tabL = el('commute-tab-listen');
+        const tabA = el('commute-tab-answer');
+        
+        if (mode === 'listen') {
+            tabL.className = "flex-1 py-2 rounded-lg font-bold text-sm bg-blue-500 text-white shadow-sm transition-all";
+            tabA.className = "flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-white transition-all";
+        } else {
+            tabA.className = "flex-1 py-2 rounded-lg font-bold text-sm bg-blue-500 text-white shadow-sm transition-all";
+            tabL.className = "flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-white transition-all";
+        }
+
+        // Apply mic live if playing
+        if (isPlaying) {
+            if (micEnabled && initMic()) {
+                try { recognition.start(); } catch(e) {}
+            } else {
+                listeningForAnswer = false;
+                if (recognition) { try { recognition.stop(); } catch(e) {} }
+            }
+        }
+    }
+
+    function toggleInfinity() {
+        isInfinite = !isInfinite;
+        const btn = el('commute-infinity-btn');
+        if (isInfinite) {
+            btn.innerHTML = '<span class="text-lg leading-none">∞</span> ON';
+            btn.classList.add('bg-purple-600', 'text-white', 'border-purple-500');
+            btn.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-600');
+            el('commute-quantity').disabled = true;
+            el('commute-quantity').classList.add('opacity-50');
+        } else {
+            btn.innerHTML = '<span class="text-lg leading-none">∞</span> OFF';
+            btn.classList.remove('bg-purple-600', 'text-white', 'border-purple-500');
+            btn.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-600');
+            el('commute-quantity').disabled = false;
+            el('commute-quantity').classList.remove('opacity-50');
+        }
+        if (!isPlaying) loadPlaylist();
+    }
+
+    function updateSettings() {
+        pauseTime = parseInt(el('commute-pause-time').value) || 3000;
+        quantity = parseInt(el('commute-quantity').value) || 50;
+        if (!isPlaying && !isInfinite) loadPlaylist();
     }
 
     // ── Play Controls ──
     function togglePlay() {
-        if (playlist.length === 0) {
+        if (playlist.length === 0 || currentIndex >= playlist.length) {
             loadPlaylist().then(() => { if (playlist.length > 0) startPlaying(); });
             return;
         }
@@ -177,6 +252,7 @@ window.CommuteEngine = (function() {
         isPlaying = true;
         loopActive = true;
         el('commute-play-icon').innerText = '⏸️';
+        el('commute-replay-btn').classList.add('hidden');
         
         // Start persistent mic if enabled
         if (micEnabled && initMic()) {
@@ -199,6 +275,13 @@ window.CommuteEngine = (function() {
         }
     }
 
+    function replay() {
+        currentIndex = 0;
+        updateDisplay();
+        el('commute-replay-btn').classList.add('hidden');
+        startPlaying();
+    }
+
     // ── Main Pimsleur Loop ──
     async function playLoop() {
         while (loopActive && playlist.length > 0) {
@@ -206,7 +289,7 @@ window.CommuteEngine = (function() {
             updateDisplay();
 
             // 1. Speak English
-            listeningForAnswer = false; // Ignore mic while TTS speaks
+            listeningForAnswer = false; 
             el('commute-current-sr').classList.add('opacity-30');
             el('commute-current-en').classList.remove('opacity-30');
             await speakGTX(word.en, 'en-US');
@@ -214,21 +297,19 @@ window.CommuteEngine = (function() {
 
             // 2. Thinking pause (or mic listen)
             if (micEnabled) {
-                el('commute-current-sr').innerText = '🎙️ Your turn...';
+                el('commute-current-sr').innerText = '🎙️ Vaš red (Your turn)...';
                 
-                // Unmute the processing logic
                 currentExpectedAnswer = (word.sr || word.sr_lat);
                 answerFound = false;
                 listeningForAnswer = true;
                 
-                // Wait for answer OR timeout
                 let elapsed = 0;
                 while (elapsed < pauseTime) {
                     if (answerFound || !loopActive) break;
                     await wait(200);
                     elapsed += 200;
                 }
-                listeningForAnswer = false; // Mute mic processing again
+                listeningForAnswer = false;
                 
                 if (!answerFound && loopActive) {
                     const srEl = el('commute-current-sr');
@@ -252,7 +333,21 @@ window.CommuteEngine = (function() {
             await wait(1200);
             if (!loopActive) break;
 
-            currentIndex = (currentIndex + 1) % playlist.length;
+            currentIndex++;
+
+            // Handle end of list / infinity
+            if (currentIndex >= playlist.length) {
+                if (isInfinite) {
+                    currentIndex = 0;
+                    playlist.sort(() => 0.5 - Math.random()); // reshuffle and keep going
+                } else {
+                    stopPlaying();
+                    el('commute-current-sr').innerText = '🎉 Gotovo! (Finished)';
+                    el('commute-current-en').innerText = 'Press Replay to practice this list again.';
+                    el('commute-replay-btn').classList.remove('hidden');
+                    break;
+                }
+            }
         }
     }
 
@@ -276,30 +371,6 @@ window.CommuteEngine = (function() {
         }
     }
 
-    function updateSettings() {
-        pauseTime = parseInt(el('commute-pause-time').value) || 3000;
-    }
-
-    function toggleMic() {
-        micEnabled = !micEnabled;
-        const btn = el('commute-mic-btn');
-        if (btn) {
-            btn.classList.toggle('bg-green-600', micEnabled);
-            btn.classList.toggle('bg-slate-800', !micEnabled);
-            btn.innerText = micEnabled ? '🎙️ Mic ON' : '🎙️ Mic OFF';
-        }
-        
-        // If we are actively playing, start or stop the mic immediately
-        if (isPlaying) {
-            if (micEnabled) {
-                if (initMic()) try { recognition.start(); } catch(e) {}
-            } else {
-                listeningForAnswer = false;
-                if (recognition) try { recognition.stop(); } catch(e) {}
-            }
-        }
-    }
-
     return {
         init: () => { loadPlaylist(); },
         togglePlay,
@@ -307,6 +378,8 @@ window.CommuteEngine = (function() {
         prev,
         updateSettings,
         loadPlaylist,
-        toggleMic
+        setMode,
+        toggleInfinity,
+        replay
     };
 })();
