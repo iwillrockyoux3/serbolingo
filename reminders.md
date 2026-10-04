@@ -45,20 +45,13 @@
 ## 📚 Priority 1: Massive Vocabulary Database Expansion
 - [ ] **Thousands of Categorized Words (seed-data.js & IndexedDB)**:
   - Expand database to reach **15,000+ words and phrases** (massive scaling goal).
-  - Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms.
-  - Include phonetic pronunciation helpers, grammatical gender flags, and usage examples.
+<p style="opacity: 0.4;">  - [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)</p>
+<p style="opacity: 0.4;">  - [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)</p>
 - [ ] **Omni-Bar "Fuzzy Search" & Typo Tolerance**:
   - Implement a Levenshtein Distance (Fuzzy Search) algorithm so the search bar auto-corrects typos (e.g. typing "yabuka" instead of "jabuka") and handles missing Cyrillic characters gracefully.
 
-## 🌳 Priority 2: Giant Skill Tree Expansion
-- [ ] **Sprawling Tree Structure (skill-tree.js)**:
-  - Expand from the initial 8 starter nodes to a full multi-unit tree covering Beginner to Advanced mastery.
-  - New Major Units & Branches:
-    - ✈️ Travel & Directions (Airport, Transport, Navigation)
-    - 💼 Business & Work (Office, Tech, Formal register)
-    - ❤️ Dating & Social Life (Small talk, Slang, Dating)
-    - ⏳ Grammar Mastery: Tenses (Past Tense / Perfekat, Future Tense / Futur I & II, Present)
-    - 🏛️ Grammar Mastery: The 7 Serbian Cases (Nominativ, Genitiv, Dativ, Akuzativ, Vokativ, Instrumental, Lokativ)
+## ✅ Priority 2: Giant Skill Tree Expansion
+<p style="opacity: 0.4;">- [x] Sprawling Tree Structure (skill-tree.js): Expanded to 82 multi-unit nodes covering Beginner to Advanced mastery, including Travel, Business, Dating, Tenses, and all 7 Cases.</p>
 
 ## ✍️ Priority 3: Štampana i Pisana Slova (Printed vs. Cursive Script)
 - [ ] **Display Option (Settings):**
@@ -77,10 +70,8 @@
   - Canvas-based or SVG touch-tracing engine for all 30 Serbian Cyrillic letters (А, Б, В, Г, Д, Ђ, Ж, З, И, Ј, К, Л, Љ, М, Н, Њ, О, П, Р, С, Т, Ћ, У, Ф, Х, Ц, Ч, Џ, Ш).
   - Stroke-order guidance, glowing trace path, and instant haptic/audio confirmation upon perfect letter formation.
 
-## 📑 Priority 5: Unit "Cheat Sheet" Grammar Notes (LingoDeer-Style)
-- [ ] **Bite-Sized Grammar Guides**:
-  - A quick "Guidebook / Tips" tab attached to each Skill Tree node.
-  - Visual charts breaking down why grammatical shifts happen (e.g., Kuća ➡️ U kući, Prijatelj ➡️ Prijatelji) in simple 1-minute visual explanations before lessons start.
+## ✅ Priority 5: Unit "Cheat Sheet" Grammar Notes (LingoDeer-Style)
+<p style="opacity: 0.4;">- [x] Bite-Sized Grammar Guides: A quick "Guidebook / Tips" tab attached to each Skill Tree node via guideHtml. Visual charts breaking down grammatical shifts in simple explanations before lessons start.</p>
 
 ## ✅ Priority 6: The Mistake Vault ("Moje Greške" / Smart Error Review)
 <p style="opacity: 0.4;">1-Click Mistake Clearing: Automatically captures any question or word answered incorrectly in lessons, skill tree, or minigames. Dedicated "Mistakes" review screen with SRS prioritization to clear weaknesses permanently.</p>
@@ -238,7 +229,7 @@
 - [ ] **Cultural Context Notes**: Teach not just the literal translation, but exactly when and to whom these emotional phrases are used.
 
 ## ⌨️ Priority 31: Keyboard Tolerance & Diacritic Normalization
-- [ ] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes `š->s`, `č/ć->c`, `ž->z`, and `đ->dj` during answer checking. (ALREADY IMPLEMENTED!)
+<p style="opacity: 0.4;">- [x] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes š->s, č/ć->c, ž->z, and đ->dj during answer checking. (ALREADY IMPLEMENTED in app.js checkAnswer normalize())</p>
 - [ ] **Gentle Typo Feedback**: Pop up a gentle tip (e.g., "Correct! But watch out, the proper spelling has a š") when the user relies on Bald Latin shortcuts.
 
 ## 🏆 Priority 32: Advanced Gamification & Social (The League System)
@@ -261,7 +252,7 @@
 
 ## 🏗️ Priority 36: Infrastructure & Code Architecture Upgrades
 - [ ] **Database Migration Engine**: Script a version-control system for `IndexedDB`. When we push a new `seed-data.js` with 10,000 new words, the app must safely merge it without deleting the user's saved flashcard progress.
-- [ ] **Data Chunking (Lazy Loading)**: Break the dictionary into `A-M.json` and `N-Z.json` so budget phones don't crash when loading massive vocabularies into RAM.
+<p style="opacity: 0.4;">- [x] **Data Chunking (Lazy Loading)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags. (DONE)</p>
 
 ## 🔔 Priority 37: Retention & Habit Building
 - [ ] **Web Push Notifications**: Ask for notification permission to send a daily reminder: *"Your 5-day streak is in danger! Practice now."*
