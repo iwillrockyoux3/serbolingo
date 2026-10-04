@@ -1,4 +1,4 @@
-﻿// [SHIELD_DAEMON: VALIDATED]
+// [SHIELD_DAEMON: VALIDATED]
 // Priority 17: Hands-Free / Commute Audio Mode (Pimsleur-Style)
 // Uses Google Translate TTS (GTX) for reliable audio.
 // Persistent Mic session to avoid permission spam.
@@ -70,7 +70,7 @@ window.CommuteEngine = (function() {
     function speakGTX(text, lang) {
         return new Promise(resolve => {
             const gtLang = lang.startsWith('sr') ? 'sr' : 'en';
-            const url = https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl= + gtLang + &q= + encodeURIComponent(text);
+            const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=${gtLang}&q=${encodeURIComponent(text)}`;
             const audio = new Audio(url);
             audio.volume = 1;
 
