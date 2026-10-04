@@ -850,28 +850,38 @@
 
                 <div class="z-10 w-full max-w-xs">
                     <!-- Current Item Display -->
+                <div class="z-10 w-full max-w-xs">
+                    <!-- Progress Counter -->
+                    <div id="commute-counter" class="text-xs font-bold text-slate-500 mb-6 tracking-widest uppercase">0 / 0</div>
+                    <!-- Current Item Display -->
                     <div id="commute-current-sr" class="text-4xl font-black mb-2 min-h-[48px] drop-shadow-md">Spreman?</div>
                     <div id="commute-current-en" class="text-xl text-slate-400 font-bold min-h-[32px]">Ready?</div>
                 </div>
 
                 <!-- Controls -->
-                <div class="z-10 flex items-center justify-center gap-6 mt-8">
-                    <button onclick="CommuteEngine.prev()" class="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center active:scale-95 transition-transform border border-slate-700 hover:bg-slate-700">
-                        <span class="text-xl">⏮️</span>
-                    </button>
-                    
-                    <button id="commute-play-btn" onclick="CommuteEngine.togglePlay()" class="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center active:scale-95 transition-transform shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:bg-blue-500">
-                        <span id="commute-play-icon" class="text-4xl ml-2">▶️</span>
-                    </button>
-                    
-                    <button onclick="CommuteEngine.next()" class="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center active:scale-95 transition-transform border border-slate-700 hover:bg-slate-700">
-                        <span class="text-xl">⏭️</span>
+                <div class="z-10 flex flex-col items-center gap-6 mt-8">
+                    <div class="flex items-center justify-center gap-6">
+                        <button onclick="CommuteEngine.prev()" class="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center active:scale-95 transition-transform border border-slate-700 hover:bg-slate-700">
+                            <span class="text-xl">⏮️</span>
+                        </button>
+                        
+                        <button id="commute-play-btn" onclick="CommuteEngine.togglePlay()" class="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center active:scale-95 transition-transform shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:bg-blue-500">
+                            <span id="commute-play-icon" class="text-4xl ml-2">▶️</span>
+                        </button>
+                        
+                        <button onclick="CommuteEngine.next()" class="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center active:scale-95 transition-transform border border-slate-700 hover:bg-slate-700">
+                            <span class="text-xl">⏭️</span>
+                        </button>
+                    </div>
+
+                    <!-- Mic Mode Toggle -->
+                    <button id="commute-mic-btn" onclick="CommuteEngine.toggleMic()" class="px-6 py-2 rounded-full bg-slate-800 border border-slate-700 text-sm font-bold active:scale-95 transition-colors">
+                        🎙️ Mic OFF
                     </button>
                 </div>
 
                 <!-- Settings -->
-                <div class="z-10 w-full max-w-xs mt-12 bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
-                    <label class="block text-xs font-bold text-slate-400 mb-2 uppercase">Playlist Category</label>
+                <div class="z-10 w-full max-w-xs mt-8 bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
                     <select id="commute-category" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-sm font-bold text-white focus:outline-none focus:border-blue-500" onchange="CommuteEngine.loadPlaylist()">
                         <option value="all">All Words (Mixed)</option>
                         <option value="mistakes">My Mistakes (Needs Review)</option>
