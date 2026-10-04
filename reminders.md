@@ -100,9 +100,7 @@
 ## ✅ Priority 12: Arcade Expansion (Reach 20 Total Minigames + Solo/Bot Mode)
 - [x] Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko Bot, Ana Bot) with live race progress bars.
 - [x] 20 Total Minigames built: Tacno/Netacno, Pogodi Sliku, Osmosmerka, Ukrstenica, Recko, Baloni, Razvrstaj and more.
-
----
-
+<!-- -->
 - [ ] **Local Trophy Cabinet** *(Pending Upgrade)*:
   - Build a showcase room tracking high scores, win streaks against the Bots, and awarding Bronze/Silver/Gold medals for minigames.
 
