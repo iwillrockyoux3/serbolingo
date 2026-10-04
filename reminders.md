@@ -37,21 +37,21 @@
 ---
 
 ## ✅ Completed Core Infrastructure (DONE)
-> *Massive Dictionary Engine (IndexedDB / SQLite): IndexedDB implemented in db.js. Dictionary loads from seed-data.js.*
-> *⭐ Add to Flashcards from Omni-Bar: Star button on search results saves words to SRS deck via state.mistakeLog.*
+> *[DONE] Massive Dictionary Engine (IndexedDB / SQLite): IndexedDB implemented in db.js. Dictionary loads from seed-data.js.*
+> *[DONE] ⭐ Add to Flashcards from Omni-Bar: Star button on search results saves words to SRS deck via state.mistakeLog.*
 
 ---
 
 ## 📚 Priority 1: Massive Vocabulary Database Expansion
 - [ ] **Thousands of Categorized Words (seed-data.js & IndexedDB)**:
   - Expand database to reach **15,000+ words and phrases** (massive scaling goal).
-> *  - [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)*
-> *  - [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)*
+> *[DONE]   - [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)*
+> *[DONE]   - [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)*
 - [ ] **Omni-Bar "Fuzzy Search" & Typo Tolerance**:
   - Implement a Levenshtein Distance (Fuzzy Search) algorithm so the search bar auto-corrects typos (e.g. typing "yabuka" instead of "jabuka") and handles missing Cyrillic characters gracefully.
 
 ## ✅ Priority 2: Giant Skill Tree Expansion
-> *- [x] Sprawling Tree Structure (skill-tree.js): Expanded to 82 multi-unit nodes covering Beginner to Advanced mastery, including Travel, Business, Dating, Tenses, and all 7 Cases.*
+> *[DONE] - [x] Sprawling Tree Structure (skill-tree.js): Expanded to 82 multi-unit nodes covering Beginner to Advanced mastery, including Travel, Business, Dating, Tenses, and all 7 Cases.*
 
 ## ✍️ Priority 3: Štampana i Pisana Slova (Printed vs. Cursive Script)
 - [ ] **Display Option (Settings):**
@@ -71,10 +71,10 @@
   - Stroke-order guidance, glowing trace path, and instant haptic/audio confirmation upon perfect letter formation.
 
 ## ✅ Priority 5: Unit "Cheat Sheet" Grammar Notes (LingoDeer-Style)
-> *- [x] Bite-Sized Grammar Guides: A quick "Guidebook / Tips" tab attached to each Skill Tree node via guideHtml. Visual charts breaking down grammatical shifts in simple explanations before lessons start.*
+> *[DONE] - [x] Bite-Sized Grammar Guides: A quick "Guidebook / Tips" tab attached to each Skill Tree node via guideHtml. Visual charts breaking down grammatical shifts in simple explanations before lessons start.*
 
 ## ✅ Priority 6: The Mistake Vault ("Moje Greške" / Smart Error Review)
-> *1-Click Mistake Clearing: Automatically captures any question or word answered incorrectly in lessons, skill tree, or minigames. Dedicated "Mistakes" review screen with SRS prioritization to clear weaknesses permanently.*
+> *[DONE] 1-Click Mistake Clearing: Automatically captures any question or word answered incorrectly in lessons, skill tree, or minigames. Dedicated "Mistakes" review screen with SRS prioritization to clear weaknesses permanently.*
 
 - [ ] **True SRS Algorithm (SuperMemo-2)** *(Pending Upgrade)*:
   - Implement the SM2 mathematical algorithm to properly space out reviews (1 day, 3 days, 10 days) for true long-term memory retention instead of just basic mistake logging.
@@ -85,7 +85,7 @@
   - **Daily Quests (Dnevne Misije)**: 3 daily missions (e.g., "Earn 60 XP", "Score 90% in Speed Typer", "Learn 5 New Words") awarding bonus gems and XP boosts.
 
 ## ✅ Priority 8: Istraži / Web & Media Learning Hub (Pop Culture & 3-Tab Explorer)
-> *Dedicated External Learning Search Engine: Search any Serbian/English topic. Categorized into 3 Interactive Tabs: 🎬 Video Tab (embedded YouTube lessons), 🖼️ Pictures / Infographics Tab (grammar charts, case tables), 📄 Text & Articles Tab (Serbian news, blog posts, reading passages with tap-to-translate).*
+> *[DONE] Dedicated External Learning Search Engine: Search any Serbian/English topic. Categorized into 3 Interactive Tabs: 🎬 Video Tab (embedded YouTube lessons), 🖼️ Pictures / Infographics Tab (grammar charts, case tables), 📄 Text & Articles Tab (Serbian news, blog posts, reading passages with tap-to-translate).*
 
 - [ ] **🍿 Pop Culture & Entertainment Immersion** *(content expansion still TODO)*:
   - 🎨 **Crtaći & Anime (Serbian Dubbed Cartoons & Anime)**: Learn with clear cartoon voice acting (SpongeBob, Disney, anime in Serbian).
@@ -94,33 +94,33 @@
   - 🎬 **Serijske Drame (TV Show Clips)**: Real conversational drama and comedic dialogue clips.
 
 ## ✅ Priority 9: Bilingual Karaoke Reader (Karaoke Mode #1: Dual-Text & Audio)
-> *LingQ & Beelinguapp Style Dual Reader: Serbian folk tales, short modern stories, and cultural news with synchronized side-by-side English translations. Karaoke text highlighting matching the spoken audio. Tap any individual word to see definition, case, gender, and save to flashcards.*
+> *[DONE] LingQ & Beelinguapp Style Dual Reader: Serbian folk tales, short modern stories, and cultural news with synchronized side-by-side English translations. Karaoke text highlighting matching the spoken audio. Tap any individual word to see definition, case, gender, and save to flashcards.*
 
 ## ✅ Priority 10: Muzika & Tekstovi (Karaoke Modes #2 & #3: Music & Live Singing)
-> *Karaoke Mode #2 — Song Lyrics Rhythm Trainer: Learn language through classic Serbian rock (Bajaga, Riblja Čorba, Bijelo Dugme), pop (Zdravko Čolić), and traditional folk classics (Tamo Daleko). Interactive lyrics trainer: fill in missing lyric blocks in real-time as the song plays.*
-> *Karaoke Mode #3 — Live Sing-Along Microphone Scoring (Karaoke Bar Mode): Full sing-along mode with Web Speech API and Web Audio analyzer to grade Serbian pronunciation, pitch accuracy, and rhythm, awarding stars and XP!*
+> *[DONE] Karaoke Mode #2 — Song Lyrics Rhythm Trainer: Learn language through classic Serbian rock (Bajaga, Riblja Čorba, Bijelo Dugme), pop (Zdravko Čolić), and traditional folk classics (Tamo Daleko). Interactive lyrics trainer: fill in missing lyric blocks in real-time as the song plays.*
+> *[DONE] Karaoke Mode #3 — Live Sing-Along Microphone Scoring (Karaoke Bar Mode): Full sing-along mode with Web Speech API and Web Audio analyzer to grade Serbian pronunciation, pitch accuracy, and rhythm, awarding stars and XP!*
 
 ## ✅ Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
-> *Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).*
+> *[DONE] Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).*
 
 ## ✅ Priority 12: Arcade Expansion (Reach 20 Total Minigames + Solo/Bot Mode)
-> *Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko_Bot, Ana_Bot) with live race progress bars.*
-> *Game #14: ⚡ Tačno/Netačno (Speed True/False) · Game #15: 🖼️ Pogodi Sliku (Picture Match) · Game #16: 🔍 Osmosmerka (Word Search) · Game #17: 📰 Ukrštenica (Mini Crossword) · Game #18: 🟩 Rečko (Serbian Wordle) · Game #19: 🎈 Baloni (Bubble Pop) · Game #20: 🧺 Razvrstaj (Gender & Case Sorter)*
+> *[DONE] Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko_Bot, Ana_Bot) with live race progress bars.*
+> *[DONE] Game #14: ⚡ Tačno/Netačno (Speed True/False) · Game #15: 🖼️ Pogodi Sliku (Picture Match) · Game #16: 🔍 Osmosmerka (Word Search) · Game #17: 📰 Ukrštenica (Mini Crossword) · Game #18: 🟩 Rečko (Serbian Wordle) · Game #19: 🎈 Baloni (Bubble Pop) · Game #20: 🧺 Razvrstaj (Gender & Case Sorter)*
 
 - [ ] **Local Trophy Cabinet** *(Pending Upgrade)*:
   - Build a showcase room tracking high scores, win streaks against the Bots, and awarding Bronze/Silver/Gold medals for minigames.
 
 ## ✅ Priority 13: Cloze Mastery (Fill-in-the-Blank Context Engine)
-> *Busuu / Clozemaster Context Trainer: 5,000+ real conversational Serbian sentences with 1 key missing word. Rapid-fire contextual fill-in-the-blank practice to build natural language instincts.*
+> *[DONE] Busuu / Clozemaster Context Trainer: 5,000+ real conversational Serbian sentences with 1 key missing word. Rapid-fire contextual fill-in-the-blank practice to build natural language instincts.*
 
 ## ✅ Priority 14: Extended Roleplay & AI Chat Scenarios
-> *Deep Scenario Library (roleplay.js): Dozens of specialized AI scenario prompts — 🏨 Hotel Check-in & Room Service · ✈️ Airport Security & Customs · 🩺 Doctor's Office & Pharmacy · 🏢 Job Interview in Belgrade · 🍽️ Ordering at a Traditional Kafana with wine pairings · 🚨 Emergency / Lost Passport Assistance*
+> *[DONE] Deep Scenario Library (roleplay.js): Dozens of specialized AI scenario prompts — 🏨 Hotel Check-in & Room Service · ✈️ Airport Security & Customs · 🩺 Doctor's Office & Pharmacy · 🏢 Job Interview in Belgrade · 🍽️ Ordering at a Traditional Kafana with wine pairings · 🚨 Emergency / Lost Passport Assistance*
 
 ## ✅ Priority 15: Authentic Serbian Slang & Žargon Module
-> *Real Street Serbian & Dialects: Dedicated modules for Belgrade slang ("Brate", "Bleja", "Šta ima"), coffee culture expressions, and Balkan idioms. Dialect toggle notes: Belgrade (Šumadijsko-vojvođanski) vs. Niš / Southern Serbian vs. Western / Diaspora expressions.*
+> *[DONE] Real Street Serbian & Dialects: Dedicated modules for Belgrade slang ("Brate", "Bleja", "Šta ima"), coffee culture expressions, and Balkan idioms. Dialect toggle notes: Belgrade (Šumadijsko-vojvođanski) vs. Niš / Southern Serbian vs. Western / Diaspora expressions.*
 
 ## ✅ Priority 16: Serbian Pitch-Accent & Melodic Pronunciation Guide
-> *Visual Pitch Waveform & Intonation: Educational guide and audio trainer for the 4 Serbian vowel accents (Kratkosilazni, Dugo-silazni, Kratkouzlazni, Dugouzlazni). Visual intonation curves showing native speaker melody vs. flat robotic speech. Voice Pitch-Waveform Visualizer: visual sound-wave of user's voice layered on top of native speaker's sound-wave.*
+> *[DONE] Visual Pitch Waveform & Intonation: Educational guide and audio trainer for the 4 Serbian vowel accents (Kratkosilazni, Dugo-silazni, Kratkouzlazni, Dugouzlazni). Visual intonation curves showing native speaker melody vs. flat robotic speech. Voice Pitch-Waveform Visualizer: visual sound-wave of user's voice layered on top of native speaker's sound-wave.*
 
 ## 🚗 Priority 17: Hands-Free / Commute Audio Mode
 - [ ] **Screen-Locked Audio Trainer (Pimsleur-Style)**:
@@ -229,7 +229,7 @@
 - [ ] **Cultural Context Notes**: Teach not just the literal translation, but exactly when and to whom these emotional phrases are used.
 
 ## ⌨️ Priority 31: Keyboard Tolerance & Diacritic Normalization
-> *- [x] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes š->s, č/ć->c, ž->z, and đ->dj during answer checking. (ALREADY IMPLEMENTED in app.js checkAnswer normalize())*
+> *[DONE] - [x] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes š->s, č/ć->c, ž->z, and đ->dj during answer checking. (ALREADY IMPLEMENTED in app.js checkAnswer normalize())*
 - [ ] **Gentle Typo Feedback**: Pop up a gentle tip (e.g., "Correct! But watch out, the proper spelling has a š") when the user relies on Bald Latin shortcuts.
 
 ## 🏆 Priority 32: Advanced Gamification & Social (The League System)
@@ -252,7 +252,7 @@
 
 ## 🏗️ Priority 36: Infrastructure & Code Architecture Upgrades
 - [ ] **Database Migration Engine**: Script a version-control system for `IndexedDB`. When we push a new `seed-data.js` with 10,000 new words, the app must safely merge it without deleting the user's saved flashcard progress.
-> *- [x] **Data Chunking (Lazy Loading)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags. (DONE)*
+> *[DONE] - [x] **Data Chunking (Lazy Loading)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags. (DONE)*
 
 ## 🔔 Priority 37: Retention & Habit Building
 - [ ] **Web Push Notifications**: Ask for notification permission to send a daily reminder: *"Your 5-day streak is in danger! Practice now."*
@@ -269,4 +269,5 @@
 
 ## 🧩 Priority 41: Interactive Grammar Sandbox
 - [ ] **Visual Sentence Builder**: Instead of typing, users drag and drop "Lego blocks" of words. Noun blocks are blue, Verb blocks are red. It visually teaches sentence structure (SVO).
+
 
