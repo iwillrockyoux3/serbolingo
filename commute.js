@@ -15,6 +15,7 @@ window.CommuteEngine = (function() {
     let sessionMode = 'listen'; // 'listen' or 'answer'
     let isInfinite = false;
     let quantity = 50;
+    let direction = 'en-sr'; // 'en-sr' or 'sr-en'
 
     let micEnabled = false;
     let isMicRecording = false;
@@ -45,7 +46,7 @@ window.CommuteEngine = (function() {
         if (!recognition) {
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRec();
-            recognition.lang = 'sr-RS';
+            recognition.lang = (direction === 'sr-en') ? 'en-US' : 'sr-RS';
             recognition.continuous = true;
             recognition.interimResults = true; // MUST BE TRUE for fast response
             
@@ -63,8 +64,9 @@ window.CommuteEngine = (function() {
                     
                     lastHeardTranscript = raw; 
                     
-                    // Show live text so user knows it's working!
-                    el('commute-current-en').innerText = "🎙️ " + raw;
+                    // Show live text so user knows it's working
+                    const liveEl = (direction === 'en-sr') ? el('commute-current-sr') : el('commute-current-en');
+                    liveEl.innerText = "🎙️ " + raw;
                     
                     const r = normalizeText(raw);
                     if (!r) continue; 
@@ -283,6 +285,16 @@ window.CommuteEngine = (function() {
         pauseTime = parseInt(el('commute-pause-time').value) || 3000;
         quantity = parseInt(el('commute-quantity').value) || 50;
         
+        const newDir = el('commute-direction') ? el('commute-direction').value : 'en-sr';
+        if (newDir !== direction) {
+            direction = newDir;
+            // Destroy old recognition so it recreates with the correct language
+            if (recognition) {
+                try { recognition.stop(); } catch(e) {}
+                recognition = null;
+            }
+        }
+        
         // Update live
         applyQuantity();
         updateDisplay();
@@ -342,26 +354,76 @@ window.CommuteEngine = (function() {
             const word = playlist[currentIndex];
             if (!word) break;
             
-            updateDisplay();
+            const srText = (word.sr || word.sr_lat) || '';
+            const enText = word.en || '';
+            
+            // Determine prompt (what we show/speak first) and answer (what user must produce)
+            const promptText = (direction === 'en-sr') ? enText : srText;
+            const answerText = (direction === 'en-sr') ? srText : enText;
+            const promptLang = (direction === 'en-sr') ? 'en-US' : 'sr-RS';
+            const answerLang = (direction === 'en-sr') ? 'sr-RS' : 'en-US';
+            
+            // Update display
+            const srEl = el('commute-current-sr');
+            const enEl = el('commute-current-en');
+            
+            // In Listen mode: show both (prompt bold, answer dimmed)
+            // In Answer mode: show only the prompt, hide the answer completely
+            if (direction === 'en-sr') {
+                enEl.innerText = enText;
+                enEl.classList.remove('opacity-30');
+                if (micEnabled) {
+                    srEl.innerText = '???'; // Hide Serbian answer in Answer mode
+                    srEl.classList.add('opacity-30');
+                } else {
+                    srEl.innerText = srText;
+                    srEl.classList.add('opacity-30');
+                }
+            } else {
+                srEl.innerText = srText;
+                srEl.classList.remove('opacity-30');
+                if (micEnabled) {
+                    enEl.innerText = '???'; // Hide English answer in Answer mode
+                    enEl.classList.add('opacity-30');
+                } else {
+                    enEl.innerText = enText;
+                    enEl.classList.add('opacity-30');
+                }
+            }
+            
+            // Update counter
+            const counter = el('commute-counter');
+            if (counter) {
+                if (isInfinite) {
+                    counter.innerText = '∞ Infinity Mode (' + (currentIndex + 1) + ')';
+                } else {
+                    counter.innerText = (currentIndex + 1) + ' / ' + playlist.length;
+                }
+            }
 
-            // 1. Speak English
+            // 1. Speak the PROMPT word
             listeningForAnswer = false; 
-            el('commute-current-sr').classList.add('opacity-30');
-            el('commute-current-en').classList.remove('opacity-30');
-            await speakGTX(word.en, 'en-US');
+            await speakGTX(promptText, promptLang);
             
             if (!loopActive || myId !== loopId) break;
 
             // 2. Thinking pause (or mic listen)
             if (micEnabled) {
-                el('commute-current-sr').innerText = '🎙️ Vaš red (Your turn)...';
+                // Show "Your turn" in the ANSWER slot
+                if (direction === 'en-sr') {
+                    srEl.innerText = '🎙️ Vaš red (Your turn)...';
+                    srEl.classList.remove('opacity-30');
+                } else {
+                    enEl.innerText = '🎙️ Your turn...';
+                    enEl.classList.remove('opacity-30');
+                }
                 
                 // Force start mic if it crashed
                 if (!isMicRecording && initMic()) {
                      try { recognition.start(); } catch(e){}
                 }
                 
-                currentExpectedAnswer = (word.sr || word.sr_lat);
+                currentExpectedAnswer = answerText;
                 answerFound = false;
                 listeningForAnswer = true;
                 lastHeardTranscript = "";
@@ -376,12 +438,21 @@ window.CommuteEngine = (function() {
                 
                 if (!answerFound && loopActive && myId === loopId) {
                     if (window.app && window.app.playSound) window.app.playSound('incorrect');
-                    const srEl = el('commute-current-sr');
-                    srEl.classList.add('text-red-400');
+                    // Show the answer they missed in red
+                    if (direction === 'en-sr') {
+                        srEl.innerText = answerText;
+                        srEl.classList.add('text-red-400');
+                    } else {
+                        enEl.innerText = answerText;
+                        enEl.classList.add('text-red-400');
+                    }
                     if (lastHeardTranscript && window.app && window.app.showToast) {
                         window.app.showToast('Mic heard: ' + lastHeardTranscript, 'info');
                     }
-                    setTimeout(() => srEl.classList.remove('text-red-400'), 1500);
+                    setTimeout(() => {
+                        srEl.classList.remove('text-red-400');
+                        enEl.classList.remove('text-red-400');
+                    }, 1500);
                 }
             } else {
                 let elapsed = 0;
@@ -394,11 +465,17 @@ window.CommuteEngine = (function() {
             
             if (!loopActive || myId !== loopId) break;
 
-            // 3. Reveal & Speak Serbian answer
-            el('commute-current-sr').innerText = (word.sr || word.sr_lat);
-            el('commute-current-sr').classList.remove('opacity-30');
-            el('commute-current-en').classList.add('opacity-30');
-            await speakGTX((word.sr || word.sr_lat), 'sr-RS');
+            // 3. Reveal & Speak the ANSWER
+            if (direction === 'en-sr') {
+                srEl.innerText = srText;
+                srEl.classList.remove('opacity-30', 'text-red-400');
+                enEl.classList.add('opacity-30');
+            } else {
+                enEl.innerText = enText;
+                enEl.classList.remove('opacity-30', 'text-red-400');
+                srEl.classList.add('opacity-30');
+            }
+            await speakGTX(answerText, answerLang);
             
             if (!loopActive || myId !== loopId) break;
 
