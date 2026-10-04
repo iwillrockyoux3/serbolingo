@@ -26,6 +26,15 @@ window.CommuteEngine = (function() {
 
     const el = (id) => document.getElementById(id);
 
+    let lastHeardTranscript = "";
+
+    function normalizeText(str) {
+        let s = str.toLowerCase();
+        const map = {'а':'a', 'б':'b', 'в':'v', 'г':'g', 'д':'d', 'ђ':'đ', 'е':'e', 'ж':'ž', 'з':'z', 'и':'i', 'ј':'j', 'к':'k', 'л':'l', 'љ':'lj', 'м':'m', 'н':'n', 'њ':'nj', 'о':'o', 'п':'p', 'р':'r', 'с':'s', 'т':'t', 'ћ':'ć', 'у':'u', 'ф':'f', 'х':'h', 'ц':'c', 'ч':'č', 'џ':'dž', 'ш':'š'};
+        s = s.split('').map(c => map[c] || c).join('');
+        return s.replace(/[.,?!()]/g, '').replace(/\s+/g, ' ').trim();
+    }
+
     // ── Persistent Speech Recognition ──
     function initMic() {
         if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
@@ -45,23 +54,30 @@ window.CommuteEngine = (function() {
             recognition.onresult = (e) => {
                 if (!listeningForAnswer || !currentExpectedAnswer) return;
                 
-                const results = [];
-                for (let i = e.resultIndex; i < e.results.length; i++) {
-                    results.push(e.results[i][0].transcript.toLowerCase().trim());
-                }
+                const expectedClean = normalizeText(currentExpectedAnswer);
+                let matched = false;
                 
-                const expected = currentExpectedAnswer.toLowerCase().trim();
-                const correct = results.some(r => r === expected || r.includes(expected) || expected.includes(r));
+                for (let i = e.resultIndex; i < e.results.length; i++) {
+                    const raw = e.results[i][0].transcript;
+                    lastHeardTranscript = raw; // Save for debugging timeout
+                    
+                    const r = normalizeText(raw);
+                    if (!r) continue; // Ignore empty noise
+                    
+                    // Match exactly, or if spoken phrase contains the exact expected word(s)
+                    const regex = new RegExp(`(?:^|\\s)${expectedClean}(?:\\s|$)`);
+                    if (r === expectedClean || regex.test(r)) {
+                        matched = true;
+                        break;
+                    }
+                }
 
-                if (correct) {
+                if (matched) {
                     answerFound = true;
                     if (window.app && window.app.playSound) window.app.playSound('correct');
                     const srEl = el('commute-current-sr');
                     srEl.classList.add('text-green-400');
                     setTimeout(() => srEl.classList.remove('text-green-400'), 1500);
-                } else {
-                    // Help user debug what was heard
-                    if (window.app && window.app.showToast) window.app.showToast('Mic heard: ' + results[0], 'info');
                 }
             };
 
@@ -344,6 +360,7 @@ window.CommuteEngine = (function() {
                 currentExpectedAnswer = (word.sr || word.sr_lat);
                 answerFound = false;
                 listeningForAnswer = true;
+                lastHeardTranscript = "";
                 
                 let elapsed = 0;
                 while (elapsed < pauseTime) {
@@ -357,6 +374,9 @@ window.CommuteEngine = (function() {
                     if (window.app && window.app.playSound) window.app.playSound('incorrect');
                     const srEl = el('commute-current-sr');
                     srEl.classList.add('text-red-400');
+                    if (lastHeardTranscript && window.app && window.app.showToast) {
+                        window.app.showToast('Mic heard: ' + lastHeardTranscript, 'info');
+                    }
                     setTimeout(() => srEl.classList.remove('text-red-400'), 1500);
                 }
             } else {
