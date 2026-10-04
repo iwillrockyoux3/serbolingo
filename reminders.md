@@ -243,6 +243,7 @@
 ## 🏗️ Priority 36: Infrastructure & Code Architecture Upgrades
 - [ ] **Database Migration Engine**: Script a version-control system for `IndexedDB`. When we push a new `seed-data.js` with 10,000 new words, the app must safely merge it without deleting the user's saved flashcard progress.
 - [x] **Data Chunking (Lazy Loading)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags. (DONE)
+
 ## 🔔 Priority 37: Retention & Habit Building
 - [ ] **Web Push Notifications**: Ask for notification permission to send a daily reminder: *"Your 5-day streak is in danger! Practice now."*
 - [ ] **PWA & Home Screen Widgets**: Add a `manifest.json` so users can install it as a native app, and create an Android/iOS Widget that displays their Daily Streak right on their phone's home screen.
