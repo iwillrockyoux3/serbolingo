@@ -240,3 +240,41 @@
 ## ⌨️ Priority 31: Keyboard Tolerance & Diacritic Normalization
 - [ ] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes `š->s`, `č/ć->c`, `ž->z`, and `đ->dj` during answer checking. (ALREADY IMPLEMENTED!)
 - [ ] **Gentle Typo Feedback**: Pop up a gentle tip (e.g., "Correct! But watch out, the proper spelling has a š") when the user relies on Bald Latin shortcuts.
+
+## 🏆 Priority 32: Advanced Gamification & Social (The League System)
+- [ ] **Ranked Leagues**: Bronze, Silver, Gold, Diamond, and Obsidian leagues. Users are grouped with 30 random people weekly. Top 10 advance, bottom 5 demote.
+- [ ] **Timed XP Boosts**: "Early Bird" (practice before 9 AM) grants a 15-minute 2x XP boost to use later that evening, building a twice-a-day habit.
+- [ ] **Profile Avatars & Titles**: Unlockable animated avatars and titles (e.g., "Kafana Legend", "Grammar Nerd") bought with in-app gems.
+
+## 🤖 Priority 33: "Explain My Mistake" AI Tutor
+- [ ] **Gemini Grammar Breakdown**: When a user gets a question wrong (e.g., typing "Ja sam dobar" instead of "Ja sam dobra"), add an "Explain Why" button. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made.
+- [ ] **AI Accent Coach**: Give a 0-100% pronunciation score comparing the user's voice pitch to a native Belgrade speaker.
+
+## 📺 Priority 34: Real-World Native Media & Immersion
+- [ ] **Native Speaker Clips**: Short 3-second looping video/audio clips of actual locals pronouncing difficult words or slang on the street.
+- [ ] **Hardcore Immersion Mode**: A toggle in settings that turns the *entire app UI* into Serbian. Zero English is allowed. Good for advanced learners.
+
+## 📳 Priority 35: Accessibility & Sensory Feedback
+- [ ] **Haptic Feedback**: Use `navigator.vibrate` to trigger tiny micro-vibrations on the phone when tapping keys, and a heavier double-buzz when answering wrong.
+- [ ] **Colorblind Mode**: Add visual textures/patterns to buttons so users don't have to rely purely on Green (Correct) and Red (Wrong).
+- [ ] **Landscape Mode Optimization**: Adjust the Flexbox layout so the app looks beautiful on horizontal tablets and iPads, not just vertical phones.
+
+## 🏗️ Priority 36: Infrastructure & Code Architecture Upgrades
+- [ ] **Database Migration Engine**: Script a version-control system for `IndexedDB`. When we push a new `seed-data.js` with 10,000 new words, the app must safely merge it without deleting the user's saved flashcard progress.
+- [ ] **Data Chunking (Lazy Loading)**: Break the dictionary into `A-M.json` and `N-Z.json` so budget phones don't crash when loading massive vocabularies into RAM.
+
+## 🔔 Priority 37: Retention & Habit Building
+- [ ] **Web Push Notifications**: Ask for notification permission to send a daily reminder: *"Your 5-day streak is in danger! Practice now."*
+- [ ] **PWA & Home Screen Widgets**: Add a `manifest.json` so users can install it as a native app, and create an Android/iOS Widget that displays their Daily Streak right on their phone's home screen.
+
+## 📚 Priority 38: Smart Paced Story Mode
+- [ ] **Dynamic Bedtime Stories**: Instead of static stories, the app uses AI to generate a unique short story containing *only* the specific 20 words the user struggled with most that week.
+
+## 📷 Priority 39: Optical Character Recognition (AI Visual Lens)
+- [ ] **Camera Translation**: Tap a camera icon, point the phone at a real Serbian restaurant menu or street sign, and the app reads the text, translates it, and adds the new words directly to your Flashcard deck.
+
+## 🗂️ Priority 40: Custom Community Decks
+- [ ] **User-Created Vocab Lists**: Allow users to build custom folders (e.g., "Medical Terms", "Football Vocabulary") and share them with other users via a generated link.
+
+## 🧩 Priority 41: Interactive Grammar Sandbox
+- [ ] **Visual Sentence Builder**: Instead of typing, users drag and drop "Lego blocks" of words. Noun blocks are blue, Verb blocks are red. It visually teaches sentence structure (SVO).
