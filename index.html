@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="sr">
 
 <head>
@@ -215,9 +215,17 @@
             </div>
 
             <!-- Practice Mode Button -->
-            <button onclick="app.startPractice()" class="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-black rounded-2xl shadow-lg text-sm uppercase tracking-wider active:scale-95 transition-transform mb-6">
-                🔄 Vežbaj / Practice
-            </button>
+            <!-- Practice Mode Button & Commute Mode -->
+            <div class="flex gap-2 mb-6">
+                <button onclick="app.startPractice()" class="flex-1 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-black rounded-2xl shadow-lg text-sm uppercase tracking-wider active:scale-95 transition-transform flex items-center justify-center gap-2">
+                    Vežbaj
+                </button>
+                <button onclick="app.navigate('audio-commute'); CommuteEngine.init();" class="flex-1 py-4 bg-slate-800 text-white font-black rounded-2xl shadow-lg text-sm uppercase tracking-wider active:scale-95 transition-transform flex items-center justify-center gap-2">
+                    🚗 Hands-Free
+                </button>
+            </div>
+
+
 
             <!-- Daily Quests -->
             <div>
@@ -821,6 +829,72 @@
             </button>
             </button>
         </div>
+
+        <!-- View: Audio Commute Mode (Priority 17) -->
+        <div id="view-audio-commute" class="hidden flex-1 flex flex-col bg-slate-900 text-white fade-in" style="height: calc(100vh - 110px);">
+            <!-- Top Bar -->
+            <div class="flex items-center justify-between p-4 border-b border-slate-800">
+                <button onclick="app.navigate('home')" class="text-slate-400 hover:text-white p-2">
+                    <span class="text-2xl">←</span>
+                </button>
+                <h2 class="font-black tracking-widest uppercase text-sm text-slate-300">Hands-Free Mode</h2>
+                <div class="w-10"></div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-8 relative overflow-hidden">
+                <!-- Pulse/Visualizer Background (hidden by default) -->
+                <div id="commute-pulse" class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 pointer-events-none">
+                    <div class="w-64 h-64 bg-blue-500/20 rounded-full animate-ping"></div>
+                </div>
+
+                <div class="z-10 w-full max-w-xs">
+                    <!-- Current Item Display -->
+                    <div id="commute-current-sr" class="text-4xl font-black mb-2 min-h-[48px] drop-shadow-md">Spreman?</div>
+                    <div id="commute-current-en" class="text-xl text-slate-400 font-bold min-h-[32px]">Ready?</div>
+                </div>
+
+                <!-- Controls -->
+                <div class="z-10 flex items-center justify-center gap-6 mt-8">
+                    <button onclick="CommuteEngine.prev()" class="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center active:scale-95 transition-transform border border-slate-700 hover:bg-slate-700">
+                        <span class="text-xl">⏮️</span>
+                    </button>
+                    
+                    <button id="commute-play-btn" onclick="CommuteEngine.togglePlay()" class="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center active:scale-95 transition-transform shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:bg-blue-500">
+                        <span id="commute-play-icon" class="text-4xl ml-2">▶️</span>
+                    </button>
+                    
+                    <button onclick="CommuteEngine.next()" class="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center active:scale-95 transition-transform border border-slate-700 hover:bg-slate-700">
+                        <span class="text-xl">⏭️</span>
+                    </button>
+                </div>
+
+                <!-- Settings -->
+                <div class="z-10 w-full max-w-xs mt-12 bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <label class="block text-xs font-bold text-slate-400 mb-2 uppercase">Playlist Category</label>
+                    <select id="commute-category" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-3 py-2 text-sm font-bold text-white focus:outline-none focus:border-blue-500" onchange="CommuteEngine.loadPlaylist()">
+                        <option value="all">All Words (Mixed)</option>
+                        <option value="mistakes">My Mistakes (Needs Review)</option>
+                        <option value="favorites">Favorites (Starred)</option>
+                        <option value="phrases">Common Phrases</option>
+                    </select>
+
+                    <div class="flex items-center justify-between mt-4">
+                        <label class="text-xs font-bold text-slate-400 uppercase">Thinking Pause</label>
+                        <select id="commute-pause-time" class="bg-slate-800 border border-slate-600 rounded-lg px-2 py-1 text-xs font-bold text-white" onchange="CommuteEngine.updateSettings()">
+                            <option value="1500">1.5s (Fast)</option>
+                            <option value="3000" selected>3s (Normal)</option>
+                            <option value="5000">5s (Slow)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hidden Audio Element to keep iOS Safari awake -->
+            <audio id="commute-silent-audio" loop playsinline>
+                <!-- We will generate a silent data URI blob in JS -->
+            </audio>
+        </div>
     </main>
 
     <!-- BOTTOM NAVIGATION -->
@@ -943,6 +1017,7 @@
     <script src="skill-tree.js" charset="UTF-8"></script>
     <script src="roleplay.js" charset="UTF-8"></script>
     <script src="arcade.js" charset="UTF-8"></script>
+    <script src="commute.js" charset="UTF-8"></script>
     <script src="app.js" charset="UTF-8"></script>
 </body>
 

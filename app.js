@@ -652,7 +652,7 @@ const app = {
         }
     },
     navigate: (vid) => {
-        ['view-home', 'view-lesson', 'view-stats', 'view-profile', 'view-arcade', 'view-mistakes', 'view-explore', 'view-karaoke'].forEach(id => {
+        ['view-home', 'view-lesson', 'view-stats', 'view-profile', 'view-arcade', 'view-mistakes', 'view-explore', 'view-karaoke', 'view-audio-commute'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.add('hidden');
         });
