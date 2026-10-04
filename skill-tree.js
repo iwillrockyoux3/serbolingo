@@ -3,6 +3,26 @@
 // Phase 3: Duolingo-style progression system
 
 const SKILL_TREE = [
+    // Slang Node inserted as an Optional fun path in TIER 1
+    { id: 'slang', name: 'Ulični Srpski', nameEn: 'Street Slang', emoji: '🌶️', category: 'slang', prereqs: [], optional: true, difficulty: 2, guideHtml: `
+<div class="space-y-4">
+    <p>Welcome to <b>Ulični Srpski (Street Serbian)</b>! This is how people actually speak on the streets of Belgrade.</p>
+    <ul class="list-disc pl-5 font-bold space-y-2">
+        <li><b>Brate</b> - Literally "brother", used like "dude" or "bro".</li>
+        <li><b>Bleja</b> - Hanging out or chilling. "Idemo na bleju" (Let's go chill).</li>
+        <li><b>Gajba</b> - Literally a crate, used for "apartment" or "house". "Cimaj me kad stigneš na gajbu" (Hit me up when you get home).</li>
+    </ul>
+    <p class="text-sm bg-red-50 dark:bg-red-900/30 p-2 rounded-lg mt-2 text-red-800 dark:text-red-200"><b>Note:</b> You can play the full Slang Quiz in the Arcade (Igraonica) tab!</p>
+</div>`, guideHtmlSr: `
+<div class="space-y-4">
+    <p>Dobrodošli u <b>Engleski Žargon (Slang)</b>!</p>
+    <ul class="list-disc pl-5 font-bold space-y-2">
+        <li><b>Dude / Bro / Man</b> - Brate / Matori</li>
+        <li><b>Chilling</b> - Bleja (Opuštanje)</li>
+        <li><b>Hang out</b> - Druženje / Izaći napolje</li>
+    </ul>
+</div>` },
+
     // --- TIER 1: FOUNDATION (all unlocked from start, paired layout) ---
     { id: 'alphabet', name: 'Azbuka', nameEn: 'Alphabet', emoji: '🔤', category: 'alphabet', prereqs: [], optional: false, difficulty: 1, guideHtml: `
 <div class="space-y-6">

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SerboLingo - Learn Serbian to English</title>
     <script>
         window.addEventListener('error', function(e) {
@@ -27,7 +27,8 @@
 </head>
 
 <body
-    class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 h-screen flex flex-col overflow-hidden text-[14px] transition-colors duration-300">
+    class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden text-[14px] transition-colors duration-300"
+    style="height: 100vh; height: 100dvh;">
 
     <!-- GOAL MODAL -->
     <div id="lesson-overlay"
@@ -381,7 +382,7 @@
                 </div>
             </div>
             <div id="lesson-content-area"
-                class="flex-1 overflow-y-auto px-6 pb-40 flex flex-col items-center justify-center text-center fade-in">
+                class="flex-1 overflow-y-auto px-6 pb-40 flex flex-col items-center justify-start pt-8 text-center fade-in">
             </div>
             <div id="lesson-footer"
                 class="p-4 border-t-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 absolute bottom-0 w-full z-10">
@@ -733,6 +734,17 @@
                                 class="absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform dark:translate-x-5">
                             </div>
                         </button>
+                    </div>
+
+                    <!-- Text Scaling -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
+                            <span data-i18n="profile_text_size">Veličina teksta</span>
+                            <span id="text-scale-val">100%</span>
+                        </div>
+                        <input type="range" min="100" max="150" step="5" value="100" id="text-scale"
+                            oninput="app.setTextScale(this.value)"
+                            class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
                     </div>
 
                     <!-- Sound Effects Volume -->

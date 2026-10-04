@@ -37,18 +37,18 @@
 ---
 
 ## ✅ Completed Core Infrastructure (DONE)
-- [x] **Massive Dictionary Engine (IndexedDB / SQLite):** ✅ DONE
-  - IndexedDB implemented in `db.js`. Dictionary loads from `seed-data.js`.
-- [x] **⭐ Add to Flashcards from Omni-Bar:** ✅ DONE
-  - Star button on search results saves words to SRS deck via `state.mistakeLog`.
+<p style="opacity: 0.4;">Massive Dictionary Engine (IndexedDB / SQLite): IndexedDB implemented in db.js. Dictionary loads from seed-data.js.</p>
+<p style="opacity: 0.4;">⭐ Add to Flashcards from Omni-Bar: Star button on search results saves words to SRS deck via state.mistakeLog.</p>
 
 ---
 
 ## 📚 Priority 1: Massive Vocabulary Database Expansion
 - [ ] **Thousands of Categorized Words (seed-data.js & IndexedDB)**:
-  - Expand to match Babbel/Duolingo scale (5,000+ words/phrases).
+  - Expand database to reach **15,000+ words and phrases** (massive scaling goal).
   - Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms.
   - Include phonetic pronunciation helpers, grammatical gender flags, and usage examples.
+- [ ] **Omni-Bar "Fuzzy Search" & Typo Tolerance**:
+  - Implement a Levenshtein Distance (Fuzzy Search) algorithm so the search bar auto-corrects typos (e.g. typing "yabuka" instead of "jabuka") and handles missing Cyrillic characters gracefully.
 
 ## 🌳 Priority 2: Giant Skill Tree Expansion
 - [ ] **Sprawling Tree Structure (skill-tree.js)**:
@@ -82,87 +82,54 @@
   - A quick "Guidebook / Tips" tab attached to each Skill Tree node.
   - Visual charts breaking down why grammatical shifts happen (e.g., Kuća ➡️ U kući, Prijatelj ➡️ Prijatelji) in simple 1-minute visual explanations before lessons start.
 
-## 🧠 Priority 6: The Mistake Vault ("Moje Greške" / Smart Error Review)
-- [ ] **1-Click Mistake Clearing**:
-  - Automatically captures any question or word answered incorrectly in lessons, skill tree, or minigames.
-  - Dedicated "Mistakes" review screen with SRS prioritization to clear weaknesses permanently.
+## ✅ Priority 6: The Mistake Vault ("Moje Greške" / Smart Error Review)
+<p style="opacity: 0.4;">1-Click Mistake Clearing: Automatically captures any question or word answered incorrectly in lessons, skill tree, or minigames. Dedicated "Mistakes" review screen with SRS prioritization to clear weaknesses permanently.</p>
+
+- [ ] **True SRS Algorithm (SuperMemo-2)** *(Pending Upgrade)*:
+  - Implement the SM2 mathematical algorithm to properly space out reviews (1 day, 3 days, 10 days) for true long-term memory retention instead of just basic mistake logging.
 
 ## 🛡️ Priority 7: Streak Freeze & Daily Quests Shop
 - [ ] **Gamification Expansion**:
   - **Streak Freeze (Štit za Niz)**: Purchase or earn shields that protect streak if the user misses a day.
   - **Daily Quests (Dnevne Misije)**: 3 daily missions (e.g., "Earn 60 XP", "Score 90% in Speed Typer", "Learn 5 New Words") awarding bonus gems and XP boosts.
 
-## 🌐 Priority 8: Istraži / Web & Media Learning Hub (Pop Culture & 3-Tab Explorer)
-- [ ] **Dedicated External Learning Search Engine**:
-  - Search any Serbian/English topic (e.g., "Ordering food in Belgrade", "Serbian past tense", "Top slang").
-  - Categorized into 3 Interactive Tabs:
-    - 🎬 **Video Tab**: Embedded educational YouTube video lessons and authentic dialogues playable right in the app.
-    - 🖼️ **Pictures / Infographics Tab**: Visual grammar charts, case tables, and vocabulary infographic posters.
-    - 📄 **Text & Articles Tab**: Real Serbian news snippets, cultural blog posts, and reading passages with built-in tap-to-translate.
-- [ ] **🍿 Pop Culture & Entertainment Immersion**:
+## ✅ Priority 8: Istraži / Web & Media Learning Hub (Pop Culture & 3-Tab Explorer)
+<p style="opacity: 0.4;">Dedicated External Learning Search Engine: Search any Serbian/English topic. Categorized into 3 Interactive Tabs: 🎬 Video Tab (embedded YouTube lessons), 🖼️ Pictures / Infographics Tab (grammar charts, case tables), 📄 Text & Articles Tab (Serbian news, blog posts, reading passages with tap-to-translate).</p>
+
+- [ ] **🍿 Pop Culture & Entertainment Immersion** *(content expansion still TODO)*:
   - 🎨 **Crtaći & Anime (Serbian Dubbed Cartoons & Anime)**: Learn with clear cartoon voice acting (SpongeBob, Disney, anime in Serbian).
-  - 🍿 **Kultne Scene (Iconic Yugoslav & Serbian Cinema)**: Clips from “Ko to tamo peva”, “Maratonci”, “Munje”, and “Južni vetar” with dual-language subtitles.
+  - 🍿 **Kultne Scene (Iconic Yugoslav & Serbian Cinema)**: Clips from "Ko to tamo peva", "Maratonci", "Munje", and "Južni vetar" with dual-language subtitles.
   - 📖 **Stripovi & Comics**: Interactive Balkan comic panels (e.g., Alan Ford, Zagor, webcomics) with tap-to-translate dialogue bubbles.
   - 🎬 **Serijske Drame (TV Show Clips)**: Real conversational drama and comedic dialogue clips.
 
-## 🎶 Priority 9: Bilingual Karaoke Reader (Karaoke Mode #1: Dual-Text & Audio)
-- [ ] **LingQ & Beelinguapp Style Dual Reader**:
-  - Serbian folk tales, short modern stories, and cultural news with synchronized side-by-side English translations.
-  - Karaoke text highlighting matching the spoken audio. Tap any individual word to see definition, case, gender, and save to flashcards.
+## ✅ Priority 9: Bilingual Karaoke Reader (Karaoke Mode #1: Dual-Text & Audio)
+<p style="opacity: 0.4;">LingQ & Beelinguapp Style Dual Reader: Serbian folk tales, short modern stories, and cultural news with synchronized side-by-side English translations. Karaoke text highlighting matching the spoken audio. Tap any individual word to see definition, case, gender, and save to flashcards.</p>
 
-## 🎵 Priority 10: Muzika & Tekstovi (Karaoke Modes #2 & #3: Music & Live Singing)
-- [ ] **Karaoke Mode #2: Song Lyrics Rhythm Trainer**:
-  - Learn language through classic Serbian rock (Bajaga, Riblja Čorba, Bijelo Dugme), pop (Zdravko Čolić), and traditional folk classics (Tamo Daleko).
-  - Interactive lyrics trainer: fill in missing lyric blocks in real-time as the song plays.
-- [ ] **Karaoke Mode #3: Live Sing-Along Microphone Scoring (Karaoke Bar Mode)**:
-  - Full sing-along mode: hold the phone, sing the Serbian song lyrics into the microphone as the backing track plays.
-  - Uses the Web Speech API and Web Audio analyzer to grade your Serbian pronunciation, pitch accuracy, and rhythm, awarding stars and XP!
+## ✅ Priority 10: Muzika & Tekstovi (Karaoke Modes #2 & #3: Music & Live Singing)
+<p style="opacity: 0.4;">Karaoke Mode #2 — Song Lyrics Rhythm Trainer: Learn language through classic Serbian rock (Bajaga, Riblja Čorba, Bijelo Dugme), pop (Zdravko Čolić), and traditional folk classics (Tamo Daleko). Interactive lyrics trainer: fill in missing lyric blocks in real-time as the song plays.</p>
+<p style="opacity: 0.4;">Karaoke Mode #3 — Live Sing-Along Microphone Scoring (Karaoke Bar Mode): Full sing-along mode with Web Speech API and Web Audio analyzer to grade Serbian pronunciation, pitch accuracy, and rhythm, awarding stars and XP!</p>
 
-## 📖 Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
-- [ ] **Voiced Cultural Mini-Stories**:
-  - Immersive dialogues and cultural tales (e.g., “A Night Out in Skadarlija”, “Buying at Kalenić Pijaca”, “The Lost Passport”).
-  - Native TTS audio narration with animated character bubbles.
-  - Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).
+## ✅ Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
+<p style="opacity: 0.4;">Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).</p>
 
-## 🎮 Priority 12: Arcade Expansion (Reach 20 Total Minigames + Solo/Bot Mode)
-We currently have 13 standalone minigames. We will add the 7 new minigames plus the mode selector:
-- [ ] **Solo vs. AI Bot Mode Selector**:
-  - Add a pre-game toggle when launching any minigame:
-    - 👤 **Solo Mode**: Relaxed progression through Levels 1-10.
-    - 🤖 **Vs. AI Bot Mode**: Race against simulated bot opponents (e.g. Marko_Bot, Ana_Bot) with live race progress bars.
-- [ ] **Game #14: ⚡ Tačno/Netačno (Speed True/False)** — High-speed flash verification with 1.5s timer.
-- [ ] **Game #15: 🖼️ Pogodi Sliku (Picture Match)** — Match Serbian/English words to emoji/icon grid visual options.
-- [ ] **Game #16: 🔍 Osmosmerka (Word Search)** — Dynamic letter grid finding hidden vocabulary words.
-- [ ] **Game #17: 📰 Ukrštenica (Mini Crossword)** — 4x4 / 5x5 crossword grid solving vocabulary clues letter-by-letter.
-- [ ] **Game #18: 🟩 Rečko (Serbian Wordle / 5-Letter Guess)** — 5-guess deductive vocabulary puzzle with color-coded hints.
-- [ ] **Game #19: 🎈 Baloni (Bubble Pop / Floating Words)** — Tap floating bubbles with correct translations before they float away.
-- [ ] **Game #20: 🧺 Razvrstaj (Gender & Case Sorter)** — Rapidly categorize falling words into grammatical baskets (Muški, Ženski, Srednji / Cases).
+## ✅ Priority 12: Arcade Expansion (Reach 20 Total Minigames + Solo/Bot Mode)
+<p style="opacity: 0.4;">Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko_Bot, Ana_Bot) with live race progress bars.</p>
+<p style="opacity: 0.4;">Game #14: ⚡ Tačno/Netačno (Speed True/False) · Game #15: 🖼️ Pogodi Sliku (Picture Match) · Game #16: 🔍 Osmosmerka (Word Search) · Game #17: 📰 Ukrštenica (Mini Crossword) · Game #18: 🟩 Rečko (Serbian Wordle) · Game #19: 🎈 Baloni (Bubble Pop) · Game #20: 🧺 Razvrstaj (Gender & Case Sorter)</p>
 
-## 🧩 Priority 13: Cloze Mastery (Fill-in-the-Blank Context Engine)
-- [ ] **Busuu / Clozemaster Context Trainer**:
-  - 5,000+ real conversational Serbian sentences with 1 key missing word.
-  - Rapid-fire contextual fill-in-the-blank practice to build natural language instincts.
+- [ ] **Local Trophy Cabinet** *(Pending Upgrade)*:
+  - Build a showcase room tracking high scores, win streaks against the Bots, and awarding Bronze/Silver/Gold medals for minigames.
 
-## 🎭 Priority 14: Extended Roleplay & AI Chat Scenarios
-- [ ] **Deep Scenario Library (roleplay.js)**:
-  - Add dozens of new specialized AI scenario prompts:
-    - 🏨 Hotel Check-in & Room Service
-    - ✈️ Airport Security & Customs
-    - 🩺 Doctor's Office & Pharmacy
-    - 🏢 Job Interview in Belgrade
-    - 🍽️ Ordering at a Traditional Kafana with wine pairings
-    - 🚨 Emergency / Lost Passport Assistance
+## ✅ Priority 13: Cloze Mastery (Fill-in-the-Blank Context Engine)
+<p style="opacity: 0.4;">Busuu / Clozemaster Context Trainer: 5,000+ real conversational Serbian sentences with 1 key missing word. Rapid-fire contextual fill-in-the-blank practice to build natural language instincts.</p>
 
-## 🇷🇸 Priority 15: Authentic Serbian Slang & Žargon Module
-- [ ] **Real Street Serbian & Dialects**:
-  - Dedicated modules for Belgrade slang (“Brate”, “Bleja”, “Šta ima”), coffee culture expressions, and Balkan idioms.
-  - Dialect toggle notes: Belgrade (Šumadijsko-vojvođanski) vs. Niš / Southern Serbian vs. Western / Diaspora expressions.
+## ✅ Priority 14: Extended Roleplay & AI Chat Scenarios
+<p style="opacity: 0.4;">Deep Scenario Library (roleplay.js): Dozens of specialized AI scenario prompts — 🏨 Hotel Check-in & Room Service · ✈️ Airport Security & Customs · 🩺 Doctor's Office & Pharmacy · 🏢 Job Interview in Belgrade · 🍽️ Ordering at a Traditional Kafana with wine pairings · 🚨 Emergency / Lost Passport Assistance</p>
 
-## 📈 Priority 16: Serbian Pitch-Accent & Melodic Pronunciation Guide
-- [ ] **Visual Pitch Waveform & Intonation**:
-  - Educational guide and audio trainer for the 4 Serbian vowel accents (Kratkosilazni, Dugo-silazni, Kratkouzlazni, Dugouzlazni).
-  - Visual intonation curves showing native speaker melody vs. flat robotic speech.
-  - **Voice Pitch-Waveform Visualizer (Moonshot Integration):** When doing pronunciation/karaoke, show a visual sound-wave of the user's voice layered directly on top of a native speaker's sound-wave, so they can visually see if their pitch went up when it should have gone down.
+## ✅ Priority 15: Authentic Serbian Slang & Žargon Module
+<p style="opacity: 0.4;">Real Street Serbian & Dialects: Dedicated modules for Belgrade slang ("Brate", "Bleja", "Šta ima"), coffee culture expressions, and Balkan idioms. Dialect toggle notes: Belgrade (Šumadijsko-vojvođanski) vs. Niš / Southern Serbian vs. Western / Diaspora expressions.</p>
+
+## ✅ Priority 16: Serbian Pitch-Accent & Melodic Pronunciation Guide
+<p style="opacity: 0.4;">Visual Pitch Waveform & Intonation: Educational guide and audio trainer for the 4 Serbian vowel accents (Kratkosilazni, Dugo-silazni, Kratkouzlazni, Dugouzlazni). Visual intonation curves showing native speaker melody vs. flat robotic speech. Voice Pitch-Waveform Visualizer: visual sound-wave of user's voice layered on top of native speaker's sound-wave.</p>
 
 ## 🚗 Priority 17: Hands-Free / Commute Audio Mode
 - [ ] **Screen-Locked Audio Trainer (Pimsleur-Style)**:
@@ -227,3 +194,25 @@ We currently have 13 standalone minigames. We will add the 7 new minigames plus 
   - Instead of just translating text, the user points their phone camera at a physical object in their room (like a table, dog, or window), and the app uses AI image recognition to make the Serbian word float in 3D space over the object.
 - [ ] **Home Screen Widgets**:
   - iOS and Android native widgets so the user can see their Streak, Daily XP goal, or a "Serbian Word of the Day" right on their phone's home screen without even opening the app.
+
+
+## 🌍 Priority 23: The "Ultimate Learning App" Expansion (Multi-Language Ecosystem)
+- [ ] **Universal Language Engine (Central Concept Schema)**:
+  - Transition the database from a simple bilingual list to a "Master Concept ID" system. (e.g., Concept #0001 contains translations for English, Serbian, Spanish, Japanese, etc. in a single row).
+  - Allow users to pair *any* two languages they want (e.g., learn Japanese from Spanish). Flashcards, Arcade games, and Skill Trees automatically adapt to the chosen pair.
+- [ ] **Massive Offline Text Scaling (IndexedDB)**:
+  - Safely scale to 10+ languages. 15,000 words per language is highly optimized text data (<100MB total), ensuring it runs lightning-fast on budget devices without crashing the active RAM.
+- [ ] **Modular Audio Language Packs**:
+  - To prevent app bloat from massive audio files, implement downloadable offline "Audio Packs" (e.g., "Download Spanish Voice Pack - 150MB").
+  - Fall back to lightweight native device Text-to-Speech (TTS) for users who don't want to download large MP3 packs.
+
+
+## 💾 Priority 24: Save Data Sync System (Data Backup & Restore)
+- [ ] **Local Progress Export**:
+  - Add a button in Settings that lets users export their profile, XP, streaks, and mistake vault to a `.json` file.
+  - Add an import function to allow users to move their progress to another device, protecting their local `localStorage` and `IndexedDB` data from accidental cache clears.
+
+## 👆 Priority 25: Native Mobile Touch Gestures
+- [ ] **Swipe Physics (Touch API)**:
+  - Add native-feeling swipe-to-go-back and swipe-down-to-dismiss gestures for UI injections and bottom sheets.
+  - Make the SPA feel like a real downloaded app rather than a rigid website.

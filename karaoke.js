@@ -274,7 +274,7 @@ window.Karaoke = (() => {
             <div id="karaoke-menu-modal" class="fixed inset-0 bg-slate-50 dark:bg-slate-900 z-[100] flex flex-col fade-in">
                 <div class="p-4 flex items-center justify-between border-b-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                     <div>
-                        <h2 class="text-xl font-black text-slate-800 dark:text-white">🎤 Karaoke Reader</h2>
+                        <h2 class="text-xl font-black text-slate-800 dark:text-white">🎤 Karaoke & Reader</h2>
                         <p class="text-xs text-slate-500 font-bold">Read aloud & practice pronunciation</p>
                     </div>
                     <button onclick="document.getElementById('karaoke-menu-modal').remove()" class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-xl text-slate-600 dark:text-slate-300 active:scale-95 transition-transform">❌</button>
@@ -351,7 +351,7 @@ window.Karaoke = (() => {
 
     function renderSentences() {
         const container = document.getElementById('karaoke-text-container');
-        if (!container) return;
+        if (!container || !currentStory) return;
         
         const isEnToSr = state && state.settings && state.settings.learningDirection === 'en_to_sr';
         
@@ -376,9 +376,10 @@ window.Karaoke = (() => {
                 }).join(' ');
             }
             
-            html += `<div id="k-sent-${idx}" class="p-4 rounded-2xl border-2 ${idx === currentSentenceIndex ? 'border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 shadow-md' : 'border-transparent hover:bg-slate-50 dark:hover:bg-slate-800'} transition-all cursor-pointer" onclick="Karaoke.jumpTo(${idx})">
-                <div class="text-xl font-black ${idx === currentSentenceIndex && isPlaying ? '' : 'text-slate-800 dark:text-white'} leading-relaxed">${wordsHtml}</div>
+            html += `<div id="k-sent-${idx}" class="relative p-4 rounded-2xl border-2 ${idx === currentSentenceIndex ? 'border-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 shadow-md' : 'border-transparent hover:bg-slate-50 dark:hover:bg-slate-800'} transition-all cursor-pointer" onclick="Karaoke.jumpTo(${idx})">
+                <div class="text-xl font-black ${idx === currentSentenceIndex && isPlaying ? '' : 'text-slate-800 dark:text-white'} leading-relaxed pr-10">${wordsHtml}</div>
                 <div class="text-sm font-bold text-slate-500 dark:text-slate-400 mt-2">${secondary}</div>
+                <button onclick="event.stopPropagation(); Karaoke.playSentenceTTS(${idx})" class="absolute top-4 right-4 w-8 h-8 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full flex items-center justify-center hover:bg-purple-100 hover:text-purple-600 transition-colors" title="Listen to sentence">🔊</button>
             </div>`;
         });
         
@@ -431,6 +432,7 @@ window.Karaoke = (() => {
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl border-2 border-white dark:border-slate-700" onclick="event.stopPropagation()">
                     <div class="text-4xl mb-2">${entry.emoji || '📖'}</div>
                     <h3 class="text-xl font-black text-slate-800 dark:text-white">${mainText}</h3>
+                    <button onclick="app.speakPhrase('${mainText.replace(/'/g, "\\'")}', '${isEnToSr ? 'sr-RS' : 'en-US'}')" class="w-10 h-10 mx-auto mt-2 mb-3 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center hover:bg-purple-200 transition-colors shadow-sm active:scale-95" title="Listen to word">🔊</button>
                     <p class="text-blue-500 font-bold mb-1">${subText1}</p>
                     ${subText2 ? `<p class="text-slate-400 dark:text-slate-500 font-bold text-[10px] mb-4">${subText2}</p>` : '<div class="mb-4"></div>'}
                     <div class="flex justify-center gap-2 mb-4">
@@ -447,6 +449,10 @@ window.Karaoke = (() => {
             </div>
         `;
         document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        if (app && app.speakPhrase) {
+            app.speakPhrase(mainText, isEnToSr ? 'sr-RS' : 'en-US');
+        }
     }
 
     function jumpTo(idx) {
@@ -488,6 +494,48 @@ window.Karaoke = (() => {
         updatePlayButton();
     }
 
+    let currentTTSTarget = null;
+
+    function playSentenceTTS(idx) {
+        if (!currentStory || !currentStory.sentences[idx]) return;
+        
+        const targetId = 'sentence_' + idx;
+        if (app && app.isSpeaking && app.isSpeaking() && currentTTSTarget === targetId) {
+            if (app.stopSpeech) app.stopSpeech();
+            currentTTSTarget = null;
+            return;
+        }
+
+        const isEnToSr = state && state.settings && state.settings.learningDirection === 'en_to_sr';
+        const text = isEnToSr ? currentStory.sentences[idx].sr : currentStory.sentences[idx].en;
+        const lang = isEnToSr ? 'sr-RS' : 'en-US';
+        
+        if (app && app.speakPhrase) {
+            currentTTSTarget = targetId;
+            app.speakPhrase(text, lang);
+        }
+    }
+
+    function playFullTextTTS() {
+        if (!currentStory) return;
+        
+        const targetId = 'full_text';
+        if (app && app.isSpeaking && app.isSpeaking() && currentTTSTarget === targetId) {
+            if (app.stopSpeech) app.stopSpeech();
+            currentTTSTarget = null;
+            return;
+        }
+
+        const isEnToSr = state && state.settings && state.settings.learningDirection === 'en_to_sr';
+        const lang = isEnToSr ? 'sr-RS' : 'en-US';
+        const text = currentStory.sentences.map(s => isEnToSr ? s.sr : s.en).join(' ');
+        
+        if (app && app.speakPhrase) {
+            currentTTSTarget = targetId;
+            app.speakPhrase(text, lang);
+        }
+    }
+
     function reset() {
         if (recognition) recognition.stop();
         currentSentenceIndex = 0;
@@ -516,6 +564,8 @@ window.Karaoke = (() => {
         reset: reset,
         tapWord: tapWord,
         jumpTo: jumpTo,
+        playSentenceTTS: playSentenceTTS,
+        playFullTextTTS: playFullTextTTS,
         STORIES: STORIES
     };
 })();

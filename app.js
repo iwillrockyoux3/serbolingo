@@ -4,7 +4,7 @@ const state = {
     goalCelebrated: false,
     history: {}, // Format: "YYYY-MM-DD": { xp: 0, lessons: 0 }
     skills: { 'Slušanje': 50, 'Govor': 50, 'Čitanje': 50, 'Pisanje': 50, 'Gramatika': 50, 'Vokabular': 50 },
-    settings: { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, appLanguage: 'sr_lat', learningDirection: 'sr_to_en' },
+    settings: { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, textScale: 100, appLanguage: 'sr_lat', learningDirection: 'sr_to_en' },
     achievements: {},
     lastActiveDate: null,
     mistakeLog: {}, // New for Phase 4: Track missed words for SRS
@@ -119,6 +119,7 @@ const UI_STRINGS = {
     profile_achievements: { en: 'Achievements', sr_lat: 'Dostignuća', sr_cyr: 'Достигнућа' },
     profile_settings: { en: 'Settings', sr_lat: 'Opcije', sr_cyr: 'Опције' },
     profile_dark_mode: { en: 'Dark Mode', sr_lat: 'Tamni režim', sr_cyr: 'Тамни режим' },
+    profile_text_size: { en: 'Text Size', sr_lat: 'Veličina teksta', sr_cyr: 'Величина текста' },
     profile_sounds: { en: 'Sounds', sr_lat: 'Zvukovi', sr_cyr: 'Звукови' },
     profile_tts: { en: 'Pronunciation (AI)', sr_lat: 'Izgovor (AI)', sr_cyr: 'Изговор (AI)' },
     profile_logout: { en: 'Log Out', sr_lat: 'Odjavi se', sr_cyr: 'Одјави се' },
@@ -316,6 +317,7 @@ const app = {
         }
 
         app.applyDarkMode();
+        app.applyTextScale();
         // Learning Direction now controls both lesson direction AND app UI language
         app.setLearningDirection(state.settings.learningDirection || 'sr_to_en');
         app.updateProfileUI(); // Update UI with latest values
@@ -346,6 +348,16 @@ const app = {
     toggleDarkMode: () => {
         state.settings.darkMode = !state.settings.darkMode;
         app.applyDarkMode();
+        app.saveStats();
+    },
+    applyTextScale: () => {
+        const scale = state.settings.textScale || 100;
+        document.documentElement.style.fontSize = scale + '%';
+    },
+    setTextScale: (val) => {
+        state.settings.textScale = parseInt(val);
+        document.getElementById('text-scale-val').innerText = val + '%';
+        app.applyTextScale();
         app.saveStats();
     },
     setVolume: (type, val) => {
@@ -405,6 +417,12 @@ const app = {
     },
     updateProfileUI: () => {
         if (!state.user) return;
+        
+        // Fix for corrupted avatars saved during encoding issue
+        if (state.user.avatar && state.user.avatar.length > 3) {
+            state.user.avatar = '👤';
+            app.saveStats();
+        }
 
         // Header
         const isEnToSr = state.settings.learningDirection === 'en_to_sr';
@@ -421,6 +439,8 @@ const app = {
         }
 
         // Settings Controls
+        document.getElementById('text-scale').value = state.settings.textScale || 100;
+        document.getElementById('text-scale-val').innerText = (state.settings.textScale || 100) + '%';
         document.getElementById('vol-sfx').value = state.settings.volume.sfx;
         document.getElementById('vol-sfx-val').innerText = Math.round(state.settings.volume.sfx * 100) + '%';
         document.getElementById('vol-tts').value = state.settings.volume.tts;
@@ -637,6 +657,16 @@ const app = {
             if (el) el.classList.add('hidden');
         });
         document.getElementById(`view-${vid}`).classList.remove('hidden');
+
+        const navBar = document.getElementById('main-nav');
+        const appContainer = document.getElementById('app-container');
+        if (vid === 'lesson' || vid === 'karaoke') {
+            if (navBar) navBar.classList.add('hidden');
+            if (appContainer) appContainer.style.paddingBottom = '0px';
+        } else {
+            if (navBar) navBar.classList.remove('hidden');
+            if (appContainer) appContainer.style.paddingBottom = '';
+        }
 
         if (vid === 'explore') {
             if (window.ExploreHub) ExploreHub.init();
