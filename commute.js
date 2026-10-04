@@ -1,4 +1,4 @@
-﻿// [SHIELD_DAEMON: VALIDATED]
+// [SHIELD_DAEMON: VALIDATED]
 // Priority 17: Hands-Free / Commute Audio Mode (Pimsleur-Style)
 // Dual Modes: Listen vs Answer (mic). Quantity + Infinity controls.
 
@@ -79,8 +79,8 @@ window.CommuteEngine = (function() {
             }
 
             const gtLang = lang.startsWith('sr') ? 'sr' : 'en';
-            const url = "https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=${gtLang}&q=${encodeURIComponent(text)}"; // Fixed quotes
-            const audio = new Audio(url.replace(//g, ''));
+            const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=${gtLang}&q=${encodeURIComponent(text)}`;
+            const audio = new Audio(url);
             currentAudio = audio;
             audio.volume = 1;
 
@@ -197,9 +197,9 @@ window.CommuteEngine = (function() {
         const counter = el('commute-counter');
         if (counter) {
             if (isInfinite) {
-                counter.innerText = ∞ Infinity Mode ();
+                counter.innerText = `∞ Infinity Mode (${currentIndex + 1})`;
             } else {
-                counter.innerText = ${currentIndex + 1} / ;
+                counter.innerText = `${currentIndex + 1} / ${playlist.length}`;
             }
         }
     }
