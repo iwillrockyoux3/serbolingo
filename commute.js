@@ -47,7 +47,7 @@ window.CommuteEngine = (function() {
             recognition = new SpeechRec();
             recognition.lang = 'sr-RS';
             recognition.continuous = true;
-            recognition.interimResults = false;
+            recognition.interimResults = true; // MUST BE TRUE for fast response
             
             recognition.onstart = () => { isMicRecording = true; };
 
@@ -59,12 +59,16 @@ window.CommuteEngine = (function() {
                 
                 for (let i = e.resultIndex; i < e.results.length; i++) {
                     const raw = e.results[i][0].transcript;
-                    lastHeardTranscript = raw; // Save for debugging timeout
+                    if (!raw) continue;
+                    
+                    lastHeardTranscript = raw; 
+                    
+                    // Show live text so user knows it's working!
+                    el('commute-current-en').innerText = "🎙️ " + raw;
                     
                     const r = normalizeText(raw);
-                    if (!r) continue; // Ignore empty noise
+                    if (!r) continue; 
                     
-                    // Match exactly, or if spoken phrase contains the exact expected word(s)
                     const regex = new RegExp(`(?:^|\\s)${expectedClean}(?:\\s|$)`);
                     if (r === expectedClean || regex.test(r)) {
                         matched = true;
