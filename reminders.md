@@ -98,8 +98,8 @@
 ## ✅ Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
 - [x] Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).
 ## ✅ Priority 12: Arcade Expansion (Reach 20 Total Minigames + Solo/Bot Mode)
-- [x] Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko_Bot, Ana_Bot) with live race progress bars.
-- [x] Game #14: ⚡ Tačno/Netačno (Speed True/False) · Game #15: 🖼️ Pogodi Sliku (Picture Match) · Game #16: 🔍 Osmosmerka (Word Search) · Game #17: 📰 Ukrštenica (Mini Crossword) · Game #18: 🟩 Rečko (Serbian Wordle) · Game #19: 🎈 Baloni (Bubble Pop) · Game #20: 🧺 Razvrstaj (Gender & Case Sorter)
+- [x] Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko Bot, Ana Bot) with live race progress bars.
+- [x] 20 Total Minigames built: Tacno/Netacno, Pogodi Sliku, Osmosmerka, Ukrstenica, Recko, Baloni, Razvrstaj and more.
 
 - [ ] **Local Trophy Cabinet** *(Pending Upgrade)*:
   - Build a showcase room tracking high scores, win streaks against the Bots, and awarding Bronze/Silver/Gold medals for minigames.
