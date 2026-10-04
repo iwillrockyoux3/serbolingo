@@ -45,8 +45,8 @@
 ## 📚 Priority 1: Massive Vocabulary Database Expansion
 - [ ] **Thousands of Categorized Words (seed-data.js & IndexedDB)**:
   - Expand database to reach **15,000+ words and phrases** (massive scaling goal).
-> *[DONE]   - [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)*
-> *[DONE]   - [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)*
+  - [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)
+  - [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)
 - [ ] **Omni-Bar "Fuzzy Search" & Typo Tolerance**:
   - Implement a Levenshtein Distance (Fuzzy Search) algorithm so the search bar auto-corrects typos (e.g. typing "yabuka" instead of "jabuka") and handles missing Cyrillic characters gracefully.
 
@@ -92,14 +92,14 @@
 ## ✅ Priority 9: Bilingual Karaoke Reader (Karaoke Mode #1: Dual-Text & Audio)
 - [x] LingQ & Beelinguapp Style Dual Reader: Serbian folk tales, short modern stories, and cultural news with synchronized side-by-side English translations. Karaoke text highlighting matching the spoken audio. Tap any individual word to see definition, case, gender, and save to flashcards.
 ## ✅ Priority 10: Muzika & Tekstovi (Karaoke Modes #2 & #3: Music & Live Singing)
-> *[DONE] Karaoke Mode #2 — Song Lyrics Rhythm Trainer: Learn language through classic Serbian rock (Bajaga, Riblja Čorba, Bijelo Dugme), pop (Zdravko Čolić), and traditional folk classics (Tamo Daleko). Interactive lyrics trainer: fill in missing lyric blocks in real-time as the song plays.*
-> *[DONE] Karaoke Mode #3 — Live Sing-Along Microphone Scoring (Karaoke Bar Mode): Full sing-along mode with Web Speech API and Web Audio analyzer to grade Serbian pronunciation, pitch accuracy, and rhythm, awarding stars and XP!*
+- [x] Karaoke Mode #2 — Song Lyrics Rhythm Trainer: Learn language through classic Serbian rock (Bajaga, Riblja Čorba, Bijelo Dugme), pop (Zdravko Čolić), and traditional folk classics (Tamo Daleko). Interactive lyrics trainer: fill in missing lyric blocks in real-time as the song plays.
+- [x] Karaoke Mode #3 — Live Sing-Along Microphone Scoring (Karaoke Bar Mode): Full sing-along mode with Web Speech API and Web Audio analyzer to grade Serbian pronunciation, pitch accuracy, and rhythm, awarding stars and XP!
 
 ## ✅ Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
 - [x] Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).
 ## ✅ Priority 12: Arcade Expansion (Reach 20 Total Minigames + Solo/Bot Mode)
-> *[DONE] Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko_Bot, Ana_Bot) with live race progress bars.*
-> *[DONE] Game #14: ⚡ Tačno/Netačno (Speed True/False) · Game #15: 🖼️ Pogodi Sliku (Picture Match) · Game #16: 🔍 Osmosmerka (Word Search) · Game #17: 📰 Ukrštenica (Mini Crossword) · Game #18: 🟩 Rečko (Serbian Wordle) · Game #19: 🎈 Baloni (Bubble Pop) · Game #20: 🧺 Razvrstaj (Gender & Case Sorter)*
+- [x] Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko_Bot, Ana_Bot) with live race progress bars.
+- [x] Game #14: ⚡ Tačno/Netačno (Speed True/False) · Game #15: 🖼️ Pogodi Sliku (Picture Match) · Game #16: 🔍 Osmosmerka (Word Search) · Game #17: 📰 Ukrštenica (Mini Crossword) · Game #18: 🟩 Rečko (Serbian Wordle) · Game #19: 🎈 Baloni (Bubble Pop) · Game #20: 🧺 Razvrstaj (Gender & Case Sorter)
 
 - [ ] **Local Trophy Cabinet** *(Pending Upgrade)*:
   - Build a showcase room tracking high scores, win streaks against the Bots, and awarding Bronze/Silver/Gold medals for minigames.
@@ -219,7 +219,7 @@
 - [ ] **Cultural Context Notes**: Teach not just the literal translation, but exactly when and to whom these emotional phrases are used.
 
 ## ⌨️ Priority 31: Keyboard Tolerance & Diacritic Normalization
-> *[DONE] - [x] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes š->s, č/ć->c, ž->z, and đ->dj during answer checking. (ALREADY IMPLEMENTED in app.js checkAnswer normalize())*
+- [x] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes š->s, č/ć->c, ž->z, and đ->dj during answer checking. (ALREADY IMPLEMENTED in app.js checkAnswer normalize())
 - [ ] **Gentle Typo Feedback**: Pop up a gentle tip (e.g., "Correct! But watch out, the proper spelling has a š") when the user relies on Bald Latin shortcuts.
 
 ## 🏆 Priority 32: Advanced Gamification & Social (The League System)
@@ -258,6 +258,8 @@
 
 ## 🧩 Priority 41: Interactive Grammar Sandbox
 - [ ] **Visual Sentence Builder**: Instead of typing, users drag and drop "Lego blocks" of words. Noun blocks are blue, Verb blocks are red. It visually teaches sentence structure (SVO).
+
+
 
 
 
