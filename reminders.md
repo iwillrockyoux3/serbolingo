@@ -1,4 +1,4 @@
-﻿# 📌 SerboLingo — Master Upcoming Tasks & Reminders
+# 📌 SerboLingo — Master Upcoming Tasks & Reminders
 
 > [!IMPORTANT]
 > This document tracks all agreed upcoming features, content expansions, and deployment steps ready to be built in our next sessions.
@@ -45,8 +45,8 @@
 ## 📚 Priority 1: Massive Vocabulary Database Expansion
 - [ ] **Thousands of Categorized Words (seed-data.js & IndexedDB)**:
   - Expand database to reach **15,000+ words and phrases** (massive scaling goal).
-  - [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)
-  - [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)
+- [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)
+- [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)
 - [ ] **Omni-Bar "Fuzzy Search" & Typo Tolerance**:
   - Implement a Levenshtein Distance (Fuzzy Search) algorithm so the search bar auto-corrects typos (e.g. typing "yabuka" instead of "jabuka") and handles missing Cyrillic characters gracefully.
 
