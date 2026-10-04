@@ -198,18 +198,15 @@ window.CommuteEngine = (function() {
         if (mode === 'listen') {
             tabL.className = "flex-1 py-2 rounded-lg font-bold text-sm bg-blue-500 text-white shadow-sm transition-all";
             tabA.className = "flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-white transition-all";
+            // Stop mic if running
+            listeningForAnswer = false;
+            if (recognition) { try { recognition.stop(); } catch(e) {} }
         } else {
             tabA.className = "flex-1 py-2 rounded-lg font-bold text-sm bg-blue-500 text-white shadow-sm transition-all";
             tabL.className = "flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-white transition-all";
-        }
-
-        // Apply mic live if playing
-        if (isPlaying) {
-            if (micEnabled && initMic()) {
+            // Start mic if already playing
+            if (isPlaying && initMic()) {
                 try { recognition.start(); } catch(e) {}
-            } else {
-                listeningForAnswer = false;
-                if (recognition) { try { recognition.stop(); } catch(e) {} }
             }
         }
     }
@@ -252,7 +249,6 @@ window.CommuteEngine = (function() {
         isPlaying = true;
         loopActive = true;
         el('commute-play-icon').innerText = '⏸️';
-        el('commute-replay-btn').classList.add('hidden');
         
         // Start persistent mic if enabled
         if (micEnabled && initMic()) {
@@ -275,12 +271,6 @@ window.CommuteEngine = (function() {
         }
     }
 
-    function replay() {
-        currentIndex = 0;
-        updateDisplay();
-        el('commute-replay-btn').classList.add('hidden');
-        startPlaying();
-    }
 
     // ── Main Pimsleur Loop ──
     async function playLoop() {
@@ -342,9 +332,9 @@ window.CommuteEngine = (function() {
                     playlist.sort(() => 0.5 - Math.random()); // reshuffle and keep going
                 } else {
                     stopPlaying();
+                    currentIndex = 0; // Reset so next Play press restarts
                     el('commute-current-sr').innerText = '🎉 Gotovo! (Finished)';
-                    el('commute-current-en').innerText = 'Press Replay to practice this list again.';
-                    el('commute-replay-btn').classList.remove('hidden');
+                    el('commute-current-en').innerText = 'Press Play to start again.';
                     break;
                 }
             }
@@ -379,7 +369,6 @@ window.CommuteEngine = (function() {
         updateSettings,
         loadPlaylist,
         setMode,
-        toggleInfinity,
-        replay
+        toggleInfinity
     };
 })();
