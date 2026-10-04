@@ -216,3 +216,27 @@
 - [ ] **Swipe Physics (Touch API)**:
   - Add native-feeling swipe-to-go-back and swipe-down-to-dismiss gestures for UI injections and bottom sheets.
   - Make the SPA feel like a real downloaded app rather than a rigid website.
+
+## 🎮 Priority 26: Gamification & Economy (Duolingo Hooks)
+- [ ] **Streak Freezes & Wagers**: Add an in-app "Store" where users can spend XP to buy a "Streak Freeze" or make a "7-Day Wager".
+- [ ] **Daily Quests & Mystery Chests**: Give 3 specific daily goals (e.g., "Play 3 Arcade Games", "Review 15 mistakes"). Completing all unlocks a chest with bonus XP.
+
+## 🧠 Priority 27: Learning Science & SRS (Anki Power)
+- [ ] **Memory Heatmap (Brain Health)**: Upgrade the Stats tab to include a visual heatmap showing which words are fading and need review.
+- [ ] **Tinder-Style Swipe Reviews**: Offer a quick "Flashcard Swipe" mode before hardcore lessons. Swipe right if known, left if not.
+
+## 📱 Priority 28: Adaptive UX & Flow
+- [ ] **Adaptive Placement Test**: Build a 3-minute test for new users that fires increasing difficulty questions to auto-unlock skill tree tiers.
+- [ ] **Smart Grammar Tooltips**: Tapping a word (e.g. "školu") shows a smart tag like "Accusative Case (Direction) of 'škola'" instead of just translation.
+
+## ⚙️ Priority 29: Technical Power-Ups
+- [ ] **Offline Audio Bundles**: Add "Download Offline Audio Pack" to save pre-generated MP3s for 1,000 common words into IndexedDB for airplane mode.
+- [ ] **Peer-to-Peer Friend Codes**: Let users generate a code to share stats and compete on a mini-leaderboard without a massive cloud backend.
+
+## 🎭 Priority 30: "Untranslatable" Cultural Idioms & Slang
+- [ ] **Idioms & Terms of Endearment**: Expand slang curriculum with phrases like "ljubi te baka sine" or "Dušo moja".
+- [ ] **Cultural Context Notes**: Teach not just the literal translation, but exactly when and to whom these emotional phrases are used.
+
+## ⌨️ Priority 31: Keyboard Tolerance & Diacritic Normalization
+- [ ] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes `š->s`, `č/ć->c`, `ž->z`, and `đ->dj` during answer checking. (ALREADY IMPLEMENTED!)
+- [ ] **Gentle Typo Feedback**: Pop up a gentle tip (e.g., "Correct! But watch out, the proper spelling has a š") when the user relies on Bald Latin shortcuts.
