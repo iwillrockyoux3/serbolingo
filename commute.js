@@ -1,4 +1,4 @@
-// [SHIELD_DAEMON: VALIDATED]
+﻿// [SHIELD_DAEMON: VALIDATED]
 // Priority 17: Hands-Free / Commute Audio Mode (Pimsleur-Style)
 // Dual Modes: Listen vs Answer (mic). Quantity + Infinity controls.
 
@@ -19,6 +19,7 @@ window.CommuteEngine = (function() {
     let currentExpectedAnswer = null;
     let listeningForAnswer = false;
     let answerFound = false;
+    let currentAudio = null; // Track current Audio to prevent overlaps
 
     const el = (id) => document.getElementById(id);
 
@@ -49,6 +50,7 @@ window.CommuteEngine = (function() {
 
                 if (correct) {
                     answerFound = true;
+                    if (window.app && window.app.playSound) window.app.playSound('correct');
                     const srEl = el('commute-current-sr');
                     srEl.classList.add('text-green-400');
                     setTimeout(() => srEl.classList.remove('text-green-400'), 1500);
@@ -71,23 +73,39 @@ window.CommuteEngine = (function() {
     // ── Reliable TTS via Google Translate Audio ──
     function speakGTX(text, lang) {
         return new Promise(resolve => {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+
             const gtLang = lang.startsWith('sr') ? 'sr' : 'en';
-            const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=${gtLang}&q=${encodeURIComponent(text)}`;
-            const audio = new Audio(url);
+            const url = "https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=${gtLang}&q=${encodeURIComponent(text)}"; // Fixed quotes
+            const audio = new Audio(url.replace(//g, ''));
+            currentAudio = audio;
             audio.volume = 1;
 
-            audio.onended = () => resolve();
+            audio.onended = () => { currentAudio = null; resolve(); };
             audio.onerror = () => {
                 console.warn('GTX TTS failed, trying native for:', text);
+                currentAudio = null;
                 speakNative(text, lang).then(resolve);
             };
 
             const pulse = el('commute-pulse');
             if (pulse) pulse.classList.add('opacity-100');
-            audio.onended = () => { if (pulse) pulse.classList.remove('opacity-100'); resolve(); };
+            
+            const cleanup = () => {
+                if (pulse) pulse.classList.remove('opacity-100');
+                if (currentAudio === audio) currentAudio = null;
+                resolve();
+            };
+            audio.onended = cleanup;
 
-            audio.play().catch(() => speakNative(text, lang).then(resolve));
-            setTimeout(resolve, 6000);
+            audio.play().catch(() => {
+                currentAudio = null;
+                speakNative(text, lang).then(resolve);
+            });
+            setTimeout(cleanup, 6000); // Safety timeout
         });
     }
 
@@ -179,9 +197,9 @@ window.CommuteEngine = (function() {
         const counter = el('commute-counter');
         if (counter) {
             if (isInfinite) {
-                counter.innerText = `∞ Infinity Mode (${currentIndex + 1})`;
+                counter.innerText = ∞ Infinity Mode ();
             } else {
-                counter.innerText = `${currentIndex + 1} / ${playlist.length}`;
+                counter.innerText = ${currentIndex + 1} / ;
             }
         }
     }
@@ -238,14 +256,21 @@ window.CommuteEngine = (function() {
 
     // ── Play Controls ──
     function togglePlay() {
-        if (playlist.length === 0 || currentIndex >= playlist.length) {
+        if (playlist.length === 0) {
             loadPlaylist().then(() => { if (playlist.length > 0) startPlaying(); });
+            return;
+        }
+        if (currentIndex >= playlist.length) {
+            currentIndex = 0;
+            updateDisplay();
+            startPlaying();
             return;
         }
         isPlaying ? stopPlaying() : startPlaying();
     }
 
     function startPlaying() {
+        if (loopActive) return; // Prevent overlapping loops
         isPlaying = true;
         loopActive = true;
         el('commute-play-icon').innerText = '⏸️';
@@ -263,6 +288,12 @@ window.CommuteEngine = (function() {
         loopActive = false;
         el('commute-play-icon').innerText = '▶️';
         el('commute-pulse').classList.remove('opacity-100');
+        
+        // Stop Audio overlaps immediately
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
+        }
         window.speechSynthesis.cancel();
         
         listeningForAnswer = false;
@@ -270,7 +301,6 @@ window.CommuteEngine = (function() {
             try { recognition.stop(); } catch(e) {}
         }
     }
-
 
     // ── Main Pimsleur Loop ──
     async function playLoop() {
@@ -296,18 +326,24 @@ window.CommuteEngine = (function() {
                 let elapsed = 0;
                 while (elapsed < pauseTime) {
                     if (answerFound || !loopActive) break;
-                    await wait(200);
-                    elapsed += 200;
+                    await wait(100); // Check more frequently for live pauseTime updates
+                    elapsed += 100;
                 }
                 listeningForAnswer = false;
                 
                 if (!answerFound && loopActive) {
+                    if (window.app && window.app.playSound) window.app.playSound('incorrect');
                     const srEl = el('commute-current-sr');
                     srEl.classList.add('text-red-400');
                     setTimeout(() => srEl.classList.remove('text-red-400'), 1500);
                 }
             } else {
-                await wait(pauseTime);
+                let elapsed = 0;
+                while (elapsed < pauseTime) {
+                    if (!loopActive) break;
+                    await wait(100);
+                    elapsed += 100;
+                }
             }
             
             if (!loopActive) break;
@@ -342,24 +378,37 @@ window.CommuteEngine = (function() {
     }
 
     function next() {
+        const wasPlaying = isPlaying;
+        if (wasPlaying) stopPlaying();
         currentIndex = (currentIndex + 1) % playlist.length;
         updateDisplay();
-        if (isPlaying) {
-            loopActive = false;
-            window.speechSynthesis.cancel();
-            setTimeout(() => { loopActive = true; playLoop(); }, 150);
-        }
+        if (wasPlaying) setTimeout(startPlaying, 50); // slight delay to ensure Audio ends
     }
 
     function prev() {
+        const wasPlaying = isPlaying;
+        if (wasPlaying) stopPlaying();
         currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
         updateDisplay();
-        if (isPlaying) {
-            loopActive = false;
-            window.speechSynthesis.cancel();
-            setTimeout(() => { loopActive = true; playLoop(); }, 150);
-        }
+        if (wasPlaying) setTimeout(startPlaying, 50);
     }
+
+    // Monitor tab visibility to stop audio when leaving Hands-Free Mode
+    setTimeout(() => {
+        const viewCommute = el('view-audio-commute');
+        if (viewCommute) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'class') {
+                        if (viewCommute.classList.contains('hidden') && isPlaying) {
+                            stopPlaying();
+                        }
+                    }
+                });
+            });
+            observer.observe(viewCommute, { attributes: true });
+        }
+    }, 1000);
 
     return {
         init: () => { loadPlaylist(); },
