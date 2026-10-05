@@ -15,7 +15,13 @@ window.CommuteEngine = (function() {
     let sessionMode = 'listen'; // 'listen' or 'answer'
     let isInfinite = false;
     let quantity = 50;
-    let direction = 'en-sr'; // 'en-sr' or 'sr-en'
+
+    function getDirection() {
+        if (window.state && window.state.settings && window.state.settings.learningDirection) {
+            return window.state.settings.learningDirection === 'sr_to_en' ? 'sr-en' : 'en-sr';
+        }
+        return 'en-sr';
+    }
 
     let micEnabled = false;
     let isMicRecording = false;
@@ -43,10 +49,19 @@ window.CommuteEngine = (function() {
             return false;
         }
 
+        const currentDir = getDirection();
+        const targetLang = (currentDir === 'sr-en') ? 'en-US' : 'sr-RS';
+
+        // Destroy if language has changed globally
+        if (recognition && recognition.lang !== targetLang) {
+            try { recognition.stop(); } catch(e) {}
+            recognition = null;
+        }
+
         if (!recognition) {
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRec();
-            recognition.lang = (direction === 'sr-en') ? 'en-US' : 'sr-RS';
+            recognition.lang = targetLang;
             recognition.continuous = true;
             recognition.interimResults = true; // MUST BE TRUE for fast response
             
@@ -65,7 +80,7 @@ window.CommuteEngine = (function() {
                     lastHeardTranscript = raw; 
                     
                     // Show live text so user knows it's working
-                    const liveEl = (direction === 'en-sr') ? el('commute-current-sr') : el('commute-current-en');
+                    const liveEl = (getDirection() === 'en-sr') ? el('commute-current-sr') : el('commute-current-en');
                     liveEl.innerText = "🎙️ " + raw;
                     
                     const r = normalizeText(raw);
@@ -285,16 +300,6 @@ window.CommuteEngine = (function() {
         pauseTime = parseInt(el('commute-pause-time').value) || 3000;
         quantity = parseInt(el('commute-quantity').value) || 50;
         
-        const newDir = el('commute-direction') ? el('commute-direction').value : 'en-sr';
-        if (newDir !== direction) {
-            direction = newDir;
-            // Destroy old recognition so it recreates with the correct language
-            if (recognition) {
-                try { recognition.stop(); } catch(e) {}
-                recognition = null;
-            }
-        }
-        
         // Update live
         applyQuantity();
         updateDisplay();
@@ -354,14 +359,15 @@ window.CommuteEngine = (function() {
             const word = playlist[currentIndex];
             if (!word) break;
             
+            const currentDir = getDirection();
             const srText = (word.sr || word.sr_lat) || '';
             const enText = word.en || '';
             
             // Determine prompt (what we show/speak first) and answer (what user must produce)
-            const promptText = (direction === 'en-sr') ? enText : srText;
-            const answerText = (direction === 'en-sr') ? srText : enText;
-            const promptLang = (direction === 'en-sr') ? 'en-US' : 'sr-RS';
-            const answerLang = (direction === 'en-sr') ? 'sr-RS' : 'en-US';
+            const promptText = (currentDir === 'en-sr') ? enText : srText;
+            const answerText = (currentDir === 'en-sr') ? srText : enText;
+            const promptLang = (currentDir === 'en-sr') ? 'en-US' : 'sr-RS';
+            const answerLang = (currentDir === 'en-sr') ? 'sr-RS' : 'en-US';
             
             // Update display
             const srEl = el('commute-current-sr');
@@ -369,7 +375,7 @@ window.CommuteEngine = (function() {
             
             // In Listen mode: show both (prompt bold, answer dimmed)
             // In Answer mode: show only the prompt, hide the answer completely
-            if (direction === 'en-sr') {
+            if (currentDir === 'en-sr') {
                 enEl.innerText = enText;
                 enEl.classList.remove('opacity-30');
                 if (micEnabled) {
@@ -410,7 +416,7 @@ window.CommuteEngine = (function() {
             // 2. Thinking pause (or mic listen)
             if (micEnabled) {
                 // Show "Your turn" in the ANSWER slot
-                if (direction === 'en-sr') {
+                if (currentDir === 'en-sr') {
                     srEl.innerText = '🎙️ Vaš red (Your turn)...';
                     srEl.classList.remove('opacity-30');
                 } else {
@@ -439,7 +445,7 @@ window.CommuteEngine = (function() {
                 if (!answerFound && loopActive && myId === loopId) {
                     if (window.app && window.app.playSound) window.app.playSound('incorrect');
                     // Show the answer they missed in red
-                    if (direction === 'en-sr') {
+                    if (currentDir === 'en-sr') {
                         srEl.innerText = answerText;
                         srEl.classList.add('text-red-400');
                     } else {
@@ -466,7 +472,7 @@ window.CommuteEngine = (function() {
             if (!loopActive || myId !== loopId) break;
 
             // 3. Reveal & Speak the ANSWER
-            if (direction === 'en-sr') {
+            if (currentDir === 'en-sr') {
                 srEl.innerText = srText;
                 srEl.classList.remove('opacity-30', 'text-red-400');
                 enEl.classList.add('opacity-30');
