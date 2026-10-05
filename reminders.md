@@ -1,4 +1,4 @@
-﻿# 📌 SerboLingo — Master Upcoming Tasks & Reminders
+# 📌 SerboLingo — Master Upcoming Tasks & Reminders
 
 > [!IMPORTANT]
 > This document tracks all agreed upcoming features, content expansions, and deployment steps ready to be built in our next sessions.
@@ -112,8 +112,8 @@
 - [x] Real Street Serbian & Dialects: Dedicated modules for Belgrade slang ("Brate", "Bleja", "Šta ima"), coffee culture expressions, and Balkan idioms. Dialect toggle notes: Belgrade (Šumadijsko-vojvođanski) vs. Niš / Southern Serbian vs. Western / Diaspora expressions.
 ## ✅ Priority 16: Serbian Pitch-Accent & Melodic Pronunciation Guide
 - [x] Visual Pitch Waveform & Intonation: Educational guide and audio trainer for the 4 Serbian vowel accents (Kratkosilazni, Dugo-silazni, Kratkouzlazni, Dugouzlazni). Visual intonation curves showing native speaker melody vs. flat robotic speech. Voice Pitch-Waveform Visualizer: visual sound-wave of user's voice layered on top of native speaker's sound-wave.
-- [x] **Priority 17: Hands-Free / Commute Audio Mode (DONE)**
-  - [x] **Screen-Locked Audio Trainer (Pimsleur-Style)**:
+- [x] Priority 17: Hands-Free / Commute Audio Mode (DONE)
+  - [x] Screen-Locked Audio Trainer (Pimsleur-Style):
   - Audio-only lesson flow designed for driving, walking, or working out.
   - Prompts the user with English/Serbian audio cue → gives a 3-second thinking pause → plays native response audio.
   - Background audio playback support.
