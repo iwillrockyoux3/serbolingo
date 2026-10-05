@@ -18,7 +18,10 @@ window.CommuteEngine = (function() {
 
     function getDirection() {
         if (window.state && window.state.settings && window.state.settings.learningDirection) {
-            return window.state.settings.learningDirection === 'sr_to_en' ? 'sr-en' : 'en-sr';
+            // User requested mapping: 
+            // 'sr_to_en' -> Prompt: English, Answer: Serbian ('en-sr')
+            // 'en_to_sr' -> Prompt: Serbian, Answer: English ('sr-en')
+            return window.state.settings.learningDirection === 'sr_to_en' ? 'en-sr' : 'sr-en';
         }
         return 'en-sr';
     }
