@@ -82,9 +82,9 @@ window.CommuteEngine = (function() {
                     
                     lastHeardTranscript = raw; 
                     
-                    // Show live text so user knows it's working
-                    const liveEl = (getDirection() === 'en-sr') ? el('commute-current-sr') : el('commute-current-en');
-                    liveEl.innerText = "🎙️ " + raw;
+                    // Show live text so user knows it's working in the Answer slot
+                    const answerEl = el('commute-current-en'); // Bottom slot
+                    answerEl.innerText = "🎙️ " + raw;
                     
                     const r = normalizeText(raw);
                     if (!r) continue; 
@@ -99,9 +99,9 @@ window.CommuteEngine = (function() {
                 if (matched) {
                     answerFound = true;
                     if (window.app && window.app.playSound) window.app.playSound('correct');
-                    const srEl = el('commute-current-sr');
-                    srEl.classList.add('text-green-400');
-                    setTimeout(() => srEl.classList.remove('text-green-400'), 1500);
+                    const promptEl = el('commute-current-sr'); // Top slot gets the green flash
+                    promptEl.classList.add('text-green-400');
+                    setTimeout(() => promptEl.classList.remove('text-green-400'), 1500);
                 }
             };
 
@@ -241,11 +241,22 @@ window.CommuteEngine = (function() {
         if (!playlist[currentIndex]) return;
         const word = playlist[currentIndex];
         
-        el('commute-current-sr').innerText = (word.sr || word.sr_lat) || '—';
-        el('commute-current-en').innerText = word.en || '—';
+        const currentDir = getDirection();
+        const srText = (word.sr || word.sr_lat) || '—';
+        const enText = word.en || '—';
         
-        el('commute-current-sr').classList.remove('opacity-30', 'text-green-400', 'text-red-400');
-        el('commute-current-en').classList.remove('opacity-30');
+        const promptText = (currentDir === 'en-sr') ? enText : srText;
+        const answerText = (currentDir === 'en-sr') ? srText : enText;
+        
+        // Use slots purely for visual hierarchy: sr=top (big), en=bottom (small)
+        const promptEl = el('commute-current-sr');
+        const answerEl = el('commute-current-en');
+        
+        promptEl.innerText = promptText;
+        answerEl.innerText = answerText;
+        
+        promptEl.classList.remove('opacity-30', 'text-green-400', 'text-red-400');
+        answerEl.classList.remove('opacity-30', 'text-red-400');
 
         const counter = el('commute-counter');
         if (counter) {
@@ -372,32 +383,20 @@ window.CommuteEngine = (function() {
             const promptLang = (currentDir === 'en-sr') ? 'en-US' : 'sr-RS';
             const answerLang = (currentDir === 'en-sr') ? 'sr-RS' : 'en-US';
             
-            // Update display
-            const srEl = el('commute-current-sr');
-            const enEl = el('commute-current-en');
+            // Re-use HTML slots purely for visual hierarchy (top/big vs bottom/small)
+            const promptEl = el('commute-current-sr');
+            const answerEl = el('commute-current-en');
             
-            // In Listen mode: show both (prompt bold, answer dimmed)
-            // In Answer mode: show only the prompt, hide the answer completely
-            if (currentDir === 'en-sr') {
-                enEl.innerText = enText;
-                enEl.classList.remove('opacity-30');
-                if (micEnabled) {
-                    srEl.innerText = '???'; // Hide Serbian answer in Answer mode
-                    srEl.classList.add('opacity-30');
-                } else {
-                    srEl.innerText = srText;
-                    srEl.classList.add('opacity-30');
-                }
+            // Update display: Prompt always on top
+            promptEl.innerText = promptText;
+            promptEl.classList.remove('opacity-30', 'text-red-400');
+            
+            if (micEnabled) {
+                answerEl.innerText = '???'; // Hide answer in Answer mode
+                answerEl.classList.add('opacity-30');
             } else {
-                srEl.innerText = srText;
-                srEl.classList.remove('opacity-30');
-                if (micEnabled) {
-                    enEl.innerText = '???'; // Hide English answer in Answer mode
-                    enEl.classList.add('opacity-30');
-                } else {
-                    enEl.innerText = enText;
-                    enEl.classList.add('opacity-30');
-                }
+                answerEl.innerText = answerText;
+                answerEl.classList.add('opacity-30');
             }
             
             // Update counter
@@ -418,14 +417,8 @@ window.CommuteEngine = (function() {
 
             // 2. Thinking pause (or mic listen)
             if (micEnabled) {
-                // Show "Your turn" in the ANSWER slot
-                if (currentDir === 'en-sr') {
-                    srEl.innerText = '🎙️ Vaš red (Your turn)...';
-                    srEl.classList.remove('opacity-30');
-                } else {
-                    enEl.innerText = '🎙️ Your turn...';
-                    enEl.classList.remove('opacity-30');
-                }
+                answerEl.innerText = (currentDir === 'en-sr') ? '🎙️ Vaš red (Your turn)...' : '🎙️ Your turn...';
+                answerEl.classList.remove('opacity-30');
                 
                 // Force start mic if it crashed
                 if (!isMicRecording && initMic()) {
@@ -447,20 +440,18 @@ window.CommuteEngine = (function() {
                 
                 if (!answerFound && loopActive && myId === loopId) {
                     if (window.app && window.app.playSound) window.app.playSound('incorrect');
-                    // Show the answer they missed in red
-                    if (currentDir === 'en-sr') {
-                        srEl.innerText = answerText;
-                        srEl.classList.add('text-red-400');
-                    } else {
-                        enEl.innerText = answerText;
-                        enEl.classList.add('text-red-400');
-                    }
+                    
+                    // Show the answer they missed in red in the answer slot
+                    answerEl.innerText = answerText;
+                    answerEl.classList.add('text-red-400');
+                    promptEl.classList.add('text-red-400'); // Flash both red
+                    
                     if (lastHeardTranscript && window.app && window.app.showToast) {
                         window.app.showToast('Mic heard: ' + lastHeardTranscript, 'info');
                     }
                     setTimeout(() => {
-                        srEl.classList.remove('text-red-400');
-                        enEl.classList.remove('text-red-400');
+                        answerEl.classList.remove('text-red-400');
+                        promptEl.classList.remove('text-red-400');
                     }, 1500);
                 }
             } else {
@@ -475,15 +466,10 @@ window.CommuteEngine = (function() {
             if (!loopActive || myId !== loopId) break;
 
             // 3. Reveal & Speak the ANSWER
-            if (currentDir === 'en-sr') {
-                srEl.innerText = srText;
-                srEl.classList.remove('opacity-30', 'text-red-400');
-                enEl.classList.add('opacity-30');
-            } else {
-                enEl.innerText = enText;
-                enEl.classList.remove('opacity-30', 'text-red-400');
-                srEl.classList.add('opacity-30');
-            }
+            answerEl.innerText = answerText;
+            answerEl.classList.remove('opacity-30', 'text-red-400');
+            promptEl.classList.add('opacity-30');
+            
             await speakGTX(answerText, answerLang);
             
             if (!loopActive || myId !== loopId) break;
@@ -503,8 +489,8 @@ window.CommuteEngine = (function() {
                 } else {
                     stopPlaying();
                     currentIndex = 0;
-                    el('commute-current-sr').innerText = '🎉 Gotovo! (Finished)';
-                    el('commute-current-en').innerText = 'Press Play to start again.';
+                    promptEl.innerText = '🎉 Gotovo! (Finished)';
+                    answerEl.innerText = 'Press Play to start again.';
                     break;
                 }
             }
