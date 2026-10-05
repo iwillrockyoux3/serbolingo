@@ -17,11 +17,10 @@ window.CommuteEngine = (function() {
     let quantity = 50;
 
     function getDirection() {
-        if (window.state && window.state.settings && window.state.settings.learningDirection) {
-            // User requested mapping: 
-            // 'sr_to_en' -> Prompt: English, Answer: Serbian ('en-sr')
-            // 'en_to_sr' -> Prompt: Serbian, Answer: English ('sr-en')
-            return window.state.settings.learningDirection === 'sr_to_en' ? 'en-sr' : 'sr-en';
+        if (window.appState && window.appState.settings && window.appState.settings.learningDirection) {
+            // 'en_to_sr' (Native English, learning Serbian) -> Prompt: English, Answer: Serbian ('en-sr')
+            // 'sr_to_en' (Native Serbian, learning English) -> Prompt: Serbian, Answer: English ('sr-en')
+            return window.appState.settings.learningDirection === 'en_to_sr' ? 'en-sr' : 'sr-en';
         }
         return 'en-sr';
     }
@@ -205,10 +204,10 @@ window.CommuteEngine = (function() {
         basePool = [];
 
         if (cat === 'mistakes') {
-            const mistakes = (window.state && window.state.mistakeLog) || {};
+            const mistakes = (window.appState && window.appState.mistakeLog) || {};
             basePool = allWords.filter(w => mistakes[w.id]);
         } else if (cat === 'favorites') {
-            const favs = (window.state && window.state.favorites) || {};
+            const favs = (window.appState && window.appState.favorites) || {};
             basePool = allWords.filter(w => favs[w.id]);
         } else if (cat === 'phrases') {
             basePool = allWords.filter(w => w.category === 'phrases' || ((w.sr || w.sr_lat) && (w.sr || w.sr_lat).includes(' ')));
