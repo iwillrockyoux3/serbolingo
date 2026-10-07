@@ -2434,6 +2434,169 @@ ArcadeEngine._launchGame = function(gameFnName, mode) {
     }
 };
 
+// 22. Padajuće Reči (Falling Words)
+ArcadeEngine.startFallingWords = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+
+    let score = 0;
+    let lives = 3;
+    let level = 1;
+    let speed = 2200; // ms per fall cycle
+    let spawnRate = 2500;
+    let activeWords = [];
+    let gameOver = false;
+    let spawnTimer = null;
+    let frameId = null;
+    const maxActive = 5;
+    const self = this;
+
+    const allWords = this._getWords(80);
+    if (allWords.length < 5) { this._hideOverlay(); return; }
+    let wordIdx = 0;
+
+    overlay.innerHTML = `
+        ${this._renderHeader('🌧️ Padajuće Reči', level, 5, lives, score)}
+        <div class="flex flex-col h-full bg-gray-900 relative overflow-hidden" style="min-height:400px;">
+            <div id="fw-arena" class="flex-1 relative w-full overflow-hidden" style="min-height:320px;"></div>
+            <div class="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
+                <input id="fw-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
+                    class="flex-1 bg-gray-700 text-white text-lg font-bold px-4 py-3 rounded-xl border-2 border-gray-600 focus:border-blue-500 focus:outline-none"
+                    placeholder="Type the translation...">
+                <button id="fw-submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-5 py-3 rounded-xl active:scale-95 transition-transform text-lg">⏎</button>
+            </div>
+        </div>
+    `;
+
+    const arena = document.getElementById('fw-arena');
+    const input = document.getElementById('fw-input');
+    const submitBtn = document.getElementById('fw-submit');
+    input.focus();
+
+    function normalizeAnswer(s) {
+        return s.toLowerCase().replace(/[čć]/g,'c').replace(/š/g,'s').replace(/ž/g,'z').replace(/đ/g,'dj').replace(/[.,!?'"]/g,'').trim();
+    }
+
+    function spawnWord() {
+        if (gameOver || activeWords.length >= maxActive) return;
+        if (wordIdx >= allWords.length) wordIdx = 0;
+        const w = allWords[wordIdx++];
+
+        const el = document.createElement('div');
+        const xPos = 10 + Math.random() * 70; // 10%-80% left
+        el.className = 'absolute text-center transition-none pointer-events-none';
+        el.style.left = xPos + '%';
+        el.style.top = '-40px';
+        el.style.zIndex = '10';
+        el.innerHTML = `
+            <div class="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-black text-base px-4 py-2 rounded-xl shadow-lg shadow-blue-500/40 whitespace-nowrap">
+                ${w.source}
+            </div>
+        `;
+        arena.appendChild(el);
+
+        const wordObj = {
+            el: el,
+            source: w.source,
+            target: w.target,
+            y: -40,
+            startTime: Date.now()
+        };
+        activeWords.push(wordObj);
+    }
+
+    function checkAnswer() {
+        const val = normalizeAnswer(input.value);
+        if (!val) return;
+
+        let found = -1;
+        for (let i = 0; i < activeWords.length; i++) {
+            if (normalizeAnswer(activeWords[i].target) === val) {
+                found = i;
+                break;
+            }
+        }
+
+        if (found >= 0) {
+            const w = activeWords[found];
+            // Explode animation
+            w.el.innerHTML = `<div class="text-green-400 font-black text-2xl animate-ping">✓</div>`;
+            setTimeout(() => { if (w.el.parentNode) w.el.parentNode.removeChild(w.el); }, 400);
+            activeWords.splice(found, 1);
+            score += 10 * level;
+            self._playSound('correct');
+            updateHeader();
+
+            // Level up every 5 correct
+            if (score > 0 && score % 50 === 0 && level < 5) {
+                level++;
+                speed = Math.max(800, speed - 300);
+                spawnRate = Math.max(1200, spawnRate - 300);
+                clearInterval(spawnTimer);
+                spawnTimer = setInterval(spawnWord, spawnRate);
+                updateHeader();
+            }
+        }
+        input.value = '';
+        input.focus();
+    }
+
+    function updateHeader() {
+        const headerEl = overlay.querySelector('.flex.items-center');
+        if (!headerEl) return;
+        // Re-render header inline
+        const h = overlay.firstElementChild;
+        if (h) h.outerHTML = self._renderHeader('🌧️ Padajuće Reči', level, 5, lives, score);
+    }
+
+    function gameLoop() {
+        if (gameOver) return;
+        const arenaH = arena.clientHeight || 320;
+
+        for (let i = activeWords.length - 1; i >= 0; i--) {
+            const w = activeWords[i];
+            const elapsed = Date.now() - w.startTime;
+            const progress = elapsed / speed;
+            w.y = -40 + (arenaH + 60) * progress;
+            w.el.style.top = w.y + 'px';
+
+            // Hit the bottom
+            if (w.y >= arenaH - 20) {
+                w.el.innerHTML = `<div class="text-red-400 font-black text-xs">${w.target}</div>`;
+                setTimeout(() => { if (w.el.parentNode) w.el.parentNode.removeChild(w.el); }, 800);
+                activeWords.splice(i, 1);
+                lives--;
+                self._playSound('incorrect');
+                updateHeader();
+
+                if (lives <= 0) {
+                    gameOver = true;
+                    clearInterval(spawnTimer);
+                    overlay.innerHTML = self._renderGameOver('Padajuće Reči', score, '__original_startFallingWords');
+                    return;
+                }
+            }
+        }
+        frameId = requestAnimationFrame(gameLoop);
+    }
+
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') checkAnswer(); });
+    submitBtn.addEventListener('click', checkAnswer);
+
+    // Start spawning & game loop
+    spawnWord();
+    spawnTimer = setInterval(spawnWord, spawnRate);
+    frameId = requestAnimationFrame(gameLoop);
+
+    // Cleanup on hide
+    this._timers.push({ clear: () => {
+        gameOver = true;
+        clearInterval(spawnTimer);
+        cancelAnimationFrame(frameId);
+    }});
+};
+
 // Monkey-patch all startXXX functions to redirect to preLaunch automatically
 Object.keys(ArcadeEngine).forEach(key => {
     if (key.startsWith('start') && typeof ArcadeEngine[key] === 'function' && key !== 'startBotOpponent') {
