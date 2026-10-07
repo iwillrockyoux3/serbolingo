@@ -1,4 +1,4 @@
-// [SHIELD_DAEMON: VALIDATED]
+﻿// [SHIELD_DAEMON: VALIDATED]
 const ArcadeEngine = {
     _timers: [],
     
@@ -60,7 +60,7 @@ const ArcadeEngine = {
     _renderHeader: function(title, level, maxLevel, lives, score) {
         let livesHtml = '';
         if (lives !== null) {
-            livesHtml = `<div>Lives: ${'❤️'.repeat(lives)}</div>`;
+            livesHtml = `<div>Lives: ${'â¤ï¸'.repeat(lives)}</div>`;
         }
         let scoreHtml = score !== null ? `<div>Score: ${score}</div>` : '';
         let levelHtml = level !== null ? `<div>Level: ${level}${maxLevel ? '/' + maxLevel : ''}</div>` : '';
@@ -72,7 +72,7 @@ const ArcadeEngine = {
                     <div class="w-full bg-gray-700 rounded-full h-3 relative overflow-hidden shadow-inner">
                         <div id="bot-progress" class="bg-gradient-to-r from-red-500 to-red-400 h-3 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.8)] transition-all duration-500 ease-linear" style="width: 0%"></div>
                     </div>
-                    <div class="text-[10px] text-center text-red-400 mt-1 font-black uppercase tracking-wider">🤖 Marko_Bot</div>
+                    <div class="text-[10px] text-center text-red-400 mt-1 font-black uppercase tracking-wider">ðŸ¤– Marko_Bot</div>
                 </div>
             `;
         }
@@ -577,16 +577,16 @@ const ArcadeEngine = {
             const maxWrong = 6;
             
             const isCyr = (window.appState?.settings?.script === 'cyrillic');
-            const letters = isCyr ? 'АБВГДЂЕЖЗИЈКЛЉМНЊОПРСТЋУФХЦЧЏШ'.split('') : 'ABCDEFGHIJKLMNOPQRSTUVWXYZČĆŽŠĐ'.split('');
+            const letters = isCyr ? 'ÐÐ‘Ð’Ð“Ð”Ð‚Ð•Ð–Ð—Ð˜ÐˆÐšÐ›Ð‰ÐœÐÐŠÐžÐŸÐ Ð¡Ð¢Ð‹Ð£Ð¤Ð¥Ð¦Ð§ÐÐ¨'.split('') : 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄŒÄ†Å½Å Ä'.split('');
             
             const render = () => {
                 let display = answer.split('').map(c => {
                     if(c === ' ') return '&nbsp;&nbsp;';
-                    if(!c.match(/[A-ZČĆŽŠĐА-Ш]/i)) return c;
+                    if(!c.match(/[A-ZÄŒÄ†Å½Å ÄÐ-Ð¨]/i)) return c;
                     return guessed.has(c) ? c : '_';
                 }).join(' ');
                 
-                let isWin = answer.split('').every(c => c === ' ' || !c.match(/[A-ZČĆŽŠĐА-Ш]/i) || guessed.has(c));
+                let isWin = answer.split('').every(c => c === ' ' || !c.match(/[A-ZÄŒÄ†Å½Å ÄÐ-Ð¨]/i) || guessed.has(c));
                 
                 if (isWin) {
                     this._playSound('correct');
@@ -779,7 +779,7 @@ const ArcadeEngine = {
                         ${this._renderHeader('Audio Survival', level, 10, lives, score)}
                         <div class="flex-grow flex flex-col items-center justify-center p-4">
                             <button onclick="audioReplay()" class="w-32 h-32 bg-teal-600 rounded-full flex items-center justify-center mb-12 shadow-[0_0_20px_rgba(20,184,166,0.5)] active:bg-teal-500">
-                                <span class="text-6xl">🔊</span>
+                                <span class="text-6xl">ðŸ”Š</span>
                             </button>
                             <div class="text-xl mb-6">Select the translation:</div>
                             <div class="grid grid-cols-2 gap-4 w-full max-w-md">
@@ -876,7 +876,7 @@ const ArcadeEngine = {
                     return `
                         <div id="mem-card-${i}" onclick="memoryFlip(${i})" class="bg-indigo-600 rounded-lg flex items-center justify-center p-2 text-center cursor-pointer select-none transition-transform transform ${isFlipped ? 'rotate-y-180 bg-indigo-500' : ''}" style="perspective: 1000px;">
                             <div class="font-bold text-sm sm:text-base break-words w-full h-full flex items-center justify-center">
-                                ${isFlipped ? c.text : '❓'}
+                                ${isFlipped ? c.text : 'â“'}
                             </div>
                         </div>
                     `;
@@ -944,11 +944,11 @@ const ArcadeEngine = {
                     
                     <div class="p-4 grid grid-cols-3 grid-rows-3 gap-2 w-48 mx-auto mb-4">
                         <div></div>
-                        <button class="bg-gray-700 rounded-lg p-4 active:bg-gray-600" onclick="window.snakeDir(0, -1)">⬆️</button>
+                        <button class="bg-gray-700 rounded-lg p-4 active:bg-gray-600" onclick="window.snakeDir(0, -1)">â¬†ï¸</button>
                         <div></div>
-                        <button class="bg-gray-700 rounded-lg p-4 active:bg-gray-600" onclick="window.snakeDir(-1, 0)">⬅️</button>
-                        <button class="bg-gray-700 rounded-lg p-4 active:bg-gray-600" onclick="window.snakeDir(0, 1)">⬇️</button>
-                        <button class="bg-gray-700 rounded-lg p-4 active:bg-gray-600" onclick="window.snakeDir(1, 0)">➡️</button>
+                        <button class="bg-gray-700 rounded-lg p-4 active:bg-gray-600" onclick="window.snakeDir(-1, 0)">â¬…ï¸</button>
+                        <button class="bg-gray-700 rounded-lg p-4 active:bg-gray-600" onclick="window.snakeDir(0, 1)">â¬‡ï¸</button>
+                        <button class="bg-gray-700 rounded-lg p-4 active:bg-gray-600" onclick="window.snakeDir(1, 0)">âž¡ï¸</button>
                     </div>
                 </div>
             `;
@@ -1272,14 +1272,14 @@ const ArcadeEngine = {
                 const resEl = document.getElementById('parrot-result');
                 if (transcript.includes(targetText) || targetText.includes(transcript)) {
                     this._playSound('correct');
-                    if(resEl) resEl.innerHTML = '✅ <span class="text-green-400">Excellent!</span>';
+                    if(resEl) resEl.innerHTML = 'âœ… <span class="text-green-400">Excellent!</span>';
                     setTimeout(() => {
                         level++;
                         overlay.innerHTML = this._renderLevelComplete(level - 1, 'parrotNext()');
                     }, 1500);
                 } else {
                     this._playSound('incorrect');
-                    if(resEl) resEl.innerHTML = `❌ <span class="text-red-400">Heard: "${transcript}"</span>`;
+                    if(resEl) resEl.innerHTML = `âŒ <span class="text-red-400">Heard: "${transcript}"</span>`;
                 }
             };
             
@@ -1297,11 +1297,11 @@ const ArcadeEngine = {
                         <div class="text-4xl font-bold mb-8">${targetWord.source}</div>
                         
                         <button onclick="parrotPlay()" class="mb-12 p-4 bg-orange-700 rounded-full w-16 h-16 flex items-center justify-center shadow-lg active:bg-orange-600">
-                            🔊
+                            ðŸ”Š
                         </button>
                         
                         <button id="parrot-mic-btn" onclick="parrotListen()" class="w-32 h-32 bg-blue-600 rounded-full flex items-center justify-center text-5xl shadow-[0_0_20px_rgba(37,99,235,0.5)] transition-colors duration-300">
-                            🎤
+                            ðŸŽ¤
                         </button>
                         
                         <div id="parrot-result" class="mt-8 text-2xl font-bold h-10"></div>
@@ -1369,14 +1369,14 @@ const ArcadeEngine = {
                 const resEl = document.getElementById('vt-result');
                 if (transcript.includes(targetText) || targetText.includes(transcript)) {
                     this._playSound('correct');
-                    if(resEl) resEl.innerHTML = '✅ <span class="text-green-400">Correct!</span>';
+                    if(resEl) resEl.innerHTML = 'âœ… <span class="text-green-400">Correct!</span>';
                     setTimeout(() => {
                         level++;
                         overlay.innerHTML = this._renderLevelComplete(level - 1, 'vtNext()');
                     }, 1500);
                 } else {
                     this._playSound('incorrect');
-                    if(resEl) resEl.innerHTML = `❌ <span class="text-red-400">Heard "${transcript}", expected "${targetText}"</span>`;
+                    if(resEl) resEl.innerHTML = `âŒ <span class="text-red-400">Heard "${transcript}", expected "${targetText}"</span>`;
                 }
             };
             
@@ -1394,7 +1394,7 @@ const ArcadeEngine = {
                         <div class="text-5xl font-bold mb-16 text-center">${targetWord.source}</div>
                         
                         <button id="vt-mic-btn" onclick="vtListen()" class="w-40 h-40 bg-rose-600 rounded-full flex items-center justify-center text-6xl shadow-[0_0_30px_rgba(225,29,72,0.5)] transition-colors duration-300">
-                            🎤
+                            ðŸŽ¤
                         </button>
                         
                         <div id="vt-result" class="mt-8 text-xl font-bold h-12 text-center w-full px-4"></div>
@@ -1415,9 +1415,9 @@ const ArcadeEngine = {
 
         // Serbian rhyme pair database
         const RHYME_PAIRS = [
-            { a: 'kuća', a_en: 'house', b: 'tuča', b_en: 'hail/fight' },
+            { a: 'kuÄ‡a', a_en: 'house', b: 'tuÄa', b_en: 'hail/fight' },
             { a: 'brate', a_en: 'brother', b: 'zlate', b_en: 'gold (voc.)' },
-            { a: 'noć', a_en: 'night', b: 'moć', b_en: 'power' },
+            { a: 'noÄ‡', a_en: 'night', b: 'moÄ‡', b_en: 'power' },
             { a: 'dan', a_en: 'day', b: 'san', b_en: 'dream' },
             { a: 'srce', a_en: 'heart', b: 'sunce', b_en: 'sun' },
             { a: 'nebo', a_en: 'sky', b: 'hleb', b_en: 'bread' },
@@ -1425,18 +1425,18 @@ const ArcadeEngine = {
             { a: 'voda', a_en: 'water', b: 'moda', b_en: 'fashion' },
             { a: 'grad', a_en: 'city', b: 'rad', b_en: 'work' },
             { a: 'sneg', a_en: 'snow', b: 'beg', b_en: 'escape' },
-            { a: 'sreća', a_en: 'happiness', b: 'leća', b_en: 'lens/lentil' },
+            { a: 'sreÄ‡a', a_en: 'happiness', b: 'leÄ‡a', b_en: 'lens/lentil' },
             { a: 'strah', a_en: 'fear', b: 'prah', b_en: 'dust' },
             { a: 'glava', a_en: 'head', b: 'slava', b_en: 'glory' },
-            { a: 'duša', a_en: 'soul', b: 'suša', b_en: 'drought' },
+            { a: 'duÅ¡a', a_en: 'soul', b: 'suÅ¡a', b_en: 'drought' },
             { a: 'more', a_en: 'sea', b: 'gore', b_en: 'above/burn' },
             { a: 'vreme', a_en: 'time', b: 'seme', b_en: 'seed' },
             { a: 'misao', a_en: 'thought', b: 'visao', b_en: 'hung (past)' },
-            { a: 'život', a_en: 'life', b: 'pivot', b_en: 'pivot' },
+            { a: 'Å¾ivot', a_en: 'life', b: 'pivot', b_en: 'pivot' },
             { a: 'pesma', a_en: 'song', b: 'vesma', b_en: 'very (archaic)' },
             { a: 'rima', a_en: 'rhyme', b: 'klima', b_en: 'climate' },
-            { a: 'reč', a_en: 'word', b: 'peć', b_en: 'oven/stove' },
-            { a: 'um', a_en: 'mind', b: 'šum', b_en: 'noise' },
+            { a: 'reÄ', a_en: 'word', b: 'peÄ‡', b_en: 'oven/stove' },
+            { a: 'um', a_en: 'mind', b: 'Å¡um', b_en: 'noise' },
             { a: 'plamen', a_en: 'flame', b: 'kamen', b_en: 'stone' },
             { a: 'zima', a_en: 'winter', b: 'rima', b_en: 'rhyme' },
             { a: 'zemlja', a_en: 'earth', b: 'nedelja', b_en: 'week/Sunday' },
@@ -1472,7 +1472,7 @@ const ArcadeEngine = {
 
             overlay.innerHTML = `
                 <div class="flex flex-col h-full bg-gradient-to-b from-violet-900 to-slate-900 text-white">
-                    ${this._renderHeader('Freestyle Rap 🎤', level, maxLevel, lives, score)}
+                    ${this._renderHeader('Freestyle Rap ðŸŽ¤', level, maxLevel, lives, score)}
                     <div class="flex-grow flex flex-col p-4 items-center justify-center gap-6">
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">What rhymes with...</p>
                         <div class="bg-violet-700/50 px-8 py-5 rounded-2xl border-2 border-violet-500 shadow-lg shadow-violet-500/30 text-center">
@@ -1488,7 +1488,7 @@ const ArcadeEngine = {
                             `).join('')}
                         </div>
                         <div class="bg-slate-800/60 rounded-xl p-3 mt-2">
-                            <p class="text-[10px] text-slate-400 text-center font-bold">💡 TIP: Words that end with the same sound rhyme!</p>
+                            <p class="text-[10px] text-slate-400 text-center font-bold">ðŸ’¡ TIP: Words that end with the same sound rhyme!</p>
                         </div>
                     </div>
                 </div>
@@ -1552,33 +1552,33 @@ const ArcadeEngine = {
                 setup_en: 'I\'m on top, looking down like a ___',
                 correct: 'soko',
                 correct_en: 'falcon',
-                options: ['soko', 'mačka', 'riba', 'miš'],
+                options: ['soko', 'maÄka', 'riba', 'miÅ¡'],
                 options_en: ['falcon', 'cat', 'fish', 'mouse'],
                 rhyme_with: 'Letim visoko',
                 rhyme_en: 'I fly high',
-                explanation: '"soko" (falcon) rhymes with "visoko" (high) — double wordplay!'
+                explanation: '"soko" (falcon) rhymes with "visoko" (high) â€” double wordplay!'
             },
             {
-                setup: 'Moje reči su oštre kao ___',
+                setup: 'Moje reÄi su oÅ¡tre kao ___',
                 setup_en: 'My words are sharp as ___',
-                correct: 'mač',
+                correct: 'maÄ',
                 correct_en: 'sword',
-                options: ['mač', 'hleb', 'san', 'cvet'],
+                options: ['maÄ', 'hleb', 'san', 'cvet'],
                 options_en: ['sword', 'bread', 'dream', 'flower'],
-                rhyme_with: 'Svaki stih je tač',
+                rhyme_with: 'Svaki stih je taÄ',
                 rhyme_en: 'Every verse is precise',
-                explanation: '"mač" (sword) rhymes with "tač" (precise) — lethal bars!'
+                explanation: '"maÄ" (sword) rhymes with "taÄ" (precise) â€” lethal bars!'
             },
             {
                 setup: 'Idem napred, nikad ne stajem, brzinom ___',
                 setup_en: 'Moving forward, never stopping, at the speed of ___',
                 correct: 'svetlost',
                 correct_en: 'light',
-                options: ['svetlost', 'puž', 'vetar', 'oblak'],
+                options: ['svetlost', 'puÅ¾', 'vetar', 'oblak'],
                 options_en: ['light', 'snail', 'wind', 'cloud'],
                 rhyme_with: 'To je moja radost',
                 rhyme_en: 'That is my joy',
-                explanation: '"svetlost" (light) rhymes with "radost" (joy) — speed + happiness!'
+                explanation: '"svetlost" (light) rhymes with "radost" (joy) â€” speed + happiness!'
             },
             {
                 setup: 'Moj um je bistar kao ___',
@@ -1589,18 +1589,18 @@ const ArcadeEngine = {
                 options_en: ['crystal', 'mud', 'fog', 'smoke'],
                 rhyme_with: 'Svaki plan je mistal',
                 rhyme_en: 'Every plan is mystical',
-                explanation: '"kristal" (crystal) sounds with "mistal" — clean and calculated!'
+                explanation: '"kristal" (crystal) sounds with "mistal" â€” clean and calculated!'
             },
             {
-                setup: 'Oni pričaju, ali ja imam ___',
+                setup: 'Oni priÄaju, ali ja imam ___',
                 setup_en: 'They talk, but I have ___',
                 correct: 'delo',
                 correct_en: 'deeds/work',
-                options: ['delo', 'reči', 'ništa', 'strahu'],
+                options: ['delo', 'reÄi', 'niÅ¡ta', 'strahu'],
                 options_en: ['deeds', 'words', 'nothing', 'fear'],
                 rhyme_with: 'Pokazujem celo selo',
                 rhyme_en: 'I show the whole village',
-                explanation: '"delo" (deeds) rhymes with "selo" (village) — actions speak louder!'
+                explanation: '"delo" (deeds) rhymes with "selo" (village) â€” actions speak louder!'
             },
             {
                 setup: 'Tvoj rap je hladan kao ___',
@@ -1611,7 +1611,7 @@ const ArcadeEngine = {
                 options_en: ['ice', 'fire', 'sun', 'lava'],
                 rhyme_with: 'A moj je svet',
                 rhyme_en: 'And mine is the world',
-                explanation: '"led" (ice) rhymes with "svet" (world) — cold diss + flex!'
+                explanation: '"led" (ice) rhymes with "svet" (world) â€” cold diss + flex!'
             },
             {
                 setup: 'Dizem se gore kao ___',
@@ -1620,12 +1620,12 @@ const ArcadeEngine = {
                 correct_en: 'smoke',
                 options: ['dim', 'kamen', 'pesak', 'blato'],
                 options_en: ['smoke', 'stone', 'sand', 'mud'],
-                rhyme_with: 'Nedostižan sam, kao rim',
+                rhyme_with: 'NedostiÅ¾an sam, kao rim',
                 rhyme_en: 'I\'m unreachable, like a rhyme',
-                explanation: '"dim" (smoke) rhymes with "rim" (rhyme) — rising and untouchable!'
+                explanation: '"dim" (smoke) rhymes with "rim" (rhyme) â€” rising and untouchable!'
             },
             {
-                setup: 'Moj stil je čist, bez ___',
+                setup: 'Moj stil je Äist, bez ___',
                 setup_en: 'My style is clean, without ___',
                 correct: 'mrlje',
                 correct_en: 'stains',
@@ -1633,7 +1633,7 @@ const ArcadeEngine = {
                 options_en: ['stains', 'colors', 'sound', 'pictures'],
                 rhyme_with: 'Dok tvoji stihovi su srlje',
                 rhyme_en: 'While your verses are a mess',
-                explanation: '"mrlje" (stains) rhymes with "srlje" (rushing/mess) — clean roast!'
+                explanation: '"mrlje" (stains) rhymes with "srlje" (rushing/mess) â€” clean roast!'
             },
             {
                 setup: 'Kao lav, vladam sa ___',
@@ -1642,9 +1642,9 @@ const ArcadeEngine = {
                 correct_en: 'strength',
                 options: ['snagom', 'strahom', 'tugom', 'slugom'],
                 options_en: ['strength', 'fear', 'sadness', 'servant'],
-                rhyme_with: 'Koračam za blagom',
+                rhyme_with: 'KoraÄam za blagom',
                 rhyme_en: 'I walk towards treasure',
-                explanation: '"snagom" (strength) rhymes with "blagom" (treasure) — king energy!'
+                explanation: '"snagom" (strength) rhymes with "blagom" (treasure) â€” king energy!'
             }
         ];
 
@@ -1666,10 +1666,10 @@ const ArcadeEngine = {
 
             overlay.innerHTML = `
                 <div class="flex flex-col h-full bg-gradient-to-b from-red-900 via-slate-900 to-slate-900 text-white">
-                    ${this._renderHeader('Rap Battle ⚔️', level, maxLevel, lives, score)}
+                    ${this._renderHeader('Rap Battle âš”ï¸', level, maxLevel, lives, score)}
                     <div class="flex-grow flex flex-col p-4 items-center justify-center gap-4 overflow-y-auto">
                         <div class="text-center mb-2">
-                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">🎤 Complete the punchline</p>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-2">ðŸŽ¤ Complete the punchline</p>
                             <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700 mb-2">
                                 <p class="text-lg font-black text-orange-400 italic">"${battle.rhyme_with}"</p>
                                 <p class="text-[10px] text-slate-500 mt-1">${battle.rhyme_en}</p>
@@ -1702,7 +1702,7 @@ const ArcadeEngine = {
                     // Show explanation
                     const explDiv = document.createElement('div');
                     explDiv.className = 'fixed bottom-20 left-4 right-4 bg-green-900/90 text-green-100 rounded-2xl p-4 text-center z-50 border border-green-500 shadow-lg animate-bounce';
-                    explDiv.innerHTML = `<p class="text-xs font-bold">🔥 ${battle.explanation}</p>`;
+                    explDiv.innerHTML = `<p class="text-xs font-bold">ðŸ”¥ ${battle.explanation}</p>`;
                     document.body.appendChild(explDiv);
                     level++;
                     setTimeout(() => { explDiv.remove(); nextRound(); }, 2000);
@@ -1718,7 +1718,7 @@ const ArcadeEngine = {
                     });
                     const explDiv = document.createElement('div');
                     explDiv.className = 'fixed bottom-20 left-4 right-4 bg-slate-800/90 text-slate-200 rounded-2xl p-4 text-center z-50 border border-slate-600 shadow-lg';
-                    explDiv.innerHTML = `<p class="text-xs font-bold">💡 ${battle.explanation}</p>`;
+                    explDiv.innerHTML = `<p class="text-xs font-bold">ðŸ’¡ ${battle.explanation}</p>`;
                     document.body.appendChild(explDiv);
                     if (lives <= 0) {
                         setTimeout(() => { explDiv.remove(); overlay.innerHTML = this._renderGameOver('Rap Battle', score, 'startRapBattle'); }, 2000);
@@ -1732,7 +1732,7 @@ const ArcadeEngine = {
     }
 };
 
-// 15. Speed True/False (Tačno/Netačno)
+// 15. Speed True/False (TaÄno/NetaÄno)
 ArcadeEngine.startTrueFalse = function() {
     this._cleanup();
     this._showOverlay();
@@ -1746,14 +1746,14 @@ ArcadeEngine.startTrueFalse = function() {
 
     const renderRound = () => {
         if (lives <= 0) {
-            overlay.innerHTML = this._renderGameOver('Tačno/Netačno', score, '__original_startTrueFalse');
+            overlay.innerHTML = this._renderGameOver('TaÄno/NetaÄno', score, '__original_startTrueFalse');
             return;
         }
         if (round > totalRounds) {
             this._awardXpBoost();
             overlay.innerHTML = `
                 <div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center">
-                    <h2 class="text-5xl font-black text-yellow-400 mb-4">🏆 SURVIVED!</h2>
+                    <h2 class="text-5xl font-black text-yellow-400 mb-4">ðŸ† SURVIVED!</h2>
                     <p class="text-2xl mb-2">Final Score: <span class="text-green-400 font-black">${score}</span></p>
                     <p class="text-sm text-gray-400 mb-8">${totalRounds} rounds completed</p>
                     <button onclick="ArcadeEngine.__original_startTrueFalse()" class="px-6 py-3 bg-blue-600 rounded-xl text-xl mb-4 font-bold active:scale-95 transition-transform">Play Again</button>
@@ -1769,20 +1769,20 @@ ArcadeEngine.startTrueFalse = function() {
         const displayTarget = isCorrect ? pair[0].target : pair[1].target;
 
         overlay.innerHTML = `
-            ${this._renderHeader('⚡ Tačno/Netačno', round, totalRounds, lives, score)}
+            ${this._renderHeader('âš¡ TaÄno/NetaÄno', round, totalRounds, lives, score)}
             <div class="flex flex-col items-center justify-center flex-1 bg-gray-900 text-white p-6 w-full text-center relative overflow-hidden">
                 <div id="tf-timer-bar" class="absolute top-0 left-0 h-1.5 bg-gradient-to-r from-yellow-400 to-red-500 w-full rounded-full" style="transition: width 1.5s linear;"></div>
                 
-                <div class="text-7xl mb-6 animate-bounce">${pair[0].emoji || '⚡'}</div>
+                <div class="text-7xl mb-6 animate-bounce">${pair[0].emoji || 'âš¡'}</div>
                 <div class="text-4xl font-black mb-3 text-white">${pair[0].source}</div>
                 <div class="text-2xl text-gray-400 font-medium mb-12">= <span class="text-blue-300 font-bold">${displayTarget}</span> ?</div>
 
                 <div class="flex gap-4 w-full max-w-md">
                     <button id="btn-tacno" class="flex-1 p-6 bg-green-600 hover:bg-green-500 rounded-2xl active:scale-90 transition-all text-white font-black text-2xl shadow-lg shadow-green-600/30 border-b-4 border-green-800">
-                        ✅ TAČNO
+                        âœ… TAÄŒNO
                     </button>
                     <button id="btn-netacno" class="flex-1 p-6 bg-red-600 hover:bg-red-500 rounded-2xl active:scale-90 transition-all text-white font-black text-2xl shadow-lg shadow-red-600/30 border-b-4 border-red-800">
-                        ❌ NETAČNO
+                        âŒ NETAÄŒNO
                     </button>
                 </div>
             </div>
@@ -1850,7 +1850,7 @@ ArcadeEngine.startPictureMatch = function() {
             this._awardXpBoost();
             overlay.innerHTML = `
                 <div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center">
-                    <h2 class="text-5xl font-black text-yellow-400 mb-4">🖼️ Perfect Eye!</h2>
+                    <h2 class="text-5xl font-black text-yellow-400 mb-4">ðŸ–¼ï¸ Perfect Eye!</h2>
                     <p class="text-2xl mb-8">Score: <span class="text-green-400 font-black">${score}</span></p>
                     <button onclick="ArcadeEngine.__original_startPictureMatch()" class="px-6 py-3 bg-blue-600 rounded-xl text-xl mb-4 font-bold active:scale-95 transition-transform">Play Again</button>
                     <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-700 rounded-xl text-xl font-bold active:scale-95 transition-transform">Back to Arcade</button>
@@ -1864,7 +1864,7 @@ ArcadeEngine.startPictureMatch = function() {
         const options = allWords.slice(0, 4).sort(() => Math.random() - 0.5);
 
         overlay.innerHTML = `
-            ${this._renderHeader('🖼️ Pogodi Sliku', round, totalRounds, lives, score)}
+            ${this._renderHeader('ðŸ–¼ï¸ Pogodi Sliku', round, totalRounds, lives, score)}
             <div class="flex flex-col items-center justify-center flex-1 bg-gray-900 text-white p-6 w-full text-center">
                 <p class="text-sm text-gray-400 font-bold mb-2 uppercase tracking-widest">Find the match for:</p>
                 <div class="text-3xl font-black mb-8 text-blue-300">${correct.source}</div>
@@ -1876,7 +1876,7 @@ ArcadeEngine.startPictureMatch = function() {
         options.forEach(opt => {
             const btn = document.createElement('button');
             btn.className = 'p-6 bg-slate-800 rounded-2xl border-2 border-slate-700 hover:border-blue-400 active:scale-95 transition-all flex flex-col items-center gap-2';
-            btn.innerHTML = `<span class="text-4xl">${opt.emoji || '❓'}</span><span class="text-sm font-black text-white">${opt.target}</span>`;
+            btn.innerHTML = `<span class="text-4xl">${opt.emoji || 'â“'}</span><span class="text-sm font-black text-white">${opt.target}</span>`;
             btn.addEventListener('click', () => {
                 grid.querySelectorAll('button').forEach(b => b.disabled = true);
                 if (opt === correct) {
@@ -1903,13 +1903,13 @@ ArcadeEngine.startWordSearch = function() {
     this._showOverlay();
     const overlay = document.getElementById('arcade-game-overlay');
 
-    const words = this._getWords(4).map(w => w.target.toUpperCase().replace(/[^A-ZČĆŽŠĐА-Я]/gi, '').substring(0, 6));
+    const words = this._getWords(4).map(w => w.target.toUpperCase().replace(/[^A-ZÄŒÄ†Å½Å ÄÐ-Ð¯]/gi, '').substring(0, 6));
     const validWords = words.filter(w => w.length >= 2 && w.length <= 6);
     if (validWords.length < 2) { this._hideOverlay(); return; }
 
     const gridSize = 8;
     const grid = [];
-    const letters = 'ABCČĆDĐEFGHIJKLMNOPQRSŠTUVWXYZŽ';
+    const letters = 'ABCÄŒÄ†DÄEFGHIJKLMNOPQRSÅ TUVWXYZÅ½';
     
     // Fill grid with random letters
     for (let r = 0; r < gridSize; r++) {
@@ -1955,7 +1955,7 @@ ArcadeEngine.startWordSearch = function() {
 
     const render = () => {
         overlay.innerHTML = `
-            ${this._renderHeader('🔍 Osmosmerka', foundCount, placedWords.length, null, null)}
+            ${this._renderHeader('ðŸ” Osmosmerka', foundCount, placedWords.length, null, null)}
             <div class="flex flex-col items-center flex-1 bg-gray-900 text-white p-4 w-full overflow-y-auto">
                 <div class="flex flex-wrap gap-2 mb-4 justify-center">
                     ${placedWords.map(pw => `<span class="px-3 py-1 rounded-full text-xs font-black ${pw.found ? 'bg-green-600 line-through' : 'bg-slate-700'}">${pw.word}</span>`).join('')}
@@ -1997,7 +1997,7 @@ ArcadeEngine.startWordSearch = function() {
                             setTimeout(() => {
                                 overlay.innerHTML = `
                                     <div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center">
-                                        <h2 class="text-5xl font-black text-yellow-400 mb-4">🔍 All Found!</h2>
+                                        <h2 class="text-5xl font-black text-yellow-400 mb-4">ðŸ” All Found!</h2>
                                         <button onclick="ArcadeEngine.__original_startWordSearch()" class="px-6 py-3 bg-blue-600 rounded-xl text-xl mb-4 font-bold active:scale-95 transition-transform">Play Again</button>
                                         <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-700 rounded-xl text-xl font-bold active:scale-95 transition-transform">Back to Arcade</button>
                                     </div>`;
@@ -2013,7 +2013,7 @@ ArcadeEngine.startWordSearch = function() {
     render();
 };
 
-// 18. Mini Crossword (Ukrštenica)
+// 18. Mini Crossword (UkrÅ¡tenica)
 ArcadeEngine.startCrossword = function() {
     this._cleanup();
     this._showOverlay();
@@ -2030,7 +2030,7 @@ ArcadeEngine.startCrossword = function() {
             this._awardXpBoost();
             overlay.innerHTML = `
                 <div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center">
-                    <h2 class="text-5xl font-black text-yellow-400 mb-4">📰 Solved!</h2>
+                    <h2 class="text-5xl font-black text-yellow-400 mb-4">ðŸ“° Solved!</h2>
                     <p class="text-2xl mb-8">Score: <span class="text-green-400 font-black">${score}</span></p>
                     <button onclick="ArcadeEngine.__original_startCrossword()" class="px-6 py-3 bg-blue-600 rounded-xl text-xl mb-4 font-bold active:scale-95 transition-transform">Play Again</button>
                     <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-700 rounded-xl text-xl font-bold active:scale-95 transition-transform">Back to Arcade</button>
@@ -2043,7 +2043,7 @@ ArcadeEngine.startCrossword = function() {
         const cells = answer.split('').map(() => '');
 
         overlay.innerHTML = `
-            ${this._renderHeader('📰 Ukrštenica', currentClue + 1, words.length, null, score)}
+            ${this._renderHeader('ðŸ“° UkrÅ¡tenica', currentClue + 1, words.length, null, score)}
             <div class="flex flex-col items-center justify-center flex-1 bg-gray-900 text-white p-6 w-full text-center">
                 <p class="text-sm text-gray-400 font-bold mb-2 uppercase tracking-widest">Clue:</p>
                 <div class="text-3xl font-black mb-2 text-blue-300">${w.source}</div>
@@ -2089,7 +2089,7 @@ ArcadeEngine.startCrossword = function() {
     renderClue();
 };
 
-// 19. Rečko (Serbian Wordle)
+// 19. ReÄko (Serbian Wordle)
 ArcadeEngine.startRecko = function() {
     this._cleanup();
     this._showOverlay();
@@ -2112,7 +2112,7 @@ ArcadeEngine.startRecko = function() {
 
     const render = () => {
         overlay.innerHTML = `
-            ${this._renderHeader('🟩 Rečko', guesses.length, maxGuesses, null, null)}
+            ${this._renderHeader('ðŸŸ© ReÄko', guesses.length, maxGuesses, null, null)}
             <div class="flex flex-col items-center flex-1 bg-gray-900 text-white p-4 w-full overflow-y-auto">
                 <p class="text-xs text-gray-400 mb-4 font-bold">Guess the 5-letter word. Hint: <span class="text-blue-300">${target.source}</span></p>
                 <div class="space-y-2 mb-6 w-full max-w-xs" id="rk-board"></div>
@@ -2158,7 +2158,7 @@ ArcadeEngine.startRecko = function() {
                 if (row === 'ZXCVBNM') {
                     const enterBtn = document.createElement('button');
                     enterBtn.className = 'px-3 py-3 bg-green-600 rounded-lg text-xs font-black text-white active:scale-90 transition-transform';
-                    enterBtn.textContent = '✓';
+                    enterBtn.textContent = 'âœ“';
                     enterBtn.addEventListener('click', () => submitGuess());
                     rowDiv.appendChild(enterBtn);
                 }
@@ -2174,7 +2174,7 @@ ArcadeEngine.startRecko = function() {
                 if (row === 'ZXCVBNM') {
                     const delBtn = document.createElement('button');
                     delBtn.className = 'px-3 py-3 bg-red-600 rounded-lg text-xs font-black text-white active:scale-90 transition-transform';
-                    delBtn.textContent = '⌫';
+                    delBtn.textContent = 'âŒ«';
                     delBtn.addEventListener('click', () => { currentGuess = currentGuess.slice(0, -1); render(); });
                     rowDiv.appendChild(delBtn);
                 }
@@ -2202,7 +2202,7 @@ ArcadeEngine.startRecko = function() {
             setTimeout(() => {
                 overlay.innerHTML = `
                     <div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center">
-                        <h2 class="text-5xl font-black text-green-400 mb-4">🟩 Bravo!</h2>
+                        <h2 class="text-5xl font-black text-green-400 mb-4">ðŸŸ© Bravo!</h2>
                         <p class="text-xl mb-8">You got it in ${guesses.length} guess${guesses.length > 1 ? 'es' : ''}!</p>
                         <button onclick="ArcadeEngine.__original_startRecko()" class="px-6 py-3 bg-blue-600 rounded-xl text-xl mb-4 font-bold active:scale-95 transition-transform">Play Again</button>
                         <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-700 rounded-xl text-xl font-bold active:scale-95 transition-transform">Back to Arcade</button>
@@ -2246,7 +2246,7 @@ ArcadeEngine.startBubblePop = function() {
             this._awardXpBoost();
             overlay.innerHTML = `
                 <div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center">
-                    <h2 class="text-5xl font-black text-yellow-400 mb-4">🎈 All Popped!</h2>
+                    <h2 class="text-5xl font-black text-yellow-400 mb-4">ðŸŽˆ All Popped!</h2>
                     <p class="text-2xl mb-8">Score: <span class="text-green-400 font-black">${score}</span></p>
                     <button onclick="ArcadeEngine.__original_startBubblePop()" class="px-6 py-3 bg-blue-600 rounded-xl text-xl mb-4 font-bold active:scale-95 transition-transform">Play Again</button>
                     <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-700 rounded-xl text-xl font-bold active:scale-95 transition-transform">Back to Arcade</button>
@@ -2261,7 +2261,7 @@ ArcadeEngine.startBubblePop = function() {
         const colors = ['from-red-400 to-pink-500', 'from-blue-400 to-cyan-500', 'from-green-400 to-emerald-500', 'from-purple-400 to-violet-500', 'from-yellow-400 to-orange-500'];
 
         overlay.innerHTML = `
-            ${this._renderHeader('🎈 Baloni', round, totalRounds, lives, score)}
+            ${this._renderHeader('ðŸŽˆ Baloni', round, totalRounds, lives, score)}
             <div class="flex flex-col items-center justify-center flex-1 bg-gray-900 text-white p-6 w-full text-center relative overflow-hidden">
                 <p class="text-sm text-gray-400 font-bold mb-2 uppercase tracking-widest">Pop the correct bubble!</p>
                 <div class="text-3xl font-black mb-8 text-blue-300">${correct.source}</div>
@@ -2309,8 +2309,8 @@ ArcadeEngine.startSorter = function() {
     let lives = 3;
 
     const genders = [
-        { label: 'Muški (M)', key: 'm', color: 'blue' },
-        { label: 'Ženski (Ž)', key: 'f', color: 'pink' },
+        { label: 'MuÅ¡ki (M)', key: 'm', color: 'blue' },
+        { label: 'Å½enski (Å½)', key: 'f', color: 'pink' },
         { label: 'Srednji (S)', key: 'n', color: 'green' }
     ];
 
@@ -2323,8 +2323,8 @@ ArcadeEngine.startSorter = function() {
         const target = w.target || w.source;
         let gender;
         const lastChar = target.slice(-1).toLowerCase();
-        if (['a', 'а'].includes(lastChar)) gender = 'f';
-        else if (['o', 'e', 'о', 'е'].includes(lastChar)) gender = 'n';
+        if (['a', 'Ð°'].includes(lastChar)) gender = 'f';
+        else if (['o', 'e', 'Ð¾', 'Ðµ'].includes(lastChar)) gender = 'n';
         else gender = 'm';
         return { word: target, source: w.source, gender };
     };
@@ -2335,7 +2335,7 @@ ArcadeEngine.startSorter = function() {
             this._awardXpBoost();
             overlay.innerHTML = `
                 <div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center">
-                    <h2 class="text-5xl font-black text-yellow-400 mb-4">🧺 Sorted!</h2>
+                    <h2 class="text-5xl font-black text-yellow-400 mb-4">ðŸ§º Sorted!</h2>
                     <p class="text-2xl mb-8">Score: <span class="text-green-400 font-black">${score}</span></p>
                     <button onclick="ArcadeEngine.__original_startSorter()" class="px-6 py-3 bg-blue-600 rounded-xl text-xl mb-4 font-bold active:scale-95 transition-transform">Play Again</button>
                     <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-700 rounded-xl text-xl font-bold active:scale-95 transition-transform">Back to Arcade</button>
@@ -2347,7 +2347,7 @@ ArcadeEngine.startSorter = function() {
         if (!wordData) { this._hideOverlay(); return; }
 
         overlay.innerHTML = `
-            ${this._renderHeader('🧺 Razvrstaj', round, totalRounds, lives, score)}
+            ${this._renderHeader('ðŸ§º Razvrstaj', round, totalRounds, lives, score)}
             <div class="flex flex-col items-center justify-center flex-1 bg-gray-900 text-white p-6 w-full text-center">
                 <p class="text-sm text-gray-400 font-bold mb-2 uppercase tracking-widest">Sort this word by gender:</p>
                 <div class="text-4xl font-black mb-3 text-white">${wordData.word}</div>
@@ -2395,7 +2395,7 @@ ArcadeEngine.preLaunch = function(gameFnName) {
             <div class="flex flex-col gap-4 w-full max-w-sm">
                 <button onclick="ArcadeEngine._launchGame('${gameFnName}', 'solo')" class="p-6 bg-slate-800 border-2 border-slate-700 rounded-2xl text-left hover:border-blue-500 hover:bg-slate-700 active:scale-95 transition-all group">
                     <div class="flex items-center gap-4">
-                        <div class="text-4xl group-hover:scale-110 transition-transform">👤</div>
+                        <div class="text-4xl group-hover:scale-110 transition-transform">ðŸ‘¤</div>
                         <div>
                             <h3 class="text-white font-black text-xl">Solo Mode</h3>
                             <p class="text-slate-400 text-xs font-bold mt-1">Play at your own pace</p>
@@ -2404,9 +2404,9 @@ ArcadeEngine.preLaunch = function(gameFnName) {
                 </button>
 
                 <button onclick="ArcadeEngine._launchGame('${gameFnName}', 'bot')" class="p-6 bg-slate-800 border-2 border-slate-700 rounded-2xl text-left hover:border-red-500 hover:bg-slate-700 active:scale-95 transition-all group relative overflow-hidden">
-                    <div class="absolute -right-4 -bottom-4 text-7xl opacity-10 group-hover:scale-110 transition-transform">🤖</div>
+                    <div class="absolute -right-4 -bottom-4 text-7xl opacity-10 group-hover:scale-110 transition-transform">ðŸ¤–</div>
                     <div class="flex items-center gap-4 relative z-10">
-                        <div class="text-4xl group-hover:scale-110 transition-transform">🤖</div>
+                        <div class="text-4xl group-hover:scale-110 transition-transform">ðŸ¤–</div>
                         <div>
                             <h3 class="text-white font-black text-xl">Vs. AI Bot</h3>
                             <p class="text-slate-400 text-xs font-bold mt-1">Race against a bot</p>
@@ -2434,7 +2434,7 @@ ArcadeEngine._launchGame = function(gameFnName, mode) {
     }
 };
 
-// 22. Padajuće Reči (Falling Words)
+// 22. PadajuÄ‡e ReÄi (Falling Words)
 ArcadeEngine.startFallingWords = function() {
     this._cleanup();
     this._showOverlay();
@@ -2457,14 +2457,14 @@ ArcadeEngine.startFallingWords = function() {
     let wordIdx = 0;
 
     overlay.innerHTML = `
-        ${this._renderHeader('🌧️ Padajuće Reči', level, 5, lives, score)}
+        ${this._renderHeader('ðŸŒ§ï¸ PadajuÄ‡e ReÄi', level, 5, lives, score)}
         <div class="flex flex-col h-full bg-gray-900 relative overflow-hidden" style="min-height:400px;">
             <div id="fw-arena" class="flex-1 relative w-full overflow-hidden" style="min-height:320px;"></div>
             <div class="p-3 bg-gray-800 border-t border-gray-700 flex gap-2">
                 <input id="fw-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
                     class="flex-1 bg-gray-700 text-white text-lg font-bold px-4 py-3 rounded-xl border-2 border-gray-600 focus:border-blue-500 focus:outline-none"
                     placeholder="Type the translation...">
-                <button id="fw-submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-5 py-3 rounded-xl active:scale-95 transition-transform text-lg">⏎</button>
+                <button id="fw-submit" class="bg-blue-600 hover:bg-blue-500 text-white font-black px-5 py-3 rounded-xl active:scale-95 transition-transform text-lg">âŽ</button>
             </div>
         </div>
     `;
@@ -2475,7 +2475,7 @@ ArcadeEngine.startFallingWords = function() {
     input.focus();
 
     function normalizeAnswer(s) {
-        return s.toLowerCase().replace(/[čć]/g,'c').replace(/š/g,'s').replace(/ž/g,'z').replace(/đ/g,'dj').replace(/[.,!?'"]/g,'').trim();
+        return s.toLowerCase().replace(/[ÄÄ‡]/g,'c').replace(/Å¡/g,'s').replace(/Å¾/g,'z').replace(/Ä‘/g,'dj').replace(/[.,!?'"]/g,'').trim();
     }
 
     function spawnWord() {
@@ -2521,7 +2521,7 @@ ArcadeEngine.startFallingWords = function() {
         if (found >= 0) {
             const w = activeWords[found];
             // Explode animation
-            w.el.innerHTML = `<div class="text-green-400 font-black text-2xl animate-ping">✓</div>`;
+            w.el.innerHTML = `<div class="text-green-400 font-black text-2xl animate-ping">âœ“</div>`;
             setTimeout(() => { if (w.el.parentNode) w.el.parentNode.removeChild(w.el); }, 400);
             activeWords.splice(found, 1);
             score += 10 * level;
@@ -2547,7 +2547,7 @@ ArcadeEngine.startFallingWords = function() {
         if (!headerEl) return;
         // Re-render header inline
         const h = overlay.firstElementChild;
-        if (h) h.outerHTML = self._renderHeader('🌧️ Padajuće Reči', level, 5, lives, score);
+        if (h) h.outerHTML = self._renderHeader('ðŸŒ§ï¸ PadajuÄ‡e ReÄi', level, 5, lives, score);
     }
 
     function gameLoop() {
@@ -2573,7 +2573,7 @@ ArcadeEngine.startFallingWords = function() {
                 if (lives <= 0) {
                     gameOver = true;
                     clearInterval(spawnTimer);
-                    overlay.innerHTML = self._renderGameOver('Padajuće Reči', score, '__original_startFallingWords');
+                    overlay.innerHTML = self._renderGameOver('PadajuÄ‡e ReÄi', score, '__original_startFallingWords');
                     return;
                 }
             }
@@ -2597,6 +2597,652 @@ ArcadeEngine.startFallingWords = function() {
     }});
 };
 
+// 23. Ruski Rulet (Daily Deathmatch / Lockout)
+ArcadeEngine.startLockout = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+
+    const lockTime = localStorage.getItem('serbolingo_lockout');
+    if (lockTime && Date.now() < parseInt(lockTime)) {
+        const remaining = Math.ceil((parseInt(lockTime) - Date.now()) / (1000 * 60 * 60));
+        overlay.innerHTML = `
+            <div class="flex flex-col items-center justify-center h-full bg-red-950 text-white p-6 text-center">
+                <div class="text-7xl mb-6">🔒</div>
+                <h2 class="text-5xl font-black text-red-500 mb-4">ZAKLJUČANO</h2>
+                <p class="text-xl mb-8 text-red-200">Prekršaj! The app is locked for ${remaining} more hour(s).</p>
+                <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-red-600 rounded-xl text-xl font-bold active:scale-95 transition-transform shadow-lg shadow-red-900">Return</button>
+            </div>
+        `;
+        return;
+    } else if (lockTime) {
+        localStorage.removeItem('serbolingo_lockout');
+    }
+
+    let score = 0;
+    let round = 1;
+    let fails = 0;
+    const maxFails = 5;
+    const totalRounds = 10;
+    const self = this;
+
+    const renderRound = () => {
+        if (fails >= maxFails) {
+            const unlockAt = Date.now() + (24 * 60 * 60 * 1000);
+            localStorage.setItem('serbolingo_lockout', unlockAt.toString());
+            overlay.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full bg-red-950 text-white p-6 text-center animate-pulse">
+                    <div class="text-8xl mb-6">☠️</div>
+                    <h2 class="text-5xl font-black text-red-500 mb-4">GAME OVER</h2>
+                    <p class="text-xl mb-8 text-red-200">You failed ${maxFails} times. You are locked out for 24 hours.</p>
+                    <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-red-600 rounded-xl text-xl font-bold active:scale-95 transition-transform">Accept Fate</button>
+                </div>
+            `;
+            return;
+        }
+        if (round > totalRounds) {
+            this._awardXpBoost();
+            overlay.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center">
+                    <h2 class="text-5xl font-black text-green-400 mb-4">🏆 PREŽIVEO/LA SI!</h2>
+                    <p class="text-2xl mb-8">You survived the Deathmatch.</p>
+                    <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-700 rounded-xl text-xl font-bold active:scale-95 transition-transform">Back to Arcade</button>
+                </div>`;
+            return;
+        }
+
+        const allWords = this._getWords(5);
+        if (allWords.length < 4) { this._hideOverlay(); return; }
+        const correct = allWords[0];
+        const options = allWords.slice(0, 4).sort(() => Math.random() - 0.5);
+
+        overlay.innerHTML = `
+            ${this._renderHeader('💀 Dnevni Izazov', round, totalRounds, maxFails - fails, score)}
+            <div class="flex flex-col items-center justify-center flex-1 bg-gray-950 text-white p-6 w-full text-center">
+                <div class="text-red-500 font-bold mb-2 animate-pulse text-sm">SURVIVAL MODE (FAILS: ${fails}/${maxFails})</div>
+                <div class="text-4xl font-black mb-8">${correct.source}</div>
+                <div class="grid grid-cols-1 gap-4 w-full max-w-sm" id="dm-grid"></div>
+            </div>
+        `;
+
+        const grid = document.getElementById('dm-grid');
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'p-4 bg-gray-800 border-2 border-gray-700 rounded-xl text-xl font-bold active:scale-95 transition-transform hover:bg-gray-700';
+            btn.innerText = opt.target;
+            btn.onclick = () => {
+                grid.querySelectorAll('button').forEach(b => b.disabled = true);
+                if (opt === correct) {
+                    btn.classList.add('bg-green-600', 'border-green-500');
+                    score += 100;
+                    self._playSound('correct');
+                } else {
+                    btn.classList.add('bg-red-600', 'border-red-500');
+                    fails++;
+                    self._playSound('incorrect');
+                }
+                setTimeout(() => {
+                    round++;
+                    renderRound();
+                }, 1000);
+            };
+            grid.appendChild(btn);
+        });
+    };
+    renderRound();
+};
+
+// 24. Bomba (Bomb Defusal)
+ArcadeEngine.startBombDefusal = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+
+    let score = 0;
+    let round = 1;
+    let timer = null;
+    let timeLeft = 10;
+    const self = this;
+
+    const renderRound = () => {
+        timeLeft = Math.max(3, 10 - Math.floor(round / 2));
+        const allWords = this._getWords(5);
+        if (allWords.length < 4) { this._hideOverlay(); return; }
+        const correct = allWords[0];
+        const options = allWords.slice(0, 4).sort(() => Math.random() - 0.5);
+        const wireColors = ['bg-red-600', 'bg-blue-600', 'bg-green-600', 'bg-yellow-500'];
+
+        overlay.innerHTML = `
+            ${this._renderHeader('💣 Bomba', round, '∞', '1', score)}
+            <div class="flex flex-col items-center justify-center flex-1 bg-gray-900 text-white p-6 w-full text-center relative overflow-hidden">
+                <div id="bomb-timer" class="text-6xl font-black mb-2 text-red-500 font-mono tracking-tighter">00:${timeLeft.toString().padStart(2, '0')}</div>
+                <div class="text-3xl font-black mb-8">${correct.source}</div>
+                <div class="flex flex-col gap-2 w-full max-w-sm" id="wire-grid"></div>
+            </div>
+        `;
+
+        const grid = document.getElementById('wire-grid');
+        options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            const color = wireColors[idx % 4];
+            btn.className = `p-4 ${color} rounded-md text-xl font-bold active:scale-95 transition-transform flex items-center justify-between hover:brightness-110 shadow-[0_5px_0_rgba(0,0,0,0.5)] active:shadow-none active:translate-y-1 mb-2`;
+            btn.innerHTML = `<span>✂️</span> <span>${opt.target}</span> <span></span>`;
+            btn.onclick = () => {
+                clearInterval(timer);
+                grid.querySelectorAll('button').forEach(b => b.disabled = true);
+                if (opt === correct) {
+                    btn.classList.add('opacity-50');
+                    score += timeLeft * 10;
+                    self._playSound('correct');
+                    setTimeout(() => { round++; renderRound(); }, 800);
+                } else {
+                    explode();
+                }
+            };
+            grid.appendChild(btn);
+        });
+
+        const timerEl = document.getElementById('bomb-timer');
+        clearInterval(timer);
+        timer = setInterval(() => {
+            timeLeft--;
+            if (timeLeft <= 3) timerEl.classList.add('animate-pulse', 'text-red-400');
+            timerEl.innerText = `00:${timeLeft.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                explode();
+            }
+        }, 1000);
+    };
+
+    const explode = () => {
+        clearInterval(timer);
+        self._playSound('incorrect');
+        overlay.innerHTML = `<div class="flex items-center justify-center h-full bg-white animate-ping"><div class="text-9xl">💥</div></div>`;
+        setTimeout(() => {
+            overlay.innerHTML = self._renderGameOver('Bomba', score, '__original_startBombDefusal');
+        }, 1000);
+    };
+
+    renderRound();
+    this._timers.push({ clear: () => clearInterval(timer) });
+};
+
+// 25. Svemirski Osvajači (Space Invaders)
+ArcadeEngine.startSpaceInvaders = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+
+    let score = 0;
+    let lives = 3;
+    let gameOver = false;
+    let frameId = null;
+    let spawnTimer = null;
+    let speed = 2500;
+    let activeAsteroids = [];
+    const self = this;
+
+    const allWords = this._getWords(50);
+    if (allWords.length < 4) { this._hideOverlay(); return; }
+    let wordIdx = 0;
+    const currentTargets = [allWords[0], allWords[1], allWords[2]];
+
+    overlay.innerHTML = `
+        ${this._renderHeader('🛸 Svemirski Osvajači', 1, '∞', lives, score)}
+        <div class="flex flex-col h-full bg-gray-950 relative overflow-hidden" style="min-height:400px;">
+            <div id="si-arena" class="flex-1 relative w-full overflow-hidden" style="background: radial-gradient(circle, #1a1a2e 0%, #000000 100%);"></div>
+            <div class="p-4 bg-gray-900 border-t-2 border-gray-800 grid grid-cols-3 gap-2" id="si-buttons"></div>
+        </div>
+    `;
+
+    const arena = document.getElementById('si-arena');
+    const btns = document.getElementById('si-buttons');
+
+    const renderButtons = () => {
+        btns.innerHTML = '';
+        currentTargets.forEach(t => {
+            const btn = document.createElement('button');
+            btn.className = 'bg-blue-900 hover:bg-blue-700 text-blue-100 p-3 rounded-xl font-bold text-sm h-16 active:bg-blue-500 transition-colors border-b-4 border-blue-950 flex items-center justify-center overflow-hidden';
+            btn.innerHTML = `<span class="truncate px-1">${t.target}</span>`;
+            btn.onclick = () => fireLaser(t.source);
+            btns.appendChild(btn);
+        });
+    };
+    renderButtons();
+
+    function spawnAsteroid() {
+        if (gameOver) return;
+        const targetObj = currentTargets[Math.floor(Math.random() * currentTargets.length)];
+        const el = document.createElement('div');
+        const xPos = 10 + Math.random() * 60;
+        el.className = 'absolute text-center transition-none pointer-events-none rounded-full flex items-center justify-center text-xs font-black p-2';
+        el.style.left = xPos + '%';
+        el.style.top = '-50px';
+        el.style.width = '70px';
+        el.style.height = '70px';
+        el.style.backgroundImage = 'radial-gradient(circle at 30% 30%, #555, #222)';
+        el.style.color = 'white';
+        el.style.boxShadow = 'inset -5px -5px 15px rgba(0,0,0,0.8)';
+        el.innerText = targetObj.source;
+        arena.appendChild(el);
+
+        activeAsteroids.push({
+            el: el,
+            source: targetObj.source,
+            y: -50,
+            startTime: Date.now()
+        });
+    }
+
+    function fireLaser(sourceMatched) {
+        let lowestIdx = -1;
+        let maxProgress = -1;
+        
+        for (let i = 0; i < activeAsteroids.length; i++) {
+            if (activeAsteroids[i].source === sourceMatched) {
+                const elapsed = Date.now() - activeAsteroids[i].startTime;
+                if (elapsed > maxProgress) {
+                    maxProgress = elapsed;
+                    lowestIdx = i;
+                }
+            }
+        }
+
+        if (lowestIdx >= 0) {
+            const ast = activeAsteroids[lowestIdx];
+            ast.el.innerHTML = '💥';
+            ast.el.style.background = 'transparent';
+            ast.el.style.boxShadow = 'none';
+            setTimeout(() => { if (ast.el.parentNode) ast.el.parentNode.removeChild(ast.el); }, 200);
+            activeAsteroids.splice(lowestIdx, 1);
+            score += 15;
+            self._playSound('correct');
+            updateHeader();
+        } else {
+            self._playSound('incorrect');
+            score = Math.max(0, score - 5);
+            updateHeader();
+        }
+    }
+
+    function updateHeader() {
+        const h = overlay.firstElementChild;
+        if (h) h.outerHTML = self._renderHeader('🛸 Svemirski Osvajači', 1, '∞', lives, score);
+    }
+
+    function gameLoop() {
+        if (gameOver) return;
+        const arenaH = arena.clientHeight || 320;
+
+        for (let i = activeAsteroids.length - 1; i >= 0; i--) {
+            const ast = activeAsteroids[i];
+            const elapsed = Date.now() - ast.startTime;
+            const progress = elapsed / speed;
+            ast.y = -50 + (arenaH + 50) * progress;
+            ast.el.style.top = ast.y + 'px';
+
+            if (ast.y >= arenaH - 20) {
+                ast.el.innerHTML = '💥';
+                setTimeout(() => { if (ast.el.parentNode) ast.el.parentNode.removeChild(ast.el); }, 200);
+                activeAsteroids.splice(i, 1);
+                lives--;
+                self._playSound('incorrect');
+                updateHeader();
+
+                if (lives <= 0) {
+                    gameOver = true;
+                    clearInterval(spawnTimer);
+                    overlay.innerHTML = self._renderGameOver('Svemirski Osvajači', score, '__original_startSpaceInvaders');
+                    return;
+                }
+            }
+        }
+        frameId = requestAnimationFrame(gameLoop);
+    }
+
+    spawnAsteroid();
+    spawnTimer = setInterval(spawnAsteroid, 1500);
+    frameId = requestAnimationFrame(gameLoop);
+
+    this._timers.push({ clear: () => {
+        gameOver = true;
+        clearInterval(spawnTimer);
+        cancelAnimationFrame(frameId);
+    }});
+};
+
+// 26. Simon Kaže (Simon Says / Audio Memory)
+ArcadeEngine.startSimonSays = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+
+    let score = 0;
+    let sequence = [];
+    let playerStep = 0;
+    let isPlaying = false;
+    const self = this;
+
+    const allWords = this._getWords(9);
+    if (allWords.length < 4) { this._hideOverlay(); return; }
+    
+    const gridWords = allWords.slice(0, 4);
+    const colors = ['bg-red-500', 'bg-blue-500', 'bg-yellow-500', 'bg-green-500'];
+    const hoverColors = ['hover:bg-red-400', 'hover:bg-blue-400', 'hover:bg-yellow-400', 'hover:bg-green-400'];
+    const activeColors = ['bg-red-300', 'bg-blue-300', 'bg-yellow-300', 'bg-green-300'];
+
+    overlay.innerHTML = `
+        ${this._renderHeader('🧠 Simon Kaže', 1, '∞', '1', score)}
+        <div class="flex flex-col items-center justify-center flex-1 bg-gray-900 text-white p-6 w-full text-center">
+            <p id="simon-status" class="text-xl font-bold mb-6 h-8 text-gray-300">Listen...</p>
+            <div class="grid grid-cols-2 gap-4 w-full max-w-[280px]" id="simon-grid"></div>
+        </div>
+    `;
+
+    const grid = document.getElementById('simon-grid');
+    const status = document.getElementById('simon-status');
+    const buttons = [];
+
+    gridWords.forEach((w, i) => {
+        const btn = document.createElement('button');
+        btn.className = `aspect-square rounded-2xl shadow-lg transition-all transform flex flex-col items-center justify-center p-4 ${colors[i]} ${hoverColors[i]}`;
+        btn.innerHTML = `<span class="text-3xl mb-2">${w.emoji || '🔈'}</span><span class="font-black text-white drop-shadow-md text-sm truncate w-full text-center">${w.target}</span>`;
+        
+        btn.onclick = () => {
+            if (isPlaying) return;
+            flashButton(i);
+            self._speak(w.source);
+            
+            if (sequence[playerStep] === i) {
+                playerStep++;
+                if (playerStep === sequence.length) {
+                    score += 10 * sequence.length;
+                    self._playSound('correct');
+                    updateHeader();
+                    setTimeout(nextRound, 1000);
+                }
+            } else {
+                self._playSound('incorrect');
+                overlay.innerHTML = self._renderGameOver('Simon Kaže', score, '__original_startSimonSays');
+            }
+        };
+        grid.appendChild(btn);
+        buttons.push(btn);
+    });
+
+    const flashButton = (idx) => {
+        const b = buttons[idx];
+        const origClass = colors[idx];
+        const flashClass = activeColors[idx];
+        b.classList.remove(origClass);
+        b.classList.add(flashClass, 'scale-105');
+        setTimeout(() => {
+            b.classList.remove(flashClass, 'scale-105');
+            b.classList.add(origClass);
+        }, 400);
+    };
+
+    const playSequence = async () => {
+        isPlaying = true;
+        status.innerText = "Slušaj (Listen)...";
+        for (let i = 0; i < sequence.length; i++) {
+            await new Promise(r => setTimeout(r, 600));
+            const idx = sequence[i];
+            flashButton(idx);
+            self._speak(gridWords[idx].source);
+        }
+        status.innerText = "Tvoj red! (Your turn!)";
+        isPlaying = false;
+        playerStep = 0;
+    };
+
+    const nextRound = () => {
+        sequence.push(Math.floor(Math.random() * 4));
+        playSequence();
+    };
+
+    function updateHeader() {
+        const h = overlay.firstElementChild;
+        if (h) h.outerHTML = self._renderHeader('🧠 Simon Kaže', sequence.length, '∞', '1', score);
+    }
+
+    setTimeout(nextRound, 1000);
+};
+
+// 27. Kolo Sreće (Missing Vowels)
+ArcadeEngine.startMissingVowels = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+
+    let score = 0;
+    let round = 1;
+    let timer = null;
+    let timeLeft = 15;
+    const totalRounds = 10;
+    const self = this;
+
+    const vowels = ['a','e','i','o','u'];
+
+    const renderRound = () => {
+        if (round > totalRounds) {
+            this._awardXpBoost();
+            overlay.innerHTML = `<div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center">
+                <h2 class="text-5xl font-black text-yellow-400 mb-4">🏆 Bravo!</h2>
+                <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-700 rounded-xl text-xl font-bold mt-8 active:scale-95 transition-transform">Back to Arcade</button>
+            </div>`;
+            return;
+        }
+
+        const allWords = this._getWords(5).filter(w => w.source.length >= 4);
+        if (allWords.length === 0) { this._hideOverlay(); return; }
+        const w = allWords[0];
+        
+        let displayStr = '';
+        let missingChars = [];
+        
+        for (let i = 0; i < w.source.length; i++) {
+            const char = w.source[i].toLowerCase();
+            if (vowels.includes(char)) {
+                displayStr += '_';
+                missingChars.push(char);
+            } else {
+                displayStr += w.source[i];
+            }
+        }
+
+        if (missingChars.length === 0) {
+            round++; renderRound(); return;
+        }
+
+        timeLeft = 15;
+        let currentIndex = 0;
+
+        overlay.innerHTML = `
+            ${this._renderHeader('🎡 Kolo Sreće', round, totalRounds, '1', score)}
+            <div class="flex flex-col items-center justify-center flex-1 bg-gradient-to-b from-purple-900 to-indigo-900 text-white p-6 w-full text-center">
+                <div class="text-gray-400 font-bold mb-4 uppercase text-xs tracking-widest text-center">${w.target}</div>
+                <div id="mv-timer" class="text-xl font-bold mb-8 text-yellow-300">⏱️ ${timeLeft}s</div>
+                <div id="mv-display" class="text-5xl font-black tracking-[0.3em] mb-12 font-mono break-all px-4">${displayStr.toUpperCase()}</div>
+                
+                <div class="grid grid-cols-5 gap-2 w-full max-w-sm">
+                    ${vowels.map(v => `<button class="mv-btn bg-white/10 hover:bg-white/20 p-4 rounded-xl text-2xl font-bold uppercase border-2 border-white/20 active:scale-95 transition-transform" data-val="${v}">${v}</button>`).join('')}
+                </div>
+            </div>
+        `;
+
+        const displayEl = document.getElementById('mv-display');
+        const timerEl = document.getElementById('mv-timer');
+
+        clearInterval(timer);
+        timer = setInterval(() => {
+            timeLeft--;
+            timerEl.innerText = `⏱️ ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                self._playSound('incorrect');
+                overlay.innerHTML = self._renderGameOver('Kolo Sreće', score, '__original_startMissingVowels');
+            }
+        }, 1000);
+
+        const updateDisplay = () => {
+            let tempStr = '';
+            let vIdx = 0;
+            for (let i = 0; i < w.source.length; i++) {
+                const char = w.source[i].toLowerCase();
+                if (vowels.includes(char)) {
+                    if (vIdx < currentIndex) tempStr += w.source[i];
+                    else tempStr += '_';
+                    vIdx++;
+                } else {
+                    tempStr += w.source[i];
+                }
+            }
+            displayEl.innerText = tempStr.toUpperCase();
+        };
+
+        document.querySelectorAll('.mv-btn').forEach(btn => {
+            btn.onclick = () => {
+                const val = btn.getAttribute('data-val');
+                if (val === missingChars[currentIndex]) {
+                    currentIndex++;
+                    self._playSound('correct');
+                    updateDisplay();
+                    if (currentIndex >= missingChars.length) {
+                        clearInterval(timer);
+                        score += 50 + (timeLeft * 2);
+                        setTimeout(() => { round++; renderRound(); }, 800);
+                    }
+                } else {
+                    self._playSound('incorrect');
+                    timeLeft = Math.max(0, timeLeft - 3);
+                    btn.classList.add('bg-red-500/50', 'border-red-500');
+                    setTimeout(() => btn.classList.remove('bg-red-500/50', 'border-red-500'), 300);
+                }
+            };
+        });
+    };
+
+    renderRound();
+    this._timers.push({ clear: () => clearInterval(timer) });
+};
+
+// 28. Graditelj Reči (Lego Blocks / Syllable Smash)
+ArcadeEngine.startSyllableSmash = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+
+    let score = 0;
+    let round = 1;
+    let lives = 3;
+    const totalRounds = 10;
+    const self = this;
+
+    const splitIntoSyllables = (word) => {
+        const parts = [];
+        let curr = '';
+        for (let i = 0; i < word.length; i++) {
+            curr += word[i];
+            if (i > 0 && i % 3 === 0 && i < word.length - 2) {
+                parts.push(curr);
+                curr = '';
+            }
+        }
+        if (curr) parts.push(curr);
+        return parts.length > 1 ? parts : [word.substring(0, Math.floor(word.length/2)), word.substring(Math.floor(word.length/2))];
+    };
+
+    const renderRound = () => {
+        if (lives <= 0) {
+            overlay.innerHTML = self._renderGameOver('Graditelj Reči', score, '__original_startSyllableSmash');
+            return;
+        }
+        if (round > totalRounds) {
+            this._awardXpBoost();
+            overlay.innerHTML = `<div class="flex flex-col items-center justify-center h-full bg-gray-900 text-white p-6 text-center"><h2 class="text-5xl font-black text-green-400 mb-4">🏆 Gotovo!</h2><button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-700 rounded-xl mt-8 font-bold">Završi</button></div>`;
+            return;
+        }
+
+        const allWords = this._getWords(10).filter(w => w.source.length > 5 && !w.source.includes(' '));
+        if (allWords.length === 0) { this._hideOverlay(); return; }
+        const w = allWords[0];
+        
+        let originalBlocks = splitIntoSyllables(w.source);
+        let shuffledBlocks = [...originalBlocks].sort(() => Math.random() - 0.5);
+        let selectedBlocks = [];
+
+        overlay.innerHTML = `
+            ${this._renderHeader('🧩 Graditelj', round, totalRounds, lives, score)}
+            <div class="flex flex-col items-center justify-center flex-1 bg-gray-900 text-white p-6 w-full text-center">
+                <p class="text-lg text-gray-400 font-bold mb-8 text-center">${w.target}</p>
+                
+                <div id="ss-slots" class="flex flex-wrap gap-2 justify-center min-h-[60px] mb-12 w-full p-4 bg-gray-800 rounded-xl border-2 border-dashed border-gray-600">
+                    <!-- selected blocks go here -->
+                </div>
+
+                <div id="ss-pool" class="flex flex-wrap gap-3 justify-center w-full">
+                </div>
+            </div>
+        `;
+
+        const slots = document.getElementById('ss-slots');
+        const pool = document.getElementById('ss-pool');
+
+        const checkWin = () => {
+            const currentStr = selectedBlocks.join('');
+            if (selectedBlocks.length === originalBlocks.length) {
+                if (currentStr === w.source) {
+                    score += 50;
+                    self._playSound('correct');
+                    slots.classList.add('bg-green-900', 'border-green-500');
+                    setTimeout(() => { round++; renderRound(); }, 800);
+                } else {
+                    lives--;
+                    self._playSound('incorrect');
+                    slots.classList.add('bg-red-900', 'border-red-500');
+                    setTimeout(() => {
+                        if (lives > 0) {
+                            round++; renderRound();
+                        } else {
+                            renderRound(); // triggers game over
+                        }
+                    }, 800);
+                }
+            }
+        };
+
+        const renderBlocks = () => {
+            slots.innerHTML = selectedBlocks.map((blk, i) => `<div class="bg-indigo-600 text-white px-5 py-3 rounded-xl font-black text-2xl shadow-md cursor-pointer hover:bg-red-500 transition-colors" onclick="window.ssRemove(${i})">${blk}</div>`).join('');
+            
+            pool.innerHTML = shuffledBlocks.map((blk, i) => {
+                if (blk === null) return `<div class="w-16 h-12"></div>`;
+                return `<button class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-3 rounded-xl font-black text-2xl shadow-lg shadow-blue-900 active:scale-95 transition-transform" onclick="window.ssAdd(${i})">${blk}</button>`;
+            }).join('');
+        };
+
+        window.ssAdd = (i) => {
+            selectedBlocks.push(shuffledBlocks[i]);
+            shuffledBlocks[i] = null;
+            renderBlocks();
+            checkWin();
+        };
+
+        window.ssRemove = (i) => {
+            const blk = selectedBlocks[i];
+            selectedBlocks.splice(i, 1);
+            const emptyIdx = shuffledBlocks.indexOf(null);
+            shuffledBlocks[emptyIdx] = blk;
+            renderBlocks();
+        };
+
+        renderBlocks();
+    };
+
+    renderRound();
+};
+
 // Monkey-patch all startXXX functions to redirect to preLaunch automatically
 Object.keys(ArcadeEngine).forEach(key => {
     if (key.startsWith('start') && typeof ArcadeEngine[key] === 'function' && key !== 'startBotOpponent') {
@@ -2609,3 +3255,4 @@ Object.keys(ArcadeEngine).forEach(key => {
 });
 
 window.ArcadeEngine = ArcadeEngine;
+
