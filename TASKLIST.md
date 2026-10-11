@@ -101,6 +101,7 @@
 | P19.3 | Enable "Add to Home Screen" | 🆕 New | `index.html` | ⬜ TODO |
 | P20.1 | Capacitor init + Android platform | 🆕 New | New config | ⬜ TODO |
 | P20.2 | Google Play Store submission | 🆕 New | — | ⬜ TODO |
+| P24.1 | Local Save Data Export & Import (JSON) | 🆕 New | `app.js`, `index.html` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 

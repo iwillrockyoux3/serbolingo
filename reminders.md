@@ -209,10 +209,11 @@
   - Fall back to lightweight native device Text-to-Speech (TTS) for users who don't want to download large MP3 packs.
 
 
-## 💾 Priority 24: Save Data Sync System (Data Backup & Restore)
-- [ ] **Local Progress Export**:
-  - Add a button in Settings that lets users export their profile, XP, streaks, and mistake vault to a `.json` file.
-  - Add an import function to allow users to move their progress to another device, protecting their local `localStorage` and `IndexedDB` data from accidental cache clears.
+## ✅ Priority 24: Save Data Sync System (Data Backup & Restore) (DONE)
+- [x] **Local Progress Export**:
+  - [x] Add a button in Settings that lets users export their profile, XP, streaks, settings, shop items, and ghost roster to a .json file (pp.exportSaveData).
+  - [x] Add an import function to allow users to move their progress to another device, protecting their local data from accidental cache clears (pp.importSaveData).
+  - [x] 100% offline client-side Blob generation and FileReader rehydration with schema validation and confirmation safety.
 
 ## 👆 Priority 25: Native Mobile Touch Gestures
 - [ ] **Swipe Physics (Touch API)**:

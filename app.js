@@ -2992,6 +2992,84 @@ const app = {
         sessionStorage.clear(); 
         location.reload(); 
     },
+    exportSaveData: () => {
+        try {
+            const username = state.user ? state.user.name : 'guest';
+            const shopData = window.ShopEngine ? window.ShopEngine.getShopData() : {};
+            const ghosts = window.GhostEngine ? window.GhostEngine.getRoster() : [];
+
+            const backup = {
+                version: '3.0',
+                app: 'SerboLingo',
+                exportedAt: new Date().toISOString(),
+                username: username,
+                state: state,
+                shop: shopData,
+                ghosts: ghosts
+            };
+
+            const jsonStr = JSON.stringify(backup, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const dlAnchor = document.createElement('a');
+            const dateStr = new Date().toISOString().split('T')[0];
+            dlAnchor.href = url;
+            dlAnchor.download = `serbolingo-backup-${username}-${dateStr}.json`;
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            document.body.removeChild(dlAnchor);
+            URL.revokeObjectURL(url);
+
+            app.showToast('💾 Rezervna kopija je uspešno preuzeta!', 'success');
+        } catch (err) {
+            console.error('Export failed:', err);
+            app.showToast('Greška prilikom izvoza podataka.', 'error');
+        }
+    },
+    importSaveData: (file) => {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const parsed = JSON.parse(e.target.result);
+                if (!parsed.state || !parsed.app) {
+                    throw new Error('Nevažeći format SerboLingo fajla.');
+                }
+
+                const u = parsed.username || 'Igrač';
+                if (!confirm(`Da li želiš da vratiš podatke za profil "${u}"? Trenutni nesačuvani podaci biće zamenjeni.`)) {
+                    return;
+                }
+
+                // Restore state
+                Object.assign(state, parsed.state);
+
+                // Restore shop if present
+                if (parsed.shop && window.ShopEngine) {
+                    window.ShopEngine.saveShopData(parsed.shop);
+                }
+
+                // Restore ghosts if present
+                if (parsed.ghosts && window.GhostEngine) {
+                    window.GhostEngine.saveRoster(parsed.ghosts);
+                }
+
+                // Save restored state to localStorage
+                app.saveState();
+                app.applyDarkMode();
+                app.applyTextScale();
+                app.setLearningDirection(state.settings?.learningDirection || 'sr_to_en');
+                app.updateProfileUI();
+
+                app.showToast('🎉 Podaci su uspešno vraćeni!', 'success');
+                setTimeout(() => location.reload(), 1200);
+            } catch (err) {
+                console.error('Import error:', err);
+                app.showToast('Nevažeći rezervni fajl: ' + err.message, 'error');
+            }
+        };
+        reader.readAsText(file);
+    },
     endLesson: () => { if (confirm(t('lesson_quit'))) app.navigate(state.currentSkillId === 'mistakes' ? 'mistakes' : 'home'); },
     // ─── LOCALIZATION ENGINE ───
     applyLanguage: () => {
