@@ -2990,6 +2990,525 @@ ArcadeEngine.startSyllableSmash = function() {
     renderRound();
 };
 
+// 31. Brza Trka (Verb Racer / Conjugation Drag Race)
+ArcadeEngine.startVerbRacer = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+    let playerPos = 0, botPos = 0, round = 1, score = 0;
+    const totalDist = 100, finishLine = 100;
+    const self = this;
+    let botInterval = null;
+
+    const verbs = [
+        { inf: 'Biti (to be)', pronoun: 'Ja', correct: 'sam', wrong: ['si', 'smo'] },
+        { inf: 'Biti (to be)', pronoun: 'Oni', correct: 'su', wrong: ['smo', 'ste'] },
+        { inf: 'Ići (to go)', pronoun: 'Mi', correct: 'idemo', wrong: ['ideš', 'idu'] },
+        { inf: 'Ići (to go)', pronoun: 'Ti', correct: 'ideš', wrong: ['idem', 'idete'] },
+        { inf: 'Raditi (to work)', pronoun: 'Ja', correct: 'radim', wrong: ['radi', 'radimo'] },
+        { inf: 'Raditi (to work)', pronoun: 'Oni', correct: 'rade', wrong: ['radite', 'radimo'] },
+        { inf: 'Gledati (to watch)', pronoun: 'Mi', correct: 'gledamo', wrong: ['gleda', 'gledaju'] },
+        { inf: 'Piti (to drink)', pronoun: 'Vi', correct: 'pijete', wrong: ['pijem', 'pijemo'] },
+        { inf: 'Jesti (to eat)', pronoun: 'Ona', correct: 'jede', wrong: ['jedem', 'jedu'] },
+        { inf: 'Živeti (to live)', pronoun: 'Ja', correct: 'živim', wrong: ['živi', 'živimo'] },
+        { inf: 'Voleti (to love)', pronoun: 'Ti', correct: 'voliš', wrong: ['voli', 'volimo'] },
+        { inf: 'Govoriti (to speak)', pronoun: 'Oni', correct: 'govore', wrong: ['govori', 'govorite'] }
+    ].sort(() => Math.random() - 0.5);
+
+    let vIdx = 0;
+
+    const renderTrack = () => {
+        if (playerPos >= finishLine || botPos >= finishLine) {
+            clearInterval(botInterval);
+            if (playerPos >= finishLine) {
+                self._awardXpBoost();
+                overlay.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full bg-slate-900 text-white p-6 text-center">
+                        <div class="text-7xl mb-4 animate-bounce">🏎️ 🏆</div>
+                        <h2 class="text-4xl font-black text-amber-400 mb-2">POBEDA!</h2>
+                        <p class="text-slate-300 text-lg mb-6">Pobedio si Marka u trci konjugacija!</p>
+                        <p class="text-2xl font-black text-green-400 mb-8">+${score} XP</p>
+                        <button onclick="ArcadeEngine._hideOverlay()" class="px-8 py-4 bg-amber-500 hover:bg-amber-400 text-slate-900 font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-lg">Nazad u Arkadu</button>
+                    </div>`;
+            } else {
+                overlay.innerHTML = self._renderGameOver('Brza Trka', score, '__original_startVerbRacer');
+            }
+            return;
+        }
+
+        const currentV = verbs[vIdx % verbs.length];
+        const options = [currentV.correct, ...currentV.wrong].sort(() => Math.random() - 0.5);
+
+        overlay.innerHTML = `
+            ${self._renderHeader('Brza Trka', round, '10', '🏎️', score)}
+            <div class="flex flex-col flex-1 bg-slate-950 text-white p-4 justify-between">
+                <!-- Racetrack -->
+                <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-3">
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-blue-400 mb-1">
+                            <span>🏎️ TI</span><span>${playerPos}%</span>
+                        </div>
+                        <div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                            <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full transition-all duration-300" style="width: ${playerPos}%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold text-red-400 mb-1">
+                            <span>🚗 MARKO BOT</span><span>${botPos}%</span>
+                        </div>
+                        <div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                            <div class="h-full bg-gradient-to-r from-red-500 to-orange-400 rounded-full transition-all duration-300" style="width: ${botPos}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verb Prompt -->
+                <div class="text-center my-4">
+                    <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Konjuguj glagol</p>
+                    <h3 class="text-2xl font-black text-amber-400 mb-2">${currentV.inf}</h3>
+                    <div class="inline-block px-4 py-2 bg-slate-800 rounded-xl border border-slate-700 text-xl font-black text-white">
+                        ${currentV.pronoun} + <span class="text-cyan-400">___ ?</span>
+                    </div>
+                </div>
+
+                <!-- Nitro Options -->
+                <div class="grid grid-cols-3 gap-2 w-full max-w-md mx-auto" id="racer-opts"></div>
+            </div>`;
+
+        const optsContainer = document.getElementById('racer-opts');
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'py-4 px-2 bg-slate-800 hover:bg-slate-700 border-2 border-slate-700 active:border-cyan-400 rounded-2xl font-black text-lg text-white shadow-md active:scale-95 transition-all text-center';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                optsContainer.querySelectorAll('button').forEach(b => b.disabled = true);
+                if (opt === currentV.correct) {
+                    btn.classList.add('bg-green-600', 'border-green-400');
+                    playerPos = Math.min(100, playerPos + 25);
+                    score += 50;
+                    self._playSound('correct');
+                } else {
+                    btn.classList.add('bg-red-600', 'border-red-400');
+                    self._playSound('incorrect');
+                }
+                setTimeout(() => {
+                    round++;
+                    vIdx++;
+                    renderTrack();
+                }, 400);
+            };
+            optsContainer.appendChild(btn);
+        });
+    };
+
+    renderTrack();
+    botInterval = setInterval(() => {
+        botPos = Math.min(100, botPos + 6);
+        const botBar = overlay.querySelector('.bg-gradient-to-r.from-red-500');
+        if (botBar) botBar.style.width = botPos + '%';
+        if (botPos >= finishLine) renderTrack();
+    }, 1800);
+
+    this._timers.push({ clear: () => clearInterval(botInterval) });
+};
+
+// 32. Dvoboj (Quick-Draw Reflex Duel)
+ArcadeEngine.startDuel = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+    let round = 1, lives = 3, score = 0;
+    const maxRounds = 5, self = this;
+    let duelTimeout = null, countdownInterval = null;
+
+    const renderRound = () => {
+        if (lives <= 0) {
+            overlay.innerHTML = self._renderGameOver('Dvoboj', score, '__original_startDuel');
+            return;
+        }
+        if (round > maxRounds) {
+            self._awardXpBoost();
+            overlay.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full bg-slate-900 text-white p-6 text-center">
+                    <div class="text-7xl mb-4 animate-bounce">🤠 🏆</div>
+                    <h2 class="text-4xl font-black text-amber-400 mb-2">NEPOBEĐENI REVOLVERAŠ!</h2>
+                    <p class="text-slate-300 text-lg mb-6">Pobedio si u svim rundama brze reakcije!</p>
+                    <p class="text-2xl font-black text-green-400 mb-8">+${score} XP</p>
+                    <button onclick="ArcadeEngine._hideOverlay()" class="px-8 py-4 bg-amber-500 hover:bg-amber-400 text-slate-900 font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-lg">Nazad u Arkadu</button>
+                </div>`;
+            return;
+        }
+
+        const words = self._getWords(4);
+        if (words.length < 2) { self._hideOverlay(); return; }
+        const targetWord = words[0];
+        const distractor = words[1];
+        const options = [targetWord, distractor].sort(() => Math.random() - 0.5);
+
+        overlay.innerHTML = `
+            ${self._renderHeader('Dvoboj', round, maxRounds, lives, score)}
+            <div class="flex flex-col flex-1 bg-amber-950/40 text-white p-6 justify-between items-center text-center">
+                <div class="w-full flex justify-between items-center px-4 pt-2">
+                    <div class="text-left"><span class="text-3xl">🤠</span><p class="text-xs font-bold text-amber-300">TI</p></div>
+                    <div class="text-xl font-black text-red-400">VS</div>
+                    <div class="text-right"><span class="text-3xl">🦹</span><p class="text-xs font-bold text-amber-300">ODMETNIK</p></div>
+                </div>
+
+                <!-- Signal Box -->
+                <div id="duel-box" class="p-6 bg-slate-900/90 rounded-3xl border-2 border-amber-600/50 shadow-2xl w-full max-w-xs transition-all">
+                    <div id="duel-status" class="text-amber-400 font-black text-2xl mb-2 animate-pulse">Spremi se...</div>
+                    <div id="duel-word" class="text-3xl font-black text-white hidden">???</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div id="duel-actions" class="grid grid-cols-2 gap-3 w-full max-w-sm opacity-20 pointer-events-none transition-opacity"></div>
+            </div>`;
+
+        const box = document.getElementById('duel-box');
+        const statusEl = document.getElementById('duel-status');
+        const wordEl = document.getElementById('duel-word');
+        const actions = document.getElementById('duel-actions');
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'py-4 px-3 bg-amber-600 hover:bg-amber-500 text-slate-950 font-black text-base rounded-2xl shadow-lg active:scale-95 transition-all';
+            btn.innerText = opt.target;
+            btn.onclick = () => {
+                clearTimeout(duelTimeout);
+                actions.querySelectorAll('button').forEach(b => b.disabled = true);
+                if (opt === targetWord) {
+                    btn.classList.add('bg-green-500');
+                    score += 100;
+                    self._playSound('correct');
+                    statusEl.innerText = '🎯 POGODAK!';
+                    statusEl.className = 'text-green-400 font-black text-3xl animate-bounce';
+                } else {
+                    btn.classList.add('bg-red-500');
+                    lives--;
+                    self._playSound('incorrect');
+                    statusEl.innerText = '💥 PROMAŠAJ!';
+                    statusEl.className = 'text-red-500 font-black text-3xl animate-pulse';
+                }
+                setTimeout(() => { round++; renderRound(); }, 900);
+            };
+            actions.appendChild(btn);
+        });
+
+        // Countdown delay between 1.5s to 3s before signal
+        const drawDelay = 1500 + Math.random() * 1500;
+        duelTimeout = setTimeout(() => {
+            statusEl.innerText = 'PALI! (DRAW!)';
+            statusEl.className = 'text-red-500 font-black text-3xl animate-ping';
+            wordEl.innerText = targetWord.source;
+            wordEl.classList.remove('hidden');
+            actions.classList.remove('opacity-20', 'pointer-events-none');
+
+            // 1.8 second reaction window
+            duelTimeout = setTimeout(() => {
+                actions.querySelectorAll('button').forEach(b => b.disabled = true);
+                lives--;
+                self._playSound('incorrect');
+                statusEl.innerText = '💀 PREKASNO!';
+                statusEl.className = 'text-red-500 font-black text-3xl animate-pulse';
+                setTimeout(() => { round++; renderRound(); }, 900);
+            }, 1800);
+        }, drawDelay);
+    };
+
+    renderRound();
+    this._timers.push({ clear: () => clearTimeout(duelTimeout) });
+};
+
+// 33. Pijaca / Korpa (Balkan Market Basket Run)
+ArcadeEngine.startMarketRun = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+    let round = 1, lives = 3, score = 0;
+    const maxRounds = 5, self = this;
+
+    const groceries = [
+        { sr: 'Jabuka', en: 'Apple', icon: '🍎' },
+        { sr: 'Hleb', en: 'Bread', icon: '🍞' },
+        { sr: 'Mleko', en: 'Milk', icon: '🥛' },
+        { sr: 'Sir', en: 'Cheese', icon: '🧀' },
+        { sr: 'Kafa', en: 'Coffee', icon: '☕' },
+        { sr: 'Meso', en: 'Meat', icon: '🥩' },
+        { sr: 'Riba', en: 'Fish', icon: '🐟' },
+        { sr: 'Paradajz', en: 'Tomato', icon: '🍅' },
+        { sr: 'Krompir', en: 'Potato', icon: '🥔' },
+        { sr: 'Jaje', en: 'Egg', icon: '🥚' },
+        { sr: 'Voda', en: 'Water', icon: '💧' },
+        { sr: 'Grožđe', en: 'Grapes', icon: '🍇' }
+    ];
+
+    const renderRound = () => {
+        if (lives <= 0) {
+            overlay.innerHTML = self._renderGameOver('Pijaca', score, '__original_startMarketRun');
+            return;
+        }
+        if (round > maxRounds) {
+            self._awardXpBoost();
+            overlay.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full bg-slate-900 text-white p-6 text-center">
+                    <div class="text-7xl mb-4 animate-bounce">🧺 🏆</div>
+                    <h2 class="text-4xl font-black text-amber-400 mb-2">PUNA KORPA!</h2>
+                    <p class="text-slate-300 text-lg mb-6">Uspešno si kupio sve sa spiska na Kalenić pijaci!</p>
+                    <p class="text-2xl font-black text-green-400 mb-8">+${score} XP</p>
+                    <button onclick="ArcadeEngine._hideOverlay()" class="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-lg">Nazad u Arkadu</button>
+                </div>`;
+            return;
+        }
+
+        const shuffled = [...groceries].sort(() => Math.random() - 0.5);
+        const needed = shuffled.slice(0, 3);
+        const extras = shuffled.slice(3, 8);
+        const marketItems = [...needed, ...extras].sort(() => Math.random() - 0.5);
+        let collected = [];
+
+        overlay.innerHTML = `
+            ${self._renderHeader('Pijaca', round, maxRounds, lives, score)}
+            <div class="flex flex-col flex-1 bg-slate-950 text-white p-4 justify-between">
+                <!-- Shopping List -->
+                <div class="bg-amber-900/40 border-2 border-amber-600/40 rounded-2xl p-4 text-center shadow-lg">
+                    <p class="text-xs uppercase tracking-widest text-amber-300 font-bold mb-2">📜 Spisak za kupovinu (Shopping List)</p>
+                    <div class="flex justify-center gap-3" id="shopping-targets">
+                        ${needed.map(item => `
+                            <div class="target-item px-3 py-1.5 bg-slate-900/90 rounded-xl border border-amber-500/50 text-sm font-bold flex items-center gap-1.5" id="target-${item.sr}">
+                                <span>${item.icon}</span> <span>${item.en}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Market Stall Items -->
+                <div class="my-auto">
+                    <p class="text-center text-xs text-slate-400 font-bold mb-3">Dodirni samo namirnice sa spiska (na srpskom):</p>
+                    <div class="grid grid-cols-4 gap-2.5 max-w-md mx-auto" id="stall-grid">
+                        ${marketItems.map(item => `
+                            <button class="stall-item p-3 bg-slate-800 hover:bg-slate-700 active:scale-90 border-2 border-slate-700 rounded-2xl flex flex-col items-center justify-center transition-all shadow-md group" data-sr="${item.sr}">
+                                <span class="text-3xl mb-1 group-hover:scale-110 transition-transform">${item.icon}</span>
+                                <span class="text-xs font-black text-slate-200 truncate w-full text-center">${item.sr}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="text-center text-xs text-slate-500 font-bold">Korpa: <span id="cart-count">0</span> / 3 kupljeno</div>
+            </div>`;
+
+        const stallBtns = overlay.querySelectorAll('.stall-item');
+        const cartCount = document.getElementById('cart-count');
+
+        stallBtns.forEach(btn => {
+            btn.onclick = () => {
+                const srName = btn.getAttribute('data-sr');
+                const isNeeded = needed.some(n => n.sr === srName);
+
+                if (isNeeded && !collected.includes(srName)) {
+                    collected.push(srName);
+                    btn.classList.add('bg-green-600', 'border-green-400', 'opacity-40');
+                    btn.disabled = true;
+                    self._playSound('correct');
+                    score += 30;
+
+                    const targetBadge = document.getElementById('target-' + srName);
+                    if (targetBadge) targetBadge.classList.add('bg-green-900', 'line-through', 'text-green-300');
+                    cartCount.innerText = collected.length;
+
+                    if (collected.length === needed.length) {
+                        score += 50;
+                        setTimeout(() => { round++; renderRound(); }, 600);
+                    }
+                } else {
+                    lives--;
+                    btn.classList.add('bg-red-600', 'border-red-400');
+                    self._playSound('incorrect');
+                    setTimeout(() => btn.classList.remove('bg-red-600', 'border-red-400'), 400);
+                    if (lives <= 0) setTimeout(() => renderRound(), 400);
+                }
+            };
+        });
+    };
+
+    renderRound();
+};
+
+// 34. Pikado (Word Darts / Target Meaning)
+ArcadeEngine.startWordDarts = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+    let round = 1, lives = 3, score = 0;
+    const maxRounds = 8, self = this;
+
+    const renderRound = () => {
+        if (lives <= 0) {
+            overlay.innerHTML = self._renderGameOver('Pikado', score, '__original_startWordDarts');
+            return;
+        }
+        if (round > maxRounds) {
+            self._awardXpBoost();
+            overlay.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full bg-slate-900 text-white p-6 text-center">
+                    <div class="text-7xl mb-4 animate-bounce">🎯 🏆</div>
+                    <h2 class="text-4xl font-black text-amber-400 mb-2">PRAVO U METU!</h2>
+                    <p class="text-slate-300 text-lg mb-6">Pogodio si sve mete tačnim prevodima!</p>
+                    <p class="text-2xl font-black text-green-400 mb-8">+${score} XP</p>
+                    <button onclick="ArcadeEngine._hideOverlay()" class="px-8 py-4 bg-red-600 hover:bg-red-500 text-white font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-lg">Nazad u Arkadu</button>
+                </div>`;
+            return;
+        }
+
+        const words = self._getWords(5);
+        if (words.length < 4) { self._hideOverlay(); return; }
+        const correct = words[0];
+        const targets = words.slice(0, 4).sort(() => Math.random() - 0.5);
+
+        overlay.innerHTML = `
+            ${self._renderHeader('Pikado', round, maxRounds, lives, score)}
+            <div class="flex flex-col flex-1 bg-slate-950 text-white p-4 justify-between items-center text-center">
+                <!-- Target Prompt -->
+                <div class="mt-2">
+                    <p class="text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Pogodi metu za reč:</p>
+                    <div class="px-6 py-3 bg-slate-900 border-2 border-red-500/50 rounded-2xl inline-block shadow-lg">
+                        <span class="text-2xl font-black text-amber-400">${correct.target}</span>
+                    </div>
+                </div>
+
+                <!-- Dartboard Targets -->
+                <div class="grid grid-cols-2 gap-4 w-full max-w-sm my-auto" id="dart-grid">
+                    ${targets.map((t, idx) => `
+                        <button class="dart-target p-5 bg-gradient-to-br from-slate-900 to-slate-800 border-2 border-slate-700 hover:border-red-500 rounded-3xl flex flex-col items-center justify-center active:scale-95 transition-all shadow-xl group relative overflow-hidden" data-sr="${t.source}">
+                            <div class="w-10 h-10 rounded-full border-2 border-dashed border-red-500/40 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                <span class="text-lg font-black text-red-400">${idx + 1}</span>
+                            </div>
+                            <span class="text-lg font-black text-white group-hover:text-amber-300 transition-colors">${t.source}</span>
+                            <span class="text-[10px] text-slate-500 font-bold uppercase mt-1">META</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div class="text-xs text-slate-500 font-bold mb-2">🎯 Dodirni tačnu metu da baciš strelicu!</div>
+            </div>`;
+
+        const targetBtns = overlay.querySelectorAll('.dart-target');
+        targetBtns.forEach(btn => {
+            btn.onclick = () => {
+                targetBtns.forEach(b => b.disabled = true);
+                const chosen = btn.getAttribute('data-sr');
+                if (chosen === correct.source) {
+                    btn.classList.add('bg-green-600', 'border-green-400');
+                    btn.innerHTML = `<span class="text-4xl animate-bounce">🎯</span><span class="font-black text-white text-lg">POGODAK!</span>`;
+                    score += 80;
+                    self._playSound('correct');
+                    setTimeout(() => { round++; renderRound(); }, 700);
+                } else {
+                    btn.classList.add('bg-red-600', 'border-red-400');
+                    btn.innerHTML = `<span class="text-4xl">❌</span><span class="font-black text-white text-lg">PROMAŠAJ!</span>`;
+                    lives--;
+                    self._playSound('incorrect');
+                    setTimeout(() => { round++; renderRound(); }, 700);
+                }
+            };
+        });
+    };
+
+    renderRound();
+};
+
+// 35. Detektiv (Padeži / Case Detective)
+ArcadeEngine.startDetective = function() {
+    this._cleanup();
+    this._showOverlay();
+    const overlay = document.getElementById('arcade-game-overlay');
+    let round = 1, lives = 3, score = 0;
+    const maxRounds = 7, self = this;
+
+    const cases = [
+        { sentence: 'Idem u ___ sutra ujutru.', base: 'Beograd', clue: 'Gde ideš? [Akuzativ za pravac]', correct: 'Beograd', options: ['Beograd', 'Beogradu', 'Beograda'] },
+        { sentence: 'Razgovaramo o novoj ___.', base: 'Knjiga', clue: 'O kome/čemu? [Lokativ]', correct: 'knjizi', options: ['knjizi', 'knjigu', 'knjigom'] },
+        { sentence: 'Molim te, daj mi malo ___.', base: 'Voda', clue: 'Koga/čega? [Genitiv / Količina]', correct: 'vode', options: ['vode', 'vodu', 'vodi'] },
+        { sentence: 'Idem u bioskop sa ___.', base: 'Marko', clue: 'S kim ideš? [Instrumental]', correct: 'Markom', options: ['Markom', 'Marka', 'Marku'] },
+        { sentence: 'Kupio sam poklon svojoj ___.', base: 'Mama', clue: 'Kome daješ? [Dativ]', correct: 'mami', options: ['mami', 'mamu', 'mame'] },
+        { sentence: 'U dvorištu vidim velikog ___.', base: 'Pas', clue: 'Koga/šta vidiš? [Akuzativ za živo biće]', correct: 'psa', options: ['psa', 'pas', 'psu'] },
+        { sentence: 'Oni već tri godine žive u ___.', base: 'Novi Sad', clue: 'Gde se nalaze? [Lokativ za mesto]', correct: 'Novom Sadu', options: ['Novom Sadu', 'Novi Sad', 'Novog Sada'] }
+    ].sort(() => Math.random() - 0.5);
+
+    const renderRound = () => {
+        if (lives <= 0) {
+            overlay.innerHTML = self._renderGameOver('Detektiv', score, '__original_startDetective');
+            return;
+        }
+        if (round > maxRounds) {
+            self._awardXpBoost();
+            overlay.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full bg-slate-900 text-white p-6 text-center">
+                    <div class="text-7xl mb-4 animate-bounce">🕵️ 🏆</div>
+                    <h2 class="text-4xl font-black text-amber-400 mb-2">SLUČAJ REŠEN!</h2>
+                    <p class="text-slate-300 text-lg mb-6">Majstorski si prepoznao sve padeže i rešio misteriju!</p>
+                    <p class="text-2xl font-black text-green-400 mb-8">+${score} XP</p>
+                    <button onclick="ArcadeEngine._hideOverlay()" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-lg">Nazad u Arkadu</button>
+                </div>`;
+            return;
+        }
+
+        const currentCase = cases[round - 1];
+        const shuffledOpts = [...currentCase.options].sort(() => Math.random() - 0.5);
+
+        overlay.innerHTML = `
+            ${self._renderHeader('Detektiv', round, maxRounds, lives, score)}
+            <div class="flex flex-col flex-1 bg-slate-950 text-white p-5 justify-between">
+                <!-- Case File Header -->
+                <div class="bg-indigo-950/50 border-2 border-indigo-700/50 rounded-2xl p-4 text-center shadow-lg">
+                    <div class="flex items-center justify-center gap-2 mb-2">
+                        <span class="text-2xl">🕵️</span>
+                        <span class="text-xs uppercase tracking-widest text-indigo-300 font-black">Dosije #${round}: Misterija Padeža</span>
+                    </div>
+                    <p class="text-xs font-bold text-amber-300 mb-3 bg-indigo-900/40 py-1 px-3 rounded-lg inline-block">${currentCase.clue}</p>
+                    
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-700 text-lg font-black text-white">
+                        "${currentCase.sentence.replace('___', '<span class="text-amber-400 underline font-black">___</span>')}"
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">Osnovna reč: <span class="text-cyan-300 font-bold">${currentCase.base}</span></p>
+                </div>
+
+                <!-- Clue Options -->
+                <div class="space-y-2.5 my-auto max-w-sm mx-auto w-full" id="detective-opts">
+                    ${shuffledOpts.map(opt => `
+                        <button class="case-opt w-full py-4 px-4 bg-slate-900 hover:bg-slate-800 border-2 border-slate-700 rounded-2xl text-lg font-black text-white flex items-center justify-between active:scale-95 transition-all shadow-md group" data-val="${opt}">
+                            <span class="flex items-center gap-2"><span class="text-indigo-400 group-hover:translate-x-1 transition-transform">🔍</span> <span>${opt}</span></span>
+                            <span class="text-[10px] text-slate-500 font-bold uppercase group-hover:text-indigo-300 transition-colors">IZABERI</span>
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div class="text-center text-xs text-slate-500 font-bold">Pronađi tačan oblik reči za dati padež!</div>
+            </div>`;
+
+        const optBtns = overlay.querySelectorAll('.case-opt');
+        optBtns.forEach(btn => {
+            btn.onclick = () => {
+                optBtns.forEach(b => b.disabled = true);
+                const val = btn.getAttribute('data-val');
+                if (val === currentCase.correct) {
+                    btn.classList.add('bg-green-600', 'border-green-400');
+                    score += 100;
+                    self._playSound('correct');
+                    setTimeout(() => { round++; renderRound(); }, 700);
+                } else {
+                    btn.classList.add('bg-red-600', 'border-red-400');
+                    lives--;
+                    self._playSound('incorrect');
+                    setTimeout(() => { round++; renderRound(); }, 700);
+                }
+            };
+        });
+    };
+
+    renderRound();
+};
+
 // Monkey-patch all startXXX functions to redirect to preLaunch automatically
 Object.keys(ArcadeEngine).forEach(key => {
     if (key.startsWith('start') && typeof ArcadeEngine[key] === 'function' && key !== 'startBotOpponent') {

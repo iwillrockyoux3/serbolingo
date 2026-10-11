@@ -100,9 +100,9 @@
 - [x] Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).
 - [x] **UI Wired**: stories.js script tag added to index.html. Launch tile added in Arcade grid ("Priče").
 
-## ✅ Priority 12: Arcade Expansion (30 Total Minigames + Solo/Bot Mode)
+## ✅ Priority 12: Arcade Expansion (40 Total Minigames & Modes + Solo/Bot Mode)
 - [x] Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko Bot, Ana Bot) with live race progress bars.
-- [x] **30 Total Minigames built & wired in Arcade Grid**: Karaoke Reader, Milioner, Spojnice, Kucanje, Udari Reč, Vešala, Slagalica, Slepi Miš, Zmija, Papagaj, Prevodilac, Memorija, Graditelj Rečenica, Tačno/Netačno, Pogodi Sliku, Osmosmerka, Ukrštenica, Rečko, Baloni, Razvrstaj, Freestyle Rap, Rep Bitka, Padajuće Reči, Ruski Rulet (Lockout), Bomba, Svemirski Osvajači, Simon Kaže, Kolo Sreće, Blokovi, Iznenadna Smrt.
+- [x] **40 Total Minigames & Interactive Modes built & wired in Arcade Grid**: Karaoke Reader, Milioner, Spojnice, Kucanje, Udari Reč, Vešala, Slagalica, Slepi Miš, Zmija, Papagaj, Prevodilac, Memorija, Graditelj Rečenica, Tačno/Netačno, Pogodi Sliku, Osmosmerka, Ukrštenica, Rečko, Baloni, Razvrstaj, Freestyle Rap, Rep Bitka, Padajuće Reči, Ruski Rulet (Lockout), Bomba, Svemirski Osvajači, Simon Kaže, Kolo Sreće, Blokovi, Iznenadna Smrt, Priče, Popuni Prazninu, Sleng & Žargon, Akcenat, Muzika & Tekstovi, Brza Trka, Dvoboj, Pijaca, Pikado, Detektiv.
 <!-- -->
 - [ ] **Local Trophy Cabinet** *(Pending Upgrade)*:
   - Build a showcase room tracking high scores, win streaks against the Bots, and awarding Bronze/Silver/Gold medals for minigames.
