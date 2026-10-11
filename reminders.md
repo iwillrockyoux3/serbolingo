@@ -257,9 +257,9 @@
 - [ ] **Timed XP Boosts**: "Early Bird" (practice before 9 AM) grants a 15-minute 2x XP boost to use later that evening, building a twice-a-day habit.
 - [ ] **Profile Avatars & Titles**: Unlockable animated avatars and titles (e.g., "Kafana Legend", "Grammar Nerd") bought with in-app gems.
 
-## 🤖 Priority 33: "Explain My Mistake" AI Tutor
-- [ ] **Gemini Grammar Breakdown**: When a user gets a question wrong (e.g., typing "Ja sam dobar" instead of "Ja sam dobra"), add an "Explain Why" button. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made.
-- [ ] **AI Accent Coach**: Give a 0-100% pronunciation score comparing the user's voice pitch to a native Belgrade speaker.
+## ✅🤖 Priority 33: "Explain My Mistake" AI Tutor (Partially DONE)
+- [x] **Gemini Grammar Breakdown**: When a user gets a question wrong, an "Explain Why" button appears. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made. (ALREADY BUILT in app.js lines 3260-3330, Gemini model cascade with offline fallback.)
+- [ ] **AI Accent Coach** *(Pending - Build Later)*: Give a 0-100% pronunciation score comparing the user's voice pitch to a native Belgrade speaker.
 
 ## 📺 Priority 34: Real-World Native Media & Immersion
 - [ ] **Native Speaker Clips**: Short 3-second looping video/audio clips of actual locals pronouncing difficult words or slang on the street.
@@ -290,10 +290,13 @@
 ## 🧩 Priority 41: Interactive Grammar Sandbox
 - [ ] **Visual Sentence Builder**: Instead of typing, users drag and drop "Lego blocks" of words. Noun blocks are blue, Verb blocks are red. It visually teaches sentence structure (SVO).
 
+## 🌐 Priority 36: Cloudflare Free Plan for Online Services
+- [ ] **Cloudflare Infrastructure**: Use Cloudflare's free plan for CDN, DNS, DDoS protection, and caching when the app goes live with online services (leaderboards, multiplayer, friend finder).
 
-
-
-
-
-
-
+## 💬 Priority 37: Omegle-Style Language Exchange Hub
+- [ ] **1v1 or Group Chat for Language Practice**:
+  - Match with random learners or friends for text chat, voice calling, or video calling to practice Serbian/English conversation skills.
+  - Language exchange pairing: match Serbian speakers learning English with English speakers learning Serbian.
+  - Group rooms for study sessions with up to 4-6 people.
+  - Optional AI moderator that suggests conversation topics and corrects grammar in real-time.
+  - Safety features: report/block buttons, auto-moderation for inappropriate content.
