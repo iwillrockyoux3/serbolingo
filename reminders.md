@@ -138,6 +138,11 @@
   - [x] **Text / OCR Mode**: Reads real-world signs, restaurant menus, book pages, or labels and provides instant Serbian ↔ English translation.
   - [x] **1-Click Save**: Add any scanned object or translated text directly into user's Flashcards & Spaced Repetition deck.
   - [x] **Zero-Key Offline Demo**: Instant sample testing for Jabuka, Kafa, and Restoranski meni without needing an active API key.
+<!-- -->
+- [ ] **Pending Polish & Camera Refinements** *(To be built in return pass)*:
+  - [ ] **Live Camera Viewfinder / WebRTC Stream**: Add direct live webcam / phone camera video feed (`navigator.mediaDevices.getUserMedia`) with a snap shutter button when pressing "Uslikaj kamerom" on PC/phone instead of file prompt.
+  - [ ] **Scrollable OCR Output Container**: Make large/long translated OCR text passages smoothly scrollable with max-h and touch overflow-y scrolling so lengthy menus or book pages don't overflow the viewport.
+  - [ ] **Auto-Reset on Modal Exit**: Automatically reset and clear the image preview, base64 cache, and previous analysis results when the user closes (closeModal()) and re-enters the Visual Lens modal, starting with a fresh clean viewfinder.
 
 ## 📱 Priority 19: Progressive Web App (PWA) Offline Deployment
 - [ ] **PWA Offline Support**:
