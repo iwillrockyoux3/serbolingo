@@ -290,10 +290,10 @@
 ## 🧩 Priority 41: Interactive Grammar Sandbox
 - [ ] **Visual Sentence Builder**: Instead of typing, users drag and drop "Lego blocks" of words. Noun blocks are blue, Verb blocks are red. It visually teaches sentence structure (SVO).
 
-## 🌐 Priority 36: Cloudflare Free Plan for Online Services
+## 🌐 Priority 42: Cloudflare Free Plan for Online Services
 - [ ] **Cloudflare Infrastructure**: Use Cloudflare's free plan for CDN, DNS, DDoS protection, and caching when the app goes live with online services (leaderboards, multiplayer, friend finder).
 
-## 💬 Priority 37: Omegle-Style Language Exchange Hub
+## 💬 Priority 43: Omegle-Style Language Exchange Hub
 - [ ] **1v1 or Group Chat for Language Practice**:
   - Match with random learners or friends for text chat, voice calling, or video calling to practice Serbian/English conversation skills.
   - Language exchange pairing: match Serbian speakers learning English with English speakers learning Serbian.
