@@ -643,6 +643,36 @@
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Blokovi</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Syllable Smash</p>
                     </button>
+
+                    <button onclick="StoriesEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-amber-500">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">📖</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Priče</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Stories</p>
+                    </button>
+
+                    <button onclick="ClozeEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-green-500">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">✏️</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Popuni Prazninu</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Cloze</p>
+                    </button>
+
+                    <button onclick="SlangEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-orange-500">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🗯️</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Sleng & Žargon</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Street Slang</p>
+                    </button>
+
+                    <button onclick="PitchAccentEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-cyan-500">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎵</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Akcenat</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Pitch-Accent</p>
+                    </button>
+
+                    <button onclick="Rhythm.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-rose-500">
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎤</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Muzika & Tekstovi</h4>
+                        <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Song Karaoke</p>
+                    </button>
                 </div>
             </div>
 
@@ -724,39 +754,7 @@
                 <!-- Populated by JS -->
             </div>
 
-            <!-- Quick Launch: Hidden Modules -->
-            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mt-6 mb-3">📚 Alati i Moduli</h3>
-            <div class="grid grid-cols-2 gap-3 pb-4">
-                <button onclick="StoriesEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-amber-500">
-                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">📖</div>
-                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Priče</h4>
-                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Interactive Stories</p>
-                </button>
 
-                <button onclick="ClozeEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-green-500">
-                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">✏️</div>
-                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Popuni Prazninu</h4>
-                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Cloze / Fill-in-Blanks</p>
-                </button>
-
-                <button onclick="SlangEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-orange-500">
-                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🗯️</div>
-                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Sleng & Žargon</h4>
-                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Street Serbian</p>
-                </button>
-
-                <button onclick="PitchAccentEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-cyan-500">
-                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎵</div>
-                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Akcenat</h4>
-                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Pitch-Accent Trainer</p>
-                </button>
-
-                <button onclick="Rhythm.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-rose-500 col-span-2">
-                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎤</div>
-                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Muzika & Tekstovi</h4>
-                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Song Lyrics Karaoke</p>
-                </button>
-            </div>
         </div>
 
         <!-- KARAOKE VIEW (Bilingual Reader) -->

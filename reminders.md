@@ -94,11 +94,11 @@
 ## ✅ Priority 10: Muzika & Tekstovi (Karaoke Modes #2 & #3: Music & Live Singing)
 - [x] Karaoke Mode #2 — Song Lyrics Rhythm Trainer: Learn language through classic Serbian rock (Bajaga, Riblja Čorba, Bijelo Dugme), pop (Zdravko Čolić), and traditional folk classics (Tamo Daleko). Interactive lyrics trainer: fill in missing lyric blocks in real-time as the song plays.
 - [x] Karaoke Mode #3 — Live Sing-Along Microphone Scoring (Karaoke Bar Mode): Full sing-along mode with Web Speech API and Web Audio analyzer to grade Serbian pronunciation, pitch accuracy, and rhythm, awarding stars and XP!
-- [x] **UI Wired**: rhythm.js script tag added to index.html. Launch button added in Explore tab ("Muzika & Tekstovi").
+- [x] **UI Wired**: rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muzika & Tekstovi").
 
 ## ✅ Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
 - [x] Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).
-- [x] **UI Wired**: stories.js script tag added to index.html. Launch button added in Explore tab ("Priče").
+- [x] **UI Wired**: stories.js script tag added to index.html. Launch tile added in Arcade grid ("Priče").
 
 ## ✅ Priority 12: Arcade Expansion (30 Total Minigames + Solo/Bot Mode)
 - [x] Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko Bot, Ana Bot) with live race progress bars.
@@ -109,7 +109,7 @@
 
 ## ✅ Priority 13: Cloze Mastery (Fill-in-the-Blank Context Engine)
 - [x] Busuu / Clozemaster Context Trainer: 5,000+ real conversational Serbian sentences with 1 key missing word. Rapid-fire contextual fill-in-the-blank practice to build natural language instincts.
-- [x] **UI Wired**: cloze.js script tag added to index.html. Launch button added in Explore tab ("Popuni Prazninu").
+- [x] **UI Wired**: cloze.js script tag added to index.html. Launch tile added in Arcade grid ("Popuni Prazninu").
 
 ## ✅ Priority 14: Extended Roleplay & AI Chat Scenarios
 - [x] Deep Scenario Library (roleplay.js): Dozens of specialized AI scenario prompts — 🏨 Hotel Check-in & Room Service · ✈️ Airport Security & Customs · 🩺 Doctor's Office & Pharmacy · 🏢 Job Interview in Belgrade · 🍽️ Ordering at a Traditional Kafana with wine pairings · 🚨 Emergency / Lost Passport Assistance
@@ -117,11 +117,11 @@
 
 ## ✅ Priority 15: Authentic Serbian Slang & Žargon Module
 - [x] Real Street Serbian & Dialects: Dedicated modules for Belgrade slang ("Brate", "Bleja", "Šta ima"), coffee culture expressions, and Balkan idioms. Dialect toggle notes: Belgrade (Šumadijsko-vojvođanski) vs. Niš / Southern Serbian vs. Western / Diaspora expressions.
-- [x] **UI Wired**: slang.js script tag added to index.html. Launch button added in Explore tab ("Sleng & Žargon").
+- [x] **UI Wired**: slang.js script tag added to index.html. Launch tile added in Arcade grid ("Sleng & Žargon").
 
 ## ✅ Priority 16: Serbian Pitch-Accent & Melodic Pronunciation Guide
 - [x] Visual Pitch Waveform & Intonation: Educational guide and audio trainer for the 4 Serbian vowel accents (Kratkosilazni, Dugo-silazni, Kratkouzlazni, Dugouzlazni). Visual intonation curves showing native speaker melody vs. flat robotic speech. Voice Pitch-Waveform Visualizer: visual sound-wave of user's voice layered on top of native speaker's sound-wave.
-- [x] **UI Wired**: pitch-accent.js script tag added to index.html. Launch button added in Explore tab ("Akcenat").
+- [x] **UI Wired**: pitch-accent.js script tag added to index.html. Launch tile added in Arcade grid ("Akcenat").
 
 ## ✅ Priority 17: Hands-Free / Commute Audio Mode (DONE)
 - [x] Screen-Locked Audio Trainer (Pimsleur-Style)
