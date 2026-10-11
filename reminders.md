@@ -94,7 +94,7 @@
 ## ✅ Priority 10: Muzika & Tekstovi (Karaoke Modes #2 & #3: Music & Live Singing)
 - [x] Karaoke Mode #2 — Song Lyrics Rhythm Trainer: Learn language through classic Serbian rock (Bajaga, Riblja Čorba, Bijelo Dugme), pop (Zdravko Čolić), and traditional folk classics (Tamo Daleko). Interactive lyrics trainer: fill in missing lyric blocks in real-time as the song plays.
 - [x] Karaoke Mode #3 — Live Sing-Along Microphone Scoring (Karaoke Bar Mode): Full sing-along mode with Web Speech API and Web Audio analyzer to grade Serbian pronunciation, pitch accuracy, and rhythm, awarding stars and XP!
-- [x] **UI Wired**: hythm.js script tag added to index.html. Launch button added in Explore tab ("Muzika & Tekstovi").
+- [x] **UI Wired**: rhythm.js script tag added to index.html. Launch button added in Explore tab ("Muzika & Tekstovi").
 
 ## ✅ Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
 - [x] Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).
