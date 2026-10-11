@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="sr">
 
 <head>
@@ -34,9 +34,9 @@
     <div id="lesson-overlay"
         class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity">
         <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-2xl text-center max-w-sm w-full transform scale-95 transition-transform duration-300">
-            <div class="text-6xl mb-4 animate-bounce">âœ¨</div>
-            <h2 id="lesson-overlay-title" class="text-2xl font-black mb-2 text-slate-800 dark:text-white">OdliÄno!</h2>
-            <p id="lesson-overlay-desc" class="text-slate-500 dark:text-slate-400 font-bold mb-6">ZavrÅ¡ili ste lekciju i osvojili +10 XP!</p>
+            <div class="text-6xl mb-4 animate-bounce">✨</div>
+            <h2 id="lesson-overlay-title" class="text-2xl font-black mb-2 text-slate-800 dark:text-white">Odlično!</h2>
+            <p id="lesson-overlay-desc" class="text-slate-500 dark:text-slate-400 font-bold mb-6">Završili ste lekciju i osvojili +10 XP!</p>
             <button onclick="app.navigate('home')"
                 class="w-full py-4 rounded-2xl font-black text-white bg-blue-500 border-b-4 border-blue-600 active:border-b-0 active:translate-y-1 hover:bg-blue-400 transition-all uppercase tracking-wider">
                 Nastavi
@@ -50,10 +50,10 @@
         <div id="confetti-container" class="absolute inset-0 pointer-events-none"></div>
         <div
             class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 text-center shadow-2xl fade-in relative overflow-hidden border-b-[10px] border-blue-600">
-            <div class="mb-4 text-7xl animate-bounce">ðŸ†</div>
+            <div class="mb-4 text-7xl animate-bounce">🏆</div>
             <h2 class="text-2xl font-black text-slate-900 mb-2" data-i18n="goal_title">Cilj Ostvaren!</h2>
             <p class="text-slate-500 font-bold leading-relaxed mb-6" data-i18n="goal_msg">Bravo! Danas si dostigao svoj cilj. Samo tako
-                nastavi! ðŸš€</p>
+                nastavi! 🚀</p>
             <button onclick="app.closeGoalModal()"
                 class="w-full py-4 bg-blue-500 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-[0_6px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1 transition-all" data-i18n="goal_continue">Nastavi!</button>
         </div>
@@ -65,20 +65,20 @@
         <div class="bg-white dark:bg-slate-800 w-full max-w-xl mx-auto rounded-t-3xl shadow-2xl overflow-hidden transform transition-transform translate-y-full flex flex-col max-h-[85vh]" id="alphabet-modal-content">
             <div class="p-4 flex justify-between items-center border-b-2 border-slate-100 dark:border-slate-700">
                 <h2 class="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">Izaberi Pismo</h2>
-                <button onclick="app.closeAlphabetModal()" class="w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-black">âœ•</button>
+                <button onclick="app.closeAlphabetModal()" class="w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-black">✕</button>
             </div>
             <div class="p-4 overflow-y-auto space-y-4">
                 
                 <!-- Tips Button -->
                 <button onclick="app.showGuide('alphabet'); app.closeAlphabetModal();" class="w-full py-3 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 font-black rounded-2xl shadow-sm hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors uppercase tracking-widest text-xs flex items-center justify-center gap-2">
-                    <span class="text-lg">ðŸ’¡</span> Vidi Tabele / View Charts
+                    <span class="text-lg">💡</span> Vidi Tabele / View Charts
                 </button>
 
                 <div class="grid grid-cols-2 gap-3">
                     <!-- Printed Latin -->
                     <button onclick="app.startAlphabetMode('alphabet_lat_print')" class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-left hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors group flex flex-col items-center text-center">
                         <div class="text-4xl mb-2 font-black text-slate-700 dark:text-slate-200">Aa</div>
-                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Latinica<br>Å tampana</div>
+                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Latinica<br>Štampana</div>
                     </button>
                     <!-- Cursive Latin -->
                     <button onclick="app.startAlphabetMode('alphabet_lat_cur')" class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-left hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors group flex flex-col items-center text-center">
@@ -87,13 +87,13 @@
                     </button>
                     <!-- Printed Cyrillic -->
                     <button onclick="app.startAlphabetMode('alphabet_cyr_print')" class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-left hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors group flex flex-col items-center text-center">
-                        <div class="text-4xl mb-2 font-black text-slate-700 dark:text-slate-200">ÐÐ°</div>
-                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Ä†irilica<br>Å tampana</div>
+                        <div class="text-4xl mb-2 font-black text-slate-700 dark:text-slate-200">Аа</div>
+                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Ćirilica<br>Štampana</div>
                     </button>
                     <!-- Cursive Cyrillic -->
                     <button onclick="app.startAlphabetMode('alphabet_cyr_cur')" class="bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-left hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors group flex flex-col items-center text-center">
-                        <div class="text-5xl mb-1 font-cursive text-slate-700 dark:text-slate-200" style="line-height: 1;">ÐÐ°</div>
-                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Ä†irilica<br>Pisana</div>
+                        <div class="text-5xl mb-1 font-cursive text-slate-700 dark:text-slate-200" style="line-height: 1;">Аа</div>
+                        <div class="text-sm font-black text-slate-800 dark:text-white leading-tight mb-1">Ćirilica<br>Pisana</div>
                     </button>
                 </div>
             </div>
@@ -104,7 +104,7 @@
     <div id="guide-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 z-[200] hidden flex-col justify-end transition-opacity opacity-0 pb-16">
         <div class="bg-white dark:bg-slate-800 w-full rounded-t-[2.5rem] p-6 shadow-2xl transition-transform translate-y-full h-[70vh] flex flex-col">
             <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6"></div>
-            <h2 id="guide-modal-title" class="text-xl font-black text-slate-800 dark:text-white mb-4 uppercase tracking-wide">ðŸ’¡ Tips</h2>
+            <h2 id="guide-modal-title" class="text-xl font-black text-slate-800 dark:text-white mb-4 uppercase tracking-wide">💡 Tips</h2>
             <div id="guide-modal-content" class="flex-1 overflow-y-auto text-slate-600 dark:text-slate-300 text-sm leading-relaxed pr-2">
                 <!-- Populated by JS -->
             </div>
@@ -117,13 +117,13 @@
         class="fixed inset-0 bg-white dark:bg-slate-900 z-[100] flex items-center justify-center p-6 transition-colors duration-300">
         <div class="w-full max-w-xs space-y-6">
             <div class="text-center">
-                <span class="text-5xl">ðŸ‡·ðŸ‡¸</span>
+                <span class="text-5xl">🇷🇸</span>
                 <h2 id="auth-title" class="mt-4 text-2xl font-extrabold text-slate-900 dark:text-white">Login / Prijavite se</h2>
             </div>
             <div class="space-y-3">
 
 
-                <input id="auth-username" type="text" placeholder="Username / KorisniÄko ime"
+                <input id="auth-username" type="text" placeholder="Username / Korisničko ime"
                     class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none font-bold text-sm">
                 <input id="auth-password" type="password" placeholder="Password / Lozinka"
                     class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white outline-none font-bold text-sm">
@@ -152,7 +152,7 @@
         id="main-header">
         <div class="max-w-xl mx-auto px-4 py-2.5 flex justify-between items-center">
             <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="app.navigate('home')">
-                <span class="text-2xl">ðŸ‡·ðŸ‡¸</span>
+                <span class="text-2xl">🇷🇸</span>
                 <h1 class="text-base font-black text-slate-700 dark:text-slate-100 tracking-tight">SerboLingo</h1>
             </div>
             <div class="flex-1 relative z-50 mx-2 h-8">
@@ -160,14 +160,14 @@
             </div>
             
             <div class="flex items-center gap-3 font-black text-xs shrink-0">
-                <div class="flex items-center text-orange-500"><span class="mr-1">ðŸ”¥</span><span
+                <div class="flex items-center text-orange-500"><span class="mr-1">🔥</span><span
                         id="streak-display">1</span></div>
-                <div class="flex items-center text-blue-500"><span class="mr-1">âš¡</span><span id="xp-display">0</span>
+                <div class="flex items-center text-blue-500"><span class="mr-1">⚡</span><span id="xp-display">0</span>
                 </div>
-                <div class="flex items-center text-red-500"><span class="mr-1">â¤ï¸</span><span
+                <div class="flex items-center text-red-500"><span class="mr-1">❤️</span><span
                         id="hearts-display">5</span></div>
                 <div id="header-xp-boost-container" class="flex items-center bg-yellow-400 text-yellow-900 px-1.5 py-0.5 rounded-md ml-1">
-                    <span class="mr-0.5 text-xs">ðŸš€</span><span id="header-xp-boost-count">0</span>
+                    <span class="mr-0.5 text-xs">🚀</span><span id="header-xp-boost-count">0</span>
                 </div>
             </div>
         </div>
@@ -181,12 +181,12 @@
             <!-- OMNI-BAR SEARCH ENGINE -->
             <div class="relative z-30">
                 <div class="relative flex items-center w-full group">
-                    <span class="absolute left-4 text-xl">ðŸ”</span>
-                    <input type="text" id="omni-search" placeholder="TraÅ¾i / Search (npr. KuÄ‡a, Dog)" 
+                    <span class="absolute left-4 text-xl">🔍</span>
+                    <input type="text" id="omni-search" placeholder="Traži / Search (npr. Kuća, Dog)" 
                         oninput="app.handleSearch(this.value)" data-i18n="omni_placeholder" data-i18n-attr="placeholder"
                         class="w-full pl-12 pr-12 py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-slate-800 dark:text-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.2)] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all placeholder-slate-400 dark:placeholder-slate-500">
                     <button id="omni-clear" onclick="app.clearSearch()" class="hidden absolute right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-lg p-2 active:scale-90 transition-transform">
-                        âœ–
+                        ✖
                     </button>
                 </div>
                 
@@ -206,7 +206,7 @@
                         lekciju.</p>
                 </div>
                 <button onclick="app.generateAILesson()" id="ai-gen-btn"
-                    class="sparkle-btn w-9 h-9 rounded-xl shadow-md flex items-center justify-center text-base">âœ¨</button>
+                    class="sparkle-btn w-9 h-9 rounded-xl shadow-md flex items-center justify-center text-base">✨</button>
             </div>
 
             <!-- Skill Tree Container (dynamically rendered) -->
@@ -218,10 +218,10 @@
             <!-- Practice Mode Button & Commute Mode -->
             <div class="flex gap-2 mb-6">
                 <button onclick="app.startPractice()" class="flex-1 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-black rounded-2xl shadow-lg text-sm uppercase tracking-wider active:scale-95 transition-transform flex items-center justify-center gap-2">
-                    VeÅ¾baj
+                    Vežbaj
                 </button>
                 <button onclick="app.navigate('audio-commute'); CommuteEngine.init();" class="flex-1 py-4 bg-slate-800 text-white font-black rounded-2xl shadow-lg text-sm uppercase tracking-wider active:scale-95 transition-transform flex items-center justify-center gap-2">
-                    ðŸš— Hands-Free
+                    🚗 Hands-Free
                 </button>
             </div>
 
@@ -305,7 +305,7 @@
                 <h3
                     class="font-black text-slate-400 dark:text-slate-500 uppercase text-[9px] tracking-wider text-center mb-2" data-i18n="stats_skills">
                     Analiza
-                    VeÅ¡tina</h3>
+                    Veština</h3>
                 <div class="h-44"><canvas id="skillsRadarChart"></canvas></div>
             </div>
 
@@ -326,7 +326,7 @@
                 <div class="flex-1">
                     <h3 class="font-black text-slate-400 dark:text-slate-500 uppercase text-[9px] tracking-wider" data-i18n="stats_daily_goal">Dnevni
                         cilj</h3>
-                    <p class="text-xs font-black text-slate-700 dark:text-slate-200" id="goal-text">UÄitavam...</p>
+                    <p class="text-xs font-black text-slate-700 dark:text-slate-200" id="goal-text">Učitavam...</p>
                     <div class="flex gap-4 mt-2">
                         <div>
                             <p class="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase" data-i18n="stats_xp_left">Preostalo XP
@@ -340,14 +340,14 @@
                         </div>
                     </div>
                 </div>
-                <div id="goal-icon" class="text-2xl transition-all duration-300">ðŸ†</div>
+                <div id="goal-icon" class="text-2xl transition-all duration-300">🏆</div>
             </div>
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-2 gap-3 pb-8">
                 <div class="stat-grid-card">
                     <div class="stat-label" data-i18n="stats_total_xp">Ukupni XP</div>
-                    <div class="stat-value"><span class="text-blue-400 text-sm">âš¡</span><span
+                    <div class="stat-value"><span class="text-blue-400 text-sm">⚡</span><span
                             id="stat-total-xp">0</span></div>
                 </div>
                 <div class="stat-grid-card">
@@ -364,17 +364,17 @@
                     </div>
                     <div class="flex items-center justify-center gap-1">
                         <span class="stat-label" data-i18n="stats_streak">Niz dana</span>
-                        <span class="text-xs">ðŸ”¥</span>
+                        <span class="text-xs">🔥</span>
                     </div>
                 </div>
                 <div class="stat-grid-card">
-                    <div class="stat-label" data-i18n="stats_accuracy">TaÄnost</div>
-                    <div class="stat-value"><span class="text-red-500 text-sm">ðŸŽ¯</span><span
+                    <div class="stat-label" data-i18n="stats_accuracy">Tačnost</div>
+                    <div class="stat-value"><span class="text-red-500 text-sm">🎯</span><span
                             id="stat-accuracy">0%</span></div>
                 </div>
                 <div class="stat-grid-card">
                     <div class="stat-label" data-i18n="stats_lessons">Lekcije</div>
-                    <div class="stat-value"><span class="text-green-500 text-sm">âœ…</span><span
+                    <div class="stat-value"><span class="text-green-500 text-sm">✅</span><span
                             id="stat-total-lessons">0</span></div>
                 </div>
             </div>
@@ -384,7 +384,7 @@
         <div id="view-lesson" class="hidden h-full flex flex-col bg-white dark:bg-slate-900">
             <div class="px-5 py-4 flex items-center gap-3">
                 <button onclick="app.endLesson()"
-                    class="text-slate-300 dark:text-slate-600 text-2xl font-black hover:text-slate-400 dark:hover:text-slate-400 transition-colors">âœ•</button>
+                    class="text-slate-300 dark:text-slate-600 text-2xl font-black hover:text-slate-400 dark:hover:text-slate-400 transition-colors">✕</button>
                 <div class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div id="lesson-progress-bar" class="h-full bg-green-500 w-0 transition-all duration-500"></div>
                 </div>
@@ -403,17 +403,17 @@
                             <div id="explanation-buttons" class="flex gap-2">
                                 <button id="btn-explain-offline" onclick="app.showExplanation()"
                                     class="flex items-center gap-1.5 px-3 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg text-[10px] font-black uppercase tracking-wide transition-colors">
-                                    <span>âœ¨</span> <span data-i18n="lesson_explain_offline">OBJASNI MI OVO</span>
+                                    <span>✨</span> <span data-i18n="lesson_explain_offline">OBJASNI MI OVO</span>
                                 </button>
                                 <button id="btn-explain-ai" onclick="app.showAIExplanation()"
                                     class="flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-[10px] font-black uppercase tracking-wide transition-colors">
-                                    <span>ðŸ¤–</span> <span data-i18n="lesson_explain_ai">AI OBJAÅ NJENJE</span>
+                                    <span>🤖</span> <span data-i18n="lesson_explain_ai">AI OBJAŠNJENJE</span>
                                 </button>
                             </div>
                             <div id="explanation-content" class="hidden">
                                 <button onclick="app.resetExplanationUI()"
                                     class="mb-2 text-[10px] font-bold text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1">
-                                    â¬… Nazad
+                                    ⬅ Nazad
                                 </button>
                                 <div id="explanation-text"
                                     class="p-3 bg-white/60 dark:bg-slate-800/60 rounded-xl text-[11px] text-slate-600 dark:text-slate-300 font-medium border-l-4 border-purple-400 leading-relaxed max-h-40 overflow-y-auto">
@@ -434,173 +434,180 @@
         <div id="view-arcade" class="hidden flex-1 flex flex-col bg-slate-50 dark:bg-slate-900 fade-in" style="height: calc(100vh - 110px);">
             <div class="p-6 overflow-y-auto flex-1">
                 <div class="flex justify-between items-end mb-2">
-                    <h2 class="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-wide">ðŸ•¹ï¸ <span data-i18n="nav_arcade">Igraonica</span></h2>
+                    <h2 class="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-wide">🕹️ <span data-i18n="nav_arcade">Igraonica</span></h2>
                     <div class="flex items-center gap-1 bg-yellow-400 text-yellow-900 px-2 py-1 rounded-lg shadow-sm font-black text-xs">
-                        <span>ðŸš€ Ã—</span><span id="xp-boost-count">0</span>
+                        <span>🚀 ×</span><span id="xp-boost-count">0</span>
                     </div>
                 </div>
                 <p class="text-xs text-slate-500 dark:text-slate-400 font-bold mb-6">Play minigames to earn Double XP Boosts for your Skill Tree!</p>
                 
                 <!-- Chat Launcher -->
                 <div class="bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl p-4 mb-6 shadow-lg shadow-blue-500/30">
-                    <h3 class="text-white font-black text-lg mb-1">ðŸ¤– AI Razgovor</h3>
+                    <h3 class="text-white font-black text-lg mb-1">🤖 AI Razgovor</h3>
                     <p class="text-blue-100 text-xs font-medium mb-4">Practice speaking with our AI Tutor.</p>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="RoleplayEngine.startScenario('Ordering coffee at a cafe')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">â˜• Cafe</button>
-                        <button onclick="RoleplayEngine.startScenario('Taking a taxi in Belgrade')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">ðŸš• Taxi</button>
-                        <button onclick="RoleplayEngine.startFreeChat()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">ðŸ—£ï¸ Free Chat</button>
-                        <button onclick="RoleplayEngine.startRandom()" class="bg-yellow-400 hover:bg-yellow-300 text-yellow-900 px-3 py-1.5 rounded-xl text-xs font-black shadow-sm transition-colors">ðŸŽ² Random</button>
+                        <button onclick="RoleplayEngine.startScenario('Ordering coffee at a cafe')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">☕ Cafe</button>
+                        <button onclick="RoleplayEngine.startScenario('Taking a taxi in Belgrade')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">🚕 Taxi</button>
+                        <button onclick="RoleplayEngine.startScenario('Booking a hotel room')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">🏨 Hotel</button>
+                        <button onclick="RoleplayEngine.startScenario('At the airport going through customs')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">✈️ Airport</button>
+                        <button onclick="RoleplayEngine.startScenario('At the pharmacy buying medicine')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">🏥 Doctor</button>
+                        <button onclick="RoleplayEngine.startScenario('Job interview at a tech company')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">💼 Interview</button>
+                        <button onclick="RoleplayEngine.startScenario('Ordering at a traditional Kafana')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">🍷 Kafana</button>
+                        <button onclick="RoleplayEngine.startScenario('Emergency room visit')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">🚨 Emergency</button>
+                        <button onclick="RoleplayEngine.startFreeChat()" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">🗣️ Free Chat</button>
+                        <button onclick="RoleplayEngine.startRandom()" class="bg-yellow-400 hover:bg-yellow-300 text-yellow-900 px-3 py-1.5 rounded-xl text-xs font-black shadow-sm transition-colors">🎲 Random</button>
                     </div>
                 </div>
 
 
                 <!-- Games Grid -->
-                <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3">ðŸŽ® Minigames</h3>
+                <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3">🎮 Minigames</h3>
                 <div class="grid grid-cols-2 gap-3 pb-20">
 
                     <button onclick="Karaoke.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-emerald-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸŽ¤</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎤</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Karaoke</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Reader</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startMillionaire()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-yellow-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ†</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🏆</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Milioner</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">15-Q Trivia</p>
                     </button>
                     
                     <button onclick="ArcadeEngine.startMatchPairs()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-blue-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ§©</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🧩</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Spojnice</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Match Pairs</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startSpeedTyper()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-purple-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">âŒ¨ï¸</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">⌨️</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Kucanje</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Speed Typer</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startWhackAWord()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-red-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ”¨</div>
-                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Udari ReÄ</h4>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🔨</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Udari Reč</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Whack-a-Word</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startHangman()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-green-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ” </div>
-                        <h4 class="font-black text-slate-800 dark:text-white text-sm">VeÅ¡ala</h4>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🔠</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Vešala</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Hangman</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startWordScramble()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-orange-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ”€</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🔀</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Slagalica</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Word Scramble</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startAudioSurvival()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-cyan-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸŽ§</div>
-                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Slepi MiÅ¡</h4>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎧</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Slepi Miš</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Audio Survival</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startMemoryFlip()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-pink-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸƒ</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🃏</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Memorija</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Flip Cards</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startSnake()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-emerald-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🐍</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Zmijica</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Vocab Snake</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startSuddenDeath()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-rose-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ’€</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">💀</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Sudden Death</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Endless Quiz</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startSentenceBuilder()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-indigo-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ§±</div>
-                        <h4 class="font-black text-slate-800 dark:text-white text-sm">ReÄenica</h4>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🧱</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Rečenica</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Sentence Builder</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startParrot()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-lime-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸŽ™ï¸</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎙️</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Papagaj</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Pronunciation</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startTrueFalse()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-blue-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">âœ…</div>
-                        <h4 class="font-black text-slate-800 dark:text-white text-sm">TaÄno/NetaÄno</h4>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">✅</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Tačno/Netačno</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">True/False</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startPictureMatch()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-yellow-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ–¼ï¸</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🖼️</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Pogodi Sliku</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Image Match</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startWordSearch()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-indigo-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ”</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🔍</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Osmosmerka</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Word Search</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startCrossword()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-slate-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ“</div>
-                        <h4 class="font-black text-slate-800 dark:text-white text-sm">UkrÅ¡tenica</h4>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">📝</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Ukrštenica</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Crossword</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startRecko()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-green-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸŸ©</div>
-                        <h4 class="font-black text-slate-800 dark:text-white text-sm">ReÄko</h4>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🟩</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Rečko</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Wordle Clone</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startBubblePop()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-rose-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸŽˆ</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎈</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Baloni</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Bubble Pop</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startSorter()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-cyan-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ—‚ï¸</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🗂️</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Razvrstaj</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Sorter</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startVoiceTranslator()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-teal-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ§ </div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🧠</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Prevodilac</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Voice Translate</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startFreestyleRap()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-fuchsia-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸŽ¤</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎤</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Slobodni Stil</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Freestyle Rap</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startRapBattle()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-orange-500">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸ”¥</div>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🔥</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Rep Bitka</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Rap Battle</p>
                     </button>
 
                     <button onclick="ArcadeEngine.startFallingWords()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-indigo-400">
-                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">ðŸŒ§ï¸</div>
-                        <h4 class="font-black text-slate-800 dark:text-white text-sm">PadajuÄ‡e ReÄi</h4>
+                        <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🌧️</div>
+                        <h4 class="font-black text-slate-800 dark:text-white text-sm">Padajuće Reči</h4>
                         <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Falling Words</p>
                     </button>
+
                     <button onclick="ArcadeEngine.startLockout()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-red-600">
                         <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">☠️</div>
                         <h4 class="font-black text-slate-800 dark:text-white text-sm">Ruski Rulet</h4>
@@ -644,7 +651,7 @@
                 <!-- Header -->
                 <div class="bg-white dark:bg-slate-800 p-4 border-b-2 border-slate-100 dark:border-slate-700 flex items-center gap-4 shrink-0 shadow-sm z-10">
                     <button onclick="RoleplayEngine.quitChat()" class="w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full text-slate-500 hover:text-red-500 transition-colors">
-                        <span class="text-lg font-black">Ã—</span>
+                        <span class="text-lg font-black">×</span>
                     </button>
                     <h2 id="arcade-chat-title" class="text-lg font-black text-slate-800 dark:text-white truncate"></h2>
                 </div>
@@ -658,7 +665,7 @@
                 <div class="bg-white dark:bg-slate-800 p-3 border-t-2 border-slate-100 dark:border-slate-700 shrink-0 mb-4 pb-8">
                     <div class="flex gap-2">
                         <input type="text" id="arcade-chat-input" onkeypress="RoleplayEngine.handleInputKeypress(event)" placeholder="Kucaj na srpskom..." class="flex-1 bg-slate-100 dark:bg-slate-700 border-2 border-transparent focus:border-blue-500 rounded-2xl px-4 py-3 text-slate-800 dark:text-white font-medium outline-none text-sm">
-                        <button onclick="const i = document.getElementById('arcade-chat-input'); if(i) RoleplayEngine.sendMessage(i.value);" class="bg-blue-500 text-white rounded-2xl px-5 font-black uppercase text-xs hover:bg-blue-600 transition-colors shadow-[0_4px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1">Å alji</button>
+                        <button onclick="const i = document.getElementById('arcade-chat-input'); if(i) RoleplayEngine.sendMessage(i.value);" class="bg-blue-500 text-white rounded-2xl px-5 font-black uppercase text-xs hover:bg-blue-600 transition-colors shadow-[0_4px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1">Šalji</button>
                     </div>
                 </div>
             </div>
@@ -673,48 +680,82 @@
         <div id="view-explore" class="hidden p-4 space-y-4 fade-in pb-24">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-black tracking-tight text-slate-800 dark:text-slate-100" data-i18n="explore_title">IstraÅ¾i</h2>
+                    <h2 class="text-xl font-black tracking-tight text-slate-800 dark:text-slate-100" data-i18n="explore_title">Istraži</h2>
                     <p class="text-xs text-slate-500 font-medium" data-i18n="explore_desc">Media & Culture Hub</p>
                 </div>
-                <div class="text-4xl">ðŸŒ</div>
+                <div class="text-4xl">🌍</div>
             </div>
 
             <!-- Search Area with Smart Modes -->
             <div class="space-y-2">
                 <div class="relative w-full shadow-sm rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-blue-400 dark:focus-within:border-blue-500 transition-colors">
-                    <input type="text" id="explore-search-input" onkeyup="if(event.key === 'Enter') ExploreHub.doSearch()" placeholder="PretraÅ¾i (npr. 'NaruÄivanje hrane')" data-i18n="explore_search_placeholder" data-i18n-attr="placeholder" class="w-full bg-transparent py-3 pl-4 pr-12 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none font-medium">
+                    <input type="text" id="explore-search-input" onkeyup="if(event.key === 'Enter') ExploreHub.doSearch()" placeholder="Pretraži (npr. 'Naručivanje hrane')" data-i18n="explore_search_placeholder" data-i18n-attr="placeholder" class="w-full bg-transparent py-3 pl-4 pr-12 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none font-medium">
                     <button onclick="ExploreHub.doSearch()" class="absolute right-0 top-0 bottom-0 px-4 text-slate-400 hover:text-blue-500 transition-colors">
-                        ðŸ”
+                        🔍
                     </button>
                 </div>
                 <div class="flex gap-2 justify-end">
                     <button id="explore-btn-yt" onclick="ExploreHub.setMode('youtube')" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-red-100 dark:hover:bg-red-900/30" data-i18n="explore_btn_yt">
-                        ðŸŒ YouTube
+                        🌐 YouTube
                     </button>
                     <button id="explore-btn-ai" onclick="ExploreHub.setMode('ai')" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-purple-100 dark:hover:bg-purple-900/30" data-i18n="explore_btn_ai">
-                        âœ¨ AI GeneriÅ¡i
+                        ✨ AI Generiši
                     </button>
                 </div>
             </div>
 
             <div class="flex bg-slate-100 dark:bg-slate-800 rounded-xl p-1 gap-1 sticky top-0 z-10 shadow-sm border border-slate-200 dark:border-slate-700">
                 <button onclick="ExploreHub.switchTab('video')" id="tab-video" class="flex-1 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-colors bg-white dark:bg-slate-700 text-blue-600 shadow-sm" data-i18n="explore_tab_video">
-                    ðŸ“º Video
+                    📺 Video
                 </button>
                 <button onclick="ExploreHub.switchTab('pictures')" id="tab-pictures" class="flex-1 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-colors text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50" data-i18n="explore_tab_pictures">
-                    ðŸ–¼ï¸ Slike
+                    🖼️ Slike
                 </button>
                 <button onclick="ExploreHub.switchTab('articles')" id="tab-articles" class="flex-1 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-colors text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50" data-i18n="explore_tab_articles">
-                    ðŸ“„ Tekst
+                    📄 Tekst
                 </button>
                 <button onclick="ExploreHub.switchTab('extra')" id="tab-extra" class="flex-1 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg transition-colors text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-700/50" data-i18n="explore_tab_extra">
-                    ðŸ¿ Extra
+                    🍿 Extra
                 </button>
             </div>
 
             <!-- Content Area -->
             <div id="explore-content" class="space-y-4 min-h-[300px]">
                 <!-- Populated by JS -->
+            </div>
+
+            <!-- Quick Launch: Hidden Modules -->
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mt-6 mb-3">📚 Alati i Moduli</h3>
+            <div class="grid grid-cols-2 gap-3 pb-4">
+                <button onclick="StoriesEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-amber-500">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">📖</div>
+                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Priče</h4>
+                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Interactive Stories</p>
+                </button>
+
+                <button onclick="ClozeEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-green-500">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">✏️</div>
+                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Popuni Prazninu</h4>
+                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Cloze / Fill-in-Blanks</p>
+                </button>
+
+                <button onclick="SlangEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-orange-500">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🗯️</div>
+                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Sleng & Žargon</h4>
+                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Street Serbian</p>
+                </button>
+
+                <button onclick="PitchAccentEngine.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-cyan-500">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎵</div>
+                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Akcenat</h4>
+                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Pitch-Accent Trainer</p>
+                </button>
+
+                <button onclick="Rhythm.openMenu()" class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-lg shadow-slate-200/50 dark:shadow-none border-2 border-slate-100 dark:border-slate-700 active:scale-95 transition-transform text-left group hover:border-rose-500 col-span-2">
+                    <div class="text-3xl mb-2 group-hover:scale-110 transition-transform origin-left">🎤</div>
+                    <h4 class="font-black text-slate-800 dark:text-white text-sm">Muzika & Tekstovi</h4>
+                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Song Lyrics Karaoke</p>
+                </button>
             </div>
         </div>
 
@@ -725,13 +766,13 @@
                     <h2 class="text-xl font-black tracking-tight text-slate-800 dark:text-slate-100" id="karaoke-title">Karaoke Reader</h2>
                     <p class="text-xs text-slate-500 font-medium" id="karaoke-desc">Listen and Read</p>
                 </div>
-                <button onclick="app.navigate('arcade')" class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-xl text-slate-600 dark:text-slate-300 active:scale-95 transition-transform hover:bg-slate-200 dark:hover:bg-slate-700">âŒ</button>
+                <button onclick="app.navigate('arcade')" class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-xl text-slate-600 dark:text-slate-300 active:scale-95 transition-transform hover:bg-slate-200 dark:hover:bg-slate-700">❌</button>
             </div>
             
             <!-- Controls -->
             <div class="flex justify-center items-center gap-4 bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
-                <button id="karaoke-play-btn" onclick="Karaoke.togglePlay()" class="w-48 h-14 bg-blue-500 text-white rounded-2xl flex items-center justify-center font-black shadow-lg active:scale-95 transition-transform shadow-blue-500/30">ðŸŽ™ï¸ START READING</button>
-                <button onclick="Karaoke.reset()" class="w-14 h-14 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-2xl flex items-center justify-center text-lg font-black active:scale-95 transition-transform">ðŸ”„</button>
+                <button id="karaoke-play-btn" onclick="Karaoke.togglePlay()" class="w-48 h-14 bg-blue-500 text-white rounded-2xl flex items-center justify-center font-black shadow-lg active:scale-95 transition-transform shadow-blue-500/30">🎙️ START READING</button>
+                <button onclick="Karaoke.reset()" class="w-14 h-14 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-2xl flex items-center justify-center text-lg font-black active:scale-95 transition-transform">🔄</button>
             </div>
 
             <!-- Reading Area -->
@@ -744,22 +785,22 @@
         <div id="view-mistakes" class="hidden p-4 space-y-4 fade-in pb-24">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-black tracking-tight text-slate-800 dark:text-slate-100" data-i18n="mistakes_title">Moje GreÅ¡ke</h2>
+                    <h2 class="text-xl font-black tracking-tight text-slate-800 dark:text-slate-100" data-i18n="mistakes_title">Moje Greške</h2>
                     <p class="text-xs text-slate-500 font-medium" data-i18n="mistakes_desc">Mistake Vault</p>
                 </div>
-                <div class="text-4xl">ðŸ§ </div>
+                <div class="text-4xl">🧠</div>
             </div>
 
             <!-- Empty State -->
             <div id="mistakes-empty-state" class="hidden bg-slate-100 dark:bg-slate-800 p-8 rounded-3xl text-center space-y-3 border-2 border-slate-200 dark:border-slate-700">
-                <div class="text-5xl mb-4">ðŸ†</div>
-                <h3 class="font-black text-slate-800 dark:text-white" data-i18n="mistakes_empty">Nema greÅ¡aka!</h3>
-                <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="mistakes_empty_desc">Trenutno nemate reÄi za ponavljanje. OdliÄan posao!</p>
+                <div class="text-5xl mb-4">🏆</div>
+                <h3 class="font-black text-slate-800 dark:text-white" data-i18n="mistakes_empty">Nema grešaka!</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="mistakes_empty_desc">Trenutno nemate reči za ponavljanje. Odličan posao!</p>
             </div>
 
             <!-- Review Button -->
             <button id="mistakes-review-btn" onclick="app.startMistakeReview()" class="hidden w-full py-4 bg-gradient-to-r from-orange-400 to-red-500 text-white font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-sm uppercase tracking-wider mb-4">
-                âš¡ Clear Weaknesses (<span id="mistakes-count-badge">0</span>)
+                ⚡ Clear Weaknesses (<span id="mistakes-count-badge">0</span>)
             </button>
 
             <!-- Words List -->
@@ -776,7 +817,7 @@
                 <div class="relative group">
                     <button onclick="app.toggleAvatarPicker()"
                         class="w-24 h-24 bg-slate-200 dark:bg-slate-800 rounded-full border-4 border-blue-500 flex items-center justify-center text-4xl shadow-lg transition-transform active:scale-95">
-                        <span id="profile-avatar">ðŸ‘¤</span>
+                        <span id="profile-avatar">👤</span>
                         <div
                             class="absolute bottom-0 right-0 bg-blue-500 text-white p-1.5 rounded-full border-2 border-white dark:border-slate-900">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20"
@@ -798,7 +839,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                     </button>
                 </div>
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1"><span data-i18n="profile_member_since">ÄŒlan od:</span>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1"><span data-i18n="profile_member_since">Član od:</span>
                     <span id="profile-joined">--</span></p>
             </div>
 
@@ -812,7 +853,7 @@
 
             <!-- Achievements Section -->
             <div class="space-y-3">
-                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1" data-i18n="profile_achievements">DostignuÄ‡a</h3>
+                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1" data-i18n="profile_achievements">Dostignuća</h3>
                 <div id="achievements-list" class="space-y-3">
                     <!-- Populated by JS -->
                 </div>
@@ -827,8 +868,8 @@
                     <!-- Dark Mode Toggle -->
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                            <div class="p-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-lg">ðŸŒ™</div>
-                            <span class="font-bold text-sm text-slate-700 dark:text-slate-200" data-i18n="profile_dark_mode">Tamni reÅ¾im</span>
+                            <div class="p-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-lg">🌙</div>
+                            <span class="font-bold text-sm text-slate-700 dark:text-slate-200" data-i18n="profile_dark_mode">Tamni režim</span>
                         </div>
                         <button onclick="app.toggleDarkMode()" id="btn-dark-mode"
                             class="w-12 h-7 bg-slate-200 dark:bg-blue-500 rounded-full relative transition-colors duration-300">
@@ -841,7 +882,7 @@
                     <!-- Text Scaling -->
                     <div class="space-y-2">
                         <div class="flex justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
-                            <span data-i18n="profile_text_size">VeliÄina teksta</span>
+                            <span data-i18n="profile_text_size">Veličina teksta</span>
                             <span id="text-scale-val">100%</span>
                         </div>
                         <input type="range" min="100" max="150" step="5" value="100" id="text-scale"
@@ -876,9 +917,9 @@
                         <div class="flex justify-between items-center text-xs font-bold text-slate-500 dark:text-slate-400">
                             <span>Premium AI Voice</span>
                             <div class="flex gap-2">
-                                <a id="link-gcp" href="https://console.cloud.google.com/apis/credentials" target="_blank" class="text-blue-500 hover:underline">Get GCP Key ðŸ”‘</a>
-                                <a id="link-oai" href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-500 hover:underline hidden">Get OpenAI Key ðŸ”‘</a>
-                                <a id="link-gem" href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline hidden">Get Gemini Key ðŸ”‘</a>
+                                <a id="link-gcp" href="https://console.cloud.google.com/apis/credentials" target="_blank" class="text-blue-500 hover:underline">Get GCP Key 🔑</a>
+                                <a id="link-oai" href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-500 hover:underline hidden">Get OpenAI Key 🔑</a>
+                                <a id="link-gem" href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-500 hover:underline hidden">Get Gemini Key 🔑</a>
                             </div>
                         </div>
                         <div class="flex gap-2">
@@ -905,12 +946,12 @@
 
                     <!-- Learning Direction Toggle -->
                     <div>
-                        <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2" data-i18n="profile_direction">Smer uÄenja</p>
+                        <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2" data-i18n="profile_direction">Smer učenja</p>
                         <div class="flex gap-2">
                             <button onclick="app.setLearningDirection('sr_to_en')" data-dir="sr_to_en"
-                                class="dir-btn flex-1 py-2.5 rounded-xl font-black text-[10px] border-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-900/30 transition-all active:scale-95" data-i18n="profile_direction_sr_en">Srpski â†’ Engleski</button>
+                                class="dir-btn flex-1 py-2.5 rounded-xl font-black text-[10px] border-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-900/30 transition-all active:scale-95" data-i18n="profile_direction_sr_en">Srpski → Engleski</button>
                             <button onclick="app.setLearningDirection('en_to_sr')" data-dir="en_to_sr"
-                                class="dir-btn flex-1 py-2.5 rounded-xl font-black text-[10px] border-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 transition-all active:scale-95" data-i18n="profile_direction_en_sr">Engleski â†’ Srpski</button>
+                                class="dir-btn flex-1 py-2.5 rounded-xl font-black text-[10px] border-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 transition-all active:scale-95" data-i18n="profile_direction_en_sr">Engleski → Srpski</button>
                         </div>
                     </div>
 
@@ -929,7 +970,7 @@
             <!-- Top Bar -->
             <div class="flex items-center justify-between p-4 border-b border-slate-800">
                 <button onclick="app.navigate('home')" class="text-slate-400 hover:text-white p-2">
-                    <span class="text-2xl">â†</span>
+                    <span class="text-2xl">←</span>
                 </button>
                 <h2 class="font-black tracking-widest uppercase text-sm text-slate-300">Hands-Free Mode</h2>
                 <div class="w-10"></div>
@@ -944,8 +985,8 @@
 
                 <!-- Mode Tabs -->
                 <div class="z-10 flex gap-2 w-full max-w-xs mx-auto bg-slate-800 p-1 rounded-xl border border-slate-700">
-                    <button id="commute-tab-listen" onclick="CommuteEngine.setMode('listen')" class="flex-1 py-2 rounded-lg font-bold text-sm bg-blue-500 text-white shadow-sm transition-all">ðŸŽ§ Listen</button>
-                    <button id="commute-tab-answer" onclick="CommuteEngine.setMode('answer')" class="flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-white transition-all">ðŸŽ™ï¸ Answer</button>
+                    <button id="commute-tab-listen" onclick="CommuteEngine.setMode('listen')" class="flex-1 py-2 rounded-lg font-bold text-sm bg-blue-500 text-white shadow-sm transition-all">🎧 Listen</button>
+                    <button id="commute-tab-answer" onclick="CommuteEngine.setMode('answer')" class="flex-1 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-white transition-all">🎙️ Answer</button>
                 </div>
 
                 <div class="z-10 w-full max-w-xs mt-2">
@@ -960,15 +1001,15 @@
                 <div class="z-10 flex flex-col items-center gap-4 mt-4">
                     <div class="flex items-center justify-center gap-6">
                         <button onclick="CommuteEngine.prev()" class="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center active:scale-95 transition-transform border border-slate-700 hover:bg-slate-700">
-                            <span class="text-xl">â®ï¸</span>
+                            <span class="text-xl">⏮️</span>
                         </button>
                         
                         <button id="commute-play-btn" onclick="CommuteEngine.togglePlay()" class="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center active:scale-95 transition-transform shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:bg-blue-500">
-                            <span id="commute-play-icon" class="text-4xl ml-2">â–¶ï¸</span>
+                            <span id="commute-play-icon" class="text-4xl ml-2">▶️</span>
                         </button>
                         
                         <button onclick="CommuteEngine.next()" class="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center active:scale-95 transition-transform border border-slate-700 hover:bg-slate-700">
-                            <span class="text-xl">â­ï¸</span>
+                            <span class="text-xl">⏭️</span>
                         </button>
                     </div>
 
@@ -1000,7 +1041,7 @@
                         <div class="flex-1">
                             <label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Infinity</label>
                             <button id="commute-infinity-btn" onclick="CommuteEngine.toggleInfinity()" class="w-full h-[28px] bg-slate-800 border border-slate-600 rounded-lg text-xs font-bold text-slate-400 active:scale-95 transition-colors flex items-center justify-center gap-1">
-                                <span class="text-lg leading-none">âˆž</span> OFF
+                                <span class="text-lg leading-none">∞</span> OFF
                             </button>
                         </div>
                     </div>
@@ -1026,32 +1067,32 @@
         <div class="max-w-xl mx-auto flex justify-around py-2">
             <button onclick="app.navigate('home')" class="nav-btn flex flex-col items-center gap-1 text-blue-500"
                 id="nav-home">
-                <span class="text-2xl mb-1 mt-1 block">ðŸ </span>
-                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_learn">UÄi</span>
+                <span class="text-2xl mb-1 mt-1 block">🏠</span>
+                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_learn">Uči</span>
             </button>
             <button onclick="app.navigate('arcade')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
                 id="nav-arcade">
-                <span class="text-2xl mb-1 mt-1 block">ðŸ•¹ï¸</span>
+                <span class="text-2xl mb-1 mt-1 block">🕹️</span>
                 <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_arcade">Igraonica</span>
             </button>
             <button onclick="app.navigate('explore')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
                 id="nav-explore">
-                <span class="text-2xl mb-1 mt-1 block">ðŸ§­</span>
-                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_explore">IstraÅ¾i</span>
+                <span class="text-2xl mb-1 mt-1 block">🧭</span>
+                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_explore">Istraži</span>
             </button>
             <button onclick="app.navigate('mistakes')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
                 id="nav-mistakes">
-                <span class="text-lg mt-1 block">ðŸ§ </span>
-                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_mistakes">GreÅ¡ke</span>
+                <span class="text-lg mt-1 block">🧠</span>
+                <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_mistakes">Greške</span>
             </button>
             <button onclick="app.navigate('stats')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
                 id="nav-stats">
-                <span class="text-lg">ðŸ“Š</span>
+                <span class="text-lg">📊</span>
                 <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_stats">Statistika</span>
             </button>
             <button onclick="app.navigate('profile')" class="nav-btn flex flex-col items-center gap-1 text-slate-400"
                 id="nav-profile">
-                <span class="text-lg">ðŸ‘¤</span>
+                <span class="text-lg">👤</span>
                 <span class="text-[7px] font-black uppercase tracking-widest" data-i18n="nav_profile">Profil</span>
             </button>
         </div>
@@ -1064,22 +1105,22 @@
             class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl transform transition-all scale-100 border-2 border-white dark:border-slate-700">
             <div
                 class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl animate-bounce">
-                ðŸ”‘
+                🔑
             </div>
-            <h3 class="text-xl font-black text-slate-800 dark:text-white mb-2">Potreban API KljuÄ</h3>
+            <h3 class="text-xl font-black text-slate-800 dark:text-white mb-2">Potreban API Ključ</h3>
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 font-medium leading-relaxed">
-                Da bi AI funkcije (online) radile, potreban je besplatan Google Gemini API kljuÄ.
+                Da bi AI funkcije (online) radile, potreban je besplatan Google Gemini API ključ.
                 <a href="https://aistudio.google.com/app/apikey" target="_blank"
-                    class="text-blue-500 hover:underline block mt-3 font-bold text-sm bg-blue-50 dark:bg-blue-900/30 p-2 rounded-lg border border-blue-100 dark:border-blue-800">ðŸ‘‰
-                    Preuzmi kljuÄ ovde</a>
+                    class="text-blue-500 hover:underline block mt-3 font-bold text-sm bg-blue-50 dark:bg-blue-900/30 p-2 rounded-lg border border-blue-100 dark:border-blue-800">👉
+                    Preuzmi ključ ovde</a>
             </p>
-            <input type="text" id="api-key-input" placeholder="Ovde nalepi kljuÄ (AIz...)"
+            <input type="text" id="api-key-input" placeholder="Ovde nalepi ključ (AIz...)"
                 class="w-full p-3 mb-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-white font-mono text-xs focus:border-blue-500 outline-none transition-colors">
             <div class="flex gap-3">
                 <button onclick="app.closeApiKeyModal()"
                     class="flex-1 py-3 rounded-xl font-black bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Kasnije</button>
                 <button onclick="app.saveApiKeyFromModal()"
-                    class="flex-1 py-3 rounded-xl font-black bg-blue-500 text-white shadow-lg shadow-blue-500/30 hover:bg-blue-600 transition-transform active:scale-95">SaÄuvaj</button>
+                    class="flex-1 py-3 rounded-xl font-black bg-blue-500 text-white shadow-lg shadow-blue-500/30 hover:bg-blue-600 transition-transform active:scale-95">Sačuvaj</button>
             </div>
             <p id="api-modal-error" class="hidden text-red-500 text-[10px] font-bold mt-2"></p>
         </div>
@@ -1089,7 +1130,7 @@
     <div id="voice-recommendation-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl border-2 border-white dark:border-slate-700">
             <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl animate-bounce">
-                ðŸ¤–
+                🤖
             </div>
             <h3 class="text-xl font-black text-slate-800 dark:text-white mb-2">Robotic Voice Detected!</h3>
             <div class="text-xs text-slate-500 dark:text-slate-400 mb-6 font-medium leading-relaxed space-y-2">
@@ -1112,19 +1153,19 @@
     <div id="yt-key-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl border-2 border-white dark:border-slate-700">
             <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
-                ðŸŒ
+                🌐
             </div>
             <h3 class="text-xl font-black text-slate-800 dark:text-white mb-2">YouTube API Key</h3>
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                Da biste pretraÅ¾ivali YouTube u aplikaciji, potreban vam je besplatan YouTube Data API v3 kljuÄ.
+                Da biste pretraživali YouTube u aplikaciji, potreban vam je besplatan YouTube Data API v3 ključ.
             </p>
             <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="text-blue-500 text-xs font-bold mb-4 block underline hover:text-blue-600">
-                ðŸ‘‰ Preuzmi kljuÄ ovde
+                👉 Preuzmi ključ ovde
             </a>
-            <input type="text" id="yt-key-input" placeholder="Nalepi kljuÄ ovde (AIz...)" class="w-full bg-slate-100 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 mb-4 text-sm focus:border-blue-500 outline-none">
+            <input type="text" id="yt-key-input" placeholder="Nalepi ključ ovde (AIz...)" class="w-full bg-slate-100 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 mb-4 text-sm focus:border-blue-500 outline-none">
             <div class="flex gap-2">
                 <button onclick="document.getElementById('yt-key-modal').classList.add('hidden')" class="flex-1 py-3 rounded-xl font-black text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">Kasnije</button>
-                <button onclick="ExploreHub.saveYTKey()" class="flex-1 py-3 rounded-xl font-black bg-blue-500 text-white hover:bg-blue-600">SaÄuvaj</button>
+                <button onclick="ExploreHub.saveYTKey()" class="flex-1 py-3 rounded-xl font-black bg-blue-500 text-white hover:bg-blue-600">Sačuvaj</button>
             </div>
         </div>
     </div>
@@ -1139,11 +1180,14 @@
     <script src="question-engine.js" charset="UTF-8"></script>
     <script src="skill-tree.js" charset="UTF-8"></script>
     <script src="roleplay.js" charset="UTF-8"></script>
+    <script src="stories.js" charset="UTF-8"></script>
+    <script src="cloze.js" charset="UTF-8"></script>
+    <script src="slang.js" charset="UTF-8"></script>
+    <script src="pitch-accent.js" charset="UTF-8"></script>
+    <script src="rhythm.js" charset="UTF-8"></script>
     <script src="arcade.js" charset="UTF-8"></script>
     <script src="commute.js" charset="UTF-8"></script>
     <script src="app.js" charset="UTF-8"></script>
 </body>
 
 </html>
-
-
