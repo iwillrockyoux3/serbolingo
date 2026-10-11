@@ -1,4 +1,4 @@
-﻿# 📋 SerboLingo — Categorized Source Manifest
+# 📋 SerboLingo — Categorized Source Manifest
 
 > [!IMPORTANT]
 > This manifest is the **ANTI-DUPLICATION SHIELD** (Constitution Section 3).  
@@ -53,6 +53,8 @@
 | [`roleplay.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/roleplay.js) | 291 | 13 KB | AI roleplay chatbot — 50+ real-world scenario prompts, free chat, auto grammar correction in brackets, model cascading, voice output |
 | [`explore-hub.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/explore-hub.js) | 470 | 39 KB | Media hub — curated video/article/infographic feeds, YouTube Data API v3 live search, AI-generated custom lessons, 4 tabs (Video/Pictures/Articles/Extra) |
 | [`commute.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/commute.js) | 134 | 4 KB | Hands-Free / Commute Audio Mode — Screen-locked Pimsleur-style audio loop |
+| [`visual-lens.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/visual-lens.js) | 480 | 20 KB | AI Visual Lens — multimodal camera snap & translate, Object & OCR modes, Gemini Vision cascade, 1-click Flashcard save |
+
 | [`karaoke.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/karaoke.js) | 572 | 28 KB | Bilingual speech-recognition reader — levels A1-B2, live word tracking, word translations, TTS replay |
 | [`rhythm.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/rhythm.js) | 567 | 26 KB | Music lyrics synchronizer — YouTube IFrame API playback + SpeechRecognition singing/recitation scoring |
 | [`cloze.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/cloze.js) | 224 | 15 KB | Fill-in-the-blank context trainer — sentence bank, scoring, streaks |

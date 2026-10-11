@@ -130,13 +130,14 @@
 - [x] Background audio playback support.
 - [x] Bidirectional learning tied to profile language direction setting.
 
-## 📸 Priority 18: AI Visual Lens ("Snap & Translate" / Camera Learning)
-- [ ] **Camera / Image Recognition (Gemini Vision API)**:
-  - Add a Camera icon button in the Omni-Bar / Home View.
-  - Allows the user to take a photo or upload an image using their phone camera.
-  - **Object Mode**: Identifies objects in real life (e.g. snap a photo of an apple -> gives Jabuka / Apple, gender, pronunciation audio, example sentence).
-  - **Text / OCR Mode**: Reads real-world signs, restaurant menus, book pages, or labels and provides instant Serbian ↔ English translation.
-  - **1-Click Save**: Add any scanned object or translated text directly into user's Flashcards & Spaced Repetition deck.
+## ✅ Priority 18: AI Visual Lens ("Snap & Translate" / Camera Learning)
+- [x] **Camera / Image Recognition (Gemini Vision API)**:
+  - [x] Add a Camera icon button in the Omni-Bar / Home View (#omni-camera launches Visual Lens modal).
+  - [x] Allows user to take a photo or upload an image using phone camera (capture="environment" for rear camera).
+  - [x] **Object Mode**: Identifies objects in real life (e.g. Jabuka / Apple, gender [ž.r.], phonetic, pronunciation audio, example sentence).
+  - [x] **Text / OCR Mode**: Reads real-world signs, restaurant menus, book pages, or labels and provides instant Serbian ↔ English translation.
+  - [x] **1-Click Save**: Add any scanned object or translated text directly into user's Flashcards & Spaced Repetition deck.
+  - [x] **Zero-Key Offline Demo**: Instant sample testing for Jabuka, Kafa, and Restoranski meni without needing an active API key.
 
 ## 📱 Priority 19: Progressive Web App (PWA) Offline Deployment
 - [ ] **PWA Offline Support**:
