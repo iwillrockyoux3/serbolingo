@@ -106,8 +106,9 @@
 
 | # | Task | Type | Status |
 |:--|:-----|:-----|:-------|
-| P21.1 | Global leaderboards | 🆕 New | ⬜ FUTURE |
-| P21.2 | Real-time PvP duels | 🆕 New | ⬜ FUTURE |
+| P21.0 | Offline Ghost Bots & Friend Codes (Part 1) | 🆕 New | ✅ DONE |
+| P21.1 | Global leaderboards (Cloud / Part 2) | 🆕 New | ⬜ FUTURE |
+| P21.2 | Real-time PvP duels (Cloud / Part 2) | 🆕 New | ⬜ FUTURE |
 | P22.1 | Smartwatch companion | 🆕 New | ⬜ FUTURE |
 | P22.2 | AR object tagging | 🆕 New | ⬜ FUTURE |
 | P22.3 | Home screen widgets | 🆕 New | ⬜ FUTURE |

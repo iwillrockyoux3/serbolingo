@@ -66,13 +66,17 @@ const ArcadeEngine = {
         let levelHtml = level !== null ? `<div>Level: ${level}${maxLevel ? '/' + maxLevel : ''}</div>` : '';
         
         let botHtml = '';
-        if (ArcadeEngine.currentMode === 'bot') {
+        if (ArcadeEngine.currentMode === 'bot' || ArcadeEngine.currentMode === 'ghost') {
+            const activeGhost = window.GhostEngine ? window.GhostEngine.getActiveGhost() : { a: '🤖', u: 'Marko_Bot', acc: 75 };
+            const label = (ArcadeEngine.currentMode === 'ghost' && activeGhost) 
+                ? `${activeGhost.a || '👻'} ${activeGhost.u} (${activeGhost.acc}%)` 
+                : `🤖 Marko_Bot`;
             botHtml = `
                 <div class="flex-1 max-w-xs mx-4">
                     <div class="w-full bg-gray-700 rounded-full h-3 relative overflow-hidden shadow-inner">
                         <div id="bot-progress" class="bg-gradient-to-r from-red-500 to-red-400 h-3 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.8)] transition-all duration-500 ease-linear" style="width: 0%"></div>
                     </div>
-                    <div class="text-[10px] text-center text-red-400 mt-1 font-black uppercase tracking-wider">🤖 Marko_Bot</div>
+                    <div class="text-[10px] text-center text-red-400 mt-1 font-black uppercase tracking-wider" id="bot-name-label">${label}</div>
                 </div>
             `;
         }
@@ -121,29 +125,34 @@ const ArcadeEngine = {
         if (window.app && window.app.speakPhrase) window.app.speakPhrase(text, lang);
     },
 
-    startBotOpponent: function() {
+    startBotOpponent: function(customGhost) {
         let progress = 0;
+        const ghost = customGhost || (window.GhostEngine ? window.GhostEngine.getActiveGhost() : { acc: 75, spd: 2.5, u: 'Marko_Bot' });
+        const hitChance = Math.max(0.35, Math.min(0.95, (ghost.acc || 75) / 100));
+        const speedFactor = Math.max(0.6, 2.5 / Math.max(1, ghost.spd || 2.5));
+
         const botTimer = setInterval(() => {
-            if(Math.random() > 0.3) {
-                progress += Math.random() * 8; // Adjust speed
-                if(progress > 100) progress = 100;
+            if (Math.random() < hitChance) {
+                progress += (Math.random() * 6 + 2) * speedFactor;
+                if (progress > 100) progress = 100;
                 
-                // Find it in the DOM (since it might have been re-rendered)
                 const bar = document.getElementById('bot-progress');
-                if(bar) bar.style.width = progress + '%';
+                if (bar) bar.style.width = progress + '%';
                 
                 if (progress >= 100) {
                     clearInterval(botTimer);
-                    // Bot won!
+                    if (window.GhostEngine && ghost.id) {
+                        window.GhostEngine.recordMatchResult(ghost.id, false);
+                    }
                     const overlay = document.getElementById('arcade-game-overlay');
                     if (overlay) {
                         ArcadeEngine._playSound('wrong');
-                        overlay.innerHTML = ArcadeEngine._renderGameOver('The Bot beat you!', 0, 'startMillionaire'); // We'll just reset to arcade if bot wins
+                        overlay.innerHTML = ArcadeEngine._renderGameOver((ghost.u || 'Bot') + ' te je pobedio!', 0, 'startMillionaire');
                     }
                 }
             }
         }, 1000);
-        this._timers.push(botTimer);
+        this._timers.push({ clear: () => clearInterval(botTimer) });
     },
 
     // 1. Millionaire
@@ -2386,35 +2395,52 @@ ArcadeEngine.preLaunch = function(gameFnName) {
     const overlay = document.getElementById('arcade-game-overlay');
     if (!overlay) return;
     
+    const activeGhost = window.GhostEngine ? window.GhostEngine.getActiveGhost() : null;
+    const ghostLabel = activeGhost ? `${activeGhost.a || '👻'} ${activeGhost.u} (${activeGhost.acc}%)` : 'Duh Prijatelja';
+
     overlay.classList.remove('hidden');
     overlay.innerHTML = `
         <div class="flex flex-col items-center justify-center h-full bg-slate-900 p-6 w-full fade-in">
-            <h2 class="text-3xl font-black text-white mb-2 text-center">Choose Your Mode</h2>
-            <p class="text-slate-400 mb-8 text-center text-sm font-medium">How do you want to play?</p>
+            <h2 class="text-3xl font-black text-white mb-2 text-center">Izaberi Režim Igre</h2>
+            <p class="text-slate-400 mb-6 text-center text-sm font-medium">Kako želiš da igraš?</p>
             
-            <div class="flex flex-col gap-4 w-full max-w-sm">
-                <button onclick="ArcadeEngine._launchGame('${gameFnName}', 'solo')" class="p-6 bg-slate-800 border-2 border-slate-700 rounded-2xl text-left hover:border-blue-500 hover:bg-slate-700 active:scale-95 transition-all group">
+            <div class="flex flex-col gap-3.5 w-full max-w-sm">
+                <button onclick="ArcadeEngine._launchGame('${gameFnName}', 'solo')" class="p-5 bg-slate-800 border-2 border-slate-700 rounded-2xl text-left hover:border-blue-500 hover:bg-slate-700 active:scale-95 transition-all group">
                     <div class="flex items-center gap-4">
                         <div class="text-4xl group-hover:scale-110 transition-transform">👤</div>
                         <div>
-                            <h3 class="text-white font-black text-xl">Solo Mode</h3>
-                            <p class="text-slate-400 text-xs font-bold mt-1">Play at your own pace</p>
+                            <h3 class="text-white font-black text-lg">Solo Režim</h3>
+                            <p class="text-slate-400 text-xs font-bold mt-0.5">Igraj samostalno za bodove</p>
                         </div>
                     </div>
                 </button>
 
-                <button onclick="ArcadeEngine._launchGame('${gameFnName}', 'bot')" class="p-6 bg-slate-800 border-2 border-slate-700 rounded-2xl text-left hover:border-red-500 hover:bg-slate-700 active:scale-95 transition-all group relative overflow-hidden">
-                    <div class="absolute -right-4 -bottom-4 text-7xl opacity-10 group-hover:scale-110 transition-transform">🤖</div>
-                    <div class="flex items-center gap-4 relative z-10">
+                <button onclick="ArcadeEngine._launchGame('${gameFnName}', 'bot')" class="p-5 bg-slate-800 border-2 border-slate-700 rounded-2xl text-left hover:border-red-500 hover:bg-slate-700 active:scale-95 transition-all group relative overflow-hidden">
+                    <div class="flex items-center gap-4">
                         <div class="text-4xl group-hover:scale-110 transition-transform">🤖</div>
                         <div>
-                            <h3 class="text-white font-black text-xl">Vs. AI Bot</h3>
-                            <p class="text-slate-400 text-xs font-bold mt-1">Race against a bot</p>
+                            <h3 class="text-white font-black text-lg">Vs. Marko Bot</h3>
+                            <p class="text-slate-400 text-xs font-bold mt-0.5">Standardni AI protivnik (75%)</p>
+                        </div>
+                    </div>
+                </button>
+
+                <button onclick="ArcadeEngine._launchGame('${gameFnName}', 'ghost')" class="p-5 bg-gradient-to-r from-indigo-950 to-purple-950 border-2 border-indigo-500/60 rounded-2xl text-left hover:border-indigo-400 active:scale-95 transition-all group relative overflow-hidden shadow-lg shadow-indigo-950/40">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl group-hover:scale-110 transition-transform">👻</div>
+                        <div>
+                            <h3 class="text-white font-black text-lg">Duel: ${ghostLabel}</h3>
+                            <p class="text-indigo-300 text-xs font-bold mt-0.5">Simulira preciznost i brzinu prijatelja</p>
                         </div>
                     </div>
                 </button>
                 
-                <button onclick="ArcadeEngine._hideOverlay()" class="mt-4 p-4 text-slate-500 font-bold hover:text-white transition-colors">Cancel</button>
+                <div class="flex justify-between items-center pt-2">
+                    <button onclick="GhostEngine.openModal()" class="text-xs text-indigo-400 hover:text-indigo-300 font-black flex items-center gap-1 p-2">
+                        <span>⚙️ Promeni Duha / Unesi Kod</span>
+                    </button>
+                    <button onclick="ArcadeEngine._hideOverlay()" class="text-xs text-slate-500 hover:text-white font-bold p-2">Otkaži</button>
+                </div>
             </div>
         </div>
     `;
@@ -2431,6 +2457,9 @@ ArcadeEngine._launchGame = function(gameFnName, mode) {
     
     if (mode === 'bot') {
         ArcadeEngine.startBotOpponent();
+    } else if (mode === 'ghost') {
+        const ghost = window.GhostEngine ? window.GhostEngine.getActiveGhost() : null;
+        ArcadeEngine.startBotOpponent(ghost);
     }
 };
 

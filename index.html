@@ -464,6 +464,22 @@
                     </div>
                 </div>
 
+                <!-- Ghost Arena Launcher (Priority 21: Offline Ghost Multiplayer) -->
+                <div class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 border-2 border-indigo-500/40 rounded-2xl p-4 mb-6 shadow-lg shadow-indigo-950/30 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-2xl shrink-0">
+                            👻
+                        </div>
+                        <div>
+                            <h3 class="text-white font-black text-base leading-tight">Duhovi Prijatelja</h3>
+                            <p class="text-indigo-200 text-xs font-medium">Offline duel protiv koda tvog prijatelja</p>
+                        </div>
+                    </div>
+                    <button onclick="GhostEngine.openModal()" class="py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-1.5 shrink-0">
+                        <span>⚔️</span> <span>Arena</span>
+                    </button>
+                </div>
+
 
                 <!-- Games Grid -->
                 <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3">🎮 Minigames</h3>
@@ -1296,6 +1312,53 @@
         </div>
     </div>
 
+    <!-- Ghost Arena Modal (Priority 21: Offline Ghost Multiplayer) -->
+    <div id="ghost-arena-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[200] flex flex-col p-4 md:p-6 fade-in overflow-y-auto">
+        <div class="max-w-md w-full mx-auto my-auto bg-slate-900 border-2 border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-4 bg-slate-800/80 border-b border-slate-700 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl p-1.5 bg-indigo-500/20 rounded-xl">👻</span>
+                    <div>
+                        <h3 class="text-base font-black text-white leading-tight">Ghost Arena</h3>
+                        <p class="text-[11px] font-bold text-slate-400">Offline Multiplayer & Kodovi Prijatelja</p>
+                    </div>
+                </div>
+                <button onclick="GhostEngine.closeModal()" class="w-8 h-8 rounded-full bg-slate-700/60 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center font-black text-sm active:scale-90 transition-transform">
+                    ✕
+                </button>
+            </div>
+
+            <div class="p-4 space-y-4">
+                <!-- My Ghost Profile Card -->
+                <div id="ghost-my-profile-container">
+                    <!-- Populated by GhostEngine.renderModal() -->
+                </div>
+
+                <!-- Import Friend Code Input Box -->
+                <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-3.5 space-y-2">
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400 block">Uvezi Kod Prijatelja:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="ghost-import-input" placeholder="Nalepi kod ovde (SL-GHOST-...)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+                        <button onclick="GhostEngine.submitImport()" class="py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl active:scale-95 transition-transform shrink-0">
+                            + Dodaj
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Friend Ghosts Roster -->
+                <div>
+                    <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-2.5 flex items-center justify-between">
+                        <span>👥 Tvoji Rivali (Duhovi):</span>
+                    </h4>
+                    <div class="space-y-2 max-h-60 overflow-y-auto pr-1" id="ghost-roster-list">
+                        <!-- Populated by GhostEngine.renderModal() -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="seed-data.js" charset="UTF-8"></script>
     <script src="db.js" charset="UTF-8"></script>
     <script src="alphabet-data.js" charset="UTF-8"></script>
@@ -1309,6 +1372,7 @@
     <script src="slang.js" charset="UTF-8"></script>
     <script src="pitch-accent.js" charset="UTF-8"></script>
     <script src="rhythm.js" charset="UTF-8"></script>
+    <script src="ghost-arena.js" charset="UTF-8"></script>
     <script src="arcade.js" charset="UTF-8"></script>
     <script src="visual-lens.js" charset="UTF-8"></script>
     <script src="commute.js" charset="UTF-8"></script>

@@ -169,26 +169,24 @@
 > Do NOT start this phase until the app is published on the Google Play Store and has real users.
 > The app must remain 100% offline-functional. Multiplayer is an ADDITIVE layer, not a replacement.
 
-- [ ] **Offline "Ghost Bots" (Friend Codes)**:
-  - Generate a short "Friend Code" from a user's stats (`correctAnswers`, `totalAnswers`, speed).
-  - Users can input a code to download a friend's "Bot Profile".
-  - Play offline against your friend's ghost! The bot simulates their exact accuracy (e.g., 68%) and speed, making offline play feel like real multiplayer.
-- [ ] **Global Leaderboards:**
-  - Display top scores for Milioner, Speed Typer, and other Arcade games.
-  - Sync high scores to a cloud database.
-- [ ] **Real-Time PvP Duels:**
-  - Head-to-head battles for action games (Bomba, Space Invaders). Clearing words sends junk/hazards to the opponent.
-  - Matchmaking lobby with ELO-style ranking.
-- [ ] **Backend Server Setup / Recommended Options (Free Tier):**
-  - **Firebase (Spark Plan):** Free Firestore real-time DB. Best for async ghost data storage, leaderboards, and turn-based games. Handles auth and user storage for free.
-  - **Supabase (Free Plan):** Open-source Firebase alternative on Postgres. Built-in Supabase Realtime broadcasts player actions without needing a custom WebSocket server.
-  - **Serv00:** Free permanent FreeBSD server (Polish hosting). Full SSH access, supports Node.js/Python, no forced sleep. Good for a custom WebSocket matchmaking server if doing live PvP.
-  - **Koyeb (Free Tier):** 512 MB RAM free web service. Good for lightweight socket servers without aggressive sleep.
-  - **Apinator:** Free hosted WebSocket layer. Up to 500 concurrent connections and 500,000 messages/day. Frontend connects directly to their API.
-- [ ] **Implementation Notes:**
-  - Use Firebase/Supabase JS SDK via `<script>` tag (no build step needed, stays Vanilla JS).
-  - All multiplayer features must gracefully degrade when offline (show cached leaderboard, disable PvP button).
-  - Anti-cheat: Server-side score validation required for leaderboard integrity.
+- [x] **Offline "Ghost Bots" (Friend Codes) — (PART 1 COMPLETE)**:
+  - [x] Generate a short "Friend Code" from a user's stats (correctAnswers, 	otalAnswers, speed).
+  - [x] Users can input a code to download a friend's "Bot Profile" (GhostEngine.importCode).
+  - [x] Play offline against your friend's ghost! The bot simulates their exact accuracy (e.g. 68%) and speed in Arcade races.
+  - [x] Ghost Arena modal (#ghost-arena-modal) with 1-click Friend Code copying, starter ghosts (Luka, Milica), and Head-to-Head win/loss tracking.
+- [ ] **Part 2: Cloud Backend & Online Multiplayer (AFTER Play Store Launch & All Priorities)**:
+  - [ ] **Global Leaderboards**: Display top scores for Milioner, Speed Typer, and other Arcade games synced to cloud.
+  - [ ] **Real-Time PvP Duels**: Head-to-head live battles with matchmaking lobby.
+  - [ ] **Backend Server Setup / Recommended Options (Free Tier)**:
+    - **Firebase (Spark Plan)**: Free Firestore real-time DB. Best for async ghost data storage, leaderboards, and turn-based games. Handles auth and user storage for free.
+    - **Supabase (Free Plan)**: Open-source Firebase alternative on Postgres. Built-in Supabase Realtime broadcasts player actions without needing a custom WebSocket server.
+    - **Serv00**: Free permanent FreeBSD server (Polish hosting). Full SSH access, supports Node.js/Python, no forced sleep. Good for a custom WebSocket matchmaking server if doing live PvP.
+    - **Koyeb (Free Tier)**: 512 MB RAM free web service. Good for lightweight socket servers without aggressive sleep.
+    - **Apinator**: Free hosted WebSocket layer. Up to 500 concurrent connections and 500,000 messages/day. Frontend connects directly to their API.
+  - [ ] **Implementation Notes**:
+    - Use Firebase/Supabase JS SDK via <script> tag (no build step needed, stays Vanilla JS).
+    - All multiplayer features must gracefully degrade when offline (show cached leaderboard, disable PvP button).
+    - Anti-cheat: Server-side score validation required for leaderboard integrity.
 
 ## 🚀 Priority 22: V3.0 Moonshot Features
 - [ ] **Smartwatch Companion (Wear OS / Apple Watch)**:
