@@ -178,6 +178,12 @@
 - [ ] **Part 2: Cloud Backend & Online Multiplayer (AFTER Play Store Launch & All Priorities)**:
   - [ ] **Global Leaderboards**: Display top scores for Milioner, Speed Typer, and other Arcade games synced to cloud.
   - [ ] **Real-Time PvP Duels**: Head-to-head live battles with matchmaking lobby.
+  - [ ] **Live Online Players List & Social Friend Hub**:
+    - Real-time list of currently active/online players and friends.
+    - Status indicators (in a match, studying, idle) and 1-click challenge invite buttons.
+  - [ ] **Post-Match "Add Friend / Save Ghost" Prompt**:
+    - Direct button on the Arcade Game Over screen after racing against another player/bot to add them as a friend or save their ghost profile to your roster with 1 tap.
+  - [ ] **Backend Server Setup / Recommended Options (Free Tier)**:
   - [ ] **Backend Server Setup / Recommended Options (Free Tier)**:
     - **Firebase (Spark Plan)**: Free Firestore real-time DB. Best for async ghost data storage, leaderboards, and turn-based games. Handles auth and user storage for free.
     - **Supabase (Free Plan)**: Open-source Firebase alternative on Postgres. Built-in Supabase Realtime broadcasts player actions without needing a custom WebSocket server.

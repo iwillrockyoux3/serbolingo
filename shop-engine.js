@@ -47,7 +47,8 @@
                 nameEn: 'Heart Refill',
                 desc: 'Odmah napuni svih 5 srca',
                 descEn: 'Instantly refill all 5 hearts',
-                icon: '❤️‍🩹',
+                icon: '❤️',
+                iconHtml: '<span class="relative inline-flex items-center justify-center w-full h-full"><span class="text-2xl">❤️</span><span class="absolute -bottom-1 -right-1 text-xs drop-shadow-md">🩹</span></span>',
                 cost: 100,
                 currency: 'xp',
                 max: 99,
@@ -348,7 +349,7 @@
                 return `
                 <div class="bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 flex items-center justify-between gap-3 hover:border-slate-600 transition-colors">
                     <div class="flex items-center gap-3 min-w-0">
-                        <span class="text-3xl shrink-0 w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center">${item.icon}</span>
+                        <span class="text-3xl shrink-0 w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center">${item.iconHtml || item.icon}</span>
                         <div class="min-w-0">
                             <h4 class="text-sm font-black text-white truncate">${name}</h4>
                             <p class="text-[10px] font-bold text-slate-400 truncate">${desc}</p>
