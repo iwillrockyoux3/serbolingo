@@ -303,13 +303,25 @@ const app = {
                 const currentDate = new Date(today);
                 const diffDays = Math.round((currentDate - lastDate) / (1000 * 60 * 60 * 24));
                 if (diffDays > 1) {
-                    state.streak = 0; // Lost streak
+                    if (diffDays === 2 && window.ShopEngine && window.ShopEngine.hasStreakFreeze()) {
+                        window.ShopEngine.useStreakFreeze();
+                        setTimeout(() => {
+                            if (window.app && window.app.showToast) {
+                                window.app.showToast('🛡️ Štit za Niz je sačuvao tvoj niz!', 'success');
+                            }
+                        }, 1200);
+                    } else {
+                        state.streak = 0; // Lost streak
+                    }
                 }
             }
             state.dailyXP = 0;
             state.goalCelebrated = false;
+            state.questChestClaimed = false;
             state.hearts = 5; // Refill hearts daily
-            state.quests = generateDailyQuests(); // Reset quests daily
+            state.quests = (window.ShopEngine && window.ShopEngine.generateDailyQuests)
+                ? window.ShopEngine.generateDailyQuests()
+                : generateDailyQuests(); // Reset quests daily
             
             if (state.user) {
                 localStorage.setItem('serbolingo_stats_' + (state.user ? state.user.name : 'guest'), JSON.stringify(state));
@@ -587,6 +599,10 @@ const app = {
         sessionStorage.setItem('serbolingo_auth', JSON.stringify(state.user));
         location.reload();
     },
+    saveState: () => {
+        const u = state.user ? state.user.name : 'guest';
+        localStorage.setItem('serbolingo_stats_' + u, JSON.stringify(state));
+    },
     updateQuestProgress: (questId, amount) => {
         const quest = state.quests.find(q => q.id === questId);
         if (quest && !quest.completed) {
@@ -594,18 +610,25 @@ const app = {
             if (quest.progress >= quest.target) {
                 quest.progress = quest.target;
                 quest.completed = true;
-                // Add 15 XP for completing a quest
-                state.xp += 15;
-                state.dailyXP += 15;
+                const reward = quest.reward || 15;
+                state.xp += reward;
+                state.dailyXP += reward;
                 app.playSound('level_up');
-                app.showToast('Quest Completed! +15 XP 🌟');
+                app.showToast(`Quest Completed! +${reward} XP 🌟`);
                 app.updateProfileUI(); // Update XP
+                if (window.ShopEngine && window.ShopEngine.checkAllQuestsComplete) {
+                    window.ShopEngine.checkAllQuestsComplete();
+                }
             }
-            if (state.user) localStorage.setItem('serbolingo_stats_' + (state.user ? state.user.name : 'guest'), JSON.stringify(state));
+            app.saveState();
             app.renderQuests(); 
         }
     },
     renderQuests: () => {
+        if (window.ShopEngine && window.ShopEngine.renderQuests) {
+            window.ShopEngine.renderQuests();
+            return;
+        }
         const container = document.getElementById('quests-container');
         if (!container) return;
         
@@ -2231,9 +2254,11 @@ const app = {
 
             if (isC) {
                 app.playSound('correct');
-                state.xp += 10;
+                const xpMult = (window.ShopEngine && window.ShopEngine.isDoubleXpActive()) ? 2 : 1;
+                const earnedXp = 10 * xpMult;
+                state.xp += earnedXp;
                 if (!state.currentLessonXpEarned) state.currentLessonXpEarned = 0;
-                state.currentLessonXpEarned += 10;
+                state.currentLessonXpEarned += earnedXp;
                 
                 // Phase 4: SRS Logic - decay mistake
                 if (l.wordId && state.mistakeLog[l.wordId]) {
@@ -2257,7 +2282,13 @@ const app = {
                         if (diffDays === 1) {
                             state.streak += 1;
                         } else if (diffDays > 1) {
-                            state.streak = 1;
+                            if (diffDays === 2 && window.ShopEngine && window.ShopEngine.hasStreakFreeze()) {
+                                window.ShopEngine.useStreakFreeze();
+                                state.streak += 1;
+                                app.showToast('🛡️ Štit za Niz je iskorišćen! Tvoj niz je nastavljen!', 'success');
+                            } else {
+                                state.streak = 1;
+                            }
                         }
                     } else {
                         state.streak = 1;

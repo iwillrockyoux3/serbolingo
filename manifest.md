@@ -55,6 +55,7 @@
 | [`commute.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/commute.js) | 134 | 4 KB | Hands-Free / Commute Audio Mode — Screen-locked Pimsleur-style audio loop |
 | [`visual-lens.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/visual-lens.js) | 480 | 20 KB | AI Visual Lens — multimodal camera snap & translate, Object & OCR modes, Gemini Vision cascade, 1-click Flashcard save |
 | [`ghost-arena.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/ghost-arena.js) | 330 | 14 KB | Ghost Arena — offline multiplayer ghost bot engine, Friend Code generator/importer, dynamic duel simulation |
+| [`shop-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/shop-engine.js) | 275 | 11 KB | Gamification Economy & Shop — Streak Freeze protection, XP shop, Mystery Chest rolls, daily quest pool |
 
 | [`karaoke.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/karaoke.js) | 572 | 28 KB | Bilingual speech-recognition reader — levels A1-B2, live word tracking, word translations, TTS replay |
 | [`rhythm.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/rhythm.js) | 567 | 26 KB | Music lyrics synchronizer — YouTube IFrame API playback + SpeechRecognition singing/recitation scoring |

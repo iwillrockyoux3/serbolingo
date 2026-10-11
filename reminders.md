@@ -76,10 +76,11 @@
 - [ ] **True SRS Algorithm (SuperMemo-2)** *(Pending Upgrade)*:
   - Implement the SM2 mathematical algorithm to properly space out reviews (1 day, 3 days, 10 days) for true long-term memory retention instead of just basic mistake logging.
 
-## 🛡️ Priority 7: Streak Freeze & Daily Quests Shop
-- [ ] **Gamification Expansion**:
-  - **Streak Freeze (Štit za Niz)**: Purchase or earn shields that protect streak if the user misses a day.
-  - **Daily Quests (Dnevne Misije)**: 3 daily missions (e.g., "Earn 60 XP", "Score 90% in Speed Typer", "Learn 5 New Words") awarding bonus gems and XP boosts.
+## ✅ Priority 7: Streak Freeze & Daily Quests Shop (DONE)
+- [x] **Gamification Expansion**:
+  - [x] **Streak Freeze (Štit za Niz)**: Purchase shields with XP in Shop modal; automatically protects user streak if a day is missed.
+  - [x] **Daily Quests (Dnevne Misije)**: 3 daily missions generated from dynamic quest pool with progress bars, rewards (+10-20 XP), and Mystery Chest all-complete celebration.
+  - [x] **In-App XP Shop (#shop-modal)**: Spend earned XP on Streak Freezes (200 XP), Double XP 1h (150 XP), Heart Refills (100 XP), and Mystery Chest rolls (300 XP).
 
 ## ✅ Priority 8: Istraži / Web & Media Learning Hub (Pop Culture & 3-Tab Explorer)
 - [x] Dedicated External Learning Search Engine: Search any Serbian/English topic. Categorized into 3 Interactive Tabs: 🎬 Video Tab (embedded YouTube lessons), 🖼️ Pictures / Infographics Tab (grammar charts, case tables), 📄 Text & Articles Tab (Serbian news, blog posts, reading passages with tap-to-translate).
@@ -218,9 +219,9 @@
   - Add native-feeling swipe-to-go-back and swipe-down-to-dismiss gestures for UI injections and bottom sheets.
   - Make the SPA feel like a real downloaded app rather than a rigid website.
 
-## 🎮 Priority 26: Gamification & Economy (Duolingo Hooks)
-- [ ] **Streak Freezes & Wagers**: Add an in-app "Store" where users can spend XP to buy a "Streak Freeze" or make a "7-Day Wager".
-- [ ] **Daily Quests & Mystery Chests**: Give 3 specific daily goals (e.g., "Play 3 Arcade Games", "Review 15 mistakes"). Completing all unlocks a chest with bonus XP.
+## ✅ Priority 26: Gamification & Economy (Duolingo Hooks) (DONE)
+- [x] **Streak Freezes & Shop**: In-app "Prodavnica" modal where users spend XP to buy Streak Freezes, Heart Refills, and Double XP power-ups.
+- [x] **Daily Quests & Mystery Chests**: 3 specific daily goals with progress bars. Completing all 3 unlocks a Mystery Chest with bonus XP and confetti celebration.
 
 ## 🧠 Priority 27: Learning Science & SRS (Anki Power)
 - [ ] **Memory Heatmap (Brain Health)**: Upgrade the Stats tab to include a visual heatmap showing which words are fading and need review.
