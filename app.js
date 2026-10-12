@@ -1012,8 +1012,9 @@ const app = {
         return text;
     },
     renderQuestion: () => {
-        if (typeof GrammarEngine !== 'undefined' && GrammarEngine.hideTooltip) {
-            GrammarEngine.hideTooltip();
+        if (typeof GrammarEngine !== 'undefined') {
+            if (GrammarEngine.setAnswered) GrammarEngine.setAnswered(false);
+            if (GrammarEngine.hideTooltip) GrammarEngine.hideTooltip();
         }
         if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
             alert("Lesson data missing. Returning to home.");
@@ -2356,6 +2357,11 @@ const app = {
                 if (uRaw.toLowerCase() !== cRaw.toLowerCase()) {
                     hasTypoWarning = true;
                 }
+            }
+
+            // Activate smart grammar word inspection now that the user has submitted their answer!
+            if (typeof GrammarEngine !== 'undefined' && GrammarEngine.setAnswered) {
+                GrammarEngine.setAnswered(true);
             }
 
             if (isC) {

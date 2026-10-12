@@ -78,6 +78,25 @@
     const GrammarEngine = {
         _dictIndex: null,
         activeWordEl: null,
+        isAnswered: false, // Anti-cheat guard: Only allowed AFTER user submits their answer
+
+        // Activate or deactivate word inspection mode
+        setAnswered: function (answered) {
+            this.isAnswered = !!answered;
+            const words = document.querySelectorAll('.grammar-word');
+            words.forEach(el => {
+                if (this.isAnswered) {
+                    el.classList.add('cursor-pointer', 'underline', 'decoration-dotted', 'decoration-indigo-400', 'hover:text-indigo-400', 'active:scale-95');
+                    el.classList.remove('cursor-default');
+                } else {
+                    el.classList.remove('cursor-pointer', 'underline', 'decoration-dotted', 'decoration-indigo-400', 'hover:text-indigo-400', 'active:scale-95');
+                    el.classList.add('cursor-default');
+                }
+            });
+            if (!this.isAnswered) {
+                this.hideTooltip();
+            }
+        },
 
         // Build fast in-memory dictionary lookup index
         initIndex: function () {
@@ -108,16 +127,19 @@
             }
         },
 
-        // Wrap words inside a sentence with clickable dotted interactive spans
+        // Wrap words inside a sentence with interactive spans (clickable ONLY after answering)
         wrapInteractiveWords: function (text) {
             if (!text || typeof text !== 'string') return text;
 
             // Regex matches words (both Latin with diacritics and Cyrillic) and keeps whitespace/punctuation
             const tokenRegex = /([a-zA-ZčćžšđČĆŽŠĐ\u0400-\u04FF]+)/g;
+            const dynamicClasses = this.isAnswered
+                ? 'cursor-pointer underline decoration-dotted decoration-indigo-400 hover:text-indigo-400 font-bold transition-all px-0.5 rounded hover:bg-indigo-50/70 dark:hover:bg-indigo-900/30 active:scale-95'
+                : 'cursor-default font-bold';
 
             return text.replace(tokenRegex, (word) => {
                 const clean = word.replace(/'/g, "\\'");
-                return `<span class="grammar-word cursor-pointer underline decoration-dotted decoration-blue-400 hover:decoration-blue-500 hover:text-blue-500 dark:hover:text-blue-400 font-bold transition-all px-0.5 rounded hover:bg-blue-50/70 dark:hover:bg-blue-900/30 active:scale-95" onclick="GrammarEngine.showTooltip(this, '${clean}')" data-word="${clean}">${word}</span>`;
+                return `<span class="grammar-word ${dynamicClasses}" onclick="GrammarEngine.showTooltip(this, '${clean}')" data-word="${clean}">${word}</span>`;
             });
         },
 
@@ -496,6 +518,8 @@
 
         // Open floating tooltip near tapped element
         showTooltip: function (targetEl, rawWord) {
+            // Anti-cheat guard: Only allow word inspection AFTER question is answered
+            if (!this.isAnswered) return;
             if (!targetEl || !rawWord) return;
             const tooltip = document.getElementById('grammar-tooltip');
             if (!tooltip) return;
