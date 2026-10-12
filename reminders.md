@@ -227,13 +227,12 @@
 - [ ] **Memory Heatmap (Brain Health)**: Upgrade the Stats tab to include a visual heatmap showing which words are fading and need review.
 - [ ] **Tinder-Style Swipe Reviews**: Offer a quick "Flashcard Swipe" mode before hardcore lessons. Swipe right if known, left if not.
 
-## ✅📱 Priority 28: Adaptive UX & Flow (Placement Test DONE)
-- [x] **Adaptive Placement Test**: 10-question multi-tier CEFR diagnostic quiz (A1 to B2) covering vocabulary, present tense, plurals, cases, past tense, and conditionals with automated Skill Tree unlocks and XP bonuses.
-- [x] **Direction-Aware & Bilingual**: Separate question tracks for learning Serbian (en_to_sr) vs. learning English (sr_to_en), with full Cyrillic script parity.
-- [x] **Dedicated UI (#placement-modal)**: Progress bar, clean prompt cards (no spoilers), tactile feedback, celebration screen, and home screen launcher banner.
-
-- [ ] **Smart Grammar Tooltips** *(Pending - Build Next or Later)*:
-  - Tapping a word in lessons or sentences (e.g. "školu") shows a smart tag like "Accusative Case (Direction) of 'škola'" instead of just a basic translation.
+## ✅📱 Priority 28: Adaptive UX & Flow (DONE)
+<font color="#64748b">
+Adaptive Placement Test: 10-question multi-tier CEFR diagnostic quiz (A1 to B2) covering vocabulary, present tense, plurals, cases, past tense, and conditionals with automated Skill Tree unlocks and XP bonuses.<br><br>
+Direction-Aware & Bilingual: Separate question tracks for learning Serbian (en_to_sr) vs. learning English (sr_to_en), with full Cyrillic script parity.<br><br>
+Dedicated UI: Progress bar, clean prompt cards (no spoilers), tactile feedback, celebration screen, and home screen launcher banner.
+</font>
 
 ## ⚙️ Priority 29: Technical Power-Ups
 - [ ] **Offline Audio Bundles**: Add "Download Offline Audio Pack" to save pre-generated MP3s for 1,000 common words into IndexedDB for airplane mode.
@@ -295,3 +294,6 @@
   - Group rooms for study sessions with up to 4-6 people.
   - Optional AI moderator that suggests conversation topics and corrects grammar in real-time.
   - Safety features: report/block buttons, auto-moderation for inappropriate content.
+
+## 💡 Priority 44: Smart Grammar Tooltips
+- [ ] **Smart Grammar Tooltips**: Tapping a word in lessons or sentences (e.g. "školu") shows a smart tag like "Accusative Case (Direction) of 'škola'" instead of just a basic translation.
