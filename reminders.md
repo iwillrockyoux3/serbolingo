@@ -227,12 +227,10 @@
 - [ ] **Memory Heatmap (Brain Health)**: Upgrade the Stats tab to include a visual heatmap showing which words are fading and need review.
 - [ ] **Tinder-Style Swipe Reviews**: Offer a quick "Flashcard Swipe" mode before hardcore lessons. Swipe right if known, left if not.
 
-## ✅📱 Priority 28: Adaptive UX & Flow (DONE)
-<font color="#64748b">
-Adaptive Placement Test: 10-question multi-tier CEFR diagnostic quiz (A1 to B2) covering vocabulary, present tense, plurals, cases, past tense, and conditionals with automated Skill Tree unlocks and XP bonuses.<br><br>
-Direction-Aware & Bilingual: Separate question tracks for learning Serbian (en_to_sr) vs. learning English (sr_to_en), with full Cyrillic script parity.<br><br>
-Dedicated UI: Progress bar, clean prompt cards (no spoilers), tactile feedback, celebration screen, and home screen launcher banner.
-</font>
+## ✅ Priority 28: Adaptive UX & Flow (DONE)
+- [x] **Adaptive Placement Test**: 10-question multi-tier CEFR diagnostic quiz (A1 to B2) covering vocabulary, present tense, plurals, cases, past tense, and conditionals with automated Skill Tree unlocks and XP bonuses.
+- [x] **Direction-Aware & Bilingual**: Separate question tracks for learning Serbian (en_to_sr) vs. learning English (sr_to_en), with full Cyrillic script parity.
+- [x] **Dedicated UI**: Progress bar, clean prompt cards (no spoilers), tactile feedback, celebration screen, and home screen launcher banner.
 
 ## ⚙️ Priority 29: Technical Power-Ups
 - [ ] **Offline Audio Bundles**: Add "Download Offline Audio Pack" to save pre-generated MP3s for 1,000 common words into IndexedDB for airplane mode.
