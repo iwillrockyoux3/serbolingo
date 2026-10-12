@@ -73,6 +73,7 @@
 | P1.1 | Expand vocabulary to 5,000+ words | 🔧 Content | `seed-data.js` | ⬜ TODO |
 | P1.2 | Add phonetic helpers + gender flags to all entries | 🔧 Content | `seed-data.js` | ⬜ TODO |
 | P1.3 | Add bilingual example sentences to all entries | 🔧 Content | `seed-data.js` | ⬜ TODO |
+| P1.4 | Omni-Bar Levenshtein Fuzzy Search & Did You Mean | 🆕 New | `app.js` | ✅ DONE |
 | P2.1 | Expand skill tree to 60+ nodes | 🔧 Content | `skill-tree.js` | ⬜ TODO |
 | P2.2 | Add Travel, Business, Dating, Tenses, Cases branches | 🔧 Content | `skill-tree.js` | ⬜ TODO |
 | P5.1 | Add "Cheat Sheet" grammar guides to each skill node | 🔧 Content | `skill-tree.js` | ⬜ TODO |
@@ -90,6 +91,7 @@
 | P7.1 | Streak Freeze (Štit za Niz) purchase/earn | 🆕 New | `shop-engine.js`, `app.js` | ✅ DONE |
 | P7.2 | Daily Quests shop & Mystery Chests | 🆕 New | `shop-engine.js`, `index.html` | ✅ DONE |
 | P17.1 | Hands-free commute audio mode (Pimsleur-style) | 🆕 New | New file | ⬜ TODO |
+| P31.1 | Gentle Typo Warning for Bald Latin & Minor Typos | 🆕 New | `app.js` | ✅ DONE |
 
 ### 🟢 Lower Priority — Advanced & Deployment
 

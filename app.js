@@ -2325,9 +2325,6 @@ const app = {
             fb.classList.add(isC ? 'bg-green-100' : 'bg-red-100');
             // Add dark mode support to feedback logic handled via classes above directly
 
-            document.getElementById('feedback-title').innerText = isC ? "Bravo!" : "Netačno";
-            document.getElementById('feedback-title').className = `font-black text-sm ${isC ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`;
-
             let displayCorrect = l.correct;
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             if (l.type.startsWith('alphabet_') && l.targetLetter) {
@@ -2338,10 +2335,38 @@ const app = {
                 displayCorrect = l.correct_rev;
             }
 
-            document.getElementById('feedback-msg').innerText = isC ? "+10 XP" : `Tačno: ${displayCorrect}`;
-            document.getElementById('feedback-msg').className = `text-[11px] font-bold ${isC ? 'text-green-600 dark:text-green-300' : 'text-red-600 dark:text-red-300'}`;
+            // Priority 31: Gentle Typo Feedback detection
+            let hasTypoWarning = false;
+            if (isC && state.userSelection && typeof state.userSelection === 'string' && displayCorrect) {
+                const uRaw = state.userSelection.trim();
+                const cRaw = displayCorrect.trim();
+                if (uRaw.toLowerCase() !== cRaw.toLowerCase()) {
+                    hasTypoWarning = true;
+                }
+            }
 
-            document.getElementById('feedback-icon').innerText = isC ? "✅" : "❌";
+            if (isC) {
+                if (hasTypoWarning) {
+                    document.getElementById('feedback-title').innerText = "Tačno sa greškom!";
+                    document.getElementById('feedback-title').className = "font-black text-sm text-amber-600 dark:text-amber-400";
+                    document.getElementById('feedback-msg').innerText = `⚠️ Obrati pažnju: pravilno se piše "${displayCorrect}"`;
+                    document.getElementById('feedback-msg').className = "text-[11px] font-bold text-amber-700 dark:text-amber-300";
+                    document.getElementById('feedback-icon').innerText = "⚠️";
+                    app.showToast(`Pazi na pravopis: ${displayCorrect}`, "warning");
+                } else {
+                    document.getElementById('feedback-title').innerText = "Bravo!";
+                    document.getElementById('feedback-title').className = "font-black text-sm text-green-700 dark:text-green-400";
+                    document.getElementById('feedback-msg').innerText = "+10 XP";
+                    document.getElementById('feedback-msg').className = "text-[11px] font-bold text-green-600 dark:text-green-300";
+                    document.getElementById('feedback-icon').innerText = "✅";
+                }
+            } else {
+                document.getElementById('feedback-title').innerText = "Netačno";
+                document.getElementById('feedback-title').className = "font-black text-sm text-red-700 dark:text-red-400";
+                document.getElementById('feedback-msg').innerText = `Tačno: ${displayCorrect}`;
+                document.getElementById('feedback-msg').className = "text-[11px] font-bold text-red-600 dark:text-red-300";
+                document.getElementById('feedback-icon').innerText = "❌";
+            }
 
             const expContainer = document.getElementById('feedback-explanation-container');
             const expText = document.getElementById('explanation-text');
@@ -2880,10 +2905,121 @@ const app = {
             }, 300);
         }, 3500);
     },
+    // ─── FUZZY SEARCH & TYPO TOLERANCE ENGINE (Priority 1 & 31) ───
+    _levenshtein: (a, b) => {
+        if (a === b) return 0;
+        if (!a || !a.length) return b ? b.length : 0;
+        if (!b || !b.length) return a.length;
+        let v0 = new Int16Array(b.length + 1);
+        let v1 = new Int16Array(b.length + 1);
+        for (let i = 0; i <= b.length; i++) v0[i] = i;
+        for (let i = 0; i < a.length; i++) {
+            v1[0] = i + 1;
+            const aCode = a.charCodeAt(i);
+            for (let j = 0; j < b.length; j++) {
+                const cost = aCode === b.charCodeAt(j) ? 0 : 1;
+                v1[j + 1] = Math.min(v1[j] + 1, v0[j + 1] + 1, v0[j] + cost);
+            }
+            for (let j = 0; j <= b.length; j++) v0[j] = v1[j];
+        }
+        return v1[b.length];
+    },
+
+    _phoneticNormalize: (str) => {
+        if (!str) return "";
+        let s = str.toLowerCase();
+        s = s.replace(/y/g, 'j');
+        s = s.replace(/w/g, 'v');
+        s = s.replace(/x/g, 'ks');
+        s = s.replace(/q/g, 'k');
+        s = s.replace(/sh/g, 's').replace(/ch/g, 'c').replace(/zh/g, 'z').replace(/dj/g, 'dj');
+        s = s.replace(/č/g, 'c').replace(/ć/g, 'c').replace(/š/g, 's').replace(/ž/g, 'z').replace(/đ/g, 'dj');
+        return s.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+    },
+
+    _fuzzySearchDictionary: (query) => {
+        const qRaw = query.trim().toLowerCase();
+        const qPhon = app._phoneticNormalize(qRaw);
+        if (!qRaw) return { results: [], suggestion: null, isFuzzy: false };
+
+        // 1. Tier 1: Exact Substring matches
+        const exactMatches = [];
+        for (let i = 0; i < DICTIONARY.length; i++) {
+            const entry = DICTIONARY[i];
+            const enL = entry.en.toLowerCase();
+            const latL = entry.sr_lat.toLowerCase();
+            const cyrL = entry.sr_cyr.toLowerCase();
+            if (enL.includes(qRaw) || latL.includes(qRaw) || cyrL.includes(qRaw)) {
+                exactMatches.push(entry);
+                if (exactMatches.length >= 10) break;
+            }
+        }
+
+        if (exactMatches.length > 0) {
+            return { results: exactMatches, suggestion: null, isFuzzy: false };
+        }
+
+        // 2. Tier 2: Phonetic normalized matches (e.g. 'yabuka' -> matches 'jabuka')
+        const phoneticMatches = [];
+        let bestSuggestion = null;
+
+        for (let i = 0; i < DICTIONARY.length; i++) {
+            const entry = DICTIONARY[i];
+            const enPhon = app._phoneticNormalize(entry.en);
+            const latPhon = app._phoneticNormalize(entry.sr_lat);
+            if (enPhon.includes(qPhon) || latPhon.includes(qPhon)) {
+                phoneticMatches.push(entry);
+                if (!bestSuggestion) {
+                    bestSuggestion = latPhon.includes(qPhon) ? entry.sr_lat : entry.en;
+                }
+                if (phoneticMatches.length >= 10) break;
+            }
+        }
+
+        if (phoneticMatches.length > 0) {
+            return { results: phoneticMatches, suggestion: bestSuggestion, isFuzzy: true };
+        }
+
+        // 3. Tier 3: Levenshtein distance matching (typo tolerance)
+        const scored = [];
+        const maxDist = qRaw.length <= 4 ? 1 : 2;
+
+        for (let i = 0; i < DICTIONARY.length; i++) {
+            const entry = DICTIONARY[i];
+            const enWords = entry.en.toLowerCase().split(/\s+/);
+            const latWords = entry.sr_lat.toLowerCase().split(/\s+/);
+            
+            let minD = 99;
+            let matchedWord = null;
+
+            for (const w of latWords) {
+                const d = app._levenshtein(qPhon, app._phoneticNormalize(w));
+                if (d < minD) { minD = d; matchedWord = entry.sr_lat; }
+            }
+            for (const w of enWords) {
+                const d = app._levenshtein(qRaw, w);
+                if (d < minD) { minD = d; matchedWord = entry.en; }
+            }
+
+            if (minD <= maxDist) {
+                scored.push({ entry, dist: minD, matchedWord });
+            }
+        }
+
+        if (scored.length > 0) {
+            scored.sort((a, b) => a.dist - b.dist);
+            const results = scored.slice(0, 10).map(s => s.entry);
+            const suggestion = scored[0].matchedWord;
+            return { results, suggestion, isFuzzy: true };
+        }
+
+        return { results: [], suggestion: null, isFuzzy: false };
+    },
+
     // ─── OMNI-BAR SEARCH ENGINE ───
     handleSearch: (query) => {
         const clearBtn = document.getElementById('omni-clear');
-        clearBtn.classList.toggle('hidden', !query);
+        if (clearBtn) clearBtn.classList.toggle('hidden', !query);
 
         clearTimeout(_searchDebounceTimer);
         if (!query || query.trim().length < 1) {
@@ -2892,16 +3028,18 @@ const app = {
         }
         // 300ms debounce — UI Freeze Prevention (Section 1)
         _searchDebounceTimer = setTimeout(() => {
-            const q = query.trim().toLowerCase();
-            const results = DICTIONARY.filter(entry =>
-                entry.en.toLowerCase().includes(q) ||
-                entry.sr_lat.toLowerCase().includes(q) ||
-                entry.sr_cyr.toLowerCase().includes(q)
-            ).slice(0, 10); // Safety limit
-            app.renderSearchResults(results, query.trim());
+            const searchData = app._fuzzySearchDictionary(query);
+            app.renderSearchResults(searchData.results, query.trim(), searchData.suggestion, searchData.isFuzzy);
         }, 300);
     },
-    renderSearchResults: (results, query) => {
+    setSearchQuery: (word) => {
+        const input = document.getElementById('omni-search');
+        if (input) {
+            input.value = word;
+            app.handleSearch(word);
+        }
+    },
+    renderSearchResults: (results, query, suggestion, isFuzzy) => {
         const container = document.getElementById('search-results');
         if (!results.length) {
             container.innerHTML = `
@@ -2911,7 +3049,27 @@ const app = {
                 </div>`;
             return;
         }
-        container.innerHTML = results.map(entry => {
+
+        let suggestionHtml = '';
+        if (isFuzzy && suggestion) {
+            const safeSuggestion = suggestion.replace(/'/g, "\\'");
+            suggestionHtml = `
+            <div class="bg-amber-50 dark:bg-amber-900/30 border-2 border-amber-300 dark:border-amber-700/60 rounded-2xl p-3.5 mb-3 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-xl">💡</span>
+                    <div>
+                        <p class="text-xs font-bold text-amber-900 dark:text-amber-200">
+                            Da li ste mislili: <button onclick="app.setSearchQuery('${safeSuggestion}')" class="font-black underline text-amber-600 dark:text-amber-400 hover:text-amber-500">${suggestion}</button>?
+                        </p>
+                        <p class="text-[10px] text-amber-700 dark:text-amber-400">
+                            Prikazujemo rezultate za slične reči (ispravljeno sa "${query}").
+                        </p>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        container.innerHTML = suggestionHtml + results.map(entry => {
             const genderBadge = entry.gender !== '-' ? `<span class="text-[9px] font-black px-1.5 py-0.5 rounded-md ${
                 entry.gender === 'm' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400' :
                 entry.gender === 'ž' ? 'bg-pink-100 text-pink-600 dark:bg-pink-900/40 dark:text-pink-400' :
@@ -2928,7 +3086,7 @@ const app = {
             const subText2 = secondarySr;
 
             return `
-            <div class="bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-4 shadow-lg hover:border-blue-400 dark:hover:border-blue-500 transition-all cursor-pointer active:scale-[0.98]" onclick="app.playSound('correct')">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-4 shadow-lg hover:border-blue-400 dark:hover:border-blue-500 transition-all cursor-pointer active:scale-[0.98] mb-2" onclick="app.playSound('correct')">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">${entry.emoji}</span>
                     <div class="flex-1 min-w-0">

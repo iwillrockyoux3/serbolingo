@@ -47,8 +47,9 @@
   - Expand database to reach **15,000+ words and phrases** (massive scaling goal).
 - [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)
 - [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)
-- [ ] **Omni-Bar "Fuzzy Search" & Typo Tolerance**:
-  - Implement a Levenshtein Distance (Fuzzy Search) algorithm so the search bar auto-corrects typos (e.g. typing "yabuka" instead of "jabuka") and handles missing Cyrillic characters gracefully.
+- [x] **Omni-Bar "Fuzzy Search" & Typo Tolerance (DONE)**:
+  - Space-optimized Levenshtein Distance and phonetic normalization (y <-> j, w <-> v, bald Latin, diacritics).
+  - Renders a prominent "💡 Da li ste mislili / Did you mean: [Predlog]?" interactive suggestion banner when typing errors are made (e.g. typing "yabuka" auto-matches and suggests "jabuka").
 
 ## ✅ Priority 2: Giant Skill Tree Expansion
 - [x] Sprawling Tree Structure (skill-tree.js): Expanded to 82 multi-unit nodes covering Beginner to Advanced mastery, including Travel, Business, Dating, Tenses, and all 7 Cases.
@@ -248,9 +249,9 @@
 - [ ] **Idioms & Terms of Endearment**: Expand slang curriculum with phrases like "ljubi te baka sine" or "Dušo moja".
 - [ ] **Cultural Context Notes**: Teach not just the literal translation, but exactly when and to whom these emotional phrases are used.
 
-## ⌨️ Priority 31: Keyboard Tolerance & Diacritic Normalization
+## ✅⌨️ Priority 31: Keyboard Tolerance & Diacritic Normalization (DONE)
 - [x] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes š->s, č/ć->c, ž->z, and đ->dj during answer checking. (ALREADY IMPLEMENTED in app.js checkAnswer normalize())
-- [ ] **Gentle Typo Feedback**: Pop up a gentle tip (e.g., "Correct! But watch out, the proper spelling has a š") when the user relies on Bald Latin shortcuts.
+- [x] **Gentle Typo Feedback (DONE)**: Pops up a gentle educational warning ("⚠️ Tačno sa greškom! Obrati pažnju: pravilno se piše [Tačno]") when the user relies on Bald Latin or makes a minor spelling discrepancy.
 
 ## 🏆 Priority 32: Advanced Gamification & Social (The League System)
 - [ ] **Ranked Leagues**: Bronze, Silver, Gold, Diamond, and Obsidian leagues. Users are grouped with 30 random people weekly. Top 10 advance, bottom 5 demote.
