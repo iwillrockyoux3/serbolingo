@@ -1004,7 +1004,17 @@ const app = {
             app.navigate('mistakes');
         }
     },
+    formatQuestionText: (text) => {
+        if (!text) return '';
+        if (typeof GrammarEngine !== 'undefined' && GrammarEngine.wrapInteractiveWords) {
+            return GrammarEngine.wrapInteractiveWords(text);
+        }
+        return text;
+    },
     renderQuestion: () => {
+        if (typeof GrammarEngine !== 'undefined' && GrammarEngine.hideTooltip) {
+            GrammarEngine.hideTooltip();
+        }
         if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
             alert("Lesson data missing. Returning to home.");
             app.navigate('home');
@@ -1047,7 +1057,7 @@ const app = {
             area.innerHTML = `
                 <div class="text-center w-full max-w-xs">
                     <h2 class="text-lg font-bold text-slate-500 dark:text-slate-400 mb-2">${qHeader}</h2>
-                    <div class="text-2xl font-black text-slate-800 dark:text-white mb-6">${qWord}</div>
+                    <div class="text-2xl font-black text-slate-800 dark:text-white mb-6">${app.formatQuestionText(qWord)}</div>
                     
                     <div class="flex flex-col items-center gap-6">
                         <button id="mic-btn" onclick="app.startMicRecognition('${targetLang}')" class="w-24 h-24 rounded-full bg-blue-100 dark:bg-blue-900 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-4xl shadow-md transition-all active:scale-95">
@@ -1072,8 +1082,8 @@ const app = {
             const blankText = parts[1] || "";
             
             area.innerHTML = `
-                <h2 class="text-xl font-black mb-2 text-slate-700 dark:text-slate-100">${mainText}</h2>
-                <div class="text-lg font-bold text-slate-500 mb-8">${blankText}</div>
+                <h2 class="text-xl font-black mb-2 text-slate-700 dark:text-slate-100">${app.formatQuestionText(mainText)}</h2>
+                <div class="text-lg font-bold text-slate-500 mb-8">${app.formatQuestionText(blankText)}</div>
                 <div class="w-full max-w-xs">
                     <input type="text" id="fill-blank-input" placeholder="Type the missing word..." 
                            class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-center font-bold text-lg focus:outline-none focus:border-blue-500 transition-colors"
@@ -1090,7 +1100,7 @@ const app = {
             // We need a drop zone and a word bank
             state.userSelection = []; // it will be an array of words
             area.innerHTML = `
-                <h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${questionText}</h2>
+                <h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2>
                 <div class="w-full max-w-md flex flex-col gap-6">
                     <div id="word-order-answer" class="min-h-[60px] p-4 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 flex flex-wrap gap-2 items-center justify-center">
                         <!-- Words move here when clicked -->
@@ -1457,7 +1467,7 @@ const app = {
             const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
             const optionsArray = (isSrToEn && l.options_rev) ? l.options_rev : l.options;
 
-            area.innerHTML = `<h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${questionText}</h2><div class="grid w-full max-w-xs gap-3">` +
+            area.innerHTML = `<h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2><div class="grid w-full max-w-xs gap-3">` +
                 optionsArray.map(o => `<button onclick="app.selectOption(this, '${o}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`).join('') + `</div>`;
         }
     },
@@ -2352,21 +2362,21 @@ const app = {
                 if (hasTypoWarning) {
                     document.getElementById('feedback-title').innerText = "Tačno sa greškom!";
                     document.getElementById('feedback-title').className = "font-black text-sm text-amber-600 dark:text-amber-400";
-                    document.getElementById('feedback-msg').innerText = `⚠️ Obrati pažnju: pravilno se piše "${displayCorrect}"`;
+                    document.getElementById('feedback-msg').innerHTML = `⚠️ Obrati pažnju: pravilno se piše "${app.formatQuestionText(displayCorrect)}"<p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni bilo koju reč za gramatičko objašnjenje</p>`;
                     document.getElementById('feedback-msg').className = "text-[11px] font-bold text-amber-700 dark:text-amber-300";
                     document.getElementById('feedback-icon').innerText = "⚠️";
                     app.showToast(`Pazi na pravopis: ${displayCorrect}`, "warning");
                 } else {
                     document.getElementById('feedback-title').innerText = "Bravo!";
                     document.getElementById('feedback-title').className = "font-black text-sm text-green-700 dark:text-green-400";
-                    document.getElementById('feedback-msg').innerText = "+10 XP";
+                    document.getElementById('feedback-msg').innerHTML = `+10 XP <span class="text-slate-500 dark:text-slate-400 font-normal">("${app.formatQuestionText(displayCorrect)}")</span><p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni bilo koju reč za gramatičko objašnjenje</p>`;
                     document.getElementById('feedback-msg').className = "text-[11px] font-bold text-green-600 dark:text-green-300";
                     document.getElementById('feedback-icon').innerText = "✅";
                 }
             } else {
                 document.getElementById('feedback-title').innerText = "Netačno";
                 document.getElementById('feedback-title').className = "font-black text-sm text-red-700 dark:text-red-400";
-                document.getElementById('feedback-msg').innerText = `Tačno: ${displayCorrect}`;
+                document.getElementById('feedback-msg').innerHTML = `Tačno: <span class="font-black text-slate-800 dark:text-white">${app.formatQuestionText(displayCorrect)}</span><p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni bilo koju reč za gramatičko objašnjenje</p>`;
                 document.getElementById('feedback-msg').className = "text-[11px] font-bold text-red-600 dark:text-red-300";
                 document.getElementById('feedback-icon').innerText = "❌";
             }
@@ -2398,6 +2408,9 @@ const app = {
         }
     },
     nextQuestion: () => {
+        if (typeof GrammarEngine !== 'undefined' && GrammarEngine.hideTooltip) {
+            GrammarEngine.hideTooltip();
+        }
         state.currentLessonIndex++;
         app.saveStats(); // Save immediately
         if (state.currentLessonIndex < ACTIVE_LESSON.length) {
@@ -2407,6 +2420,9 @@ const app = {
         }
     },
     finishLesson: () => {
+        if (typeof GrammarEngine !== 'undefined' && GrammarEngine.hideTooltip) {
+            GrammarEngine.hideTooltip();
+        }
         state.totalLessons++;
         const today = new Date().toISOString().split('T')[0];
         if (!state.history[today]) state.history[today] = { xp: 0, lessons: 0 };
@@ -3231,7 +3247,12 @@ const app = {
         };
         reader.readAsText(file);
     },
-    endLesson: () => { if (confirm(t('lesson_quit'))) app.navigate(state.currentSkillId === 'mistakes' ? 'mistakes' : 'home'); },
+    endLesson: () => { 
+        if (typeof GrammarEngine !== 'undefined' && GrammarEngine.hideTooltip) {
+            GrammarEngine.hideTooltip();
+        }
+        if (confirm(t('lesson_quit'))) app.navigate(state.currentSkillId === 'mistakes' ? 'mistakes' : 'home'); 
+    },
     // ─── LOCALIZATION ENGINE ───
     applyLanguage: () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {

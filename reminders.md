@@ -293,5 +293,5 @@
   - Optional AI moderator that suggests conversation topics and corrects grammar in real-time.
   - Safety features: report/block buttons, auto-moderation for inappropriate content.
 
-## 💡 Priority 44: Smart Grammar Tooltips
-- [ ] **Smart Grammar Tooltips**: Tapping a word in lessons or sentences (e.g. "školu") shows a smart tag like "Accusative Case (Direction) of 'škola'" instead of just a basic translation.
+## ✅ Priority 44: Smart Grammar Tooltips & Interactive Word Inspector (DONE)
+- [x] **Smart Grammar Tooltips**: Tapping any word in lessons or feedback prompts shows instant morphology, Serbian case tags (Akuzativ, Genitiv, Dativ/Lokativ, Instrumental, Množina), verb tenses, root lemma, translation, audio pronunciation, and 1-tap Flashcard saving.

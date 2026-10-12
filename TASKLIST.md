@@ -105,6 +105,7 @@
 | P20.2 | Google Play Store submission | 🆕 New | — | ⬜ TODO |
 | P24.1 | Local Save Data Export & Import (JSON) | 🆕 New | `app.js`, `index.html` | ✅ DONE |
 | P28.1 | Adaptive 3-Minute Placement Test & Skill Tree Unlocks | 🆕 New | `placement-test.js`, `index.html` | ✅ DONE |
+| P44.1 | Smart Grammar Tooltips & Word Inspector in Lessons | 🆕 New | `grammar-tooltips.js`, `app.js`, `index.html` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 
