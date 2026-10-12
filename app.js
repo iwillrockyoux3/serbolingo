@@ -3255,6 +3255,9 @@ const app = {
                 btn.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-900/30');
             }
         });
+        if (window.PlacementEngine && typeof window.PlacementEngine.renderHomeBanner === 'function') {
+            window.PlacementEngine.renderHomeBanner();
+        }
     },
     setLearningDirection: (dir) => {
         state.settings.learningDirection = dir;
@@ -3273,6 +3276,11 @@ const app = {
         app.applyLanguage();
         app.updateProfileUI();
         app.updateStatsUI();
+        
+        // Refresh placement test banner
+        if (window.PlacementEngine && typeof window.PlacementEngine.renderHomeBanner === 'function') {
+            window.PlacementEngine.renderHomeBanner();
+        }
         
         // Refresh roleplay list if we are currently looking at it
         if (window.RoleplayEngine && typeof window.RoleplayEngine.renderScenarioList === 'function') {
