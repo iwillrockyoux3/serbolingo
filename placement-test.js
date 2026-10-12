@@ -54,7 +54,6 @@
             level: 'A1',
             levelLabel: 'A1 Beginner',
             q: 'How do you say "Thank you" in Serbian?',
-            qSub: 'Izaberi tačan prevod za "Hvala":',
             options: ['Molim', 'Hvala', 'Dobar dan', 'Izvini'],
             correct: 1,
             explain: '"Hvala" means "Thank you". "Molim" means "Please / You\'re welcome".'
@@ -63,7 +62,6 @@
             level: 'A1',
             levelLabel: 'A1 Beginner',
             q: 'What is the Serbian word for "House"?',
-            qSub: 'Koji je pravilan prevod za "House"?',
             options: ['Auto', 'Drvo', 'Kuća', 'Ulica'],
             correct: 2,
             explain: '"Kuća" means "House".'
@@ -72,7 +70,6 @@
             level: 'A1',
             levelLabel: 'A1 Beginner',
             q: 'What does the Serbian greeting "Dobro jutro" mean?',
-            qSub: 'Šta znači "Dobro jutro"?',
             options: ['Good evening', 'Good afternoon', 'Good night', 'Good morning'],
             correct: 3,
             explain: '"Dobro jutro" is used in the morning (Good morning).'
@@ -82,7 +79,6 @@
             level: 'A2',
             levelLabel: 'A2 Elementary',
             q: 'Complete the sentence: "Oni sada ____ u Beogradu."',
-            qSub: '(They live in Belgrade now - verb "živeti")',
             options: ['živim', 'živiš', 'žive', 'živimo'],
             correct: 2,
             explain: 'For 3rd person plural ("Oni" / They), the ending is "-e": Oni žive.'
@@ -91,7 +87,6 @@
             level: 'A2',
             levelLabel: 'A2 Elementary',
             q: 'What is the correct plural form for "Grad" (City)?',
-            qSub: 'Množina od reči "Grad":',
             options: ['Gradovi', 'Gradi', 'Gradove', 'Gradim'],
             correct: 0,
             explain: 'Monosyllabic masculine nouns take the "-ovi" suffix: Grad -> Gradovi.'
@@ -100,7 +95,6 @@
             level: 'A2',
             levelLabel: 'A2 Elementary',
             q: 'Choose the Accusative of destination: "Idem u ____."',
-            qSub: '(I am going to school - feminine "škola")',
             options: ['škola', 'školi', 'školu', 'školom'],
             correct: 2,
             explain: 'When moving towards a destination, feminine nouns take "-u" in the Accusative: u školu.'
@@ -110,7 +104,6 @@
             level: 'B1',
             levelLabel: 'B1 Intermediate',
             q: 'Choose the correct Past Tense (Perfekat): "Juče smo ____ film."',
-            qSub: '(Yesterday we watched a movie - subject "Mi")',
             options: ['gledao', 'gledali', 'gledala', 'gledati'],
             correct: 1,
             explain: 'For plural subject "Mi", the active verbal participle is "-li": gledali smo.'
@@ -119,7 +112,6 @@
             level: 'B1',
             levelLabel: 'B1 Intermediate',
             q: 'Complete with the Genitive of negation: "U frižideru nema ____."',
-            qSub: '(There is no milk in the fridge - "mleko")',
             options: ['mleko', 'mleka', 'mleku', 'mlekom'],
             correct: 1,
             explain: 'After the word "nema" (there is no), nouns must be in the Genitive case: nema mleka.'
@@ -129,7 +121,6 @@
             level: 'B2',
             levelLabel: 'B2 Advanced',
             q: 'Choose the correct Conditional form: "Ja ____ rado došao."',
-            qSub: '(I would gladly come - auxiliary "biti")',
             options: ['bi', 'bih', 'bismo', 'biste'],
             correct: 1,
             explain: 'For 1st person singular ("Ja"), the conditional auxiliary is "bih": Ja bih.'
@@ -138,7 +129,6 @@
             level: 'B2',
             levelLabel: 'B2 Advanced',
             q: 'Select the perfective verb aspect (completed action) for "Čitati":',
-            qSub: 'Svršeni glagolski vid za "Čitati":',
             options: ['Čituckati', 'Iščitavati', 'Pročitati', 'Počitati'],
             correct: 2,
             explain: '"Čitati" indicates ongoing reading, while "Pročitati" indicates completing the reading.'
@@ -152,7 +142,6 @@
             level: 'A1',
             levelLabel: 'A1 Početnik',
             q: 'Kako se na engleskom kaže "Hvala"?',
-            qSub: 'How do you say "Thank you" in English?',
             options: ['Please', 'Thank you', 'Goodbye', 'Excuse me'],
             correct: 1,
             explain: '"Thank you" znači "Hvala". "Please" znači "Molim".'
@@ -161,7 +150,6 @@
             level: 'A1',
             levelLabel: 'A1 Početnik',
             q: 'Koji je tačan prevod za reč "Pas" na engleskom?',
-            qSub: 'What is the English word for "Pas"?',
             options: ['Cat', 'Bird', 'Dog', 'Fish'],
             correct: 2,
             explain: '"Dog" znači "Pas".'
@@ -170,7 +158,6 @@
             level: 'A1',
             levelLabel: 'A1 Početnik',
             q: 'Šta znači engleski pozdrav "Good evening"?',
-            qSub: 'Meaning of "Good evening":',
             options: ['Dobro jutro', 'Dobar dan', 'Laku noć', 'Dobro veče'],
             correct: 3,
             explain: '"Good evening" se koristi uveče (Dobro veče).'
@@ -180,7 +167,6 @@
             level: 'A2',
             levelLabel: 'A2 Osnovni',
             q: 'Dopuni rečenicu (Present Simple): "She ____ in London."',
-            qSub: '(Ona živi u Londonu - treće lice jednine)',
             options: ['live', 'living', 'lives', 'lived'],
             correct: 2,
             explain: 'U Present Simple vremenu, za 3. lice jednine (He/She/It) dodaje se nastavak "-s": She lives.'
@@ -189,7 +175,6 @@
             level: 'A2',
             levelLabel: 'A2 Osnovni',
             q: 'Koja je nepravilna množina za reč "Child" (dete)?',
-            qSub: 'Irregular plural of "Child":',
             options: ['Children', 'Childs', 'Childes', 'Childrens'],
             correct: 0,
             explain: '"Child" ima nepravilnu množinu: "Children".'
@@ -198,7 +183,6 @@
             level: 'A2',
             levelLabel: 'A2 Osnovni',
             q: 'Izaberi tačan predlog za lokaciju: "I am waiting ____ the bus stop."',
-            qSub: '(Čekam na autobuskoj stanici)',
             options: ['in', 'on', 'at', 'to'],
             correct: 2,
             explain: 'Za tačnu lokaciju ili stanicu koristi se predlog "at": at the bus stop.'
@@ -208,7 +192,6 @@
             level: 'B1',
             levelLabel: 'B1 Srednji',
             q: 'Prevedi u prošlo vreme (Past Simple): "Yesterday they ____ to Paris."',
-            qSub: '(Juče su otišli u Pariz - nepravilni glagol "go")',
             options: ['goed', 'went', 'gone', 'going'],
             correct: 1,
             explain: 'Past Simple oblik glagola "go" je "went".'
@@ -217,7 +200,6 @@
             level: 'B1',
             levelLabel: 'B1 Srednji',
             q: 'Dopuni rečenicu (Present Perfect): "I have already ____ my homework."',
-            qSub: '(Već sam završio domaći - glagol "finish")',
             options: ['finish', 'finished', 'finishing', 'finishes'],
             correct: 1,
             explain: 'U Present Perfect vremenu koristi se Past Participle (treća kolona): have finished.'
@@ -227,7 +209,6 @@
             level: 'B2',
             levelLabel: 'B2 Napredni',
             q: 'Dopuni kondicional (Second Conditional): "If I had money, I ____ travel the world."',
-            qSub: '(Da imam novca, putovao bih svetom)',
             options: ['will', 'would', 'can', 'shall'],
             correct: 1,
             explain: 'U Second Conditional rečenicama koristi se "would + infinitive": I would travel.'
@@ -236,7 +217,6 @@
             level: 'B2',
             levelLabel: 'B2 Napredni',
             q: 'Koji frazalni glagol znači "Odustati" ili "Predati se"?',
-            qSub: 'Phrasal verb for "To quit / surrender":',
             options: ['Give in', 'Give up', 'Take up', 'Look up'],
             correct: 1,
             explain: '"Give up" znači "Odustati / Predati se".'
@@ -349,7 +329,6 @@
 
             const displayLevelLabel = isLearnSr ? q.levelLabel : formatSrText(q.levelLabel);
             const displayQ = isLearnSr ? q.q : formatSrText(q.q);
-            const displayQSub = isLearnSr ? q.qSub : formatSrText(q.qSub);
 
             container.innerHTML = `
                 <!-- Progress Header -->
@@ -367,7 +346,6 @@
                 <div class="bg-slate-800/80 border-2 border-slate-700 rounded-2xl p-5 mb-5 shadow-inner">
                     <span class="text-3xl block mb-2">🎯</span>
                     <h3 class="text-lg font-black text-white leading-snug">${displayQ}</h3>
-                    <p class="text-xs font-bold text-slate-400 mt-1">${displayQSub}</p>
                 </div>
 
                 <!-- Answer Choices -->
