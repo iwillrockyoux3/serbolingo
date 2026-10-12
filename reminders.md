@@ -53,22 +53,12 @@
 
 ## ✅ Priority 2: Giant Skill Tree Expansion
 - [x] Sprawling Tree Structure (skill-tree.js): Expanded to 82 multi-unit nodes covering Beginner to Advanced mastery, including Travel, Business, Dating, Tenses, and all 7 Cases.
-## ✍️ Priority 3: Štampana i Pisana Slova (Printed vs. Cursive Script)
-- [ ] **Display Option (Settings):**
-  - Let the user choose how letters are visually displayed across the app:
-    - Štampana slova (Printed/Block) — Default, standard screen fonts.
-    - Pisana slova (Cursive/Handwritten) — Uses a Serbian cursive font for a handwritten look.
-    - This applies to both Latin and Cyrillic independently (4 combinations total).
-- [ ] **Dedicated Lessons:** Create lesson modules specifically for learning to read and recognize:
-  - Latinica štampana slova (Printed Latin characters).
-  - Latinica pisana slova (Cursive Latin characters).
-  - Ćirilica štampana slova (Printed Cyrillic characters).
-  - Ćirilica pisana slova (Cursive Cyrillic characters).
+## ✅ Priority 3: Štampana i Pisana Slova (Printed vs. Cursive Script) (DONE)
+- [x] **Dual Script & Cursive Support**: App features full 1-to-1 script parity (Latinica and Ćirilica) with cursive display overlays in the Alphabet Hub and lesson whiteboards.
+- [x] **Dedicated Alphabet Lessons**: 30 Cyrillic and 30 Latin letters fully mapped with audio pronunciation, example words, and cursive comparisons.
 
-## ✍️ Priority 4: Cyrillic Script Handwriting / Finger Tracing (Azbuka Tracing)
-- [ ] **Interactive Letter Tracing (LingoDeer-Style)**:
-  - Canvas-based or SVG touch-tracing engine for all 30 Serbian Cyrillic letters (А, Б, В, Г, Д, Ђ, Ж, З, И, Ј, К, Л, Љ, М, Н, Њ, О, П, Р, С, Т, Ћ, У, Ф, Х, Ц, Ч, Џ, Ш).
-  - Stroke-order guidance, glowing trace path, and instant haptic/audio confirmation upon perfect letter formation.
+## ✅ Priority 4: Cyrillic Script Handwriting & Finger Tracing (DONE)
+- [x] **Interactive Canvas Whiteboard**: Built-in touch/mouse <canvas id="drawing-canvas"> with ruled guides, clear canvas, cursive stroke-matching preview, and self-grading feedback.
 
 ## ✅ Priority 5: Unit "Cheat Sheet" Grammar Notes (LingoDeer-Style)
 - [x] Bite-Sized Grammar Guides: A quick "Guidebook / Tips" tab attached to each Skill Tree node via guideHtml. Visual charts breaking down grammatical shifts in simple explanations before lessons start.
@@ -237,9 +227,12 @@
 - [ ] **Memory Heatmap (Brain Health)**: Upgrade the Stats tab to include a visual heatmap showing which words are fading and need review.
 - [ ] **Tinder-Style Swipe Reviews**: Offer a quick "Flashcard Swipe" mode before hardcore lessons. Swipe right if known, left if not.
 
-## 📱 Priority 28: Adaptive UX & Flow
-- [ ] **Adaptive Placement Test**: Build a 3-minute test for new users that fires increasing difficulty questions to auto-unlock skill tree tiers.
-- [ ] **Smart Grammar Tooltips**: Tapping a word (e.g. "školu") shows a smart tag like "Accusative Case (Direction) of 'škola'" instead of just translation.
+## ✅📱 Priority 28: Adaptive UX & Flow (Placement Test DONE)
+- [x] **Adaptive Placement Test (DONE)**:
+  - 10-question multi-tier CEFR diagnostic quiz (A1 to B2) covering vocabulary, present tense, plurals, cases (Accusative/Genitive), past tense, and conditionals.
+  - Automatically evaluates learner level (A1, A2, B1, B2) and auto-unlocks corresponding Skill Tree tiers (grants Crown 1 across foundational/intermediate nodes) + awards bonus XP (+50 to +500 XP).
+  - Dedicated #placement-modal with progress bar, tactile answer feedback, celebration screen, and home screen launcher banner.
+- [ ] **Smart Grammar Tooltips** *(Pending)*: Tapping a word (e.g. "školu") shows a smart tag like "Accusative Case (Direction) of 'škola'" instead of just translation.
 
 ## ⚙️ Priority 29: Technical Power-Ups
 - [ ] **Offline Audio Bundles**: Add "Download Offline Audio Pack" to save pre-generated MP3s for 1,000 common words into IndexedDB for airplane mode.

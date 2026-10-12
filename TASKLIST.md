@@ -84,9 +84,9 @@
 
 | # | Task | Type | Target File(s) | Status |
 |:--|:-----|:-----|:----------------|:-------|
-| P3.1 | Štampana/Pisana script display toggle in Settings | 🆕 New | `app.js`, `index.html` | ⬜ TODO |
-| P3.2 | Dedicated printed vs. cursive letter lessons | 🆕 New | `skill-tree.js`, `question-engine.js` | ⬜ TODO |
-| P4.1 | Canvas finger-tracing engine for Cyrillic | 🆕 New | New file or `app.js` | ⬜ TODO |
+| P3.1 | Štampana/Pisana script display toggle in Settings | 🆕 New | `app.js`, `index.html` | ✅ DONE |
+| P3.2 | Dedicated printed vs. cursive letter lessons | 🆕 New | `skill-tree.js`, `question-engine.js` | ✅ DONE |
+| P4.1 | Canvas finger-tracing engine for Cyrillic | 🆕 New | New file or `app.js` | ✅ DONE |
 | P6.1 | Smart error review with SRS prioritization | 🔧 Enhance | `app.js` (mistake logic) | ⬜ TODO |
 | P7.1 | Streak Freeze (Štit za Niz) purchase/earn | 🆕 New | `shop-engine.js`, `app.js` | ✅ DONE |
 | P7.2 | Daily Quests shop & Mystery Chests | 🆕 New | `shop-engine.js`, `index.html` | ✅ DONE |
@@ -104,6 +104,7 @@
 | P20.1 | Capacitor init + Android platform | 🆕 New | New config | ⬜ TODO |
 | P20.2 | Google Play Store submission | 🆕 New | — | ⬜ TODO |
 | P24.1 | Local Save Data Export & Import (JSON) | 🆕 New | `app.js`, `index.html` | ✅ DONE |
+| P28.1 | Adaptive 3-Minute Placement Test & Skill Tree Unlocks | 🆕 New | `placement-test.js`, `index.html` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 

@@ -698,6 +698,9 @@ const app = {
         if (vid === 'home') {
             app.renderSkillTree();
             app.renderQuests();
+            if (window.PlacementEngine && window.PlacementEngine.renderHomeBanner) {
+                window.PlacementEngine.renderHomeBanner();
+            }
         }
         if (vid === 'stats') {
             app.resetDetailBox();
