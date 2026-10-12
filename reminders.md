@@ -228,10 +228,9 @@
 - [ ] **Tinder-Style Swipe Reviews**: Offer a quick "Flashcard Swipe" mode before hardcore lessons. Swipe right if known, left if not.
 
 ## ✅📱 Priority 28: Adaptive UX & Flow (Placement Test DONE)
-> *- [x] **Adaptive Placement Test (DONE)**: 10-question multi-tier CEFR diagnostic quiz (A1 to B2) covering vocabulary, present tense, plurals, cases (Accusative/Genitive), past tense, and conditionals.*
-> *- [x] **Direction-Aware & Bilingual (DONE)**: Separate question tracks for learning Serbian (en_to_sr) vs. learning English (sr_to_en), with full Cyrillic script parity.*
-> *- [x] **Automated Skill Tree Unlocks (DONE)**: Automatically evaluates learner level (A1, A2, B1, B2) and auto-unlocks corresponding Skill Tree tiers (grants Crown 1 across foundational/intermediate nodes) + awards bonus XP (+50 to +500 XP).*
-> *- [x] **Dedicated UI (#placement-modal) (DONE)**: Progress bar, clean prompt cards (no spoilers), tactile feedback, celebration screen, and home screen launcher banner.*
+- [x] **Adaptive Placement Test**: 10-question multi-tier CEFR diagnostic quiz (A1 to B2) covering vocabulary, present tense, plurals, cases, past tense, and conditionals with automated Skill Tree unlocks and XP bonuses.
+- [x] **Direction-Aware & Bilingual**: Separate question tracks for learning Serbian (en_to_sr) vs. learning English (sr_to_en), with full Cyrillic script parity.
+- [x] **Dedicated UI (#placement-modal)**: Progress bar, clean prompt cards (no spoilers), tactile feedback, celebration screen, and home screen launcher banner.
 
 - [ ] **Smart Grammar Tooltips** *(Pending - Build Next or Later)*:
   - Tapping a word in lessons or sentences (e.g. "školu") shows a smart tag like "Accusative Case (Direction) of 'škola'" instead of just a basic translation.
