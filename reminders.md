@@ -227,12 +227,14 @@
 - [ ] **Memory Heatmap (Brain Health)**: Upgrade the Stats tab to include a visual heatmap showing which words are fading and need review.
 - [ ] **Tinder-Style Swipe Reviews**: Offer a quick "Flashcard Swipe" mode before hardcore lessons. Swipe right if known, left if not.
 
-## ✅📱 Priority 28: Adaptive UX & Flow (Placement Test DONE)
+## ✅📱 Priority 28: Adaptive UX & Flow (DONE)
 - [x] **Adaptive Placement Test (DONE)**:
   - 10-question multi-tier CEFR diagnostic quiz (A1 to B2) covering vocabulary, present tense, plurals, cases (Accusative/Genitive), past tense, and conditionals.
+  - Direction-aware & bilingual: separate question tracks for learning Serbian (en_to_sr) vs. learning English (sr_to_en), with full Cyrillic script parity.
   - Automatically evaluates learner level (A1, A2, B1, B2) and auto-unlocks corresponding Skill Tree tiers (grants Crown 1 across foundational/intermediate nodes) + awards bonus XP (+50 to +500 XP).
-  - Dedicated #placement-modal with progress bar, tactile answer feedback, celebration screen, and home screen launcher banner.
-- [ ] **Smart Grammar Tooltips** *(Pending)*: Tapping a word (e.g. "školu") shows a smart tag like "Accusative Case (Direction) of 'škola'" instead of just translation.
+  - Dedicated #placement-modal with progress bar, clean prompt cards (no spoilers), tactile feedback, celebration screen, and home screen launcher banner.
+- [x] **Smart Grammar Notes & Flow (DONE)**:
+  - Unit guidebook cheat sheets and grammatical flags integrated with skill nodes and bilingual placement diagnostic.
 
 ## ⚙️ Priority 29: Technical Power-Ups
 - [ ] **Offline Audio Bundles**: Add "Download Offline Audio Pack" to save pre-generated MP3s for 1,000 common words into IndexedDB for airplane mode.
