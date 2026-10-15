@@ -2368,21 +2368,21 @@ const app = {
                 if (hasTypoWarning) {
                     document.getElementById('feedback-title').innerText = "Tačno sa greškom!";
                     document.getElementById('feedback-title').className = "font-black text-sm text-amber-600 dark:text-amber-400";
-                    document.getElementById('feedback-msg').innerHTML = `⚠️ Obrati pažnju: pravilno se piše "${app.formatQuestionText(displayCorrect)}"<p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni bilo koju reč za gramatičko objašnjenje</p>`;
+                    document.getElementById('feedback-msg').innerHTML = `⚠️ Obrati pažnju: pravilno se piše "${displayCorrect}"<p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni reči gore u pitanju za gramatičko objašnjenje</p>`;
                     document.getElementById('feedback-msg').className = "text-[11px] font-bold text-amber-700 dark:text-amber-300";
                     document.getElementById('feedback-icon').innerText = "⚠️";
                     app.showToast(`Pazi na pravopis: ${displayCorrect}`, "warning");
                 } else {
                     document.getElementById('feedback-title').innerText = "Bravo!";
                     document.getElementById('feedback-title').className = "font-black text-sm text-green-700 dark:text-green-400";
-                    document.getElementById('feedback-msg').innerHTML = `+10 XP <span class="text-slate-500 dark:text-slate-400 font-normal">("${app.formatQuestionText(displayCorrect)}")</span><p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni bilo koju reč za gramatičko objašnjenje</p>`;
+                    document.getElementById('feedback-msg').innerHTML = `+10 XP <span class="text-slate-500 dark:text-slate-400 font-normal">("${displayCorrect}")</span><p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni reči gore u pitanju za gramatičko objašnjenje</p>`;
                     document.getElementById('feedback-msg').className = "text-[11px] font-bold text-green-600 dark:text-green-300";
                     document.getElementById('feedback-icon').innerText = "✅";
                 }
             } else {
                 document.getElementById('feedback-title').innerText = "Netačno";
                 document.getElementById('feedback-title').className = "font-black text-sm text-red-700 dark:text-red-400";
-                document.getElementById('feedback-msg').innerHTML = `Tačno: <span class="font-black text-slate-800 dark:text-white">${app.formatQuestionText(displayCorrect)}</span><p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni bilo koju reč za gramatičko objašnjenje</p>`;
+                document.getElementById('feedback-msg').innerHTML = `Tačno: <span class="font-black text-slate-800 dark:text-white">${displayCorrect}</span><p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni reči gore u pitanju za gramatičko objašnjenje</p>`;
                 document.getElementById('feedback-msg').className = "text-[11px] font-bold text-red-600 dark:text-red-300";
                 document.getElementById('feedback-icon').innerText = "❌";
             }

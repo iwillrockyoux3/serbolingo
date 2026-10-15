@@ -35,7 +35,7 @@
 | [`skill-tree.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/skill-tree.js) | 675 | 68 KB | 15-tier curriculum (Foundation → C1/C2 Nuances), 5-crown progression (3 lessons/crown), prerequisite logic, bilingual grammar guides per node |
 | [`question-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/question-engine.js) | 637 | 27 KB | 12+ question type generator — MCQ, speech recognition, picture/emoji, listening, fill-blank, scrambled word order, canvas whiteboard, hangman, matching pairs, letter-by-letter spelling, drag-drop punctuation |
 | [`alphabet-data.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/alphabet-data.js) | 73 | 7 KB | Complete 30-letter Serbian alphabet matrix — Latin + Cyrillic with anchor words, emojis, phonetics |
-| [`grammar-tooltips.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/grammar-tooltips.js) | 430 | 18 KB | Smart Grammar Tooltips & Interactive Word Inspector — Morphology engine, 7-case declension tags, verb tenses, root lemma matching, floating tooltip UI |
+| [`grammar-tooltips.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/grammar-tooltips.js) | 1,280 | 70 KB | Smart Grammar Tooltips & Interactive Word Inspector — Deep linguistic engine (SR_CORE_GRAMMAR, EN_CORE_GRAMMAR, SEED_DATA indexing), gender/tense/case badges, collocations, syntax notes, bilingual audio & examples |
 
 ## [04_AUDIO] — TTS, Speech Recognition & Pitch Analysis
 
