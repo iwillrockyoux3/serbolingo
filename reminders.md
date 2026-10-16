@@ -1,4 +1,4 @@
-﻿# 📌 SerboLingo — Master Upcoming Tasks & Reminders
+# 📌 SerboLingo — Master Upcoming Tasks & Reminders
 
 > [!IMPORTANT]
 > This document tracks all agreed upcoming features, content expansions, and deployment steps ready to be built in our next sessions.
@@ -86,7 +86,8 @@
 ## ✅ Priority 10: Muzika & Tekstovi (Karaoke Modes #2 & #3: Music & Live Singing)
 - [x] Karaoke Mode #2 — Song Lyrics Rhythm Trainer: Learn language through classic Serbian rock (Bajaga, Riblja Čorba, Bijelo Dugme), pop (Zdravko Čolić), and traditional folk classics (Tamo Daleko). Interactive lyrics trainer: fill in missing lyric blocks in real-time as the song plays.
 - [x] Karaoke Mode #3 — Live Sing-Along Microphone Scoring (Karaoke Bar Mode): Full sing-along mode with Web Speech API and Web Audio analyzer to grade Serbian pronunciation, pitch accuracy, and rhythm, awarding stars and XP!
-- [x] **UI Wired**: rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muzika & Tekstovi").
+- [x] **UI Wired**: 
+rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muzika & Tekstovi").
 
 ## ✅ Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
 - [x] Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).
@@ -214,11 +215,9 @@
   - [x] Add an import function to allow users to move their progress to another device, protecting their local data from accidental cache clears (pp.importSaveData).
   - [x] 100% offline client-side Blob generation and FileReader rehydration with schema validation and confirmation safety.
 
-## 👆 Priority 25: Native Mobile Touch Gestures
-- [ ] **Swipe Physics (Touch API)**:
-  - Add native-feeling swipe-to-go-back and swipe-down-to-dismiss gestures for UI injections and bottom sheets.
-  - Make the SPA feel like a real downloaded app rather than a rigid website.
-
+## ✅ Priority 25: Native Mobile Touch Gestures (DONE)
+- [x] **Swipe Physics (Touch API)**: Native swipe-down-to-dismiss on modals with rubber-band resistance & spring release physics; edge-swipe right to navigate back to Home.
+- [x] Interactive touch-haptics.js engine with passive event listeners for smooth 60+ FPS mobile performance.
 ## ✅ Priority 26: Gamification & Economy (Duolingo Hooks) (DONE)
 - [x] **Streak Freezes & Shop**: In-app "Prodavnica" modal where users spend XP to buy Streak Freezes, Heart Refills, and Double XP power-ups.
 - [x] **Daily Quests & Mystery Chests**: 3 specific daily goals with progress bars. Completing all 3 unlocks a Mystery Chest with bonus XP and confetti celebration.
@@ -257,11 +256,10 @@
 - [ ] **Native Speaker Clips**: Short 3-second looping video/audio clips of actual locals pronouncing difficult words or slang on the street.
 - [ ] **Hardcore Immersion Mode**: A toggle in settings that turns the *entire app UI* into Serbian. Zero English is allowed. Good for advanced learners.
 
-## 📳 Priority 35: Accessibility & Sensory Feedback
-- [ ] **Haptic Feedback**: Use `navigator.vibrate` to trigger tiny micro-vibrations on the phone when tapping keys, and a heavier double-buzz when answering wrong.
-- [ ] **Colorblind Mode**: Add visual textures/patterns to buttons so users don't have to rely purely on Green (Correct) and Red (Wrong).
-- [ ] **Landscape Mode Optimization**: Adjust the Flexbox layout so the app looks beautiful on horizontal tablets and iPads, not just vertical phones.
-
+## ✅ Priority 35: Accessibility & Sensory Feedback (DONE)
+- [x] **Haptic Feedback**: navigator.vibrate micro-vibrations on button taps, warm pulse on correct answers, double-pulse buzz on wrong answers, celebrate rhythm on goal completions.
+- [x] **Colorblind Mode**: Dedicated high-contrast pattern borders, double lines, and accessible visual cues toggleable in Profile settings.
+- [x] **Landscape & Tablet Optimization**: Centered max-w-2xl containers on tablets and compact scrollable lesson layout on landscape phones.
 ## 🏗️ Priority 36: Infrastructure & Code Architecture Upgrades
 - [ ] **Database Migration Engine**: Script a version-control system for `IndexedDB`. When we push a new `seed-data.js` with 10,000 new words, the app must safely merge it without deleting the user's saved flashcard progress.
 - [x] **Data Chunking (Lazy Loading)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags. (DONE)

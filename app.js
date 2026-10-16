@@ -4,7 +4,7 @@ const state = {
     goalCelebrated: false,
     history: {}, // Format: "YYYY-MM-DD": { xp: 0, lessons: 0 }
     skills: { 'Slušanje': 50, 'Govor': 50, 'Čitanje': 50, 'Pisanje': 50, 'Gramatika': 50, 'Vokabular': 50 },
-    settings: { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, textScale: 100, appLanguage: 'sr_lat', learningDirection: 'sr_to_en' },
+    settings: { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, textScale: 100, appLanguage: 'sr_lat', learningDirection: 'sr_to_en', hapticsEnabled: true, colorblindMode: false },
     achievements: {},
     lastActiveDate: null,
     mistakeLog: {}, // New for Phase 4: Track missed words for SRS
@@ -2365,6 +2365,7 @@ const app = {
             }
 
             if (isC) {
+                if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('correct');
                 if (hasTypoWarning) {
                     document.getElementById('feedback-title').innerText = "Tačno sa greškom!";
                     document.getElementById('feedback-title').className = "font-black text-sm text-amber-600 dark:text-amber-400";
@@ -2380,6 +2381,7 @@ const app = {
                     document.getElementById('feedback-icon').innerText = "✅";
                 }
             } else {
+                if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('wrong');
                 document.getElementById('feedback-title').innerText = "Netačno";
                 document.getElementById('feedback-title').className = "font-black text-sm text-red-700 dark:text-red-400";
                 document.getElementById('feedback-msg').innerHTML = `Tačno: <span class="font-black text-slate-800 dark:text-white">${displayCorrect}</span><p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni reči gore u pitanju za gramatičko objašnjenje</p>`;
@@ -2586,6 +2588,7 @@ const app = {
         }, 300);
     },
     showGoalModal: () => {
+        if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('celebrate');
         document.getElementById('goal-modal').classList.remove('hidden');
         app.fireConfetti();
         const icon = document.getElementById('goal-icon');
