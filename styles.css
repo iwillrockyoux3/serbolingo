@@ -484,56 +484,38 @@ html {
 
 /* --- PRIORITY 25: TOUCH GESTURES & MODAL DRAG HANDLE --- */
 .modal-drag-handle {
-    width: 44px;
+    width: 48px;
     height: 5px;
     background-color: rgba(148, 163, 184, 0.4);
     border-radius: 9999px;
-    margin: 8px auto 14px auto;
+    margin: 10px auto 12px auto;
     cursor: grab;
     transition: background-color 0.2s;
+    touch-action: none; /* Prevents mobile browser gesture interception */
+    user-select: none;
+    -webkit-user-select: none;
 }
 .modal-drag-handle:active {
-    background-color: rgba(148, 163, 184, 0.8);
+    background-color: rgba(148, 163, 184, 0.85);
     cursor: grabbing;
-}
-
-/* --- PRIORITY 35: COLORBLIND ACCESSIBILITY MODE --- */
-body.colorblind-mode .bg-green-100,
-body.colorblind-mode .bg-green-500,
-body.colorblind-mode .bg-emerald-500,
-body.colorblind-mode .text-green-500,
-body.colorblind-mode .text-green-600 {
-    outline: 3px double #15803d !important;
-    position: relative;
-}
-
-body.colorblind-mode .bg-red-100,
-body.colorblind-mode .bg-red-500,
-body.colorblind-mode .text-red-500,
-body.colorblind-mode .text-red-600 {
-    outline: 3px dashed #b91c1c !important;
-    position: relative;
-}
-
-body.colorblind-mode #feedback-area.bg-green-100 {
-    border-left: 8px solid #16a34a !important;
-}
-
-body.colorblind-mode #feedback-area.bg-red-100 {
-    border-left: 8px solid #dc2626 !important;
-}
-
-body.colorblind-mode .option-btn.border-blue-500 {
-    border-width: 3px !important;
-    border-style: solid !important;
 }
 
 /* --- PRIORITY 35: LANDSCAPE & TABLET LAYOUT OPTIMIZATION --- */
 @media (min-width: 768px) {
+    #app-container,
+    #main-header > div,
+    #main-nav > div {
+        max-width: 680px !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
     #view-lesson,
     #view-home,
     #view-stats,
-    #view-profile {
+    #view-profile,
+    #view-arcade,
+    #view-explore,
+    #view-mistakes {
         max-width: 680px;
         margin-left: auto;
         margin-right: auto;
@@ -541,9 +523,13 @@ body.colorblind-mode .option-btn.border-blue-500 {
 }
 
 @media (orientation: landscape) and (max-height: 550px) {
+    #main-header > div {
+        padding-top: 0.35rem;
+        padding-bottom: 0.35rem;
+    }
     #view-lesson {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
     }
     #lesson-content-area {
         max-height: 65vh;

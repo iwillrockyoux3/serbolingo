@@ -107,7 +107,7 @@
 | P28.1 | Adaptive 3-Minute Placement Test & Skill Tree Unlocks | 🆕 New | `placement-test.js`, `index.html` | ✅ DONE |
 | P44.1 | Smart Grammar Tooltips & Word Inspector in Lessons | 🆕 New | `grammar-tooltips.js`, `app.js`, `index.html` | ✅ DONE |
 | P25.1 | Native Touch Swipes & Pull-Down Modal Dismiss Physics | 🆕 New | `touch-haptics.js`, `index.html`, `styles.css` | ✅ DONE |
-| P35.1 | Haptic Vibrations, Colorblind Mode & Responsive Tablet Layout | 🆕 New | `touch-haptics.js`, `app.js`, `index.html`, `styles.css` | ✅ DONE |
+| P35.1 | Punchy Haptic Vibrations & Responsive Tablet Layout | 🆕 New | `touch-haptics.js`, `app.js`, `index.html`, `styles.css` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 

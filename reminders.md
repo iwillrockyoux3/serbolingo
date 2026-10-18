@@ -256,10 +256,9 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [ ] **Native Speaker Clips**: Short 3-second looping video/audio clips of actual locals pronouncing difficult words or slang on the street.
 - [ ] **Hardcore Immersion Mode**: A toggle in settings that turns the *entire app UI* into Serbian. Zero English is allowed. Good for advanced learners.
 
-## ✅ Priority 35: Accessibility & Sensory Feedback (DONE)
-- [x] **Haptic Feedback**: navigator.vibrate micro-vibrations on button taps, warm pulse on correct answers, double-pulse buzz on wrong answers, celebrate rhythm on goal completions.
-- [x] **Colorblind Mode**: Dedicated high-contrast pattern borders, double lines, and accessible visual cues toggleable in Profile settings.
-- [x] **Landscape & Tablet Optimization**: Centered max-w-2xl containers on tablets and compact scrollable lesson layout on landscape phones.
+## ✅ Priority 35: Sensory Feedback & Responsive Layout (DONE)
+- [x] **Punchy Haptic Feedback**: Noticeable, tactile navigator.vibrate pulses for button taps (40ms), firm double-pulse on correct answers ([70, 40, 120]ms), authoritative warning buzz on wrong answers ([120, 60, 180]ms), and celebration fanfare rhythm. User toggleable in Profile settings.
+- [x] **Landscape & Tablet Optimization**: Centered 680px container layout on tablets for header, navigation, and views; compact scroll-safe lesson layout on landscape phones.
 ## 🏗️ Priority 36: Infrastructure & Code Architecture Upgrades
 - [ ] **Database Migration Engine**: Script a version-control system for `IndexedDB`. When we push a new `seed-data.js` with 10,000 new words, the app must safely merge it without deleting the user's saved flashcard progress.
 - [x] **Data Chunking (Lazy Loading)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags. (DONE)

@@ -4,7 +4,7 @@ const state = {
     goalCelebrated: false,
     history: {}, // Format: "YYYY-MM-DD": { xp: 0, lessons: 0 }
     skills: { 'Slušanje': 50, 'Govor': 50, 'Čitanje': 50, 'Pisanje': 50, 'Gramatika': 50, 'Vokabular': 50 },
-    settings: { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, textScale: 100, appLanguage: 'sr_lat', learningDirection: 'sr_to_en', hapticsEnabled: true, colorblindMode: false },
+    settings: { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, textScale: 100, appLanguage: 'sr_lat', learningDirection: 'sr_to_en', hapticsEnabled: true },
     achievements: {},
     lastActiveDate: null,
     mistakeLog: {}, // New for Phase 4: Track missed words for SRS
