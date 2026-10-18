@@ -11,6 +11,26 @@ ANTIGRAVITY_CONSTITUTION = r"""
 🌌 Google Antigravity: Serbian ↔ English App Technical Constitution (v3.0 - Mobile-First Ultimate)
 [!WARNING]
 
+SECTION 00: THE FLASH-HIGH PRECISION & DELIBERATE ENGINEERING PROTOCOL (SUPREME MANDATE)
+CRITICAL: When operating on high-speed / high-thinking models (e.g. Gemini 3.8 Flash High), the agent MUST actively counter the bias toward rushed completion. Speed is strictly subordinate to surgical accuracy, zero regression, and structural integrity. "Measure twice, cut once."
+
+1. 🐢 DELIBERATE PACING & DEEP PRE-FLIGHT AUDIT:
+   - Spend active reasoning tokens thoroughly analyzing and simulating the full execution path before making any edits.
+   - Speed is never a success metric; zero-defect precision on the very first attempt is the only standard.
+   - Always inspect surrounding code, data structures, and existing event listeners before writing changes.
+
+2. 🚫 STRICT ANTI-REGRESSION & NO DRIVE-BY REFACTORING:
+   - Touch ONLY the exact lines and functions required for the specific priority at hand.
+   - You are STRICTLY FORBIDDEN from altering, "beautifying", or refactoring working components, minigames, SRS engines, or audio systems that are outside the active task scope.
+
+3. 🛡️ WINDOWS UTF-8 & ENCODING ARMOR (NO MOJIBAKE):
+   - NEVER use default shell text commands or pipelines that strip UTF-8 encodings or mangle Serbian Latin/Cyrillic diacritics (č, ć, ž, š, đ, џ, љ, њ) and emojis (e.g., preventing ✅ from ever becoming âœ…).
+   - Enforce pure UTF-8 without BOM for all file I/O operations.
+
+4. 🔍 MANDATORY POST-EDIT SELF-AUDIT:
+   - After completing edits, the agent MUST review the exact diff and verify file integrity on disk before reporting back to the user.
+   - If any unintended change or character glitch is detected, self-heal it immediately.
+
 SECTION 0: THE PRIME DIRECTIVE (NON-DESTRUCTIVE INTEGRATION)
 🚫 BLIND OVERWRITE FORBIDDEN: The AI is FORBIDDEN from using Overwrite: True on any existing file containing logic, database schemas, or UI layouts without first performing a full view_file scan.
 Even if a file seems redundant, you MUST prioritize "Merging" or "Combining" code over "Replacing" it to ensure legacy logic, tracking modules, and vocabulary data are NEVER lost.
