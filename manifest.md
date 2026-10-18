@@ -59,6 +59,7 @@
 | [`shop-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/shop-engine.js) | 275 | 11 KB | Gamification Economy & Shop — Streak Freeze protection, XP shop, Mystery Chest rolls, daily quest pool |
 | [`placement-test.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/placement-test.js) | 330 | 14 KB | Adaptive Placement Test — 10-question CEFR diagnostic quiz (A1-B2), auto-unlocks skill tree tiers with XP bonus |
 | [`touch-haptics.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/touch-haptics.js) | 260 | 11 KB | Native Touch Gestures & Haptics — Swipe-to-dismiss modals with spring physics, left edge swipe back to Home, punchy haptic vibrations |
+| [`srs-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/srs-engine.js) | 410 | 18 KB | Spaced Repetition & Flashcards — Tinder-style card swipe reviews, 3D flip physics, SM-2 retention algorithm, Stats tab Brain Health Heatmap |
 
 | [`karaoke.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/karaoke.js) | 572 | 28 KB | Bilingual speech-recognition reader — levels A1-B2, live word tracking, word translations, TTS replay |
 | [`rhythm.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/rhythm.js) | 567 | 26 KB | Music lyrics synchronizer — YouTube IFrame API playback + SpeechRecognition singing/recitation scoring |

@@ -222,9 +222,9 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Streak Freezes & Shop**: In-app "Prodavnica" modal where users spend XP to buy Streak Freezes, Heart Refills, and Double XP power-ups.
 - [x] **Daily Quests & Mystery Chests**: 3 specific daily goals with progress bars. Completing all 3 unlocks a Mystery Chest with bonus XP and confetti celebration.
 
-## 🧠 Priority 27: Learning Science & SRS (Anki Power)
-- [ ] **Memory Heatmap (Brain Health)**: Upgrade the Stats tab to include a visual heatmap showing which words are fading and need review.
-- [ ] **Tinder-Style Swipe Reviews**: Offer a quick "Flashcard Swipe" mode before hardcore lessons. Swipe right if known, left if not.
+## ✅ Priority 27: Learning Science & SRS (Anki Power) (DONE)
+- [x] **Memory Heatmap (Brain Health)**: Visual 48-tile retention matrix and Brain Health Vitality gauge in the Stats tab with interactive word inspection and instant review CTA.
+- [x] **Tinder-Style Swipe Reviews**: High-performance card stack with realistic tilt physics, green/red swipe stamps, 3D flip for translations/examples, native audio pronunciation, and +20 XP celebration rewards.
 
 ## ✅ Priority 28: Adaptive UX & Flow (DONE)
 - [x] **Adaptive Placement Test**: 10-question multi-tier CEFR diagnostic quiz (A1 to B2) covering vocabulary, present tense, plurals, cases, past tense, and conditionals with automated Skill Tree unlocks and XP bonuses.

@@ -101,6 +101,7 @@
                 { id: 'placement-modal', closeFn: () => typeof PlacementEngine !== 'undefined' && PlacementEngine.closeModal ? PlacementEngine.closeModal() : document.getElementById('placement-modal')?.classList.add('hidden') },
                 { id: 'visual-lens-modal', closeFn: () => typeof VisualLens !== 'undefined' && VisualLens.closeModal ? VisualLens.closeModal() : document.getElementById('visual-lens-modal')?.classList.add('hidden') },
                 { id: 'ghost-arena-modal', closeFn: () => typeof GhostEngine !== 'undefined' && GhostEngine.closeModal ? GhostEngine.closeModal() : document.getElementById('ghost-arena-modal')?.classList.add('hidden') },
+                { id: 'flashcard-swipe-modal', closeFn: () => typeof SrsEngine !== 'undefined' && SrsEngine.closeModal ? SrsEngine.closeModal() : document.getElementById('flashcard-swipe-modal')?.classList.add('hidden') },
                 { id: 'guide-modal', closeFn: () => typeof SkillTree !== 'undefined' && SkillTree.closeGuideModal ? SkillTree.closeGuideModal() : document.getElementById('guide-modal')?.classList.add('hidden') }
             ];
 
@@ -226,7 +227,7 @@
                 startTime = Date.now();
 
                 // If any modal is currently visible, don't trigger view swipe back
-                const openModal = document.querySelector('#shop-modal:not(.hidden), #placement-modal:not(.hidden), #ghost-arena-modal:not(.hidden), #visual-lens-modal:not(.hidden), #guide-modal:not(.hidden)');
+                const openModal = document.querySelector('#shop-modal:not(.hidden), #placement-modal:not(.hidden), #ghost-arena-modal:not(.hidden), #visual-lens-modal:not(.hidden), #flashcard-swipe-modal:not(.hidden), #guide-modal:not(.hidden)');
                 if (openModal) {
                     isValidSwipe = false;
                     return;

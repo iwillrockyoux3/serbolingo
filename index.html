@@ -327,6 +327,9 @@
                 <div class="h-44"><canvas id="skillsRadarChart"></canvas></div>
             </div>
 
+            <!-- Memory Retention Heatmap Card (Priority 27) -->
+            <div id="memory-heatmap-container"></div>
+
             <!-- Daily Goal Card -->
             <div
                 class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
@@ -859,6 +862,11 @@
                 <h3 class="font-black text-slate-800 dark:text-white" data-i18n="mistakes_empty">Nema grešaka!</h3>
                 <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="mistakes_empty_desc">Trenutno nemate reči za ponavljanje. Odličan posao!</p>
             </div>
+
+            <!-- Tinder-Style Flashcard Swipe Review (Priority 27) -->
+            <button onclick="SrsEngine.openSwipeSession()" class="w-full py-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 text-white font-black rounded-2xl shadow-lg shadow-blue-500/25 active:scale-95 transition-transform text-sm uppercase tracking-wider mb-2 flex items-center justify-center gap-2">
+                <span>🎴</span> <span>Flashcard Swipe (Brzo Ponavljanje)</span>
+            </button>
 
             <!-- Review Button -->
             <button id="mistakes-review-btn" onclick="app.startMistakeReview()" class="hidden w-full py-4 bg-gradient-to-r from-orange-400 to-red-500 text-white font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-sm uppercase tracking-wider mb-4">
@@ -1479,6 +1487,54 @@
         </div>
     </div>
 
+    <!-- Tinder-Style Flashcard Swipe Modal (Priority 27: SRS) -->
+    <div id="flashcard-swipe-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[210] flex flex-col p-4 md:p-6 fade-in overflow-y-auto">
+        <div class="max-w-md w-full mx-auto my-auto bg-slate-900 border-2 border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+            <div class="modal-drag-handle"></div>
+            <!-- Header -->
+            <div class="p-4 bg-slate-800/80 border-b border-slate-700 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl p-1.5 bg-blue-500/20 rounded-xl">🎴</span>
+                    <div>
+                        <h3 class="text-base font-black text-white leading-tight">Flashcard Swipe</h3>
+                        <p class="text-[11px] font-bold text-slate-400">Tinder-stil ponavljanje reči</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="srs-progress-label" class="text-xs font-black text-blue-400">1 / 12</span>
+                    <button onclick="SrsEngine.closeModal()" class="w-8 h-8 rounded-full bg-slate-700/60 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center font-black text-sm active:scale-90 transition-transform">
+                        ✕
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="w-full bg-slate-800 h-1.5 overflow-hidden">
+                <div id="srs-progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full transition-all duration-300" style="width: 0%;"></div>
+            </div>
+
+            <!-- Card Arena -->
+            <div class="p-4 md:p-6 flex flex-col items-center">
+                <div id="srs-card-container" class="relative w-full max-w-sm h-[360px] md:h-[400px]">
+                    <!-- Injected dynamically by SrsEngine -->
+                </div>
+
+                <!-- Tinder Action Controls -->
+                <div class="flex items-center justify-center gap-4 mt-6 w-full max-w-xs">
+                    <button onclick="SrsEngine.executeSwipe('left')" title="Treba Ponavljanje (Swipe Left)" class="w-14 h-14 rounded-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border-2 border-red-500/40 flex items-center justify-center text-2xl font-black shadow-lg shadow-red-500/10 active:scale-90 transition-transform">
+                        ✕
+                    </button>
+                    <button onclick="SrsEngine.toggleCardFlip()" title="Okreni Karticu (Flip)" class="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs flex items-center gap-1.5 active:scale-95 transition-transform shadow-md">
+                        <span>🔄</span> <span>Okreni</span>
+                    </button>
+                    <button onclick="SrsEngine.executeSwipe('right')" title="Znam Ovo (Swipe Right)" class="w-14 h-14 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border-2 border-emerald-500/40 flex items-center justify-center text-2xl font-black shadow-lg shadow-emerald-500/10 active:scale-90 transition-transform">
+                        ✓
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Smart Grammar Tooltip Floating Inspector (Priority 44) -->
     <div id="grammar-tooltip" class="hidden fixed z-[300] max-w-sm w-80 bg-slate-900/95 dark:bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-3xl shadow-2xl border-2 border-indigo-500/40 transition-all duration-200 max-h-[85vh] overflow-y-auto">
         <!-- Populated dynamically by GrammarEngine -->
@@ -1503,6 +1559,7 @@
     <script src="commute.js" charset="UTF-8"></script>
     <script src="shop-engine.js" charset="UTF-8"></script>
     <script src="placement-test.js" charset="UTF-8"></script>
+    <script src="srs-engine.js" charset="UTF-8"></script>
     <script src="touch-haptics.js" charset="UTF-8"></script>
     <script src="grammar-tooltips.js" charset="UTF-8"></script>
     <script src="app.js" charset="UTF-8"></script>

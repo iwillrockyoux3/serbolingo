@@ -708,6 +708,9 @@ const app = {
             app.renderRadar();
             app.updateStatsUI();
             app.updateGoalUI();
+            if (window.SrsEngine && window.SrsEngine.renderHeatmap) {
+                window.SrsEngine.renderHeatmap();
+            }
         }
         if (vid === 'profile') {
             app.updateProfileUI();

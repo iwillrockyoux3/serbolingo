@@ -537,3 +537,26 @@ html {
     }
 }
 
+/* --- PRIORITY 27: SRS TINDER FLASHCARDS & HEATMAP --- */
+#srs-card-container {
+    perspective: 1200px;
+    touch-action: pan-y;
+}
+
+#srs-active-card {
+    will-change: transform, opacity;
+    touch-action: none; /* Prevents scroll interruption during Tinder swipe */
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+@keyframes stamp-pop {
+    0% { transform: scale(0.8) rotate(-10deg); }
+    50% { transform: scale(1.1) rotate(5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.animate-scale-up {
+    animation: stamp-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
