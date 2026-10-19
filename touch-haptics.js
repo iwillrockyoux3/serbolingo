@@ -102,6 +102,9 @@
                 { id: 'visual-lens-modal', closeFn: () => typeof VisualLens !== 'undefined' && VisualLens.closeModal ? VisualLens.closeModal() : document.getElementById('visual-lens-modal')?.classList.add('hidden') },
                 { id: 'ghost-arena-modal', closeFn: () => typeof GhostEngine !== 'undefined' && GhostEngine.closeModal ? GhostEngine.closeModal() : document.getElementById('ghost-arena-modal')?.classList.add('hidden') },
                 { id: 'flashcard-swipe-modal', closeFn: () => typeof SrsEngine !== 'undefined' && SrsEngine.closeModal ? SrsEngine.closeModal() : document.getElementById('flashcard-swipe-modal')?.classList.add('hidden') },
+                { id: 'league-modal', closeFn: () => typeof LeagueEngine !== 'undefined' && LeagueEngine.closeLeagueModal ? LeagueEngine.closeLeagueModal() : document.getElementById('league-modal')?.classList.add('hidden') },
+                { id: 'league-results-modal', closeFn: () => typeof LeagueEngine !== 'undefined' && LeagueEngine.closeResultsModal ? LeagueEngine.closeResultsModal() : document.getElementById('league-results-modal')?.classList.add('hidden') },
+                { id: 'locker-modal', closeFn: () => typeof LeagueEngine !== 'undefined' && LeagueEngine.closeLockerModal ? LeagueEngine.closeLockerModal() : document.getElementById('locker-modal')?.classList.add('hidden') },
                 { id: 'guide-modal', closeFn: () => typeof SkillTree !== 'undefined' && SkillTree.closeGuideModal ? SkillTree.closeGuideModal() : document.getElementById('guide-modal')?.classList.add('hidden') }
             ];
 

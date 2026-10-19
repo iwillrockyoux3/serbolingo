@@ -228,6 +228,9 @@
                 // Bonus reward for completing all 3
                 appState.xp += 30;
                 appState.dailyXP += 30;
+                if (window.LeagueEngine) {
+                    window.LeagueEngine.addGems(10, 'Sve dnevne misije');
+                }
                 if (window.app) {
                     window.app.saveState();
                     window.app.updateProfileUI();

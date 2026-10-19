@@ -560,3 +560,48 @@ html {
     animation: stamp-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* --- PRIORITY 32: RANKED LEAGUES & ANIMATED AVATARS --- */
+@keyframes glow-gold {
+    0%, 100% { filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.6)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 12px rgba(234, 179, 8, 0.9)); transform: scale(1.05); }
+}
+
+@keyframes pulse-shadow {
+    0%, 100% { filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.5)); }
+    50% { filter: drop-shadow(0 0 14px rgba(129, 140, 248, 0.9)); }
+}
+
+@keyframes float-wing {
+    0%, 100% { transform: translateY(0); filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2)); }
+    50% { transform: translateY(-5px); filter: drop-shadow(0 8px 12px rgba(56, 189, 248, 0.5)); }
+}
+
+@keyframes shimmer-spark {
+    0%, 100% { filter: drop-shadow(0 0 6px rgba(234, 179, 8, 0.7)) brightness(1); }
+    50% { filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.9)) brightness(1.2); }
+}
+
+@keyframes magic-stars {
+    0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.6)); }
+    50% { transform: scale(1.06) rotate(3deg); filter: drop-shadow(0 0 14px rgba(217, 70, 239, 0.9)); }
+}
+
+@keyframes zero-gravity {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(-4deg); }
+}
+
+@keyframes flame-ember {
+    0%, 100% { filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.7)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.95)); transform: scale(1.04); }
+}
+
+.avatar-glow-gold { animation: glow-gold 2.2s infinite ease-in-out; }
+.avatar-pulse-shadow { animation: pulse-shadow 2s infinite ease-in-out; }
+.avatar-float-wing { animation: float-wing 2.4s infinite ease-in-out; }
+.avatar-shimmer-spark { animation: shimmer-spark 1.8s infinite ease-in-out; }
+.avatar-magic-stars { animation: magic-stars 2.6s infinite ease-in-out; }
+.avatar-zero-gravity { animation: zero-gravity 3s infinite ease-in-out; }
+.avatar-flame-ember { animation: flame-ember 1.9s infinite ease-in-out; }
+
+

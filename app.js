@@ -9,8 +9,13 @@ const state = {
     lastActiveDate: null,
     mistakeLog: {}, // New for Phase 4: Track missed words for SRS
     quests: [], // New for Phase 4: Daily quests array
-    badges: [], // New for Phase 4: Earned badges array
-    inventory: { xpBoosts: 0 } // Arcade rewards
+    inventory: { xpBoosts: 0 }, // Arcade rewards
+    gems: 50, // Priority 32: In-app currency
+    unlockedAvatars: [],
+    unlockedTitles: [],
+    equippedTitle: null,
+    earlyBirdClaimAvailable: false,
+    earlyBirdEarnedDate: null
 };
 let apiKey = "";
 
@@ -286,6 +291,11 @@ const app = {
             if (!state.quests || state.quests.length === 0) state.quests = generateDailyQuests();
             // Phase 6 Arcade Defaults
             if (!state.inventory) state.inventory = { xpBoosts: 0 };
+            // Priority 32 Defaults
+            if (typeof state.gems !== 'number') state.gems = 50;
+            if (!state.unlockedAvatars) state.unlockedAvatars = [];
+            if (!state.unlockedTitles) state.unlockedTitles = [];
+            if (state.equippedTitle === undefined) state.equippedTitle = null;
         } else {
             // Apply defaults if no stats exist
             if (!state.settings) state.settings = { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, appLanguage: 'sr_lat', learningDirection: 'sr_to_en' };
@@ -293,6 +303,10 @@ const app = {
             state.mistakeLog = {};
             state.badges = [];
             state.inventory = { xpBoosts: 0 };
+            state.gems = 50;
+            state.unlockedAvatars = [];
+            state.unlockedTitles = [];
+            state.equippedTitle = null;
         }
 
         // DAILY RESET LOGIC
@@ -333,6 +347,11 @@ const app = {
         // Learning Direction now controls both lesson direction AND app UI language
         app.setLearningDirection(state.settings.learningDirection || 'sr_to_en');
         app.updateProfileUI(); // Update UI with latest values
+        if (window.LeagueEngine) {
+            window.LeagueEngine.updateGemsHeaderUI();
+            window.LeagueEngine.updateHeaderBoostUI();
+            window.LeagueEngine.renderHomeBanner();
+        }
 
         if (state.user) {
             app.showMainApp();
@@ -477,6 +496,9 @@ const app = {
 
         app.renderBadges();
         app.renderAchievements();
+        if (window.LeagueEngine && window.LeagueEngine.updateProfileHeader) {
+            window.LeagueEngine.updateProfileHeader();
+        }
     },
     renderBadges: () => {
         const container = document.getElementById('badges-list');
@@ -701,6 +723,10 @@ const app = {
             if (window.PlacementEngine && window.PlacementEngine.renderHomeBanner) {
                 window.PlacementEngine.renderHomeBanner();
             }
+            if (window.LeagueEngine) {
+                if (window.LeagueEngine.renderHomeBanner) window.LeagueEngine.renderHomeBanner();
+                if (window.LeagueEngine.updateHeaderBoostUI) window.LeagueEngine.updateHeaderBoostUI();
+            }
         }
         if (vid === 'stats') {
             app.resetDetailBox();
@@ -711,9 +737,15 @@ const app = {
             if (window.SrsEngine && window.SrsEngine.renderHeatmap) {
                 window.SrsEngine.renderHeatmap();
             }
+            if (window.LeagueEngine && window.LeagueEngine.renderStatsCard) {
+                window.LeagueEngine.renderStatsCard();
+            }
         }
         if (vid === 'profile') {
             app.updateProfileUI();
+            if (window.LeagueEngine && window.LeagueEngine.updateProfileHeader) {
+                window.LeagueEngine.updateProfileHeader();
+            }
         }
         if (vid === 'arcade') {
             const boostEl = document.getElementById('xp-boost-count');
@@ -2276,6 +2308,9 @@ const app = {
                 state.xp += earnedXp;
                 if (!state.currentLessonXpEarned) state.currentLessonXpEarned = 0;
                 state.currentLessonXpEarned += earnedXp;
+                if (window.LeagueEngine && window.LeagueEngine.recordUserXp) {
+                    window.LeagueEngine.recordUserXp(earnedXp);
+                }
                 
                 // Phase 4: SRS Logic - decay mistake
                 if (l.wordId && state.mistakeLog[l.wordId]) {
@@ -2492,6 +2527,14 @@ const app = {
         
         if (state.user && state.user.isGuest) {
             app.showToast(t('toast_guest_finish'), 'success');
+        }
+        
+        // Priority 32: Award Gems for Lesson Completion (+2 gems, +1 bonus for perfect lesson)
+        if (window.LeagueEngine) {
+            const lessonGems = state.lastLessonPerfect ? 3 : 2;
+            window.LeagueEngine.addGems(lessonGems, state.lastLessonPerfect ? 'Savršena lekcija' : 'Završena lekcija');
+            window.LeagueEngine.checkEarlyBirdOnLessonComplete();
+            window.LeagueEngine.updateHeaderBoostUI();
         }
         
         if (state.currentSkillId === 'mistakes') {

@@ -247,10 +247,10 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes š->s, č/ć->c, ž->z, and đ->dj during answer checking. (ALREADY IMPLEMENTED in app.js checkAnswer normalize())
 - [x] **Gentle Typo Feedback (DONE)**: Pops up a gentle educational warning ("⚠️ Tačno sa greškom! Obrati pažnju: pravilno se piše [Tačno]") when the user relies on Bald Latin or makes a minor spelling discrepancy.
 
-## 🏆 Priority 32: Advanced Gamification & Social (The League System)
-- [ ] **Ranked Leagues**: Bronze, Silver, Gold, Diamond, and Obsidian leagues. Users are grouped with 30 random people weekly. Top 10 advance, bottom 5 demote.
-- [ ] **Timed XP Boosts**: "Early Bird" (practice before 9 AM) grants a 15-minute 2x XP boost to use later that evening, building a twice-a-day habit.
-- [ ] **Profile Avatars & Titles**: Unlockable animated avatars and titles (e.g., "Kafana Legend", "Grammar Nerd") bought with in-app gems.
+## ✅🏆 Priority 32: Advanced Gamification & Social (The League System) (DONE)
+- [x] **Ranked Leagues (DONE)**: Bronze, Silver, Gold, Diamond, and Obsidian leagues. Users are grouped with 30 random people weekly. Top 10 advance, bottom 5 demote.
+- [x] **Timed XP Boosts (DONE)**: "Early Bird" (practice before 9 AM) grants a 15-minute 2x XP boost to use later that evening, building a twice-a-day habit.
+- [x] **Profile Avatars & Titles (DONE)**: Unlockable animated avatars and titles (e.g., "Kafana Legend", "Grammar Nerd") bought with in-app gems.
 
 ## ✅🤖 Priority 33: "Explain My Mistake" AI Tutor (Partially DONE)
 - [x] **Gemini Grammar Breakdown**: When a user gets a question wrong, an "Explain Why" button appears. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made. (ALREADY BUILT in app.js lines 3260-3330, Gemini model cascade with offline fallback.)
