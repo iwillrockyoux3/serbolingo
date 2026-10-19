@@ -215,9 +215,12 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] Add an import function to allow users to move their progress to another device, protecting their local data from accidental cache clears (pp.importSaveData).
   - [x] 100% offline client-side Blob generation and FileReader rehydration with schema validation and confirmation safety.
 
-## ✅ Priority 25: Native Mobile Touch Gestures (DONE)
-- [x] **Swipe Physics (Touch API)**: Native swipe-down-to-dismiss on modals with rubber-band resistance & spring release physics; edge-swipe right to navigate back to Home.
-- [x] Interactive touch-haptics.js engine with passive event listeners for smooth 60+ FPS mobile performance.
+## 🔄 Priority 25: Native Mobile Touch Gestures & Swipe Physics (PENDING REVISIT)
+- [ ] **Mobile Browser vs. Native Google Play Touch Refinement**:
+  - Revisit modal swipe-down-to-dismiss and edge swipe back-and-forth navigation.
+  - Fix mobile browser event interception (distinguishing between mobile web on Cloudflare vs. standalone APK/Google Play wrapper).
+  - Add smooth bi-directional horizontal swiping between bottom navigation tabs (Home ↔ Arcade ↔ Explore ↔ Mistakes ↔ Profile).
+
 ## ✅ Priority 26: Gamification & Economy (Duolingo Hooks) (DONE)
 - [x] **Streak Freezes & Shop**: In-app "Prodavnica" modal where users spend XP to buy Streak Freezes, Heart Refills, and Double XP power-ups.
 - [x] **Daily Quests & Mystery Chests**: 3 specific daily goals with progress bars. Completing all 3 unlocks a Mystery Chest with bonus XP and confetti celebration.
