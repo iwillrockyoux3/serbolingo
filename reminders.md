@@ -216,6 +216,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] 100% offline client-side Blob generation and FileReader rehydration with schema validation and confirmation safety.
 
 ## 🔄 Priority 25: Native Mobile Touch Gestures & Swipe Physics (PENDING REVISIT)
+- [x] **Haptic Sensory Vibrations (DONE)**: Tactile mechanical feedback for button taps (40ms), correct answers ([70, 40, 120]ms), wrong answers double-buzz ([120, 60, 180]ms), swipe feedback (50ms), and celebration fanfare. User toggleable in Profile settings.
 - [ ] **Mobile Browser vs. Native Google Play Touch Refinement**:
   - Revisit modal swipe-down-to-dismiss and edge swipe back-and-forth navigation.
   - Fix mobile browser event interception (distinguishing between mobile web on Cloudflare vs. standalone APK/Google Play wrapper).
