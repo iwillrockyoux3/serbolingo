@@ -91,6 +91,7 @@
 | P7.1 | Streak Freeze (Štit za Niz) purchase/earn | 🆕 New | `shop-engine.js`, `app.js` | ✅ DONE |
 | P7.2 | Daily Quests shop & Mystery Chests | 🆕 New | `shop-engine.js`, `index.html` | ✅ DONE |
 | P17.1 | Hands-free commute audio mode (Pimsleur-style) | 🆕 New | New file | ⬜ TODO |
+| P30.1 | Authentic Cultural Idioms & Slang ("Untranslatable" Cultural Notes, Skill Tree "Ulični srpski" & Arcade Quiz + SRS Sync) | 🔧 Content/Enhance | `seed-data.js`, `slang.js`, `skill-tree.js`, `db.js`, `index.html` | ✅ DONE |
 | P31.1 | Gentle Typo Warning for Bald Latin & Minor Typos | 🆕 New | `app.js` | ✅ DONE |
 
 ### 🟢 Lower Priority — Advanced & Deployment

@@ -5,22 +5,247 @@
 const SKILL_TREE = [
     // Slang Node inserted as an Optional fun path in TIER 1
     { id: 'slang', name: 'Ulični Srpski', nameEn: 'Street Slang', emoji: '🌶️', category: 'slang', prereqs: [], optional: true, difficulty: 2, guideHtml: `
-<div class="space-y-4">
-    <p>Welcome to <b>Ulični Srpski (Street Serbian)</b>! This is how people actually speak on the streets of Belgrade.</p>
-    <ul class="list-disc pl-5 font-bold space-y-2">
-        <li><b>Brate</b> - Literally "brother", used like "dude" or "bro".</li>
-        <li><b>Bleja</b> - Hanging out or chilling. "Idemo na bleju" (Let's go chill).</li>
-        <li><b>Gajba</b> - Literally a crate, used for "apartment" or "house". "Cimaj me kad stigneš na gajbu" (Hit me up when you get home).</li>
-    </ul>
-    <p class="text-sm bg-red-50 dark:bg-red-900/30 p-2 rounded-lg mt-2 text-red-800 dark:text-red-200"><b>Note:</b> You can play the full Slang Quiz in the Arcade (Igraonica) tab!</p>
+<div class="space-y-5 text-slate-800 dark:text-slate-100">
+    <div class="bg-gradient-to-r from-red-500/10 via-orange-500/10 to-amber-500/10 border-2 border-orange-500/30 rounded-2xl p-4">
+        <h3 class="text-base font-black text-orange-600 dark:text-orange-400 mb-1 flex items-center gap-2">
+            <span>🌶️</span> Dobrodošli u Ulični Srpski!
+        </h3>
+        <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+            Srpski jezik je čuven po bogatim, duhovitim i emotivnim izrekama koje se ne mogu doslovno prevesti. Ispod je tvoj vodič za autentične kulturne fraze, izraze nežnosti i beogradski žargon.
+        </p>
+    </div>
+
+    <!-- Section 1: Narodne Izreke -->
+    <div>
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+            <span>👵</span> Narodne Izreke & Kulturne Fraze
+        </h4>
+        <div class="space-y-3">
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="flex items-baseline gap-2">
+                            <h5 class="text-base font-black text-slate-900 dark:text-white">Ljubi te baka sine</h5>
+                            <span class="text-xs font-serif text-slate-400">(Љуби те бака сине)</span>
+                        </div>
+                        <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Bezgranična bakina ljubav i privrženost</span></p>
+                        <p class="text-[11px] text-slate-400 italic">Doslovno: "Grandma kisses you, son"</p>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="event.stopPropagation(); SlangEngine.toggleStar('idm1', this)" class="w-8 h-8 rounded-full flex items-center justify-center text-base text-slate-400 hover:text-yellow-400 bg-slate-100 dark:bg-slate-700 active:scale-90 transition-all" title="Dodaj u Flashcards">★</button>
+                        <button onclick="event.stopPropagation(); SlangEngine.playAudio('ljubi te baka sine')" class="w-8 h-8 rounded-full flex items-center justify-center text-sm text-blue-500 bg-blue-50 dark:bg-slate-700 hover:bg-blue-100 active:scale-90 transition-all">🔊</button>
+                    </div>
+                </div>
+                <div class="mt-2 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60 text-[11px] text-slate-600 dark:text-slate-300">
+                    <span class="font-black text-amber-500">💡 KADA SE KORISTI:</span> Govore bake unucima i unukama (bez obzira na pol) dok ih nude sarmom, pitom ili štipaju za obraze.
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="flex items-baseline gap-2">
+                            <h5 class="text-base font-black text-slate-900 dark:text-white">Bogu iza nogu</h5>
+                            <span class="text-xs font-serif text-slate-400">(Богу иза ногу)</span>
+                        </div>
+                        <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Na kraju sveta / U teškoj nedođiji</span></p>
+                        <p class="text-[11px] text-slate-400 italic">Doslovno: "Behind God's legs"</p>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="event.stopPropagation(); SlangEngine.toggleStar('idm2', this)" class="w-8 h-8 rounded-full flex items-center justify-center text-base text-slate-400 hover:text-yellow-400 bg-slate-100 dark:bg-slate-700 active:scale-90 transition-all" title="Dodaj u Flashcards">★</button>
+                        <button onclick="event.stopPropagation(); SlangEngine.playAudio('bogu iza nogu')" class="w-8 h-8 rounded-full flex items-center justify-center text-sm text-blue-500 bg-blue-50 dark:bg-slate-700 hover:bg-blue-100 active:scale-90 transition-all">🔊</button>
+                    </div>
+                </div>
+                <div class="mt-2 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60 text-[11px] text-slate-600 dark:text-slate-300">
+                    <span class="font-black text-amber-500">💡 KADA SE KORISTI:</span> Za mesta toliko izolovana i daleka da tamo jedva dopire signal ili civilizacija.
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="flex items-baseline gap-2">
+                            <h5 class="text-base font-black text-slate-900 dark:text-white">Mlatiti praznu slamu</h5>
+                            <span class="text-xs font-serif text-slate-400">(Млатити празну сламу)</span>
+                        </div>
+                        <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Pričati uprazno / Gubiti vreme</span></p>
+                        <p class="text-[11px] text-slate-400 italic">Doslovno: "Thrashing empty straw"</p>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="event.stopPropagation(); SlangEngine.toggleStar('idm4', this)" class="w-8 h-8 rounded-full flex items-center justify-center text-base text-slate-400 hover:text-yellow-400 bg-slate-100 dark:bg-slate-700 active:scale-90 transition-all" title="Dodaj u Flashcards">★</button>
+                        <button onclick="event.stopPropagation(); SlangEngine.playAudio('mlatiti praznu slamu')" class="w-8 h-8 rounded-full flex items-center justify-center text-sm text-blue-500 bg-blue-50 dark:bg-slate-700 hover:bg-blue-100 active:scale-90 transition-all">🔊</button>
+                    </div>
+                </div>
+                <div class="mt-2 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60 text-[11px] text-slate-600 dark:text-slate-300">
+                    <span class="font-black text-amber-500">💡 KADA SE KORISTI:</span> Poljoprivredno poreklo: udaranje po slami bez zrna ne stvara hleb. Koristi se kada se vodi jalov razgovor bez ikakvih rezultata.
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="flex items-baseline gap-2">
+                            <h5 class="text-base font-black text-slate-900 dark:text-white">Kad na vrbi rodi grožđe</h5>
+                            <span class="text-xs font-serif text-slate-400">(Кад на врби роди грожђе)</span>
+                        </div>
+                        <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Nikada / Nemoguća misija</span></p>
+                        <p class="text-[11px] text-slate-400 italic">Doslovno: "When grapes grow on a willow"</p>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="event.stopPropagation(); SlangEngine.toggleStar('idm5', this)" class="w-8 h-8 rounded-full flex items-center justify-center text-base text-slate-400 hover:text-yellow-400 bg-slate-100 dark:bg-slate-700 active:scale-90 transition-all" title="Dodaj u Flashcards">★</button>
+                        <button onclick="event.stopPropagation(); SlangEngine.playAudio('kad na vrbi rodi grožđe')" class="w-8 h-8 rounded-full flex items-center justify-center text-sm text-blue-500 bg-blue-50 dark:bg-slate-700 hover:bg-blue-100 active:scale-90 transition-all">🔊</button>
+                    </div>
+                </div>
+                <div class="mt-2 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60 text-[11px] text-slate-600 dark:text-slate-300">
+                    <span class="font-black text-amber-500">💡 KADA SE KORISTI:</span> Kada neko daje nerealna obećanja koja se sigurno nikad neće ostvariti.
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="flex items-baseline gap-2">
+                            <h5 class="text-base font-black text-slate-900 dark:text-white">Košta ko svetog Petra kajgana</h5>
+                            <span class="text-xs font-serif text-slate-400">(Кошта ко светог Петра кајгана)</span>
+                        </div>
+                        <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Preskupo / Paprena cena</span></p>
+                        <p class="text-[11px] text-slate-400 italic">Doslovno: "Costs like St. Peter's scrambled eggs"</p>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="event.stopPropagation(); SlangEngine.toggleStar('idm9', this)" class="w-8 h-8 rounded-full flex items-center justify-center text-base text-slate-400 hover:text-yellow-400 bg-slate-100 dark:bg-slate-700 active:scale-90 transition-all" title="Dodaj u Flashcards">★</button>
+                        <button onclick="event.stopPropagation(); SlangEngine.playAudio('košta ko svetog Petra kajgana')" class="w-8 h-8 rounded-full flex items-center justify-center text-sm text-blue-500 bg-blue-50 dark:bg-slate-700 hover:bg-blue-100 active:scale-90 transition-all">🔊</button>
+                    </div>
+                </div>
+                <div class="mt-2 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60 text-[11px] text-slate-600 dark:text-slate-300">
+                    <span class="font-black text-amber-500">💡 KADA SE KORISTI:</span> Šok kada stigne preteran račun u kafani ili majstorska tarifa.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Nežnost & Ljubav -->
+    <div>
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+            <span>❤️</span> Nežnost & Emotivni Izrazi
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                <div>
+                    <h5 class="text-sm font-black text-slate-900 dark:text-white">Dušo moja</h5>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">My soul / Darling</p>
+                </div>
+                <button onclick="event.stopPropagation(); SlangEngine.playAudio('dušo moja')" class="w-7 h-7 rounded-full flex items-center justify-center text-xs bg-slate-100 dark:bg-slate-700 text-blue-500 active:scale-90 transition-all">🔊</button>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                <div>
+                    <h5 class="text-sm font-black text-slate-900 dark:text-white">Srce moje</h5>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">My heart / Sweetheart</p>
+                </div>
+                <button onclick="event.stopPropagation(); SlangEngine.playAudio('srce moje')" class="w-7 h-7 rounded-full flex items-center justify-center text-xs bg-slate-100 dark:bg-slate-700 text-blue-500 active:scale-90 transition-all">🔊</button>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                <div>
+                    <h5 class="text-sm font-black text-slate-900 dark:text-white">Zlato moje</h5>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">My gold / Precious</p>
+                </div>
+                <button onclick="event.stopPropagation(); SlangEngine.playAudio('zlato moje')" class="w-7 h-7 rounded-full flex items-center justify-center text-xs bg-slate-100 dark:bg-slate-700 text-blue-500 active:scale-90 transition-all">🔊</button>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                <div>
+                    <h5 class="text-sm font-black text-slate-900 dark:text-white">Sunce moje</h5>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">My sunshine</p>
+                </div>
+                <button onclick="event.stopPropagation(); SlangEngine.playAudio('sunce moje')" class="w-7 h-7 rounded-full flex items-center justify-center text-xs bg-slate-100 dark:bg-slate-700 text-blue-500 active:scale-90 transition-all">🔊</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Beogradski Žargon -->
+    <div>
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+            <span>🏙️</span> Beogradski Žargon
+        </h4>
+        <div class="space-y-2">
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                <div>
+                    <span class="font-black text-slate-900 dark:text-white text-sm">Brate</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 ml-1">— Bro / Dude (Univerzalni poziv)</span>
+                </div>
+                <button onclick="event.stopPropagation(); SlangEngine.playAudio('brate')" class="w-7 h-7 rounded-full flex items-center justify-center text-xs bg-slate-100 dark:bg-slate-700 text-blue-500 active:scale-90 transition-all">🔊</button>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                <div>
+                    <span class="font-black text-slate-900 dark:text-white text-sm">Bleja</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 ml-1">— Chilling / Druženje bez žurbe</span>
+                </div>
+                <button onclick="event.stopPropagation(); SlangEngine.playAudio('bleja')" class="w-7 h-7 rounded-full flex items-center justify-center text-xs bg-slate-100 dark:bg-slate-700 text-blue-500 active:scale-90 transition-all">🔊</button>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                <div>
+                    <span class="font-black text-slate-900 dark:text-white text-sm">Vrh</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 ml-1">— Awesome / Vrhunski (Doslovno: peak)</span>
+                </div>
+                <button onclick="event.stopPropagation(); SlangEngine.playAudio('vrh')" class="w-7 h-7 rounded-full flex items-center justify-center text-xs bg-slate-100 dark:bg-slate-700 text-blue-500 active:scale-90 transition-all">🔊</button>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center shadow-sm">
+                <div>
+                    <span class="font-black text-slate-900 dark:text-white text-sm">Gas</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 ml-1">— Pun gas / Visoka energija / Hype</span>
+                </div>
+                <button onclick="event.stopPropagation(); SlangEngine.playAudio('gas')" class="w-7 h-7 rounded-full flex items-center justify-center text-xs bg-slate-100 dark:bg-slate-700 text-blue-500 active:scale-90 transition-all">🔊</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SRS Flashcard Deck Banner -->
+    <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 p-3.5 rounded-2xl flex gap-3 items-center">
+        <div class="text-2xl shrink-0">📱</div>
+        <p class="text-xs text-blue-800 dark:text-blue-200 leading-relaxed">
+            <b>Flashcards & SRS Integracija:</b> Svaka greška u lekciji "Ulični srpski" ili u Igraonici automatski se beleži u tvoj <b>Flashcard Deck</b> za ponavljanje! Takođe možeš tapnuti na zvezdicu (★) na bilo kom izrazu da ga sačuvaš.
+        </p>
+    </div>
 </div>`, guideHtmlSr: `
-<div class="space-y-4">
-    <p>Dobrodošli u <b>Engleski Žargon (Slang)</b>!</p>
-    <ul class="list-disc pl-5 font-bold space-y-2">
-        <li><b>Dude / Bro / Man</b> - Brate / Matori</li>
-        <li><b>Chilling</b> - Bleja (Opuštanje)</li>
-        <li><b>Hang out</b> - Druženje / Izaći napolje</li>
-    </ul>
+<div class="space-y-5 text-slate-800 dark:text-slate-100">
+    <div class="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-2 border-blue-500/30 rounded-2xl p-4">
+        <h3 class="text-base font-black text-blue-600 dark:text-blue-400 mb-1 flex items-center gap-2">
+            <span>🇬🇧</span> Engleske Idiomatske Fraze
+        </h3>
+        <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+            Kao i u srpskom, engleski jezik ima idiome koje ne možete prevoditi reč-po-reč. Evo najvažnijih kulturnih izraza koje izvorni govornici koriste svakog dana:
+        </p>
+    </div>
+
+    <div class="space-y-3">
+        <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <h5 class="text-sm font-black text-slate-900 dark:text-white">Bite the bullet</h5>
+            <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Stisnuti zube / Pregristi nešto neprijatno</span></p>
+            <p class="text-[11px] text-slate-400 italic">Doslovno: "Zagristi metak"</p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <h5 class="text-sm font-black text-slate-900 dark:text-white">Break a leg!</h5>
+            <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Srećno! (Pozorišna tradicija za sreću)</span></p>
+            <p class="text-[11px] text-slate-400 italic">Doslovno: "Slomi nogu!"</p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <h5 class="text-sm font-black text-slate-900 dark:text-white">Piece of cake</h5>
+            <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Prosto k'o pasulj / Dečja igra</span></p>
+            <p class="text-[11px] text-slate-400 italic">Doslovno: "Komad torte"</p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <h5 class="text-sm font-black text-slate-900 dark:text-white">Spill the beans</h5>
+            <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Otkriti tajnu / Izlanuti se</span></p>
+            <p class="text-[11px] text-slate-400 italic">Doslovno: "Prosuti pasulj"</p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <h5 class="text-sm font-black text-slate-900 dark:text-white">Cost an arm and a leg</h5>
+            <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Košta ko svetog Petra kajgana</span></p>
+            <p class="text-[11px] text-slate-400 italic">Doslovno: "Košta ruku i nogu"</p>
+        </div>
+    </div>
 </div>` },
 
     // --- TIER 1: FOUNDATION (all unlocked from start, paired layout) ---
@@ -527,8 +752,7 @@ guideHtmlSr: `
 
     // --- TIER 6: ADVANCED ---
     { id: 'dating', name: 'Ljubav', nameEn: 'Dating', emoji: '❤️', category: 'dating', prereqs: ['future_tense'], optional: false, difficulty: 3, guideHtml: `<div class="space-y-4"><p>Romance and dating terms!</p><p><b>Volim te</b> means I love you.</p></div>` },
-    { id: 'slang', name: 'Sleng', nameEn: 'Slang', emoji: '😎', category: 'slang', prereqs: ['dating'], optional: false, difficulty: 4, guideHtml: `<div class="space-y-4"><p>Speak like a local!</p><ul class="list-disc pl-5"><li><b>Brate</b> - Bro / Dude</li><li><b>Bleja</b> - Hanging out / Chilling</li><li><b>Vrh</b> - Awesome (literally: peak)</li></ul></div>` },
-    { id: 'particles', name: 'Rečce i Uzvici', nameEn: 'Particles & Interjections', emoji: '💥', category: 'particles', prereqs: ['slang'], optional: false, difficulty: 3, guideHtml: `<div class="space-y-4"><p><b>Particles (Rečce)</b> are tiny words that add meaning or emphasis:</p><ul class="list-disc pl-5"><li><b>li</b> - question marker: Da <b>li</b> znaš? (Do you know?)</li><li><b>zar</b> - rhetorical: <b>Zar</b> ne? (Right? / Isn't it?)</li><li><b>baš</b> - emphasis: <b>Baš</b> lepo! (Really nice!)</li><li><b>čak</b> - even: <b>Čak</b> i on. (Even he.)</li></ul><p><b>Interjections (Uzvici)</b> express emotion:</p><ul class="list-disc pl-5"><li><b>Jao!</b> - Oh no! / Ouch!</li><li><b>Ej!</b> - Hey!</li><li><b>Bravo!</b> - Well done!</li><li><b>Uf!</b> - Phew!</li></ul></div>` },
+        { id: 'particles', name: 'Rečce i Uzvici', nameEn: 'Particles & Interjections', emoji: '💥', category: 'particles', prereqs: ['slang'], optional: false, difficulty: 3, guideHtml: `<div class="space-y-4"><p><b>Particles (Rečce)</b> are tiny words that add meaning or emphasis:</p><ul class="list-disc pl-5"><li><b>li</b> - question marker: Da <b>li</b> znaš? (Do you know?)</li><li><b>zar</b> - rhetorical: <b>Zar</b> ne? (Right? / Isn't it?)</li><li><b>baš</b> - emphasis: <b>Baš</b> lepo! (Really nice!)</li><li><b>čak</b> - even: <b>Čak</b> i on. (Even he.)</li></ul><p><b>Interjections (Uzvici)</b> express emotion:</p><ul class="list-disc pl-5"><li><b>Jao!</b> - Oh no! / Ouch!</li><li><b>Ej!</b> - Hey!</li><li><b>Bravo!</b> - Well done!</li><li><b>Uf!</b> - Phew!</li></ul></div>` },
     { id: 'spelling', name: 'Pravopis', nameEn: 'Spelling Traps', emoji: '✍️', category: 'spelling', prereqs: ['particles'], optional: false, difficulty: 3, guideHtml: `<div class="space-y-4"><p><b>English Spelling Traps:</b></p><ul class="list-disc pl-5"><li>Drop 'y' for 'i' (happy ➡️ happier, heavy ➡️ heaviest)</li><li>Double consonant for short words (hot ➡️ hotter, big ➡️ biggest)</li></ul><p><b>Serbian Spelling Traps:</b></p><p>Pay close attention to similar-sounding letters:</p><ul class="list-disc pl-5"><li><b>Č</b> (hard ch) vs <b>Ć</b> (soft ch): čaj (tea) vs noć (night).</li><li><b>Dž</b> (hard j) vs <b>Đ</b> (soft j): džep (pocket) vs đak (student).</li></ul></div>` },
 
     // --- TIER 7: TRAVEL & NAVIGATION ---

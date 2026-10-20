@@ -239,9 +239,11 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [ ] **Offline Audio Bundles**: Add "Download Offline Audio Pack" to save pre-generated MP3s for 1,000 common words into IndexedDB for airplane mode.
 - [ ] **Peer-to-Peer Friend Codes**: Let users generate a code to share stats and compete on a mini-leaderboard without a massive cloud backend.
 
-## 🎭 Priority 30: "Untranslatable" Cultural Idioms & Slang
-- [ ] **Idioms & Terms of Endearment**: Expand slang curriculum with phrases like "ljubi te baka sine" or "Dušo moja".
-- [ ] **Cultural Context Notes**: Teach not just the literal translation, but exactly when and to whom these emotional phrases are used.
+## ✅🎭 Priority 30: "Untranslatable" Cultural Idioms & Slang (DONE)
+- [x] **Idioms & Terms of Endearment (DONE)**: Expanded with 50+ authentic cultural idioms and expressions across 5 curated categories: Beograd urban slang, Narodne izreke ("ljubi te baka sine", "bogu iza nogu", "puna kapa", "mlatiti praznu slamu", "kad na vrbi rodi grožđe", "košta ko svetog Petra kajgana"), Nežnost & ljubav ("dušo moja", "srce moje", "zlato moje", "sunce moje"), Kafanski život, and Južni govor.
+- [x] **Cultural Context Notes (DONE)**: Every idiom features a dedicated "Kada se koristi" note detailing the real cultural meaning, emotional nuance, and social etiquette, plus literal translations and authentic example sentences.
+- [x] **Strict Two-Location Placement (DONE)**: Added strictly to (1) the Skill Tree under the "Ulični srpski" node (interactive cheat-sheet guide + 10-question practice lessons) and (2) the Arcade under "Street Slang & Idioms" (`SlangEngine`).
+- [x] **Learning Engine, mistakeLog & SRS Flashcard Integration (DONE)**: All idioms feature unique word IDs (`idm1`-`idm25`, `sl11`-`sl20`, `end1`-`end10`, `kaf1`-`kaf7`, `juz1`-`juz6`). Any incorrect answers in lessons or the Arcade Slang Quiz automatically record to `state.mistakeLog`, show in the Mistakes tab, and schedule into the Tinder-style SRS Flashcard deck (`srs-engine.js`). Interactive Star (★) buttons allow instant manual saving into flashcards from both places.
 
 ## ✅⌨️ Priority 31: Keyboard Tolerance & Diacritic Normalization (DONE)
 - [x] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes š->s, č/ć->c, ž->z, and đ->dj during answer checking. (ALREADY IMPLEMENTED in app.js checkAnswer normalize())

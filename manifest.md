@@ -65,7 +65,7 @@
 | [`karaoke.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/karaoke.js) | 572 | 28 KB | Bilingual speech-recognition reader — levels A1-B2, live word tracking, word translations, TTS replay |
 | [`rhythm.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/rhythm.js) | 567 | 26 KB | Music lyrics synchronizer — YouTube IFrame API playback + SpeechRecognition singing/recitation scoring |
 | [`cloze.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/cloze.js) | 224 | 15 KB | Fill-in-the-blank context trainer — sentence bank, scoring, streaks |
-| [`slang.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/slang.js) | 200 | 12 KB | Belgrade/Southern/Kafana slang database — pronunciation, literal vs actual meanings, usage examples, slang quiz |
+| [`slang.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/slang.js) | 350 | 22 KB | Authentic Cultural Idioms & Slang (Priority 30) — Belgrade/Izreke/Nežnost/Kafana/Južni database, cultural context notes, quiz engine, mistakeLog & SRS Flashcards sync |
 | [`stories.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/stories.js) | 352 | 18 KB | Branching RPG-style interactive dialogue stories — multiple conversation paths |
 
 ## [06_UTILITIES] — Scripts, Tests & Dev Tools

@@ -1,5 +1,5 @@
 const DB_NAME = 'SerboLingoDB';
-const DB_VERSION = 5;
+const DB_VERSION = 6;
 
 const db = {
     _db: null,
@@ -111,12 +111,29 @@ const db = {
 
     getAllWords() {
         return new Promise((resolve, reject) => {
-            const transaction = this._db.transaction(['dictionary'], 'readonly');
-            const store = transaction.objectStore('dictionary');
-            const request = store.getAll();
+            if (!this._db) {
+                return resolve(window.SEED_DATA || []);
+            }
+            try {
+                const transaction = this._db.transaction(['dictionary'], 'readonly');
+                const store = transaction.objectStore('dictionary');
+                const request = store.getAll();
 
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    let results = request.result || [];
+                    const seed = window.SEED_DATA || [];
+                    if (results.length < seed.length) {
+                        const existingIds = new Set(results.map(r => r.id));
+                        seed.forEach(s => {
+                            if (!existingIds.has(s.id)) results.push(s);
+                        });
+                    }
+                    resolve(results);
+                };
+                request.onerror = () => resolve(window.SEED_DATA || []);
+            } catch (e) {
+                resolve(window.SEED_DATA || []);
+            }
         });
     },
 
@@ -147,24 +164,62 @@ const db = {
 
     getWord(id) {
         return new Promise((resolve, reject) => {
-            const transaction = this._db.transaction(['dictionary'], 'readonly');
-            const store = transaction.objectStore('dictionary');
-            const request = store.get(id);
+            if (!this._db) {
+                const found = (window.SEED_DATA || []).find(w => w.id === id);
+                return resolve(found || null);
+            }
+            try {
+                const transaction = this._db.transaction(['dictionary'], 'readonly');
+                const store = transaction.objectStore('dictionary');
+                const request = store.get(id);
 
-            request.onsuccess = () => resolve(request.result || null);
-            request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    if (request.result) return resolve(request.result);
+                    const found = (window.SEED_DATA || []).find(w => w.id === id);
+                    resolve(found || null);
+                };
+                request.onerror = () => {
+                    const found = (window.SEED_DATA || []).find(w => w.id === id);
+                    resolve(found || null);
+                };
+            } catch (e) {
+                const found = (window.SEED_DATA || []).find(w => w.id === id);
+                resolve(found || null);
+            }
         });
     },
 
     getWordsByCategory(category) {
         return new Promise((resolve, reject) => {
-            const transaction = this._db.transaction(['dictionary'], 'readonly');
-            const store = transaction.objectStore('dictionary');
-            const index = store.index('category');
-            const request = index.getAll(category);
+            if (!this._db) {
+                const filtered = (window.SEED_DATA || []).filter(w => w.category === category);
+                return resolve(filtered);
+            }
+            try {
+                const transaction = this._db.transaction(['dictionary'], 'readonly');
+                const store = transaction.objectStore('dictionary');
+                const index = store.index('category');
+                const request = index.getAll(category);
 
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    let results = request.result || [];
+                    const fallback = (window.SEED_DATA || []).filter(w => w.category === category);
+                    if (results.length < fallback.length) {
+                        const existingIds = new Set(results.map(r => r.id));
+                        fallback.forEach(f => {
+                            if (!existingIds.has(f.id)) results.push(f);
+                        });
+                    }
+                    resolve(results);
+                };
+                request.onerror = () => {
+                    const filtered = (window.SEED_DATA || []).filter(w => w.category === category);
+                    resolve(filtered);
+                };
+            } catch (e) {
+                const filtered = (window.SEED_DATA || []).filter(w => w.category === category);
+                resolve(filtered);
+            }
         });
     },
 
