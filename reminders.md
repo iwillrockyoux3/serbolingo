@@ -244,6 +244,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Cultural Context Notes (DONE)**: Every idiom features a dedicated "Kada se koristi" note detailing the real cultural meaning, emotional nuance, and social etiquette, plus literal translations and authentic example sentences.
 - [x] **Strict Two-Location Placement (DONE)**: Added strictly to (1) the Skill Tree under the "Ulični srpski" node (interactive cheat-sheet guide + 10-question practice lessons) and (2) the Arcade under "Street Slang & Idioms" (`SlangEngine`).
 - [x] **Learning Engine, mistakeLog & SRS Flashcard Integration (DONE)**: All idioms feature unique word IDs (`idm1`-`idm25`, `sl11`-`sl20`, `end1`-`end10`, `kaf1`-`kaf7`, `juz1`-`juz6`). Any incorrect answers in lessons or the Arcade Slang Quiz automatically record to `state.mistakeLog`, show in the Mistakes tab, and schedule into the Tinder-style SRS Flashcard deck (`srs-engine.js`). Interactive Star (★) buttons allow instant manual saving into flashcards from both places.
+- [ ] **Future Expansion & Revisit Note**: Come back to Priority 30 to add even more authentic Serbian slang, regional jargon (e.g., Vojvodina, Šumadija, Krajiški), and cultural idioms to the curriculum and Arcade quiz.
 
 ## ✅⌨️ Priority 31: Keyboard Tolerance & Diacritic Normalization (DONE)
 - [x] **Bald Latin (Ošišana latinica) Support**: Native engine automatically normalizes š->s, č/ć->c, ž->z, and đ->dj during answer checking. (ALREADY IMPLEMENTED in app.js checkAnswer normalize())
