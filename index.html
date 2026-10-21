@@ -154,6 +154,7 @@
             <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="app.navigate('home')">
                 <span class="text-2xl">🇷🇸</span>
                 <h1 class="text-base font-black text-slate-700 dark:text-slate-100 tracking-tight">SerboLingo</h1>
+                <span id="header-immersion-badge" class="hidden text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full bg-red-600 text-white tracking-wider animate-pulse shadow-sm">100% RS</span>
             </div>
             <div class="flex-1 relative z-50 mx-2 h-8">
                 <div id="toast-container" class="absolute -top-1 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none w-full max-w-[140px]"></div>
@@ -793,6 +794,25 @@
                 <div class="text-4xl">🌍</div>
             </div>
 
+            <!-- Native Immersion Banner (Priority 34) -->
+            <div onclick="window.ImmersionClips && ImmersionClips.openModal()"
+                class="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white p-4 rounded-2xl shadow-lg border-2 border-red-400/40 cursor-pointer active:scale-98 transition-all relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 text-6xl opacity-20 group-hover:scale-110 transition-transform">🇷🇸</div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full">🎬 Izvorni Govor</span>
+                            <span class="text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-900 px-1.5 py-0.5 rounded-full animate-pulse">16 Klipova</span>
+                        </div>
+                        <h3 class="text-base font-black tracking-tight leading-snug">Zvuci & Realni Govor (Native Clips)</h3>
+                        <p class="text-[11px] text-white/90 font-medium">Glasovi Č/Ć, Dž/Đ, beogradski sleng, audio loopovi i vežba slušanja.</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-lg shrink-0 group-hover:translate-x-1 transition-transform">
+                        ▶
+                    </div>
+                </div>
+            </div>
+
             <!-- Search Area with Smart Modes -->
             <div class="space-y-2">
                 <div class="relative w-full shadow-sm rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-blue-400 dark:focus-within:border-blue-500 transition-colors">
@@ -1058,6 +1078,37 @@
                     </div>
 
                 </div>
+            <!-- Hardcore Immersion & Native Clips (Priority 34) -->
+            <div class="space-y-3">
+                <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-red-500/30 shadow-sm space-y-4">
+                    <!-- Immersion Toggle -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-red-100 dark:bg-red-900/40 rounded-xl text-lg">🇷🇸</div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-sm text-slate-700 dark:text-slate-200" data-i18n="profile_immersion_title">Hardcore Imerzija</span>
+                                    <span class="px-1.5 py-0.5 rounded text-[8px] font-black bg-red-500 text-white tracking-wide uppercase">100% Srpski</span>
+                                </div>
+                                <p class="text-[9px] text-slate-400 dark:text-slate-500 leading-tight" data-i18n="profile_immersion_desc">Uklanja engleski iz interfejsa. Sve prelazi na čist srpski.</p>
+                            </div>
+                        </div>
+                        <button onclick="app.toggleHardcoreImmersion()" id="btn-immersion"
+                            class="w-12 h-7 bg-slate-200 dark:bg-slate-700 rounded-full relative transition-colors duration-300">
+                            <div id="knob-immersion"
+                                class="absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform">
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Native Speaker Clips Launch -->
+                    <button onclick="window.ImmersionClips && ImmersionClips.openModal()"
+                        class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-black text-xs flex items-center justify-center gap-2 shadow-md shadow-red-500/20 active:scale-95 transition-all">
+                        <span>🎬</span> <span data-i18n="profile_immersion_btn">Izvorni Govor & Klipovi (Native Clips)</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- Save Data Backup & Restore (Priority 24) -->
             <div class="space-y-3">
                 <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1">Rezervna Kopija & Podaci</h3>
@@ -1664,6 +1715,51 @@
         </div>
     </div>
 
+    <!-- Native Speaker Immersion Clips Modal (Priority 34) -->
+    <div id="immersion-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[220] flex flex-col p-4 md:p-6 fade-in overflow-y-auto">
+        <div class="max-w-md w-full mx-auto my-auto bg-slate-900 border-2 border-red-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+            <div class="modal-drag-handle"></div>
+
+            <!-- Modal Header -->
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl">🎬</span>
+                    <div>
+                        <h3 class="text-base font-black text-white leading-tight">Izvorni Govor & Klipovi</h3>
+                        <p class="text-[11px] font-bold text-red-400">Native Immersion Audio Loops</p>
+                    </div>
+                </div>
+                <button onclick="ImmersionClips.closeModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center font-black text-sm active:scale-90 transition-transform">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div class="px-4 py-2.5 border-b border-slate-800 bg-slate-800/40 flex gap-1.5 overflow-x-auto no-scrollbar">
+                <button onclick="ImmersionClips.filterCategory('all')" id="imm-cat-all" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-600 text-white shrink-0 active:scale-95 transition-all">Svi (16)</button>
+                <button onclick="ImmersionClips.filterCategory('sounds')" id="imm-cat-sounds" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 active:scale-95 transition-all">Glasovi (Č/Ć/R)</button>
+                <button onclick="ImmersionClips.filterCategory('street')" id="imm-cat-street" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 active:scale-95 transition-all">Ulica & Sleng</button>
+                <button onclick="ImmersionClips.filterCategory('culture')" id="imm-cat-culture" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 active:scale-95 transition-all">Život & Kultura</button>
+            </div>
+
+            <!-- Dynamic Player Area -->
+            <div id="immersion-player-container" class="p-4 overflow-y-auto flex-1 space-y-4">
+                <!-- Rendered dynamically by ImmersionClips.renderCurrentClip() -->
+            </div>
+
+            <!-- Modal Footer Controls -->
+            <div class="p-3 border-t border-slate-800 bg-slate-900/90 flex items-center justify-between gap-2">
+                <button onclick="ImmersionClips.prevClip()" class="flex-1 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-black text-xs active:scale-95 transition-transform flex items-center justify-center gap-1">
+                    ◀ <span>Prethodni</span>
+                </button>
+                <span id="immersion-clip-counter" class="text-xs font-black text-slate-400 px-2 shrink-0">1 / 16</span>
+                <button onclick="ImmersionClips.nextClip()" class="flex-1 py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs active:scale-95 transition-transform flex items-center justify-center gap-1">
+                    <span>Sledeći</span> ▶
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Smart Grammar Tooltip Floating Inspector (Priority 44) -->
     <div id="grammar-tooltip" class="hidden fixed z-[300] max-w-sm w-80 bg-slate-900/95 dark:bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-3xl shadow-2xl border-2 border-indigo-500/40 transition-all duration-200 max-h-[85vh] overflow-y-auto">
         <!-- Populated dynamically by GrammarEngine -->
@@ -1692,6 +1788,7 @@
     <script src="srs-engine.js" charset="UTF-8"></script>
     <script src="touch-haptics.js" charset="UTF-8"></script>
     <script src="grammar-tooltips.js" charset="UTF-8"></script>
+    <script src="immersion-clips.js" charset="UTF-8"></script>
     <script src="app.js" charset="UTF-8"></script>
 </body>
 

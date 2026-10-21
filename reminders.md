@@ -263,9 +263,9 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Gemini Grammar Breakdown**: When a user gets a question wrong, an "Explain Why" button appears. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made. (ALREADY BUILT in app.js lines 3260-3330, Gemini model cascade with offline fallback.)
 - [ ] **AI Accent Coach** *(Pending - Build Later)*: Give a 0-100% pronunciation score comparing the user's voice pitch to a native Belgrade speaker.
 
-## 📺 Priority 34: Real-World Native Media & Immersion
-- [ ] **Native Speaker Clips**: Short 3-second looping video/audio clips of actual locals pronouncing difficult words or slang on the street.
-- [ ] **Hardcore Immersion Mode**: A toggle in settings that turns the *entire app UI* into Serbian. Zero English is allowed. Good for advanced learners.
+## ✅📺 Priority 34: Real-World Native Media & Immersion (BUILT - EXPERIMENTAL / USER TESTING)
+- [x] **Native Speaker Clips**: 16 curated acoustic immersion clips with looping playback, speed controls (1.0x / 0.75x), script switching (Latin / Cyrillic / Hidden), voice shadowing test, and 1-click SRS Flashcard deck synchronization (`immersion-clips.js`).
+- [x] **Hardcore Immersion Mode**: Profile settings toggle that switches 100% of the UI into pure Serbian (`sr_lat` or `sr_cyr`), stripping English labels and adding a header `100% RS` badge. (Built experimentally for testing and evaluation).
 
 ## ✅ Priority 35: Sensory Feedback & Responsive Layout (DONE)
 - [x] **Punchy Haptic Feedback**: Noticeable, tactile navigator.vibrate pulses for button taps (40ms), firm double-pulse on correct answers ([70, 40, 120]ms), authoritative warning buzz on wrong answers ([120, 60, 180]ms), and celebration fanfare rhythm. User toggleable in Profile settings.

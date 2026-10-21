@@ -111,6 +111,7 @@
 | P35.1 | Punchy Haptic Vibrations & Responsive Tablet Layout | 🆕 New | `touch-haptics.js`, `app.js`, `index.html`, `styles.css` | ✅ DONE |
 | P27.1 | Tinder-Style Flashcard Swipes & Memory Retention Heatmap | 🆕 New | `srs-engine.js`, `app.js`, `index.html`, `styles.css` | ✅ DONE |
 | P32.1 | Ranked Leagues (Bronze to Obsidian), Timed XP Boosts & Profile Locker | 🆕 New | `league-system.js`, `app.js`, `index.html`, `styles.css` | 🔄 REVISIT |
+| P34.1 | Hardcore Immersion Mode (100% Serbian UI) & Native Speaker Clips Hub | 🆕 New | `immersion-clips.js`, `app.js`, `index.html` | ✅ TESTING |
 
 ### ⚪ Future / Moonshot
 

@@ -61,6 +61,7 @@
 | [`touch-haptics.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/touch-haptics.js) | 260 | 11 KB | Native Touch Gestures & Haptics — Swipe-to-dismiss modals with spring physics, left edge swipe back to Home, punchy haptic vibrations |
 | [`srs-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/srs-engine.js) | 410 | 18 KB | Spaced Repetition & Flashcards — Tinder-style card swipe reviews, 3D flip physics, SM-2 retention algorithm, Stats tab Brain Health Heatmap |
 | [`league-system.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/league-system.js) | 560 | 25 KB | Ranked Leagues (Bronze to Obsidian), Timed Early Bird Boosts & Animated Avatars/Titles Locker |
+| [`immersion-clips.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/immersion-clips.js) | 700 | 33 KB | Native Speaker Immersion & Audio Loops (Priority 34) — 16 curated native speech clips (Č/Ć, Dž/Đ, R, street slang, culture), 2.5s continuous loop mode, speed toggle (1.0x / 0.75x), script modes (Latinica / Ćirilica / Hidden blind ear test), voice shadowing, and 1-click SRS Flashcard synchronization |
 
 | [`karaoke.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/karaoke.js) | 572 | 28 KB | Bilingual speech-recognition reader — levels A1-B2, live word tracking, word translations, TTS replay |
 | [`rhythm.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/rhythm.js) | 567 | 26 KB | Music lyrics synchronizer — YouTube IFrame API playback + SpeechRecognition singing/recitation scoring |

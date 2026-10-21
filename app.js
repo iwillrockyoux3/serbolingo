@@ -4,7 +4,7 @@ const state = {
     goalCelebrated: false,
     history: {}, // Format: "YYYY-MM-DD": { xp: 0, lessons: 0 }
     skills: { 'Slušanje': 50, 'Govor': 50, 'Čitanje': 50, 'Pisanje': 50, 'Gramatika': 50, 'Vokabular': 50 },
-    settings: { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, textScale: 100, appLanguage: 'sr_lat', learningDirection: 'sr_to_en', hapticsEnabled: true },
+    settings: { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, textScale: 100, appLanguage: 'sr_lat', learningDirection: 'sr_to_en', hapticsEnabled: true, hardcoreImmersion: false },
     achievements: {},
     lastActiveDate: null,
     mistakeLog: {}, // New for Phase 4: Track missed words for SRS
@@ -164,11 +164,18 @@ const UI_STRINGS = {
     toast_guest_level: { en: 'Create an account to unlock all levels!', sr_lat: 'Napravi nalog da bi otključao sve nivoe!', sr_cyr: 'Направи налог да би откључао све нивое!' },
     toast_guest_ai: { en: 'Create an account to use AI lessons!', sr_lat: 'Napravi nalog da bi koristio AI lekcije!', sr_cyr: 'Направи налог да би користио АИ лекције!' },
     toast_guest_finish: { en: 'Great job! Create an account to save your XP and start your streak.', sr_lat: 'Odličan posao! Napravi nalog da bi sačuvao XP i započeo niz dana.', sr_cyr: 'Одличан посао! Направи налог да би сачувао XP и започео низ дана.' },
+    // Immersion Mode (Priority 34)
+    profile_immersion_title: { en: 'Hardcore Immersion', sr_lat: 'Hardcore Imerzija', sr_cyr: 'Хардкор Имерзија' },
+    profile_immersion_desc: { en: 'Removes English from entire UI. 100% Serbian only.', sr_lat: 'Uklanja engleski iz interfejsa. Sve prelazi na čist srpski.', sr_cyr: 'Уклања енглески из интерфејса. Све прелази на чист српски.' },
+    profile_immersion_btn: { en: '🎬 Native Speaker Clips', sr_lat: '🎬 Izvorni Govor & Klipovi', sr_cyr: '🎬 Изворни Говор & Клипови' },
 };
 
 // Translation helper — returns string for current app language
 const t = (key) => {
-    const lang = state.settings.appLanguage || 'sr_lat';
+    let lang = state.settings.appLanguage || 'sr_lat';
+    if (state.settings && state.settings.hardcoreImmersion) {
+        lang = lang === 'sr_cyr' ? 'sr_cyr' : 'sr_lat';
+    }
     const entry = UI_STRINGS[key];
     if (!entry) return key;
     return entry[lang] || entry['sr_lat'] || key;
@@ -282,6 +289,7 @@ const app = {
             if (state.settings.volume.sfx === undefined) state.settings.volume.sfx = 1.0;
             if (!state.settings.appLanguage) state.settings.appLanguage = 'sr_lat';
             if (!state.settings.learningDirection) state.settings.learningDirection = 'sr_to_en';
+            if (state.settings.hardcoreImmersion === undefined) state.settings.hardcoreImmersion = false;
             if (!state.achievements) state.achievements = {};
             // Fix missing history
             if (!state.history) state.history = {};
@@ -496,6 +504,7 @@ const app = {
 
         app.renderBadges();
         app.renderAchievements();
+        app.updateImmersionUI();
         if (window.LeagueEngine && window.LeagueEngine.updateProfileHeader) {
             window.LeagueEngine.updateProfileHeader();
         }
@@ -3366,6 +3375,48 @@ const app = {
         // Refresh Explore Hub to load the correct library
         if (window.ExploreHub && typeof window.ExploreHub.refresh === 'function') {
             window.ExploreHub.refresh();
+        }
+    },
+    // ─── HARDCORE IMMERSION ENGINE (Priority 34) ───
+    toggleHardcoreImmersion: () => {
+        state.settings.hardcoreImmersion = !state.settings.hardcoreImmersion;
+        app.saveStats();
+        app.applyLanguage();
+        app.updateImmersionUI();
+        app.updateProfileUI();
+        const isCyr = state.settings.appLanguage === 'sr_cyr';
+        if (state.settings.hardcoreImmersion) {
+            const msg = isCyr ? '🇷🇸 Имерзија активна! 100% српски интерфејс.' : '🇷🇸 Imerzija aktivna! 100% srpski interfejs.';
+            app.showToast(msg, 'success');
+        } else {
+            const msg = isCyr ? 'Имерзија искључена.' : 'Hardcore Imerzija isključena.';
+            app.showToast(msg, 'info');
+        }
+    },
+    updateImmersionUI: () => {
+        const isImmersion = !!(state.settings && state.settings.hardcoreImmersion);
+        const btn = document.getElementById('btn-immersion');
+        const knob = document.getElementById('knob-immersion');
+        if (btn && knob) {
+            if (isImmersion) {
+                btn.classList.remove('bg-slate-200', 'dark:bg-slate-700');
+                btn.classList.add('bg-red-500');
+                knob.classList.add('translate-x-5');
+            } else {
+                btn.classList.remove('bg-red-500');
+                btn.classList.add('bg-slate-200', 'dark:bg-slate-700');
+                knob.classList.remove('translate-x-5');
+            }
+        }
+        const badge = document.getElementById('header-immersion-badge');
+        if (badge) {
+            if (isImmersion) {
+                badge.classList.remove('hidden');
+                badge.classList.add('inline-flex');
+            } else {
+                badge.classList.add('hidden');
+                badge.classList.remove('inline-flex');
+            }
         }
     },
     playSound: (type) => {
