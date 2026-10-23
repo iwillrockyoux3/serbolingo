@@ -247,6 +247,7 @@ window.ImmersionClips = (() => {
     let subtitleMode = 'latin'; // 'latin' | 'cyrillic' | 'hidden'
     let isPlaying = false;
     let loopTimeoutId = null;
+    let currentAudio = null;
 
     // ─── 3. CORE CONTROLLERS ───
     function openModal() {
@@ -364,7 +365,10 @@ window.ImmersionClips = (() => {
         isPlaying = true;
         updateVisualizer(true);
 
-        const textToSpeak = clip.sr_lat;
+        // ALWAYS sanitize: strip bracketed phonetics, notes, and extra whitespace
+        const rawText = clip.sr_lat || '';
+        const textToSpeak = rawText.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/\/.*?\//g, '').trim();
+        if (!textToSpeak) return;
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
         utterance.lang = 'sr-RS';
         utterance.rate = 0.85 * playbackSpeed;
@@ -375,7 +379,12 @@ window.ImmersionClips = (() => {
         // Try selecting Serbian voice if available
         const voices = window.speechSynthesis.getVoices();
         const srVoice = voices.find(v => v.lang.startsWith('sr'));
-        if (srVoice) utterance.voice = srVoice;
+        if (srVoice) {
+            utterance.voice = srVoice;
+        } else {
+            playGtxAudio(textToSpeak);
+            return;
+        }
 
         utterance.onend = () => {
             isPlaying = false;
@@ -403,11 +412,61 @@ window.ImmersionClips = (() => {
         window.speechSynthesis.speak(utterance);
     }
 
+    function playGtxAudio(text) {
+        try {
+            const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=sr&q=${encodeURIComponent(text)}`;
+            const audio = new Audio(url);
+            audio.playbackRate = playbackSpeed;
+            audio.volume = (typeof state !== 'undefined' && state.settings && state.settings.volume && state.settings.volume.tts !== undefined) 
+                ? state.settings.volume.tts 
+                : 1.0;
+
+            audio.onended = () => {
+                isPlaying = false;
+                updateVisualizer(false);
+                if (isLooping) {
+                    loopTimeoutId = setTimeout(() => {
+                        const modal = document.getElementById('immersion-modal');
+                        if (modal && !modal.classList.contains('hidden') && isLooping) {
+                            playAudio();
+                        }
+                    }, 2000);
+                }
+            };
+
+            audio.onerror = () => {
+                isPlaying = false;
+                updateVisualizer(false);
+                if (window.app && window.app.fallbackSpeech) {
+                    window.app.fallbackSpeech(text, 'sr-RS');
+                }
+            };
+
+            currentAudio = audio;
+            audio.play().catch(e => {
+                console.warn("Audio play rejected, falling back:", e);
+                isPlaying = false;
+                updateVisualizer(false);
+                if (window.app && window.app.fallbackSpeech) {
+                    window.app.fallbackSpeech(text, 'sr-RS');
+                }
+            });
+        } catch (e) {
+            console.warn("playGtxAudio error:", e);
+            isPlaying = false;
+            updateVisualizer(false);
+        }
+    }
+
     function stopAudio() {
         isPlaying = false;
         if (loopTimeoutId) {
             clearTimeout(loopTimeoutId);
             loopTimeoutId = null;
+        }
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
         }
         if (window.speechSynthesis) {
             window.speechSynthesis.cancel();

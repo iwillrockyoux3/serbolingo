@@ -1830,6 +1830,10 @@ const app = {
     // ======== END WHITEBOARD ENGINE ========
 
     speakPhrase: (text, lang = 'en-US') => {
+        if (!text || typeof text !== 'string') return;
+        // Universal Audio Sanitizer: strip phonetic guides [like-this], (/like-this/), and notes
+        text = text.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/\/.*?\//g, '').trim();
+        if (!text) return;
         try {
             window.speechSynthesis.cancel();
             if (state.currentAudio) {

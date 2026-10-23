@@ -334,8 +334,11 @@
         },
 
         playAudio: function (text) {
-            if (typeof app !== 'undefined' && app.playTts) {
-                app.playTts(text, 'sr');
+            if (!text || typeof text !== 'string') return;
+            text = text.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/\/.*?\//g, '').trim();
+            if (!text) return;
+            if (typeof app !== 'undefined' && app.speakPhrase) {
+                app.speakPhrase(text, 'sr-RS');
             } else if ('speechSynthesis' in window) {
                 const u = new SpeechSynthesisUtterance(text);
                 u.lang = 'sr-RS';

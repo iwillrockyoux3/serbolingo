@@ -11,6 +11,24 @@ ANTIGRAVITY_CONSTITUTION = r"""
 🌌 Google Antigravity: Serbian ↔ English App Technical Constitution (v3.0 - Mobile-First Ultimate)
 [!WARNING]
 
+SECTION 00.1: THE 3-STEP INTERNAL VERIFICATION & JUDGE PROTOCOL (ZERO-DEFECT MANDATE)
+CRITICAL: To ensure single-pass perfection on Flash models, the AI MUST execute a rigorous 3-step internal review before rendering any final code block.
+
+  🔍 STEP 1: THE ARCHITECTURAL TRACE (INTERNAL SCRATCHPAD)
+- Before writing code, mentally map out the exact function signatures, state flow, and DOM interactions.
+- Identify potential bottlenecks, null references, or memory leaks on budget mobile hardware.
+
+  ⚖️ STEP 2: THE ADVERSARIAL JUDGE (SELF-CRITIQUE)
+- Critically evaluate the drafted solution against these 4 strict failure modes:
+  1. REGRESSION CHECK: Does this touch anything outside the exact user request? (If yes, strip it out).
+  2. ENCODING CHECK: Are all strings, inputs, and template literals strictly forcing UTF-8 without diacritic stripping (č, ć, ž, š, đ)?
+  3. MOBILE OVERFLOW CHECK: Will CSS flex/grid layouts wrap correctly on a narrow mobile screen?
+  4. PERSISTENCE CHECK: Are localStorage states updated atomically so app crashes don't corrupt data?
+
+  🛠️ STEP 3: SURGICAL OUTPUT GENERATION
+- If the draft fails any judge check, rewrite it internally before outputting. 
+- Output ONLY the verified, production-ready code with zero placeholders or "TODOs".
+
 SECTION 00: THE FLASH-HIGH PRECISION & DELIBERATE ENGINEERING PROTOCOL (SUPREME MANDATE)
 CRITICAL: When operating on high-speed / high-thinking models (e.g. Gemini 3.8 Flash High), the agent MUST actively counter the bias toward rushed completion. Speed is strictly subordinate to surgical accuracy, zero regression, and structural integrity. "Measure twice, cut once."
 
