@@ -1829,6 +1829,45 @@ const app = {
     },
     // ======== END WHITEBOARD ENGINE ========
 
+    pcmToWavBlob: (base64Pcm, sampleRate = 24000) => {
+        try {
+            const binaryStr = atob(base64Pcm);
+            const pcmLength = binaryStr.length;
+            const wavBuffer = new ArrayBuffer(44 + pcmLength);
+            const view = new DataView(wavBuffer);
+
+            const writeString = (offset, str) => {
+                for (let i = 0; i < str.length; i++) {
+                    view.setUint8(offset + i, str.charCodeAt(i));
+                }
+            };
+
+            writeString(0, 'RIFF');
+            view.setUint32(4, 36 + pcmLength, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true); // PCM format
+            view.setUint16(22, 1, true); // Mono
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true); // Byte rate (sampleRate * 1 * 16/8)
+            view.setUint16(32, 2, true); // Block align (1 * 16/8)
+            view.setUint16(34, 16, true); // 16 bits per sample
+            writeString(36, 'data');
+            view.setUint32(40, pcmLength, true);
+
+            const pcmView = new Uint8Array(wavBuffer, 44);
+            for (let i = 0; i < pcmLength; i++) {
+                pcmView[i] = binaryStr.charCodeAt(i);
+            }
+
+            return new Blob([wavBuffer], { type: 'audio/wav' });
+        } catch (e) {
+            console.error("pcmToWavBlob error:", e);
+            return null;
+        }
+    },
+
     speakPhrase: (text, lang = 'en-US') => {
         if (!text || typeof text !== 'string') return;
         // Universal Audio Sanitizer: strip phonetic guides [like-this], (/like-this/), and notes
@@ -1878,12 +1917,16 @@ const app = {
                         let audioUrl = null;
 
                         if (provider === 'gemini') {
-                            // Gemini TTS via generateContent with AUDIO responseModality
-                            const ttsModels = ['gemini-1.5-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.0-flash-exp'];
+                            // Gemini 2.0 Flash Audio output (native audio response modality)
+                            const ttsModels = ['gemini-2.0-flash', 'gemini-2.0-flash-exp'];
                             let geminiSuccess = false;
                             let audioData = null;
                             let audioMime = null;
                             
+                            const promptText = lang.startsWith('sr')
+                                ? `Pronounce the following text clearly and authentically in Serbian. Only speak the phrase aloud, do not add any explanation or greeting: "${text}"`
+                                : `Pronounce the following text clearly and authentically in English. Only speak the phrase aloud, do not add any explanation or greeting: "${text}"`;
+
                             for (const model of ttsModels) {
                                 try {
                                     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${effectiveKey}`, {
@@ -1891,7 +1934,7 @@ const app = {
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify({
                                             contents: [{
-                                                parts: [{ text: `Say the following clearly and naturally in ${lang.startsWith('sr') ? 'Serbian' : 'English'}: "${text}"` }]
+                                                parts: [{ text: promptText }]
                                             }],
                                             generationConfig: {
                                                 responseModalities: ["AUDIO"],
@@ -1920,7 +1963,7 @@ const app = {
                                         for (const part of parts) {
                                             if (part.inlineData && part.inlineData.data) {
                                                 audioData = part.inlineData.data;
-                                                audioMime = part.inlineData.mimeType || 'audio/mp3';
+                                                audioMime = part.inlineData.mimeType || 'audio/pcm;rate=24000';
                                                 geminiSuccess = true;
                                                 break;
                                             }
@@ -1934,10 +1977,22 @@ const app = {
                             }
                             
                             if (!geminiSuccess || !audioData) {
-                                throw new Error('Gemini TTS: No audio returned from any model');
+                                throw new Error('Gemini TTS: No audio returned from Gemini 2.0 Flash');
                             }
                             
-                            audioUrl = `data:${audioMime};base64,${audioData}`;
+                            // Check if audio is PCM and convert to WAV blob for seamless browser playback
+                            if (audioMime.includes('pcm')) {
+                                const rateMatch = audioMime.match(/rate=(\d+)/);
+                                const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
+                                const wavBlob = app.pcmToWavBlob(audioData, sampleRate);
+                                if (wavBlob) {
+                                    audioUrl = URL.createObjectURL(wavBlob);
+                                } else {
+                                    audioUrl = `data:${audioMime};base64,${audioData}`;
+                                }
+                            } else {
+                                audioUrl = `data:${audioMime};base64,${audioData}`;
+                            }
 
                         } else if (provider === 'openai') {
                             const response = await fetch('https://api.openai.com/v1/audio/speech', {
@@ -1986,12 +2041,25 @@ const app = {
                         audio.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
                         
                         if (window.app && window.app.showToast) {
-                            const names = { gemini: 'Gemini AI', openai: 'OpenAI', google: 'Google Cloud' };
+                            const names = { gemini: 'Gemini 2.0 Flash AI', openai: 'OpenAI', google: 'Google Cloud' };
                             app.showToast(`🔊 Playing ${names[provider] || provider}...`, 'info');
                         }
                         
-                        audio.onerror = () => tryNativeWebSpeech();
-                        audio.play().catch(e => tryNativeWebSpeech());
+                        const cleanup = () => {
+                            if (audioUrl.startsWith('blob:')) {
+                                URL.revokeObjectURL(audioUrl);
+                            }
+                        };
+
+                        audio.onended = cleanup;
+                        audio.onerror = () => {
+                            cleanup();
+                            tryNativeWebSpeech();
+                        };
+                        audio.play().catch(e => {
+                            cleanup();
+                            tryNativeWebSpeech();
+                        });
                         state.currentAudio = audio;
                     } catch (e) {
                         console.warn('Premium AI TTS Error, cascading down...', e);
