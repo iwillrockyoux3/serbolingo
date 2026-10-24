@@ -244,6 +244,15 @@ const generateDailyQuests = () => {
 
 const app = {
     init: async () => {
+        // Unlock Web Audio / HTMLAudio on first user gesture (Chrome / iOS compliance)
+        const unlockAudio = () => {
+            if (app.unlockAudioContext) app.unlockAudioContext();
+            document.removeEventListener('pointerdown', unlockAudio);
+            document.removeEventListener('keydown', unlockAudio);
+        };
+        document.addEventListener('pointerdown', unlockAudio, { passive: true });
+        document.addEventListener('keydown', unlockAudio, { passive: true });
+
         // Initialize IndexedDB - wrapped in try-catch so app works even if DB fails
         try {
             if (window.appDb) await window.appDb.init();
@@ -1890,11 +1899,29 @@ const app = {
         }
     },
 
+    unlockAudioContext: () => {
+        if (window._serbolingoAudioUnlocked) return;
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+                if (!window._serbolingoAudioCtx) window._serbolingoAudioCtx = new AudioCtx();
+                if (window._serbolingoAudioCtx.state === 'suspended') {
+                    window._serbolingoAudioCtx.resume();
+                }
+            }
+            window._serbolingoAudioUnlocked = true;
+        } catch (e) {
+            console.warn("AudioContext unlock note:", e);
+        }
+    },
+
     speakPhrase: (text, lang = 'en-US') => {
         if (!text || typeof text !== 'string') return;
         // Universal Audio Sanitizer: strip phonetic guides [like-this], (/like-this/), and notes
         text = text.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/\/.*?\//g, '').trim();
         if (!text) return;
+
+        if (app.unlockAudioContext) app.unlockAudioContext();
 
         try {
             if (window.speechSynthesis) {
@@ -1916,6 +1943,11 @@ const app = {
                     speakerBtn.classList.remove('ring-4', 'ring-blue-400', 'animate-pulse');
                 }
             };
+
+            // Immediate on-screen notification confirming audio request
+            if (window.app && window.app.showToast) {
+                app.showToast('🔊 Slušam: ' + text, 'info');
+            }
 
             const ttsVol = (state.settings && state.settings.volume && typeof state.settings.volume.tts === 'number' && state.settings.volume.tts > 0)
                 ? state.settings.volume.tts
@@ -1943,40 +1975,55 @@ const app = {
                     if (state.currentAudio === audio) state.currentAudio = null;
                 };
 
-                audio.onerror = (err) => {
-                    resetVisual();
-                    console.warn("Google TTS (tw-ob) error, retrying with gtx endpoint...", err);
+                const tryGtxFallback = () => {
                     try {
                         const retryUrl = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=sr&q=${encoded}&_t=${Date.now()}`;
                         const retryAudio = new Audio();
                         retryAudio.referrerPolicy = "no-referrer";
                         retryAudio.preload = "auto";
                         retryAudio.volume = ttsVol;
-                        retryAudio.onended = resetVisual;
-                        retryAudio.onerror = () => {
+                        retryAudio.onended = () => {
                             resetVisual();
+                            if (state.currentAudio === retryAudio) state.currentAudio = null;
+                        };
+                        retryAudio.onerror = (e) => {
+                            resetVisual();
+                            console.warn("Secondary Google TTS error:", e);
                             if (window.app && window.app.showToast) {
                                 app.showToast('⚠️ Greška pri reprodukciji zvuka. Proverite internet.', 'error');
                             }
                         };
                         retryAudio.src = retryUrl;
-                        retryAudio.play().catch(() => resetVisual());
                         state.currentAudio = retryAudio;
+                        const p2 = retryAudio.play();
+                        if (p2 && p2.catch) {
+                            p2.catch(err2 => {
+                                console.warn("Secondary Google TTS play rejected:", err2);
+                                resetVisual();
+                                if (window.app && window.app.showToast) {
+                                    app.showToast('⚠️ Kliknite ponovo na zvučnik za pokretanje zvuka.', 'warning');
+                                }
+                            });
+                        }
                     } catch (e2) {
                         resetVisual();
                     }
                 };
 
+                audio.onerror = (err) => {
+                    console.warn("Google TTS (tw-ob) error, retrying with gtx endpoint...", err);
+                    tryGtxFallback();
+                };
+
                 audio.src = url;
                 state.currentAudio = audio;
-                audio.play().catch(e => {
-                    if (e.name === 'AbortError' || e.name === 'NotAllowedError') {
-                        resetVisual();
-                        return;
-                    }
-                    console.warn("Audio play rejected:", e);
-                    resetVisual();
-                });
+                const p = audio.play();
+                if (p && p.catch) {
+                    p.catch(e => {
+                        console.warn("Primary Google TTS play rejected, retrying with fallback:", e);
+                        tryGtxFallback();
+                    });
+                }
                 return;
             }
 
