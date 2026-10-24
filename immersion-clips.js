@@ -414,7 +414,8 @@ window.ImmersionClips = (() => {
 
     function playGtxAudio(text) {
         try {
-            const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=sr&q=${encodeURIComponent(text)}`;
+            const textForGoogle = (window.app && window.app.toCyrillic) ? window.app.toCyrillic(text) : text;
+            const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encodeURIComponent(textForGoogle)}`;
             const audio = new Audio(url);
             audio.playbackRate = playbackSpeed;
             audio.volume = (typeof state !== 'undefined' && state.settings && state.settings.volume && state.settings.volume.tts !== undefined) 

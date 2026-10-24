@@ -1829,6 +1829,30 @@ const app = {
     },
     // ======== END WHITEBOARD ENGINE ========
 
+    toCyrillic: (text) => {
+        if (!text || typeof text !== 'string') return '';
+        const digraphs = {
+            'dž': 'џ', 'Dž': 'Џ', 'DŽ': 'Џ',
+            'nj': 'њ', 'Nj': 'Њ', 'NJ': 'Њ',
+            'lj': 'љ', 'Lj': 'Љ', 'LJ': 'Љ'
+        };
+        let res = text;
+        for (const [lat, cyr] of Object.entries(digraphs)) {
+            res = res.split(lat).join(cyr);
+        }
+        const singles = {
+            'a': 'а', 'b': 'б', 'v': 'в', 'g': 'г', 'd': 'д', 'đ': 'ђ', 'e': 'е',
+            'ž': 'ж', 'z': 'з', 'i': 'и', 'j': 'ј', 'k': 'к', 'l': 'л', 'm': 'м',
+            'n': 'н', 'o': 'о', 'p': 'п', 'r': 'р', 's': 'с', 't': 'т', 'ć': 'ћ',
+            'u': 'у', 'f': 'ф', 'h': 'х', 'c': 'ц', 'č': 'ч', 'š': 'ш',
+            'A': 'А', 'B': 'Б', 'V': 'В', 'G': 'Г', 'D': 'Д', 'Đ': 'Ђ', 'E': 'Е',
+            'Ž': 'Ж', 'Z': 'З', 'I': 'И', 'J': 'Ј', 'K': 'К', 'L': 'Л', 'M': 'М',
+            'N': 'Н', 'O': 'О', 'P': 'П', 'R': 'Р', 'S': 'С', 'T': 'Т', 'Ć': 'Ћ',
+            'U': 'У', 'F': 'Ф', 'H': 'Х', 'C': 'Ц', 'Č': 'Ч', 'Š': 'Ш'
+        };
+        return res.split('').map(ch => singles[ch] || ch).join('');
+    },
+
     pcmToWavBlob: (base64Pcm, sampleRate = 24000) => {
         try {
             const binaryStr = atob(base64Pcm);
@@ -1884,11 +1908,11 @@ const app = {
 
             const tryGTX = () => {
                 if (!navigator.onLine) return tryEmergencyFallback();
-                if (window.app && window.app.showToast) {
-                    app.showToast(`🌐 Falling back to GTX network voice...`, 'info');
-                }
                 const gtLang = lang.split('-')[0];
-                const url = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=${gtLang}&q=${encodeURIComponent(text)}`;
+                // For Serbian: transliterate to Cyrillic so Google's engine pronounces every letter with 100% phonetic authenticity
+                const textForGoogle = (gtLang === 'sr' && app.toCyrillic) ? app.toCyrillic(text) : text;
+                const encoded = encodeURIComponent(textForGoogle);
+                const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${gtLang}&q=${encoded}`;
                 
                 const audio = new Audio(url);
                 audio.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
@@ -1897,12 +1921,12 @@ const app = {
                 const triggerFallback = (reason) => {
                     if (fallbackTriggered) return;
                     fallbackTriggered = true;
-                    console.warn(`GT TTS failed (${reason}), cascading down...`);
+                    console.warn(`Native Serbian Web Audio failed (${reason}), cascading down...`);
                     tryEmergencyFallback();
                 };
 
                 audio.onerror = () => triggerFallback('onerror');
-                audio.play().catch(e => triggerFallback(`play rejected`));
+                audio.play().catch(e => triggerFallback('play rejected'));
                 state.currentAudio = audio;
             };
 
@@ -1917,82 +1941,12 @@ const app = {
                         let audioUrl = null;
 
                         if (provider === 'gemini') {
-                            // Gemini 2.0 Flash Audio output (native audio response modality)
-                            const ttsModels = ['gemini-2.0-flash', 'gemini-2.0-flash-exp'];
-                            let geminiSuccess = false;
-                            let audioData = null;
-                            let audioMime = null;
-                            
-                            const promptText = lang.startsWith('sr')
-                                ? `Pronounce the following text clearly and authentically in Serbian. Only speak the phrase aloud, do not add any explanation or greeting: "${text}"`
-                                : `Pronounce the following text clearly and authentically in English. Only speak the phrase aloud, do not add any explanation or greeting: "${text}"`;
-
-                            for (const model of ttsModels) {
-                                try {
-                                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${effectiveKey}`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                                            contents: [{
-                                                parts: [{ text: promptText }]
-                                            }],
-                                            generationConfig: {
-                                                responseModalities: ["AUDIO"],
-                                                speechConfig: {
-                                                    voiceConfig: {
-                                                        prebuiltVoiceConfig: {
-                                                            voiceName: "Kore"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        })
-                                    });
-
-                                    if (!response.ok) {
-                                        const err = await response.text();
-                                        console.warn(`Gemini TTS (${model}) HTTP ${response.status}: ${err.substring(0, 100)}`);
-                                        continue;
-                                    }
-
-                                    const data = await response.json();
-                                    
-                                    // Extract audio from candidates -> parts -> inlineData
-                                    const parts = data?.candidates?.[0]?.content?.parts;
-                                    if (parts) {
-                                        for (const part of parts) {
-                                            if (part.inlineData && part.inlineData.data) {
-                                                audioData = part.inlineData.data;
-                                                audioMime = part.inlineData.mimeType || 'audio/pcm;rate=24000';
-                                                geminiSuccess = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    
-                                    if (geminiSuccess) break;
-                                } catch (modelErr) {
-                                    console.warn(`Gemini TTS model ${model} failed:`, modelErr.message);
-                                }
+                            // Direct Google Natural Serbian Web Voice
+                            if (window.app && window.app.showToast) {
+                                app.showToast('🔊 Playing Google Natural Serbian voice...', 'info');
                             }
-                            
-                            if (!geminiSuccess || !audioData) {
-                                throw new Error('Gemini TTS: No audio returned from Gemini 2.0 Flash');
-                            }
-                            
-                            // Check if audio is PCM and convert to WAV blob for seamless browser playback
-                            if (audioMime.includes('pcm')) {
-                                const rateMatch = audioMime.match(/rate=(\d+)/);
-                                const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
-                                const wavBlob = app.pcmToWavBlob(audioData, sampleRate);
-                                if (wavBlob) {
-                                    audioUrl = URL.createObjectURL(wavBlob);
-                                } else {
-                                    audioUrl = `data:${audioMime};base64,${audioData}`;
-                                }
-                            } else {
-                                audioUrl = `data:${audioMime};base64,${audioData}`;
-                            }
+                            tryGTX();
+                            return;
 
                         } else if (provider === 'openai') {
                             const response = await fetch('https://api.openai.com/v1/audio/speech', {
@@ -2074,23 +2028,31 @@ const app = {
             };
 
             const tryNativeWebSpeech = () => {
+                const isSerbian = lang.startsWith('sr');
                 const voices = window.speechSynthesis.getVoices();
                 const langVoices = voices.filter(v => v.lang.startsWith(lang.split('-')[0]));
-                const googleVoice = langVoices.find(v => v.name.includes('Google'));
                 
-                if (googleVoice) {
+                // If on mobile/Android with an installed native Serbian voice, use it
+                const srVoice = isSerbian ? langVoices.find(v => v.lang.startsWith('sr')) : null;
+                const enVoice = !isSerbian ? (langVoices.find(v => v.name.includes('Google')) || langVoices[0]) : null;
+                
+                if (srVoice) {
                     const u = new SpeechSynthesisUtterance(text);
                     u.lang = lang;
-                    u.voice = googleVoice;
+                    u.voice = srVoice;
                     u.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
-                    if (lang.startsWith('sr')) u.rate = 0.85; 
-                    
+                    u.rate = 0.85; 
                     window.speechSynthesisUtteranceStorage = u;
-                    if (window.app && window.app.showToast) {
-                        app.showToast(`🔊 Playing native Google voice...`, 'info');
-                    }
+                    window.speechSynthesis.speak(u);
+                } else if (enVoice) {
+                    const u = new SpeechSynthesisUtterance(text);
+                    u.lang = lang;
+                    u.voice = enVoice;
+                    u.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
+                    window.speechSynthesisUtteranceStorage = u;
                     window.speechSynthesis.speak(u);
                 } else {
+                    // Windows / PC has NO Serbian voice -> use Google Natural Serbian voice!
                     tryGTX();
                 }
             };

@@ -128,7 +128,8 @@ window.CommuteEngine = (function() {
             }
 
             const gtLang = lang.startsWith('sr') ? 'sr' : 'en';
-            const url = 'https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=' + gtLang + '&q=' + encodeURIComponent(text); 
+            const textForGoogle = (gtLang === 'sr' && window.app && window.app.toCyrillic) ? window.app.toCyrillic(text) : text;
+            const url = 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=' + gtLang + '&q=' + encodeURIComponent(textForGoogle); 
             const audio = new Audio(url);
             currentAudio = audio;
             audio.volume = 1;
