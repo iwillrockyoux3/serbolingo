@@ -129,11 +129,13 @@ window.CommuteEngine = (function() {
 
             const gtLang = lang.startsWith('sr') ? 'sr' : 'en';
             const textForGoogle = (gtLang === 'sr' && window.app && window.app.toCyrillic) ? window.app.toCyrillic(text) : text;
-            const url = 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=' + gtLang + '&q=' + encodeURIComponent(textForGoogle); 
+            const url = 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=' + gtLang + '&q=' + encodeURIComponent(textForGoogle) + '&_t=' + Date.now(); 
             const audio = new Audio();
             audio.referrerPolicy = "no-referrer";
+            audio.preload = "auto";
+            // Set playbackRate after metadata loads for reliability
             if (gtLang === 'sr') {
-                audio.playbackRate = 0.85;
+                audio.onloadedmetadata = function() { audio.playbackRate = 0.85; };
             }
             currentAudio = audio;
             audio.volume = 1;

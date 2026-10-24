@@ -1385,8 +1385,8 @@ const app = {
             area.innerHTML = `
                 <div class="text-center w-full max-w-sm">
                     <p class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">What do you hear?</p>
-                    <button onclick="app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}')" 
-                        class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-95 hover:bg-blue-200 dark:hover:bg-blue-800 mb-8">
+                    <button id="listening-speaker-btn" onclick="this.classList.add('scale-95'); setTimeout(() => this.classList.remove('scale-95'), 200); app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}')" 
+                        class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-90 hover:bg-blue-200 dark:hover:bg-blue-800 mb-8 cursor-pointer select-none">
                         🔊
                     </button>
                     <div class="grid w-full gap-3">
@@ -1912,33 +1912,54 @@ const app = {
                 // For Serbian: transliterate to Cyrillic so Google's engine pronounces every letter with 100% phonetic authenticity
                 const textForGoogle = (gtLang === 'sr' && app.toCyrillic) ? app.toCyrillic(text) : text;
                 const encoded = encodeURIComponent(textForGoogle);
-                const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${gtLang}&q=${encoded}`;
+                // Cache-bust to prevent stale 404 from pre-no-referrer era
+                const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${gtLang}&q=${encoded}&_t=${Date.now()}`;
                 
                 const audio = new Audio();
                 audio.referrerPolicy = "no-referrer";
+                audio.preload = "auto";
                 audio.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
+                
+                // Set playbackRate AFTER metadata loads to avoid browser quirks that fire onerror
                 if (gtLang === 'sr') {
-                    // Match the 0.85x immersion pace so isolated consonants like "hv-" and vowels have clear breathing room
-                    audio.playbackRate = 0.85;
+                    audio.onloadedmetadata = () => { audio.playbackRate = 0.85; };
                 }
-                audio.src = url;
                 
                 let fallbackTriggered = false;
                 const triggerFallback = (reason) => {
                     if (fallbackTriggered) return;
                     fallbackTriggered = true;
-                    console.warn(`Native Serbian Web Audio failed (${reason}), cascading down...`);
-                    tryEmergencyFallback();
+                    console.warn(`Google TTS failed (${reason}), attempting retry...`);
+                    // Second-chance: try the googleapis.com endpoint (different CDN edge)
+                    try {
+                        const retryUrl = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=${gtLang}&q=${encoded}&_t=${Date.now()}`;
+                        const retryAudio = new Audio();
+                        retryAudio.referrerPolicy = "no-referrer";
+                        retryAudio.preload = "auto";
+                        retryAudio.volume = audio.volume;
+                        if (gtLang === 'sr') {
+                            retryAudio.onloadedmetadata = () => { retryAudio.playbackRate = 0.85; };
+                        }
+                        retryAudio.onerror = () => {
+                            console.warn('Google TTS retry also failed, going silent.');
+                        };
+                        retryAudio.src = retryUrl;
+                        retryAudio.play().catch(() => {});
+                        state.currentAudio = retryAudio;
+                    } catch (e2) {
+                        console.warn('Google TTS retry exception:', e2);
+                    }
                 };
 
                 audio.onerror = () => triggerFallback('onerror');
+                audio.src = url;
                 audio.play().catch(e => {
                     if (e.name === 'NotAllowedError') {
                         // Browser autoplay blocked before user interaction — do NOT downgrade to English voice!
                         console.log('Audio autoplay prevented by browser policy; waiting for user click.');
                         return;
                     }
-                    triggerFallback('play rejected');
+                    triggerFallback('play rejected: ' + e.message);
                 });
                 state.currentAudio = audio;
             };
@@ -1954,10 +1975,7 @@ const app = {
                         let audioUrl = null;
 
                         if (provider === 'gemini') {
-                            // Direct Google Natural Serbian Web Voice
-                            if (window.app && window.app.showToast) {
-                                app.showToast('🔊 Playing Google Natural Serbian voice...', 'info');
-                            }
+                            // Gemini REST can't do audio — route to Google's Natural Serbian Web Voice
                             tryGTX();
                             return;
 

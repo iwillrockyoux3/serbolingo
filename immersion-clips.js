@@ -415,13 +415,15 @@ window.ImmersionClips = (() => {
     function playGtxAudio(text) {
         try {
             const textForGoogle = (window.app && window.app.toCyrillic) ? window.app.toCyrillic(text) : text;
-            const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encodeURIComponent(textForGoogle)}`;
+            const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encodeURIComponent(textForGoogle)}&_t=${Date.now()}`;
             const audio = new Audio();
             audio.referrerPolicy = "no-referrer";
-            audio.playbackRate = playbackSpeed;
+            audio.preload = "auto";
             audio.volume = (typeof state !== 'undefined' && state.settings && state.settings.volume && state.settings.volume.tts !== undefined) 
                 ? state.settings.volume.tts 
                 : 1.0;
+            // Set playbackRate after metadata loads for reliability
+            audio.onloadedmetadata = () => { audio.playbackRate = playbackSpeed; };
             audio.src = url;
 
             audio.onended = () => {
