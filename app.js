@@ -1914,8 +1914,10 @@ const app = {
                 const encoded = encodeURIComponent(textForGoogle);
                 const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${gtLang}&q=${encoded}`;
                 
-                const audio = new Audio(url);
+                const audio = new Audio();
+                audio.referrerPolicy = "no-referrer";
                 audio.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
+                audio.src = url;
                 
                 let fallbackTriggered = false;
                 const triggerFallback = (reason) => {

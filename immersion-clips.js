@@ -416,11 +416,13 @@ window.ImmersionClips = (() => {
         try {
             const textForGoogle = (window.app && window.app.toCyrillic) ? window.app.toCyrillic(text) : text;
             const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encodeURIComponent(textForGoogle)}`;
-            const audio = new Audio(url);
+            const audio = new Audio();
+            audio.referrerPolicy = "no-referrer";
             audio.playbackRate = playbackSpeed;
             audio.volume = (typeof state !== 'undefined' && state.settings && state.settings.volume && state.settings.volume.tts !== undefined) 
                 ? state.settings.volume.tts 
                 : 1.0;
+            audio.src = url;
 
             audio.onended = () => {
                 isPlaying = false;

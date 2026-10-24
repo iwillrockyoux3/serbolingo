@@ -130,9 +130,11 @@ window.CommuteEngine = (function() {
             const gtLang = lang.startsWith('sr') ? 'sr' : 'en';
             const textForGoogle = (gtLang === 'sr' && window.app && window.app.toCyrillic) ? window.app.toCyrillic(text) : text;
             const url = 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=' + gtLang + '&q=' + encodeURIComponent(textForGoogle); 
-            const audio = new Audio(url);
+            const audio = new Audio();
+            audio.referrerPolicy = "no-referrer";
             currentAudio = audio;
             audio.volume = 1;
+            audio.src = url;
 
             const cleanup = () => {
                 const pulse = el('commute-pulse');
