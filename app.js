@@ -1920,11 +1920,27 @@ const app = {
                 const audio = new Audio();
                 audio.referrerPolicy = "no-referrer";
                 audio.preload = "auto";
-                audio.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
                 
-                // Set playbackRate AFTER metadata loads to avoid browser quirks that fire onerror
-                if (gtLang === 'sr') {
+                // Volume safeguard: ensure volume is never accidentally muted to 0
+                const ttsVol = (state.settings && state.settings.volume && typeof state.settings.volume.tts === 'number' && state.settings.volume.tts > 0) 
+                    ? state.settings.volume.tts 
+                    : 1.0;
+                audio.volume = ttsVol;
+                
+                // Only slow down long sentences; keep single words at 1.0x to prevent Chromium buffer stalls on short MP3s
+                if (gtLang === 'sr' && text.length > 25) {
                     audio.onloadedmetadata = () => { audio.playbackRate = 0.85; };
+                }
+
+                // Visual tactile pulse indicator on speaker button
+                const speakerBtn = document.getElementById('listening-speaker-btn');
+                if (speakerBtn) {
+                    speakerBtn.classList.add('ring-4', 'ring-blue-400', 'animate-pulse');
+                    const resetVisual = () => {
+                        speakerBtn.classList.remove('ring-4', 'ring-blue-400', 'animate-pulse');
+                    };
+                    audio.onended = resetVisual;
+                    audio.onerror = resetVisual;
                 }
                 
                 let fallbackTriggered = false;
@@ -1939,11 +1955,21 @@ const app = {
                         retryAudio.referrerPolicy = "no-referrer";
                         retryAudio.preload = "auto";
                         retryAudio.volume = audio.volume;
-                        if (gtLang === 'sr') {
+                        if (gtLang === 'sr' && text.length > 25) {
                             retryAudio.onloadedmetadata = () => { retryAudio.playbackRate = 0.85; };
                         }
+                        if (speakerBtn) {
+                            const resetVisual = () => {
+                                speakerBtn.classList.remove('ring-4', 'ring-blue-400', 'animate-pulse');
+                            };
+                            retryAudio.onended = resetVisual;
+                            retryAudio.onerror = resetVisual;
+                        }
                         retryAudio.onerror = () => {
-                            console.warn('Google TTS retry also failed, going silent.');
+                            console.warn('Google TTS retry also failed.');
+                            if (window.app && window.app.showToast) {
+                                app.showToast('⚠️ Zvuk nije uspeo da se reprodukuje. Proverite vezu.', 'error');
+                            }
                         };
                         retryAudio.src = retryUrl;
                         retryAudio.play().catch(e => {
