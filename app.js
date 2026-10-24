@@ -1385,7 +1385,7 @@ const app = {
             area.innerHTML = `
                 <div class="text-center w-full max-w-sm">
                     <p class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">What do you hear?</p>
-                    <button id="listening-speaker-btn" onclick="this.classList.add('scale-95'); setTimeout(() => this.classList.remove('scale-95'), 200); app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}')" 
+                    <button id="listening-speaker-btn" onclick="app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}')" 
                         class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-90 hover:bg-blue-200 dark:hover:bg-blue-800 mb-8 cursor-pointer select-none">
                         🔊
                     </button>
@@ -1394,8 +1394,6 @@ const app = {
                     </div>
                 </div>
             `;
-            // Auto-play the audio once when the question loads
-            setTimeout(() => app.speakPhrase(audioWord, audioLang), 400);
         } else if (l.type === 'dialogue') {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             const npcMsg = (isSrToEn && l.npcMessage_rev) ? l.npcMessage_rev : l.npcMessage;
@@ -1897,8 +1895,11 @@ const app = {
         // Universal Audio Sanitizer: strip phonetic guides [like-this], (/like-this/), and notes
         text = text.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/\/.*?\//g, '').trim();
         if (!text) return;
+
         try {
-            window.speechSynthesis.cancel();
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
             if (state.currentAudio) {
                 state.currentAudio.onerror = null;
                 state.currentAudio.onended = null;
@@ -1906,229 +1907,116 @@ const app = {
                 state.currentAudio = null;
             }
 
-            const tryEmergencyFallback = () => app.fallbackSpeech(text, lang, true);
+            const speakerBtn = document.getElementById('listening-speaker-btn');
+            if (speakerBtn) {
+                speakerBtn.classList.add('ring-4', 'ring-blue-400', 'animate-pulse');
+            }
+            const resetVisual = () => {
+                if (speakerBtn) {
+                    speakerBtn.classList.remove('ring-4', 'ring-blue-400', 'animate-pulse');
+                }
+            };
 
-            const tryGTX = () => {
-                if (!navigator.onLine) return tryEmergencyFallback();
-                const gtLang = lang.split('-')[0];
-                // For Serbian: transliterate to Cyrillic so Google's engine pronounces every letter with 100% phonetic authenticity
-                const textForGoogle = (gtLang === 'sr' && app.toCyrillic) ? app.toCyrillic(text) : text;
+            const ttsVol = (state.settings && state.settings.volume && typeof state.settings.volume.tts === 'number' && state.settings.volume.tts > 0)
+                ? state.settings.volume.tts
+                : 1.0;
+
+            const isSerbian = lang.startsWith('sr');
+
+            // 1. SERBIAN AUDIO -> Google Natural Serbian engine with authentic Cyrillic transliteration
+            if (isSerbian) {
+                const textForGoogle = (app.toCyrillic) ? app.toCyrillic(text) : text;
                 const encoded = encodeURIComponent(textForGoogle);
-                // Cache-bust to prevent stale 404 from pre-no-referrer era
-                const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${gtLang}&q=${encoded}&_t=${Date.now()}`;
-                
+                const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encoded}&_t=${Date.now()}`;
+
                 const audio = new Audio();
                 audio.referrerPolicy = "no-referrer";
                 audio.preload = "auto";
-                
-                // Volume safeguard: ensure volume is never accidentally muted to 0
-                const ttsVol = (state.settings && state.settings.volume && typeof state.settings.volume.tts === 'number' && state.settings.volume.tts > 0) 
-                    ? state.settings.volume.tts 
-                    : 1.0;
                 audio.volume = ttsVol;
-                
-                // Only slow down long sentences; keep single words at 1.0x to prevent Chromium buffer stalls on short MP3s
-                if (gtLang === 'sr' && text.length > 25) {
+
+                if (text.length > 25) {
                     audio.onloadedmetadata = () => { audio.playbackRate = 0.85; };
                 }
 
-                // Visual tactile pulse indicator on speaker button
-                const speakerBtn = document.getElementById('listening-speaker-btn');
-                if (speakerBtn) {
-                    speakerBtn.classList.add('ring-4', 'ring-blue-400', 'animate-pulse');
-                    const resetVisual = () => {
-                        speakerBtn.classList.remove('ring-4', 'ring-blue-400', 'animate-pulse');
-                    };
-                    audio.onended = resetVisual;
-                    audio.onerror = resetVisual;
-                }
-                
-                let fallbackTriggered = false;
-                const triggerFallback = (reason) => {
-                    if (fallbackTriggered) return;
-                    fallbackTriggered = true;
-                    console.warn(`Google TTS failed (${reason}), attempting retry...`);
-                    // Second-chance: try the googleapis.com endpoint (different CDN edge)
+                audio.onended = () => {
+                    resetVisual();
+                    if (state.currentAudio === audio) state.currentAudio = null;
+                };
+
+                audio.onerror = (err) => {
+                    resetVisual();
+                    console.warn("Google TTS (tw-ob) error, retrying with gtx endpoint...", err);
                     try {
-                        const retryUrl = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=${gtLang}&q=${encoded}&_t=${Date.now()}`;
+                        const retryUrl = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=sr&q=${encoded}&_t=${Date.now()}`;
                         const retryAudio = new Audio();
                         retryAudio.referrerPolicy = "no-referrer";
                         retryAudio.preload = "auto";
-                        retryAudio.volume = audio.volume;
-                        if (gtLang === 'sr' && text.length > 25) {
-                            retryAudio.onloadedmetadata = () => { retryAudio.playbackRate = 0.85; };
-                        }
-                        if (speakerBtn) {
-                            const resetVisual = () => {
-                                speakerBtn.classList.remove('ring-4', 'ring-blue-400', 'animate-pulse');
-                            };
-                            retryAudio.onended = resetVisual;
-                            retryAudio.onerror = resetVisual;
-                        }
+                        retryAudio.volume = ttsVol;
+                        retryAudio.onended = resetVisual;
                         retryAudio.onerror = () => {
-                            console.warn('Google TTS retry also failed.');
+                            resetVisual();
                             if (window.app && window.app.showToast) {
-                                app.showToast('⚠️ Zvuk nije uspeo da se reprodukuje. Proverite vezu.', 'error');
+                                app.showToast('⚠️ Greška pri reprodukciji zvuka. Proverite internet.', 'error');
                             }
                         };
                         retryAudio.src = retryUrl;
-                        retryAudio.play().catch(e => {
-                            if (e.name === 'NotAllowedError' || e.name === 'AbortError') return;
-                        });
+                        retryAudio.play().catch(() => resetVisual());
                         state.currentAudio = retryAudio;
                     } catch (e2) {
-                        console.warn('Google TTS retry exception:', e2);
+                        resetVisual();
                     }
                 };
 
-                audio.onerror = () => triggerFallback('onerror');
                 audio.src = url;
+                state.currentAudio = audio;
                 audio.play().catch(e => {
-                    if (e.name === 'NotAllowedError' || e.name === 'AbortError') {
-                        // Browser autoplay blocked before user interaction OR interrupted by user click — do NOT downgrade!
+                    if (e.name === 'AbortError' || e.name === 'NotAllowedError') {
+                        resetVisual();
                         return;
                     }
-                    triggerFallback('play rejected: ' + e.message);
+                    console.warn("Audio play rejected:", e);
+                    resetVisual();
                 });
-                state.currentAudio = audio;
-            };
-
-            const tryCloudTTS = async () => {
-                const ttsKey = state.settings.ttsApiKey;
-                const provider = state.settings.ttsProvider || 'none';
-                // For Gemini: use dedicated TTS key, or fall back to the existing grammar Gemini key
-                const effectiveKey = (provider === 'gemini') ? (ttsKey || window.apiKey || localStorage.getItem('serbolingo_api_key')) : ttsKey;
-
-                if (effectiveKey && navigator.onLine) {
-                    try {
-                        let audioUrl = null;
-
-                        if (provider === 'gemini') {
-                            // Gemini REST can't do audio — route to Google's Natural Serbian Web Voice
-                            tryGTX();
-                            return;
-
-                        } else if (provider === 'openai') {
-                            const response = await fetch('https://api.openai.com/v1/audio/speech', {
-                                method: 'POST',
-                                headers: {
-                                    'Authorization': `Bearer ${effectiveKey}`,
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    model: 'tts-1',
-                                    input: text,
-                                    voice: 'nova'
-                                })
-                            });
-                            
-                            if (!response.ok) {
-                                const err = await response.text();
-                                throw new Error(`OpenAI API Error: ${response.status} - ${err.substring(0, 50)}...`);
-                            }
-                            const blob = await response.blob();
-                            audioUrl = URL.createObjectURL(blob);
-                            
-                        } else {
-                            // Default to Google Cloud
-                            const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${effectiveKey}`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    input: { text: text },
-                                    voice: { languageCode: lang.startsWith('sr') ? 'sr-RS' : 'en-US', name: lang.startsWith('sr') ? 'sr-RS-Standard-A' : 'en-US-Neural2-F' },
-                                    audioConfig: { audioEncoding: 'MP3' }
-                                })
-                            });
-                            
-                            if (!response.ok) {
-                                const err = await response.text();
-                                throw new Error(`Google Cloud API Error: ${response.status} - ${err.substring(0, 50)}...`);
-                            }
-                            
-                            const data = await response.json();
-                            if (!data.audioContent) throw new Error('No audio content');
-                            audioUrl = "data:audio/mp3;base64," + data.audioContent;
-                        }
-                        
-                        const audio = new Audio(audioUrl);
-                        audio.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
-                        
-                        if (window.app && window.app.showToast) {
-                            const names = { gemini: 'Gemini 2.0 Flash AI', openai: 'OpenAI', google: 'Google Cloud' };
-                            app.showToast(`🔊 Playing ${names[provider] || provider}...`, 'info');
-                        }
-                        
-                        const cleanup = () => {
-                            if (audioUrl.startsWith('blob:')) {
-                                URL.revokeObjectURL(audioUrl);
-                            }
-                        };
-
-                        audio.onended = cleanup;
-                        audio.onerror = () => {
-                            cleanup();
-                            tryNativeWebSpeech();
-                        };
-                        audio.play().catch(e => {
-                            cleanup();
-                            tryNativeWebSpeech();
-                        });
-                        state.currentAudio = audio;
-                    } catch (e) {
-                        console.warn('Premium AI TTS Error, cascading down...', e);
-                        if (window.app && window.app.showToast) {
-                            app.showToast(`🚨 ${e.message}`, 'error');
-                        }
-                        tryNativeWebSpeech();
-                    }
-                } else {
-                    tryNativeWebSpeech();
-                }
-            };
-
-            const tryNativeWebSpeech = () => {
-                const isSerbian = lang.startsWith('sr');
-                const voices = window.speechSynthesis.getVoices();
-                const langVoices = voices.filter(v => v.lang.startsWith(lang.split('-')[0]));
-                
-                // If on mobile/Android with an installed native Serbian voice, use it
-                const srVoice = isSerbian ? langVoices.find(v => v.lang.startsWith('sr')) : null;
-                const enVoice = !isSerbian ? (langVoices.find(v => v.name.includes('Google')) || langVoices[0]) : null;
-                
-                if (srVoice) {
-                    const u = new SpeechSynthesisUtterance(text);
-                    u.lang = lang;
-                    u.voice = srVoice;
-                    u.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
-                    u.rate = 0.85; 
-                    window.speechSynthesisUtteranceStorage = u;
-                    window.speechSynthesis.speak(u);
-                } else if (enVoice) {
-                    const u = new SpeechSynthesisUtterance(text);
-                    u.lang = lang;
-                    u.voice = enVoice;
-                    u.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
-                    window.speechSynthesisUtteranceStorage = u;
-                    window.speechSynthesis.speak(u);
-                } else {
-                    // Windows / PC has NO Serbian voice -> use Google Natural Serbian voice!
-                    tryGTX();
-                }
-            };
-            
-            // Priority Check
-            const provider = state.settings.ttsProvider || 'none';
-            if (provider !== 'none') {
-                // Explicit AI selected -> Priority 1
-                tryCloudTTS();
-            } else {
-                // No AI selected -> Native Priority 1
-                tryNativeWebSpeech();
+                return;
             }
+
+            // 2. ENGLISH AUDIO -> Web Speech or explicit Cloud Provider
+            const provider = state.settings.ttsProvider || 'none';
+            const ttsKey = state.settings.ttsApiKey;
+            if (provider === 'openai' && ttsKey && navigator.onLine) {
+                // OpenAI Cloud TTS
+                fetch('https://api.openai.com/v1/audio/speech', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${ttsKey}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: 'tts-1', input: text, voice: 'nova' })
+                }).then(res => res.blob()).then(blob => {
+                    const audioUrl = URL.createObjectURL(blob);
+                    const cloudAudio = new Audio(audioUrl);
+                    cloudAudio.volume = ttsVol;
+                    cloudAudio.onended = () => { resetVisual(); URL.revokeObjectURL(audioUrl); };
+                    cloudAudio.onerror = () => { resetVisual(); URL.revokeObjectURL(audioUrl); };
+                    cloudAudio.play().catch(() => resetVisual());
+                    state.currentAudio = cloudAudio;
+                }).catch(() => resetVisual());
+                return;
+            }
+
+            // Fallback English via browser voice
+            const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+            const enVoices = voices.filter(v => v.lang.startsWith('en'));
+            const enVoice = enVoices.find(v => v.name.includes('Google')) || enVoices[0];
+
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US';
+            if (enVoice) u.voice = enVoice;
+            u.volume = ttsVol;
+            u.onend = resetVisual;
+            u.onerror = resetVisual;
+            window.speechSynthesisUtteranceStorage = u;
+            window.speechSynthesis.speak(u);
+
         } catch (e) {
             console.error("speakPhrase error:", e);
-            app.fallbackSpeech(text, lang, true);
         }
     },
     fallbackSpeech: (text, lang, isEmergency = false) => {

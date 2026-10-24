@@ -131,23 +131,24 @@ const QuestionEngine = {
         let pool = allWords.filter(w => w.id !== word.id);
         let distractors = this.shuffle(pool).slice(0, 3);
         
-        // For listening, the question IS the audio. We'll store what to speak.
-        // We'll also provide options to choose from.
-        let options_enToSr = this.shuffle([word.sr_lat, ...distractors.map(d => d.sr_lat)]);
+        // For listening:
+        // When learning Serbian (en_to_sr): Audio is Serbian (word.sr_lat), options are English meanings (word.en)
+        // When learning English (sr_to_en): Audio is Serbian (word.sr_lat), options are English meanings (word.en)
+        let options_enToSr = this.shuffle([word.en, ...distractors.map(d => d.en)]);
         let options_srToEn = this.shuffle([word.en, ...distractors.map(d => d.en)]);
 
         return {
             type: 'listening',
-            q_audio: word.en, // App will speak this if learning EN->SR
-            q_audio_rev: word.sr_lat, // App will speak this if learning SR->EN
+            q_audio: word.sr_lat, // Hear Serbian word
+            q_audio_rev: word.sr_lat, // Hear Serbian word
             
-            // Audio targets for Voice Synthesis
-            audioLang: 'en-US',
+            // Audio targets for Voice Synthesis: Always authentic Serbian
+            audioLang: 'sr-RS',
             audioLang_rev: 'sr-RS',
 
             options: options_enToSr,
             options_rev: options_srToEn,
-            correct: word.sr_lat,
+            correct: word.en,
             correct_rev: word.en,
         };
     },
