@@ -1900,6 +1900,8 @@ const app = {
         try {
             window.speechSynthesis.cancel();
             if (state.currentAudio) {
+                state.currentAudio.onerror = null;
+                state.currentAudio.onended = null;
                 state.currentAudio.pause();
                 state.currentAudio = null;
             }
@@ -1944,7 +1946,9 @@ const app = {
                             console.warn('Google TTS retry also failed, going silent.');
                         };
                         retryAudio.src = retryUrl;
-                        retryAudio.play().catch(() => {});
+                        retryAudio.play().catch(e => {
+                            if (e.name === 'NotAllowedError' || e.name === 'AbortError') return;
+                        });
                         state.currentAudio = retryAudio;
                     } catch (e2) {
                         console.warn('Google TTS retry exception:', e2);
@@ -1954,9 +1958,8 @@ const app = {
                 audio.onerror = () => triggerFallback('onerror');
                 audio.src = url;
                 audio.play().catch(e => {
-                    if (e.name === 'NotAllowedError') {
-                        // Browser autoplay blocked before user interaction — do NOT downgrade to English voice!
-                        console.log('Audio autoplay prevented by browser policy; waiting for user click.');
+                    if (e.name === 'NotAllowedError' || e.name === 'AbortError') {
+                        // Browser autoplay blocked before user interaction OR interrupted by user click — do NOT downgrade!
                         return;
                     }
                     triggerFallback('play rejected: ' + e.message);

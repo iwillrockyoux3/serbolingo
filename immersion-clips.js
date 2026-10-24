@@ -449,6 +449,7 @@ window.ImmersionClips = (() => {
 
             currentAudio = audio;
             audio.play().catch(e => {
+                if (e.name === 'AbortError' || e.name === 'NotAllowedError') return;
                 console.warn("Audio play rejected, falling back:", e);
                 isPlaying = false;
                 updateVisualizer(false);
@@ -470,6 +471,8 @@ window.ImmersionClips = (() => {
             loopTimeoutId = null;
         }
         if (currentAudio) {
+            currentAudio.onerror = null;
+            currentAudio.onended = null;
             currentAudio.pause();
             currentAudio = null;
         }
