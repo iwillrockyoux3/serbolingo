@@ -1917,6 +1917,10 @@ const app = {
                 const audio = new Audio();
                 audio.referrerPolicy = "no-referrer";
                 audio.volume = state.settings.volume.tts !== undefined ? state.settings.volume.tts : 1;
+                if (gtLang === 'sr') {
+                    // Match the 0.85x immersion pace so isolated consonants like "hv-" and vowels have clear breathing room
+                    audio.playbackRate = 0.85;
+                }
                 audio.src = url;
                 
                 let fallbackTriggered = false;
@@ -1928,7 +1932,14 @@ const app = {
                 };
 
                 audio.onerror = () => triggerFallback('onerror');
-                audio.play().catch(e => triggerFallback('play rejected'));
+                audio.play().catch(e => {
+                    if (e.name === 'NotAllowedError') {
+                        // Browser autoplay blocked before user interaction — do NOT downgrade to English voice!
+                        console.log('Audio autoplay prevented by browser policy; waiting for user click.');
+                        return;
+                    }
+                    triggerFallback('play rejected');
+                });
                 state.currentAudio = audio;
             };
 
@@ -2082,7 +2093,11 @@ const app = {
             const voices = window.speechSynthesis.getVoices();
             const langVoices = voices.filter(v => v.lang.startsWith(lang.split('-')[0]));
             if (langVoices.length > 0) {
-                u.voice = langVoices[0]; // Grab whatever is available
+                u.voice = langVoices[0]; // Grab matching language voice
+            } else if (lang.startsWith('sr')) {
+                // Windows has NO Serbian voice. NEVER allow an English voice (Zira/David) to mangle Serbian words!
+                console.warn("No native Serbian voice installed on device; suppressing robotic English fallback.");
+                return;
             }
             
             if (lang.startsWith('sr')) {
