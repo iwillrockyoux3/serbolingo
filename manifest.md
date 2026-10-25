@@ -17,7 +17,10 @@
 | [`index.html`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/index.html) | 1,077 | 86 KB | Main SPA shell — all 12 views, modals, nav, SVG icons, CDN imports |
 | [`app.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/app.js) | 3,251 | 185 KB | Core controller — state management, auth, navigation, Omni-Bar search, daily reset, XP/streak/hearts, Chart.js stats, Canvas whiteboard, TTS pipeline, Gemini AI handlers, UI_STRINGS localization |
 | [`db.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/db.js) | 227 | 9 KB | IndexedDB wrapper (`SerboLingoDB` v5) — dictionary store, seeding, category queries, search, chunk injection |
-| [`styles.css`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/styles.css) | 451 | 9 KB | Tailwind extensions — custom animations (confetti, arcade-fall/flip/pulse), 3D squishy buttons, progress ring, radar chart, dark mode theme |
+| [`styles.css`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/styles.css) | 607 | 14 KB | Tailwind extensions — custom animations (confetti, arcade-fall/flip/pulse), 3D squishy buttons, progress ring, radar chart, dark mode theme |
+| [`sw.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/sw.js) | 134 | 5 KB | PWA Service Worker (v12) — Pre-caches app shell, stale-while-revalidate for CDN libraries, 100% offline fallback |
+| [`manifest.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.json) | 48 | 1.2 KB | Web App Manifest — Standalone display mode, theme colors, responsive app icons |
+| [`icon.svg`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/icon.svg) | 57 | 3 KB | SerboLingo master vector brand icon — Serbian flag tricolor squircle, SL monogram & gold XP lightning badge |
 
 ## [02_VOCAB_SRS] — Vocabulary Database & Spaced Repetition
 

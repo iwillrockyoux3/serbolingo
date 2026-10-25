@@ -370,6 +370,8 @@ const app = {
             window.LeagueEngine.renderHomeBanner();
         }
 
+        app.initPwa();
+
         if (state.user) {
             app.showMainApp();
         }
@@ -514,6 +516,7 @@ const app = {
         app.renderBadges();
         app.renderAchievements();
         app.updateImmersionUI();
+        app.updatePwaInstallUi();
         if (window.LeagueEngine && window.LeagueEngine.updateProfileHeader) {
             window.LeagueEngine.updateProfileHeader();
         }
@@ -3703,6 +3706,118 @@ CRITICAL CONSTRAINTS:
         document.getElementById('explanation-content').classList.add('hidden');
         document.getElementById('explanation-buttons').classList.remove('hidden');
     },
+
+    // ======== PWA (PROGRESSIVE WEB APP) CONTROLLER (Priority 19) ========
+    initPwa: () => {
+        // 1. Safe Service Worker Registration
+        // Guard against file:/// protocol which blocks service workers with SecurityError
+        if ('serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:' || location.hostname === 'localhost')) {
+            navigator.serviceWorker.register('./sw.js').then((reg) => {
+                console.log('[PWA] Service Worker registered with scope:', reg.scope);
+                reg.onupdatefound = () => {
+                    const installingWorker = reg.installing;
+                    if (installingWorker) {
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('[PWA] Nova verzija SerboLingo aplikacije je spremna!');
+                            }
+                        };
+                    }
+                };
+            }).catch((err) => {
+                console.warn('[PWA] Service Worker registration failed:', err);
+            });
+        }
+
+        // 2. Capture beforeinstallprompt event for custom install CTA
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            state.deferredPwaPrompt = e;
+            console.log('[PWA] beforeinstallprompt captured and ready');
+            app.updatePwaInstallUi();
+        });
+
+        // 3. Track successful installation
+        window.addEventListener('appinstalled', () => {
+            state.deferredPwaPrompt = null;
+            console.log('[PWA] App successfully installed!');
+            app.updatePwaInstallUi();
+            if (window.app && window.app.showToast) {
+                app.showToast('🎉 SerboLingo je uspešno instaliran na početni ekran!', 'success');
+            }
+        });
+
+        // Initial UI check
+        app.updatePwaInstallUi();
+    },
+
+    isPwaStandalone: () => {
+        return window.matchMedia('(display-mode: standalone)').matches ||
+               window.navigator.standalone === true ||
+               (typeof document !== 'undefined' && document.referrer && document.referrer.includes('android-app://'));
+    },
+
+    installPwa: async () => {
+        if (state.deferredPwaPrompt) {
+            try {
+                state.deferredPwaPrompt.prompt();
+                const choiceResult = await state.deferredPwaPrompt.userChoice;
+                if (choiceResult && choiceResult.outcome === 'accepted') {
+                    console.log('[PWA] User accepted the install prompt');
+                } else {
+                    console.log('[PWA] User dismissed the install prompt');
+                }
+                state.deferredPwaPrompt = null;
+                app.updatePwaInstallUi();
+            } catch (err) {
+                console.warn('[PWA] Error launching install prompt:', err);
+            }
+            return;
+        }
+
+        // iOS Safari detection
+        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+        const iosInstructions = document.getElementById('pwa-ios-instructions');
+        if (isIos) {
+            if (iosInstructions) iosInstructions.classList.toggle('hidden');
+            return;
+        }
+
+        // Fallback for browsers / environments without deferred prompt
+        if (app.isPwaStandalone()) {
+            if (window.app && window.app.showToast) {
+                app.showToast('✅ SerboLingo je već instaliran i pokrenut kao aplikacija!', 'info');
+            }
+        } else {
+            if (window.app && window.app.showToast) {
+                app.showToast('💡 Otvorite meni browsera (⋮) i kliknite "Instaliraj aplikaciju".', 'info');
+            }
+        }
+    },
+
+    updatePwaInstallUi: () => {
+        const installContainer = document.getElementById('pwa-install-container');
+        const installedBadge = document.getElementById('pwa-installed-badge');
+        const iosInstructions = document.getElementById('pwa-ios-instructions');
+
+        if (!installContainer || !installedBadge) return;
+
+        const isStandalone = app.isPwaStandalone();
+        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+
+        if (isStandalone) {
+            installContainer.classList.add('hidden');
+            installedBadge.classList.remove('hidden');
+            if (iosInstructions) iosInstructions.classList.add('hidden');
+        } else {
+            installedBadge.classList.add('hidden');
+            installContainer.classList.remove('hidden');
+            if (isIos && iosInstructions) {
+                iosInstructions.classList.remove('hidden');
+            }
+        }
+    },
+    // ======== END PWA CONTROLLER ========
 
 };
 window.app = app;
