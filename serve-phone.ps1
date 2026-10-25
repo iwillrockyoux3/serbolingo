@@ -51,9 +51,12 @@ try {
             if ([string]::IsNullOrEmpty($line)) { break }
         }
         
-        if ($requestLine -match '^GET\s+(\S+)') {
-            $path = $Matches[1]
-            if ($path -eq '/') { $path = '/index.html' }
+        if ($requestLine -match '^(?:GET|HEAD)\s+(\S+)') {
+            $rawPath = $Matches[1]
+            # Strip query string (?v=12, cache busters) so files are found on disk
+            $qIdx = $rawPath.IndexOf('?')
+            $path = if ($qIdx -ge 0) { $rawPath.Substring(0, $qIdx) } else { $rawPath }
+            if ($path -eq '' -or $path -eq '/') { $path = '/index.html' }
             $path = [System.Uri]::UnescapeDataString($path)
             $fullPath = Join-Path $root $path.TrimStart('/')
             
@@ -61,17 +64,17 @@ try {
                 $ext = [System.IO.Path]::GetExtension($fullPath).ToLower()
                 $mime = if ($mimeTypes.ContainsKey($ext)) { $mimeTypes[$ext] } else { 'application/octet-stream' }
                 $content = [System.IO.File]::ReadAllBytes($fullPath)
-                $header = "HTTP/1.1 200 OK`r`nContent-Type: $mime`r`nContent-Length: $($content.Length)`r`nCache-Control: no-store`r`nAccess-Control-Allow-Origin: *`r`nConnection: close`r`n`r`n"
+                $header = "HTTP/1.1 200 OK`r`nContent-Type: $mime`r`nContent-Length: $($content.Length)`r`nCache-Control: no-store`r`nAccess-Control-Allow-Origin: *`r`nService-Worker-Allowed: /`r`nConnection: close`r`n`r`n"
                 $headerBytes = [System.Text.Encoding]::UTF8.GetBytes($header)
                 $stream.Write($headerBytes, 0, $headerBytes.Length)
                 $stream.Write($content, 0, $content.Length)
-                Write-Host "200: $path" -ForegroundColor Green
+                Write-Host "200: $rawPath" -ForegroundColor Green
             } else {
                 $body = "<h1>404 Not Found</h1>"
                 $header = "HTTP/1.1 404 Not Found`r`nContent-Type: text/html`r`nContent-Length: $($body.Length)`r`nConnection: close`r`n`r`n"
                 $bytes = [System.Text.Encoding]::UTF8.GetBytes($header + $body)
                 $stream.Write($bytes, 0, $bytes.Length)
-                Write-Host "404: $path" -ForegroundColor Red
+                Write-Host "404: $rawPath" -ForegroundColor Red
             }
         }
         
