@@ -128,7 +128,11 @@ window.CommuteEngine = (function() {
             }
 
             const gtLang = lang.startsWith('sr') ? 'sr' : 'en';
-            const textForGoogle = (gtLang === 'sr' && window.app && window.app.toCyrillic) ? window.app.toCyrillic(text) : text;
+            let cleanText = text ? text.trim() : '';
+            if (gtLang === 'sr' && cleanText && !/[.!?,\-:;]$/.test(cleanText)) {
+                cleanText += '.';
+            }
+            const textForGoogle = (gtLang === 'sr' && window.app && window.app.toCyrillic) ? window.app.toCyrillic(cleanText) : cleanText;
             const url = 'https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=' + gtLang + '&q=' + encodeURIComponent(textForGoogle) + '&_t=' + Date.now(); 
             const audio = new Audio();
             audio.referrerPolicy = "no-referrer";

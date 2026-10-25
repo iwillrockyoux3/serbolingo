@@ -1944,11 +1944,6 @@ const app = {
                 }
             };
 
-            // Immediate on-screen notification confirming audio request
-            if (window.app && window.app.showToast) {
-                app.showToast('🔊 Slušam: ' + text, 'info');
-            }
-
             const ttsVol = (state.settings && state.settings.volume && typeof state.settings.volume.tts === 'number' && state.settings.volume.tts > 0)
                 ? state.settings.volume.tts
                 : 1.0;
@@ -1958,6 +1953,12 @@ const app = {
 
             // 1. SERBIAN AUDIO -> Smart Auto / Gemini / Google Natural Serbian Engine
             if (isSerbian) {
+                // Ensure terminal punctuation so TTS synthesizer renders full vowel form instead of clipped clitic (e.g. "ne" -> "Не.")
+                let cleanSrText = text.trim();
+                if (!/[.!?,\-:;]$/.test(cleanSrText)) {
+                    cleanSrText += '.';
+                }
+
                 // Check if device OS has an authentic native Serbian voice installed (e.g. Android with Google Serbian TTS)
                 const voices = (window.speechSynthesis && typeof window.speechSynthesis.getVoices === 'function')
                     ? window.speechSynthesis.getVoices()
@@ -1966,7 +1967,7 @@ const app = {
 
                 // If setting is 'none' AND device has a genuine Serbian voice installed, use device voice offline
                 if (provider === 'none' && nativeSrVoice) {
-                    const u = new SpeechSynthesisUtterance(text);
+                    const u = new SpeechSynthesisUtterance(cleanSrText);
                     u.lang = 'sr-RS';
                     u.voice = nativeSrVoice;
                     u.volume = ttsVol;
@@ -1980,7 +1981,7 @@ const app = {
 
                 // For Windows / PC (no native Serbian voice) or when Gemini / Google Voice is selected:
                 // Stream authentic native Serbian via cookie-isolated Google API CDN (works in normal browser mode)
-                const textForGoogle = (app.toCyrillic) ? app.toCyrillic(text) : text;
+                const textForGoogle = (app.toCyrillic) ? app.toCyrillic(cleanSrText) : cleanSrText;
                 const encoded = encodeURIComponent(textForGoogle);
                 // Primary endpoint: translate.googleapis.com (no user account cookies attached -> 100% reliable)
                 const primaryUrl = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=sr&q=${encoded}&_t=${Date.now()}`;
