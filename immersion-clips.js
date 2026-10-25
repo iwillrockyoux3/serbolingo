@@ -415,7 +415,7 @@ window.ImmersionClips = (() => {
     function playGtxAudio(text) {
         try {
             const textForGoogle = (window.app && window.app.toCyrillic) ? window.app.toCyrillic(text) : text;
-            const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encodeURIComponent(textForGoogle)}&_t=${Date.now()}`;
+            const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=sr&q=${encodeURIComponent(textForGoogle)}&_t=${Date.now()}`;
             const audio = new Audio();
             audio.referrerPolicy = "no-referrer";
             audio.preload = "auto";

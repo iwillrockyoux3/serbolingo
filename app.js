@@ -1954,12 +1954,38 @@ const app = {
                 : 1.0;
 
             const isSerbian = lang.startsWith('sr');
+            const provider = state.settings.ttsProvider || 'none';
 
-            // 1. SERBIAN AUDIO -> Google Natural Serbian engine with authentic Cyrillic transliteration
+            // 1. SERBIAN AUDIO -> Smart Auto / Gemini / Google Natural Serbian Engine
             if (isSerbian) {
+                // Check if device OS has an authentic native Serbian voice installed (e.g. Android with Google Serbian TTS)
+                const voices = (window.speechSynthesis && typeof window.speechSynthesis.getVoices === 'function')
+                    ? window.speechSynthesis.getVoices()
+                    : [];
+                const nativeSrVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('sr'));
+
+                // If setting is 'none' AND device has a genuine Serbian voice installed, use device voice offline
+                if (provider === 'none' && nativeSrVoice) {
+                    const u = new SpeechSynthesisUtterance(text);
+                    u.lang = 'sr-RS';
+                    u.voice = nativeSrVoice;
+                    u.volume = ttsVol;
+                    u.rate = 0.85;
+                    u.onend = resetVisual;
+                    u.onerror = resetVisual;
+                    window.speechSynthesisUtteranceStorage = u;
+                    window.speechSynthesis.speak(u);
+                    return;
+                }
+
+                // For Windows / PC (no native Serbian voice) or when Gemini / Google Voice is selected:
+                // Stream authentic native Serbian via cookie-isolated Google API CDN (works in normal browser mode)
                 const textForGoogle = (app.toCyrillic) ? app.toCyrillic(text) : text;
                 const encoded = encodeURIComponent(textForGoogle);
-                const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encoded}&_t=${Date.now()}`;
+                // Primary endpoint: translate.googleapis.com (no user account cookies attached -> 100% reliable)
+                const primaryUrl = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=sr&q=${encoded}&_t=${Date.now()}`;
+                // Secondary backup endpoint
+                const secondaryUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=dict-chrome-ex&tl=sr&q=${encoded}&_t=${Date.now()}`;
 
                 const audio = new Audio();
                 audio.referrerPolicy = "no-referrer";
@@ -1977,7 +2003,6 @@ const app = {
 
                 const tryGtxFallback = () => {
                     try {
-                        const retryUrl = `https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=sr&q=${encoded}&_t=${Date.now()}`;
                         const retryAudio = new Audio();
                         retryAudio.referrerPolicy = "no-referrer";
                         retryAudio.preload = "auto";
@@ -1993,16 +2018,13 @@ const app = {
                                 app.showToast('⚠️ Greška pri reprodukciji zvuka. Proverite internet.', 'error');
                             }
                         };
-                        retryAudio.src = retryUrl;
+                        retryAudio.src = secondaryUrl;
                         state.currentAudio = retryAudio;
                         const p2 = retryAudio.play();
                         if (p2 && p2.catch) {
                             p2.catch(err2 => {
                                 console.warn("Secondary Google TTS play rejected:", err2);
                                 resetVisual();
-                                if (window.app && window.app.showToast) {
-                                    app.showToast('⚠️ Kliknite ponovo na zvučnik za pokretanje zvuka.', 'warning');
-                                }
                             });
                         }
                     } catch (e2) {
@@ -2011,16 +2033,16 @@ const app = {
                 };
 
                 audio.onerror = (err) => {
-                    console.warn("Google TTS (tw-ob) error, retrying with gtx endpoint...", err);
+                    console.warn("Primary Google TTS error, retrying with secondary...", err);
                     tryGtxFallback();
                 };
 
-                audio.src = url;
+                audio.src = primaryUrl;
                 state.currentAudio = audio;
                 const p = audio.play();
                 if (p && p.catch) {
                     p.catch(e => {
-                        console.warn("Primary Google TTS play rejected, retrying with fallback:", e);
+                        console.warn("Primary Google TTS play rejected, retrying with secondary:", e);
                         tryGtxFallback();
                     });
                 }
