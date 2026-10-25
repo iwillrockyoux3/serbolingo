@@ -2050,7 +2050,6 @@ const app = {
             }
 
             // 2. ENGLISH AUDIO -> Web Speech or explicit Cloud Provider
-            const provider = state.settings.ttsProvider || 'none';
             const ttsKey = state.settings.ttsApiKey;
             if (provider === 'openai' && ttsKey && navigator.onLine) {
                 // OpenAI Cloud TTS
