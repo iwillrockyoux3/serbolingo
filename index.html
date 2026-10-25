@@ -1273,6 +1273,26 @@
         </div>
     </main>
 
+    <!-- PWA Install Floating Banner (Bilingual & Automatic) -->
+    <div id="pwa-floating-banner" class="hidden fixed bottom-20 left-4 right-4 z-40 max-w-md mx-auto bg-slate-900/95 dark:bg-slate-800/95 text-white p-3.5 rounded-2xl shadow-2xl border-2 border-blue-500/60 backdrop-blur-md flex items-center justify-between gap-3 transition-all duration-300">
+        <div class="flex items-center gap-2.5 flex-1 min-w-0">
+            <span class="text-2xl shrink-0">📱</span>
+            <div class="min-w-0">
+                <p id="pwa-banner-text" class="text-xs font-bold text-slate-100 leading-snug">
+                    Instaliraj SerboLingo na početni ekran za 100% offline učenje!
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+            <button id="pwa-banner-install-btn" onclick="app.installPwa()" class="py-2 px-3 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-transform flex items-center gap-1 whitespace-nowrap">
+                <span id="pwa-banner-btn-text">Instaliraj odmah</span>
+            </button>
+            <button onclick="app.dismissPwaBanner()" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors text-xs font-black" title="Zatvori">
+                ✕
+            </button>
+        </div>
+    </div>
+
     <!-- BOTTOM NAVIGATION -->
     <nav class="bg-white dark:bg-slate-900 border-t-2 border-slate-100 dark:border-slate-800 flex-none z-20 hidden transition-colors duration-300"
         id="main-nav">

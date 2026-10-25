@@ -726,12 +726,15 @@ const app = {
 
         const navBar = document.getElementById('main-nav');
         const appContainer = document.getElementById('app-container');
-        if (vid === 'lesson' || vid === 'karaoke') {
+        const pwaBanner = document.getElementById('pwa-floating-banner');
+        if (vid === 'lesson' || vid === 'karaoke' || vid === 'audio-commute') {
             if (navBar) navBar.classList.add('hidden');
             if (appContainer) appContainer.style.paddingBottom = '0px';
+            if (pwaBanner) pwaBanner.classList.add('hidden');
         } else {
             if (navBar) navBar.classList.remove('hidden');
             if (appContainer) appContainer.style.paddingBottom = '';
+            app.updatePwaInstallUi();
         }
 
         if (vid === 'explore') {
@@ -3795,25 +3798,79 @@ CRITICAL CONSTRAINTS:
         }
     },
 
+    dismissPwaBanner: () => {
+        const floatingBanner = document.getElementById('pwa-floating-banner');
+        if (floatingBanner) floatingBanner.classList.add('hidden');
+        try {
+            localStorage.setItem('serbolingo_pwa_dismissed', Date.now().toString());
+        } catch (e) {}
+    },
+
     updatePwaInstallUi: () => {
         const installContainer = document.getElementById('pwa-install-container');
         const installedBadge = document.getElementById('pwa-installed-badge');
         const iosInstructions = document.getElementById('pwa-ios-instructions');
-
-        if (!installContainer || !installedBadge) return;
+        const floatingBanner = document.getElementById('pwa-floating-banner');
+        const bannerText = document.getElementById('pwa-banner-text');
+        const bannerBtnText = document.getElementById('pwa-banner-btn-text');
 
         const isStandalone = app.isPwaStandalone();
         const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
 
-        if (isStandalone) {
-            installContainer.classList.add('hidden');
-            installedBadge.classList.remove('hidden');
-            if (iosInstructions) iosInstructions.classList.add('hidden');
-        } else {
-            installedBadge.classList.add('hidden');
-            installContainer.classList.remove('hidden');
-            if (isIos && iosInstructions) {
-                iosInstructions.classList.remove('hidden');
+        // Language & Script detection
+        const isEnToSr = state.settings && state.settings.learningDirection === 'en_to_sr';
+        const isHardcore = state.settings && state.settings.hardcoreImmersion;
+        const isCyrillic = state.settings && (state.settings.script === 'cyrillic' || state.settings.appLanguage === 'sr_cyr');
+
+        // Dynamic Bilingual Strings
+        let msg = "Instaliraj SerboLingo na početni ekran za 100% offline učenje!";
+        let btnMsg = "Instaliraj odmah";
+
+        if (isEnToSr && !isHardcore) {
+            msg = "Install SerboLingo to your home screen for 100% offline learning!";
+            btnMsg = "Install Now";
+        } else if (isCyrillic || (isHardcore && isCyrillic)) {
+            msg = "Инсталирај SerboLingo на почетни екран за 100% рад без интернета!";
+            btnMsg = "Инсталирај одмах";
+        }
+
+        if (bannerText) bannerText.innerText = msg;
+        if (bannerBtnText) bannerBtnText.innerText = btnMsg;
+
+        // In Profile View:
+        if (installContainer && installedBadge) {
+            if (isStandalone) {
+                installContainer.classList.add('hidden');
+                installedBadge.classList.remove('hidden');
+                if (iosInstructions) iosInstructions.classList.add('hidden');
+            } else {
+                installedBadge.classList.add('hidden');
+                installContainer.classList.remove('hidden');
+                if (isIos && iosInstructions) {
+                    iosInstructions.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Automatic Floating Banner:
+        if (floatingBanner) {
+            let isDismissed = false;
+            try {
+                const dismissedAt = localStorage.getItem('serbolingo_pwa_dismissed');
+                if (dismissedAt) {
+                    const elapsed = Date.now() - parseInt(dismissedAt);
+                    // Dismiss for 3 days before reminding again
+                    if (elapsed < (3 * 24 * 60 * 60 * 1000)) {
+                        isDismissed = true;
+                    }
+                }
+            } catch (e) {}
+
+            const isLoggedIn = !!state.user;
+            if (isLoggedIn && !isStandalone && !isDismissed) {
+                floatingBanner.classList.remove('hidden');
+            } else {
+                floatingBanner.classList.add('hidden');
             }
         }
     },

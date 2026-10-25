@@ -15,6 +15,13 @@ Write-Host "  Open the YELLOW link on your phone!" -ForegroundColor Yellow
 Write-Host "  Press Ctrl+C to stop." -ForegroundColor DarkGray
 Write-Host ""
 
+# Automatically open default browser on PC
+try {
+    Start-Process "http://localhost:$port"
+} catch {
+    Write-Host "Please open http://localhost:$port in your browser." -ForegroundColor DarkGray
+}
+
 $mimeTypes = @{
     '.html' = 'text/html; charset=utf-8'
     '.js'   = 'application/javascript; charset=utf-8'

@@ -1,16 +1,14 @@
 @echo off
-echo =========================================
-echo   Starting SerboLingo Local Server...
-echo =========================================
+title SerboLingo Local Server Launcher
+cd /d "%~dp0"
+echo ========================================================
+echo        SerboLingo PWA & Offline Local Server
+echo ========================================================
 echo.
-echo Chrome blocks microphone access on file:/// links.
-echo This local server bypasses that restriction!
+echo Starting local web server on port 8080...
+echo Google Chrome / your browser will open automatically!
 echo.
-echo Your browser will open automatically...
-echo Keep this window open while using the app.
-echo Press Ctrl+C to close the server.
+echo Keep this window open while using SerboLingo.
+echo Press Ctrl+C to stop the server anytime.
 echo.
-
-start http://localhost:8080
-
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$listener = New-Object System.Net.HttpListener; $listener.Prefixes.Add('http://localhost:8080/'); $listener.Start(); Write-Host 'Listening on http://localhost:8080...'; while ($listener.IsListening) { $context = $listener.GetContext(); $request = $context.Request; $response = $context.Response; $path = $request.Url.LocalPath; if ($path -eq '/') { $path = '/index.html' }; $fullPath = Join-Path (Get-Location).Path $path.TrimStart('/'); if (Test-Path $fullPath -PathType Leaf) { $ext = [System.IO.Path]::GetExtension($fullPath); $mime = switch ($ext) { '.html' {'text/html'} '.js' {'application/javascript'} '.css' {'text/css'} '.json' {'application/json'} '.svg' {'image/svg+xml'} default {'application/octet-stream'} }; $response.ContentType = $mime; $response.Headers.Add('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0'); $content = [System.IO.File]::ReadAllBytes($fullPath); $response.ContentLength64 = $content.Length; $response.OutputStream.Write($content, 0, $content.Length); $response.StatusCode = 200 } else { $response.StatusCode = 404 }; $response.Close() }"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0serve-phone.ps1"
