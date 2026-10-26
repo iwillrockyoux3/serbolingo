@@ -303,3 +303,23 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 ## ✅ Priority 44: Smart Grammar Tooltips & Interactive Word Inspector (DONE)
 - [x] **Smart Grammar Tooltips**: Tapping any word in lessons or feedback prompts shows instant morphology, Serbian case tags (Akuzativ, Genitiv, Dativ/Lokativ, Instrumental, Množina), verb tenses, root lemma, translation, audio pronunciation, and 1-tap Flashcard saving.
+
+## 📱🎬 Priority 45: SerboReels — Short-Form Video Immersion & Tap-to-Translate
+> **Status**: Planned (Benchmark from Kiku, Migaku & Lingopie)  
+> **Concept**: Learn Serbian & English through a high-dopamine vertical swipeable feed of short, authentic cultural video clips (similar to TikTok, Reels, or Kiku) paired with interactive bilingual subtitles and automated SRS flashcard extraction.
+
+- [ ] **1. Short-Form Immersion ("TikTok / Reels" Habit Loop)**:
+  - Vertical, swipeable feed of 10–30 second real video clips turning language learning into passive entertainment. Users can scroll through clips on the bus or in bed without feeling like they are doing "homework."
+  - Zero lag on low-end mobile phones: Only the active clip buffers while the next is preloaded for instant snapping.
+  - Clean UI with playback pause/play tap, audio toggle, and scrubbable progress bar.
+- [ ] **2. Authentic Balkan Pop Culture & Media Curation**:
+  - **Cult Serbian Cinema**: Iconic 15-second scenes from legendary movies (*"Maratonci trče počasni krug"*, *"Ko to tamo peva"*, *"Munje"*, *"Južni vetar"*).
+  - **Dubbed Cartoons**: Nostalgic clips like *Sunđer Bob* (SpongeBob in Serbian) which has clear, expressive, and fun voice acting.
+  - **Street Interviews & Podcasts**: Real Belgrade/Balkan street speech, everyday slang, and natural humor.
+- [ ] **3. Deep Learning Engine & Flashcard Integration**:
+  - **Tap-to-Translate Subtitles**: Built directly on our interactive word inspector in `grammar-tooltips.js`. Clicking any subtitle word in the video instantly pauses the clip, reveals the translation + case/grammar breakdown, phonetic guide, and audio pronunciation.
+  - **Auto-Save to SRS Flashcards**: One tap on the star (★) immediately adds the real-world word into your existing Tinder-style SRS Flashcard deck in `srs-engine.js` with its exact sentence context.
+  - **Dual Subtitles & Script Parity**: Interactive dual subtitles: Serbian (Latin/Cyrillic toggle) + English translation below it.
+- [ ] **4. Technical Architecture**:
+  - Curated vertical video clips (YouTube Shorts / lightweight WebM clips) paired with lightweight timestamped JSON subtitle tracks.
+  - Search & usage examples: Search for specific words or grammar points to view real-world video context.
