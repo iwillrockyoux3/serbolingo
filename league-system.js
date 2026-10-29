@@ -162,6 +162,76 @@
                 cost: 200,
                 desc: 'Vatreni dah drevnih legendi',
                 descEn: 'Fire breath of ancient legends'
+            },
+            {
+                id: 'lion',
+                icon: '🦁',
+                animClass: 'avatar-glow-gold',
+                name: 'Lav sa Kalemegdana',
+                nameEn: 'Belgrade Fortress Lion',
+                cost: 85,
+                desc: 'Ponosni čuvar beogradske tvrđave',
+                descEn: 'Proud guardian of the Belgrade fortress'
+            },
+            {
+                id: 'bear',
+                icon: '🐻',
+                animClass: 'avatar-pulse-shadow',
+                name: 'Balkanski Medved',
+                nameEn: 'Balkan Bear',
+                cost: 95,
+                desc: 'Moćna snaga planine Tare',
+                descEn: 'Mighty strength of Tara mountain'
+            },
+            {
+                id: 'striker',
+                icon: '⚽',
+                animClass: 'avatar-shimmer-spark',
+                name: 'Zlatni Golgeter',
+                nameEn: 'Golden Striker',
+                cost: 110,
+                desc: 'Precizni šut u rašlje znanja',
+                descEn: 'Precision shot into the top corner of knowledge'
+            },
+            {
+                id: 'trumpeter',
+                icon: '🎺',
+                animClass: 'avatar-magic-stars',
+                name: 'Trubač iz Guče',
+                nameEn: 'Guča Trumpeter',
+                cost: 130,
+                desc: 'Ritam i duša balkanskog slavlja',
+                descEn: 'Rhythm and soul of Balkan celebrations'
+            },
+            {
+                id: 'vampire',
+                icon: '🧛',
+                animClass: 'avatar-pulse-shadow',
+                name: 'Balkanski Vampir',
+                nameEn: 'Balkan Vampire',
+                cost: 145,
+                desc: 'Legenda Save Savanovića i vodenice',
+                descEn: 'Legend of Sava Savanović & the watermill'
+            },
+            {
+                id: 'alien',
+                icon: '🛸',
+                animClass: 'avatar-zero-gravity',
+                name: 'Kosmički Poliglota',
+                nameEn: 'Cosmic Polyglot',
+                cost: 160,
+                desc: 'Učenje jezika brzinom svetlosti',
+                descEn: 'Language learning at the speed of light'
+            },
+            {
+                id: 'fox',
+                icon: '🦊',
+                animClass: 'avatar-flame-ember',
+                name: 'Lukava Lisica',
+                nameEn: 'Clever Fox',
+                cost: 120,
+                desc: 'Mudrost i snalažljivost u svakom razgovoru',
+                descEn: 'Wisdom and cleverness in every conversation'
             }
         ],
 
@@ -238,6 +308,78 @@
                 cost: 100,
                 textColor: 'text-purple-400 dark:text-purple-300',
                 border: 'border-purple-400/40 bg-purple-500/10'
+            },
+            {
+                id: 'sabor_king',
+                title: 'Kralj Sabora',
+                titleEn: 'Festival King',
+                icon: '🎺',
+                cost: 50,
+                textColor: 'text-amber-400 dark:text-amber-300',
+                border: 'border-amber-400/40 bg-amber-500/10'
+            },
+            {
+                id: 'derby_fan',
+                title: 'Derbi Fanatik',
+                titleEn: 'Derby Fanatic',
+                icon: '⚽',
+                cost: 50,
+                textColor: 'text-rose-500 dark:text-rose-400',
+                border: 'border-rose-400/40 bg-rose-500/10'
+            },
+            {
+                id: 'barista',
+                title: 'Kafedžija',
+                titleEn: 'Master Barista',
+                icon: '🫖',
+                cost: 45,
+                textColor: 'text-yellow-600 dark:text-yellow-500',
+                border: 'border-yellow-500/40 bg-yellow-500/10'
+            },
+            {
+                id: 'balkan_boss',
+                title: 'Balkanski Šef',
+                titleEn: 'The Balkan Boss',
+                icon: '👑',
+                cost: 90,
+                textColor: 'text-amber-300 dark:text-amber-200',
+                border: 'border-amber-300/50 bg-amber-500/15'
+            },
+            {
+                id: 'fast_fingers',
+                title: 'Brzi Prsti',
+                titleEn: 'Fast Fingers',
+                icon: '⚡',
+                cost: 55,
+                textColor: 'text-cyan-400 dark:text-cyan-300',
+                border: 'border-cyan-400/40 bg-cyan-500/10'
+            },
+            {
+                id: 'walking_dict',
+                title: 'Hodajući Rečnik',
+                titleEn: 'Walking Dictionary',
+                icon: '🧠',
+                cost: 80,
+                textColor: 'text-purple-400 dark:text-purple-300',
+                border: 'border-purple-400/40 bg-purple-500/10'
+            },
+            {
+                id: 'case_sniper',
+                title: 'Snajperista Padeža',
+                titleEn: 'Case Sniper',
+                icon: '🎯',
+                cost: 70,
+                textColor: 'text-emerald-400 dark:text-emerald-300',
+                border: 'border-emerald-400/40 bg-emerald-500/10'
+            },
+            {
+                id: 'serbolingo_star',
+                title: 'SerboLingo Zvezda',
+                titleEn: 'SerboLingo Star',
+                icon: '🌟',
+                cost: 100,
+                textColor: 'text-yellow-300 dark:text-yellow-200',
+                border: 'border-yellow-400/50 bg-yellow-400/15'
             }
         ],
 
@@ -951,7 +1093,7 @@
                 }
 
                 return `
-                <div class="flex items-center justify-between p-3 rounded-2xl border ${rowBg} transition-all ${isUser ? 'sticky bottom-2 z-20 shadow-xl backdrop-blur-md' : ''}">
+                <div ${isUser ? 'id="league-user-row"' : ''} class="flex items-center justify-between p-3 rounded-2xl border ${rowBg} transition-all">
                     <div class="flex items-center gap-3 min-w-0">
                         ${rankBadge}
                         <span class="text-2xl shrink-0">${player.avatar}</span>
@@ -969,6 +1111,63 @@
                 </div>
                 ${dividerHtml}`;
             }).join('');
+
+            // Render persistent user summary dock (Priority 32 Revisit)
+            const userDockEl = document.getElementById('league-user-dock');
+            const userIndex = leaderboard.findIndex(p => p.isUser);
+            if (userDockEl && userIndex !== -1) {
+                const userPlayer = leaderboard[userIndex];
+                const userRank = userIndex + 1;
+
+                let userRankBadge = `<span class="w-7 text-center font-black text-sm text-blue-400">#${userRank}</span>`;
+                if (userRank === 1) userRankBadge = `<span class="w-7 text-center text-lg">🥇</span>`;
+                else if (userRank === 2) userRankBadge = `<span class="w-7 text-center text-lg">🥈</span>`;
+                else if (userRank === 3) userRankBadge = `<span class="w-7 text-center text-lg">🥉</span>`;
+
+                let zonePill = '';
+                if (userRank <= 10) {
+                    zonePill = '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">🟢 Napreduje</span>';
+                } else if (userRank > 25) {
+                    zonePill = '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500/20 text-rose-400 border border-rose-500/40">🔴 Ispada</span>';
+                } else {
+                    zonePill = '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-700/60 text-slate-300 border border-slate-600/40">⚪ Ostaje</span>';
+                }
+
+                userDockEl.innerHTML = `
+                <div class="flex items-center justify-between gap-2 p-2.5 rounded-2xl bg-gradient-to-r from-blue-950/70 via-slate-900 to-indigo-950/70 border border-blue-500/50 shadow-lg">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        ${userRankBadge}
+                        <span class="text-2xl shrink-0">${userPlayer.avatar || '👤'}</span>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs font-black text-white truncate">${userPlayer.name}</span>
+                                <span class="text-[9px] bg-blue-500 text-white px-1.5 py-0.2 rounded font-bold uppercase">Ti</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                ${zonePill}
+                                <span class="text-[10px] font-bold text-amber-300">⚡ ${userPlayer.xp} XP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="LeagueEngine.scrollToUserRank()" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-[11px] font-black rounded-xl transition-transform shrink-0 flex items-center gap-1 shadow-sm">
+                        <span>📍</span>
+                        <span>Moj Rang</span>
+                    </button>
+                </div>`;
+            }
+        },
+
+        // Scroll to user rank row inside leaderboard list with highlight animation
+        scrollToUserRank: function () {
+            const row = document.getElementById('league-user-row');
+            if (row) {
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                row.classList.add('ring-4', 'ring-yellow-400', 'bg-blue-600/40');
+                setTimeout(() => {
+                    row.classList.remove('ring-4', 'ring-yellow-400', 'bg-blue-600/40');
+                }, 1500);
+            }
+            if (window.TouchHaptics) TouchHaptics.vibrate('tap');
         },
 
         // --- 11. WEEKLY RESULTS CELEBRATION MODAL ---
