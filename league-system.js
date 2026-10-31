@@ -709,6 +709,22 @@
             }
         },
 
+        spendGems: function (amount, reason) {
+            const appState = window.appState || window.state;
+            if (!appState) return false;
+            if (typeof appState.gems !== 'number') appState.gems = 50;
+            if (appState.gems < amount) return false;
+            appState.gems -= amount;
+
+            if (window.app && window.app.saveStats) window.app.saveStats();
+            this.updateGemsHeaderUI();
+
+            if (window.app && window.app.showToast) {
+                window.app.showToast(`💎 -${amount} Dijamanata (${reason || 'Potrošeno'})`, 'info');
+            }
+            return true;
+        },
+
         updateGemsHeaderUI: function () {
             const el = document.getElementById('gems-display');
             if (el) {

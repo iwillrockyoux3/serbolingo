@@ -272,9 +272,14 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [ ] **Database Migration Engine**: Script a version-control system for `IndexedDB`. When we push a new `seed-data.js` with 10,000 new words, the app must safely merge it without deleting the user's saved flashcard progress.
 - [x] **Data Chunking (Lazy Loading)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags. (DONE)
 
-## 🔔 Priority 37: Retention & Habit Building
-- [ ] **Web Push Notifications**: Ask for notification permission to send a daily reminder: *"Your 5-day streak is in danger! Practice now."*
-- [ ] **PWA & Home Screen Widgets**: Add a `manifest.json` so users can install it as a native app, and create an Android/iOS Widget that displays their Daily Streak right on their phone's home screen.
+## ✅🔔 Priority 37: Retention & Habit Building (The Ultimate Addiction Engine) (DONE)
+- [x] **Web Notifications API (DONE)**: Opt-in evening habit reminder that fires a native push notification to device at 19:00 if the daily streak hasn't been saved yet.
+- [x] **Streak-at-Risk Visual Alarm (DONE)**: Top bar flame icon transforms into a pulsating urgent alert (`.streak-risk-alarm`) and home view risk banner countdown to midnight ("⚠️ Tvoj niz ističe za Xh Ym! Uradi lekciju odmah").
+- [x] **Spasi Svoj Niz (Streak Repair Modal) (DONE)**: When a streak is broken without freeze shields, user gets a 24h recovery window to rescue it using 150 💎 Dijamanata or by beating a 5-Question Blitz Recovery Challenge for free.
+- [x] **Društvo Niza (Streak Society VIP Tiers) (DONE)**: 4-tier milestone VIP progression (Bronzani 7d, Srebrni 14d, Zlatni 30d, Opsidijanski 50d) with auto-awarded free streak freezes, exclusive profile frames, and league glows.
+- [x] **Deljive Milestone Kartice (DONE)**: High-res Instagram Story / WhatsApp shareable bragging cards generated at 3, 7, 14, 30, 50, 100 days with 1-click native share API or clipboard copy.
+- [x] **Interactive Streak Hub Modal (DONE)**: Header flame button opens full streak analytics, current vs best record, freeze shield inventory, and society progression roadmap.
+- [x] **PWA & Home Screen Widgets (DONE)**: Fully integrated with Service Worker (`sw.js`), `manifest.json`, and dynamic browser prompt for 1-tap installation directly to mobile/desktop home screen.
 
 ## 📚 Priority 38: Smart Paced Story Mode
 - [ ] **Dynamic Bedtime Stories**: Instead of static stories, the app uses AI to generate a unique short story containing *only* the specific 20 words the user struggled with most that week.

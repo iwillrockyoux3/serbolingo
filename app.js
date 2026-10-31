@@ -342,6 +342,14 @@ const app = {
                             }
                         }, 1200);
                     } else {
+                        // Priority 37: Save broken streak for 24h recovery window instead of silent loss
+                        if (state.streak > 0) {
+                            state.brokenStreak = {
+                                streak: state.streak,
+                                brokenDate: today,
+                                expiresAt: Date.now() + (24 * 60 * 60 * 1000)
+                            };
+                        }
                         state.streak = 0; // Lost streak
                     }
                 }
@@ -368,6 +376,9 @@ const app = {
             window.LeagueEngine.updateGemsHeaderUI();
             window.LeagueEngine.updateHeaderBoostUI();
             window.LeagueEngine.renderHomeBanner();
+        }
+        if (window.StreakEngine) {
+            window.StreakEngine.init();
         }
 
         app.initPwa();
@@ -989,6 +1000,21 @@ const app = {
             app.renderQuestion();
         } catch (e) {
             console.error('Error starting practice:', e);
+            app.navigate('home');
+        }
+    },
+    startDailyPractice: async () => {
+        try {
+            const unlockedSkills = SKILL_TREE.filter(s => window.SkillTreeEngine && window.SkillTreeEngine.isUnlocked(s.id));
+            if (unlockedSkills.length > 0) {
+                // Pick first skill that is not maxed out (crown < 5) or first unlocked
+                const activeSkill = unlockedSkills.find(s => window.SkillTreeEngine.getCrownLevel(s.id) < 5) || unlockedSkills[0];
+                await app.startSkillLesson(activeSkill.id);
+            } else {
+                app.navigate('home');
+            }
+        } catch (err) {
+            console.error('Error starting daily practice:', err);
             app.navigate('home');
         }
     },
@@ -2417,6 +2443,11 @@ const app = {
                     }
                     state.lastActiveDate = today;
                     if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+                    // Priority 37: Clear pending broken streak since user is active today
+                    state.brokenStreak = null;
+                    if (window.StreakEngine) {
+                        window.StreakEngine.onStreakAdvanced(state.streak);
+                    }
                 }
 
                 state.dailyXP += 10;
@@ -2728,6 +2759,12 @@ const app = {
         document.getElementById('xp-display').innerText = state.xp;
         document.getElementById('hearts-display').innerText = state.hearts;
         document.getElementById('streak-display').innerText = state.streak;
+        
+        // Priority 37: Sync Streak Retention Header & Banner
+        if (window.StreakEngine) {
+            window.StreakEngine.updateHeaderUI();
+            window.StreakEngine.renderHomeBanner();
+        }
         
         // Update header XP boost badge
         const headerBoostContainer = document.getElementById('header-xp-boost-container');

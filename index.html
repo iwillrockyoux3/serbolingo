@@ -173,8 +173,10 @@
             </div>
             
             <div class="flex items-center gap-2 font-black text-xs shrink-0">
-                <div class="flex items-center text-orange-500"><span class="mr-1">🔥</span><span
-                        id="streak-display">1</span></div>
+                <button id="header-streak-btn" onclick="StreakEngine.openStreakModal()" title="Pregled Niza / Streak Hub" class="flex items-center text-orange-500 hover:text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-lg border border-orange-500/20 active:scale-95 transition-all">
+                    <span id="header-streak-flame" class="mr-1 inline-block">🔥</span>
+                    <span id="streak-display">1</span>
+                </button>
                 <div class="flex items-center text-blue-500"><span class="mr-1">⚡</span><span id="xp-display">0</span>
                 </div>
                 <div class="flex items-center text-red-500"><span class="mr-1">❤️</span><span
@@ -235,6 +237,11 @@
             <!-- Early Bird XP Boost Banner (Priority 32) -->
             <div id="early-bird-home-banner" class="w-full">
                 <!-- Rendered by LeagueEngine.renderHomeBanner() -->
+            </div>
+
+            <!-- Streak at Risk & Retention Banner (Priority 37) -->
+            <div id="streak-risk-home-banner" class="w-full">
+                <!-- Rendered by StreakEngine.renderHomeBanner() -->
             </div>
 
             <!-- Adaptive Placement Test Banner (Priority 28) -->
@@ -1008,6 +1015,23 @@
                             class="w-12 h-7 bg-blue-500 rounded-full relative transition-colors duration-300">
                             <div id="knob-haptics"
                                 class="absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform translate-x-5">
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Streak Reminders Web Notifications Toggle (Priority 37) -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-lg">🔔</div>
+                            <div>
+                                <span class="font-bold text-sm text-slate-700 dark:text-slate-200">Podsetnici za Niz</span>
+                                <p class="text-[9px] text-slate-400">Obaveštenje u 19:00 ako niz nije sačuvan</p>
+                            </div>
+                        </div>
+                        <button onclick="StreakEngine.toggleNotifications()" id="btn-streak-notif"
+                            class="w-12 h-7 bg-slate-300 dark:bg-slate-700 rounded-full relative transition-colors duration-300">
+                            <div id="knob-streak-notif"
+                                class="absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform translate-x-0">
                             </div>
                         </button>
                     </div>
@@ -1833,6 +1857,194 @@
         <!-- Populated dynamically by GrammarEngine -->
     </div>
 
+    <!-- ========================================== -->
+    <!-- PRIORITY 37: RETENTION & HABIT MODALS      -->
+    <!-- ========================================== -->
+
+    <!-- 1. Interactive Streak Hub Modal -->
+    <div id="streak-hub-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[260] flex items-center justify-center p-4 fade-in">
+        <div class="max-w-md w-full bg-slate-900 border-2 border-orange-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+            <div class="modal-drag-handle"></div>
+
+            <!-- Header -->
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/95">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl">🔥</span>
+                    <div>
+                        <h3 class="text-base font-black text-white leading-tight">Centar Niza (Streak Hub)</h3>
+                        <p class="text-[11px] font-bold text-orange-400">Svakodnevna disciplina & navika</p>
+                    </div>
+                </div>
+                <button onclick="StreakEngine.closeStreakModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center font-black text-sm active:scale-90 transition-transform">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Content Body -->
+            <div class="p-4 space-y-4 overflow-y-auto flex-1">
+                <!-- Big Flame & Numbers -->
+                <div class="p-5 rounded-2xl bg-gradient-to-b from-orange-950/40 via-slate-800/60 to-slate-900 border border-orange-500/30 text-center space-y-2">
+                    <div id="streak-hub-flame" class="text-6xl mx-auto">🔥</div>
+                    <div class="text-4xl font-black text-white tracking-tight flex items-center justify-center gap-1.5">
+                        <span id="streak-hub-number">1</span>
+                        <span class="text-lg text-orange-400 font-bold uppercase tracking-wider">Dana</span>
+                    </div>
+                    <div id="streak-hub-status" class="text-xs"></div>
+                    <div class="pt-2 border-t border-slate-700/60 flex justify-around text-xs font-bold text-slate-400">
+                        <div>Najbolji niz: <span id="streak-hub-max" class="text-white font-black">1</span> dana</div>
+                    </div>
+                </div>
+
+                <!-- Shield (Freeze) Status -->
+                <div id="streak-hub-shields"></div>
+
+                <!-- Društvo Niza (Streak Society) Roadmap -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                            <span>👑</span>
+                            <span>Društvo Niza (Streak Society)</span>
+                        </h4>
+                        <span class="text-[10px] font-bold text-amber-400">VIP Pogodnosti</span>
+                    </div>
+                    <div id="streak-hub-society-list" class="space-y-2">
+                        <!-- Populated by StreakEngine -->
+                    </div>
+                </div>
+
+                <!-- Web Notification Toggle CTA -->
+                <div class="pt-1">
+                    <button id="streak-hub-notif-btn" onclick="StreakEngine.toggleNotifications()" class="w-full py-2.5 rounded-xl text-xs font-black uppercase tracking-wider active:scale-95 transition-all bg-slate-800 text-slate-300 border border-slate-700">
+                        🔔 Uključi Podsetnike za Niz (19:00)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-3 border-t border-slate-800 bg-slate-900/95 flex gap-2">
+                <button onclick="StreakEngine.openMilestoneCard()" class="flex-1 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-md active:scale-95 transition-transform flex items-center justify-center gap-1.5">
+                    <span>📲</span>
+                    <span>Podeli Svoj Niz</span>
+                </button>
+                <button onclick="StreakEngine.closeStreakModal()" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white font-black text-xs uppercase rounded-xl active:scale-95 transition-transform">
+                    Zatvori
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Dramatic Streak Repair Modal (Spasi Svoj Niz) -->
+    <div id="streak-repair-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[270] flex items-center justify-center p-4 fade-in">
+        <div class="max-w-sm w-full bg-slate-900 border-2 border-red-500/70 rounded-3xl p-6 shadow-2xl text-center space-y-4">
+            <div class="text-6xl animate-bounce">💔</div>
+            <div>
+                <h3 class="text-xl font-black text-white uppercase tracking-tight">Tvoj niz se ugasio!</h3>
+                <p class="text-xs font-bold text-slate-300 leading-relaxed mt-1">
+                    Propustio si jučerašnji dan i tvoj niz od <span id="streak-repair-count" class="text-amber-400 font-black text-sm">0</span> dana je u opasnosti od trajnog brisanja.
+                </p>
+            </div>
+
+            <div class="p-3.5 bg-red-950/40 border border-red-500/40 rounded-2xl text-[11px] font-bold text-red-200">
+                ⏳ Imaš 24 časa da spasiš svoj niz pre nego što se zauvek resetuje na 0!
+            </div>
+
+            <div class="space-y-2.5 pt-2">
+                <!-- Option A: Gems -->
+                <button id="streak-repair-gems-btn" onclick="StreakEngine.repairWithGems()" class="w-full py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs uppercase tracking-wider rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2">
+                    <span>💎</span>
+                    <span>Spasi za 150 Dijamanata</span>
+                </button>
+                <div class="text-[10px] font-bold text-slate-400">
+                    Tvoje stanje: <span id="streak-repair-gems-balance" class="text-cyan-400 font-black">50</span> 💎
+                </div>
+
+                <!-- Option B: 5-Question Challenge -->
+                <button onclick="StreakEngine.startRecoveryChallenge()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs uppercase tracking-wider rounded-2xl shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2">
+                    <span>⚡</span>
+                    <span>Hitni Izazov (5 Pitanja - Besplatno)</span>
+                </button>
+            </div>
+
+            <!-- Option C: Dismiss -->
+            <button onclick="StreakEngine.dismissBrokenStreak()" class="w-full py-2.5 text-slate-500 hover:text-slate-400 font-bold text-xs active:scale-95 transition-transform">
+                Odbaci i kreni ispočetka
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. 5-Question Blitz Recovery Challenge Modal -->
+    <div id="streak-challenge-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[280] flex items-center justify-center p-4 fade-in">
+        <div class="max-w-md w-full bg-slate-900 border-2 border-amber-500/50 rounded-3xl p-6 shadow-2xl space-y-4">
+            <!-- Header & Progress -->
+            <div class="flex items-center justify-between text-xs font-black text-slate-400">
+                <span id="streak-challenge-step" class="text-amber-400">Pitanje 1 od 5</span>
+                <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">Cilj: 4/5 tačnih</span>
+            </div>
+            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div id="streak-challenge-progress-bar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-300" style="width: 20%"></div>
+            </div>
+
+            <!-- Question Text -->
+            <div class="py-2 text-center">
+                <h3 id="streak-challenge-text" class="text-base font-black text-white leading-relaxed"></h3>
+            </div>
+
+            <!-- Options Container -->
+            <div id="streak-challenge-options" class="space-y-2"></div>
+
+            <!-- Feedback Alert -->
+            <div id="streak-challenge-feedback"></div>
+        </div>
+    </div>
+
+    <!-- 4. Shareable Milestone Card Modal (Instagram Story / WhatsApp) -->
+    <div id="streak-milestone-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[290] flex items-center justify-center p-4 fade-in">
+        <div class="max-w-xs w-full bg-gradient-to-b from-orange-950 via-slate-900 to-slate-950 border-2 border-amber-500/60 rounded-3xl p-6 shadow-2xl text-center space-y-4 relative overflow-hidden">
+            <!-- Decorative Background Glow -->
+            <div class="absolute -top-12 -left-12 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-red-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="relative z-10 space-y-3">
+                <div class="text-6xl animate-bounce">🔥</div>
+                <div class="space-y-0.5">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-amber-400">SerboLingo Dostignuće</span>
+                    <h3 class="text-4xl font-black text-white tracking-tight flex items-center justify-center gap-1">
+                        <span id="streak-card-days">7</span>
+                        <span class="text-lg text-amber-400 uppercase font-bold">Dana</span>
+                    </h3>
+                    <p id="streak-card-tier" class="text-xs font-black text-amber-300">Bronzani Plamen</p>
+                </div>
+
+                <!-- User Card Badge -->
+                <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex items-center justify-center gap-2.5">
+                    <span id="streak-card-avatar" class="text-2xl">👤</span>
+                    <span id="streak-card-user" class="text-xs font-black text-white truncate max-w-[150px]">Korisnik</span>
+                </div>
+
+                <!-- Balkan Quote -->
+                <p id="streak-card-quote" class="text-[11px] font-bold text-slate-300 italic px-2 leading-relaxed">
+                    "Navika jača od čelika! 🇷🇸"
+                </p>
+
+                <!-- Branding -->
+                <div class="pt-2 border-t border-slate-800/80 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    serbolingo.app • Uči srpski svakog dana
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-2 pt-2 relative z-10">
+                <button onclick="StreakEngine.shareMilestone()" class="w-full py-3 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 hover:from-amber-400 hover:to-red-400 text-white font-black text-xs uppercase tracking-wider rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-1.5">
+                    <span>📲</span>
+                    <span>Podeli na Story / Mreže</span>
+                </button>
+                <button onclick="StreakEngine.closeMilestoneModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl active:scale-95 transition-transform">
+                    Nastavi Učenje
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="seed-data.js?v=12" charset="UTF-8"></script>
     <script src="db.js?v=12" charset="UTF-8"></script>
     <script src="alphabet-data.js?v=12" charset="UTF-8"></script>
@@ -1857,6 +2069,7 @@
     <script src="touch-haptics.js?v=12" charset="UTF-8"></script>
     <script src="grammar-tooltips.js?v=12" charset="UTF-8"></script>
     <script src="immersion-clips.js?v=12" charset="UTF-8"></script>
+    <script src="streak-retention.js?v=12" charset="UTF-8"></script>
     <script src="app.js?v=12" charset="UTF-8"></script>
 </body>
 
