@@ -280,6 +280,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Deljive Milestone Kartice (DONE)**: High-res Instagram Story / WhatsApp shareable bragging cards generated at 3, 7, 14, 30, 50, 100 days with 1-click native share API or clipboard copy.
 - [x] **Interactive Streak Hub Modal (DONE)**: Header flame button opens full streak analytics, current vs best record, freeze shield inventory, and society progression roadmap.
 - [x] **PWA & Home Screen Widgets (DONE)**: Fully integrated with Service Worker (`sw.js`), `manifest.json`, and dynamic browser prompt for 1-tap installation directly to mobile/desktop home screen.
+- [ ] **Pending Final Sweep & QA Note**: Once all priorities and full app development are completed, revisit Priority 37 to thoroughly test and verify all streak retention mechanics on real devices (Web Notifications at 19:00, midnight risk countdown, 150 💎 gem repair & 5-question recovery challenge, Streak Society tier perks, and Instagram/WhatsApp card sharing).
 
 ## 📚 Priority 38: Smart Paced Story Mode
 - [ ] **Dynamic Bedtime Stories**: Instead of static stories, the app uses AI to generate a unique short story containing *only* the specific 20 words the user struggled with most that week.
