@@ -113,7 +113,7 @@
 | P32.1 | Ranked Leagues Table Polish & Diamond Shop Expansion | 🆕 New | `league-system.js`, `index.html` | ✅ DONE |
 | P34.1 | Hardcore Immersion Mode (100% Serbian UI) & Native Speaker Clips Hub | 🆕 New | `immersion-clips.js`, `app.js`, `index.html` | ✅ TESTING |
 | P37.1 | Ultimate Streak Retention & Duolingo Addiction Engine | 🆕 New | `streak-retention.js`, `app.js`, `index.html` | ✅ DONE |
-| P45.1 | SerboReels — TikTok-Style Video Immersion & Tap-to-Translate | 🆕 New | `serbo-reels.js`, `index.html` | ⬜ TODO |
+| P45.1 | SerboReels — TikTok-Style Video Immersion & Tap-to-Translate | 🆕 New | `serbo-reels.js`, `index.html` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 

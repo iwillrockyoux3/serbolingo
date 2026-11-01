@@ -653,5 +653,20 @@ html {
     border-color: rgba(192, 132, 252, 0.7);
 }
 
+/* --- Priority 45: SerboReels Styles --- */
+#serbo-reels-modal {
+    overscroll-behavior: contain;
+}
+
+#reels-subtitles-box span,
+#reels-subtitles-box button {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+.reels-action-glow {
+    filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.6));
+}
+
+
 
 

@@ -813,6 +813,29 @@
                 <div class="text-4xl">🌍</div>
             </div>
 
+            <!-- SerboReels Short-Form Video Immersion Banner (Priority 45) -->
+            <div onclick="window.SerboReels && SerboReels.openFeed()"
+                class="bg-gradient-to-r from-purple-700 via-pink-600 to-rose-600 text-white p-4 rounded-2xl shadow-xl border-2 border-pink-400/50 cursor-pointer active:scale-98 transition-all relative overflow-hidden group">
+                <div class="absolute -right-3 -bottom-3 text-6xl opacity-20 group-hover:scale-110 transition-transform">📱</div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <span>✨</span>
+                                <span>SerboReels</span>
+                            </span>
+                            <span class="text-[9px] font-black uppercase tracking-wider bg-yellow-400 text-slate-900 px-1.5 py-0.5 rounded-full animate-pulse">TikTok Style</span>
+                            <span class="text-[9px] font-bold bg-black/30 px-1.5 py-0.5 rounded-full text-pink-200">Kiku Immersion</span>
+                        </div>
+                        <h3 class="text-base font-black tracking-tight leading-snug">Kratki Video Klipovi (SerboReels)</h3>
+                        <p class="text-[11px] text-white/90 font-medium">Uči kroz kultne filmove, crtaće i reels video snimke sa interaktivnim titlovima na dodir!</p>
+                    </div>
+                    <div class="w-11 h-11 rounded-full bg-white/25 backdrop-blur-sm flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform shadow-md">
+                        ▶
+                    </div>
+                </div>
+            </div>
+
             <!-- Native Immersion Banner (Priority 34) -->
             <div onclick="window.ImmersionClips && ImmersionClips.openModal()"
                 class="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white p-4 rounded-2xl shadow-lg border-2 border-red-400/40 cursor-pointer active:scale-98 transition-all relative overflow-hidden group">
@@ -2045,6 +2068,147 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- PRIORITY 45: SERBOREELS VIDEO FEED MODAL   -->
+    <!-- ========================================== -->
+    <div id="serbo-reels-modal" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[275] flex items-center justify-center p-0 md:p-4 fade-in overflow-hidden">
+        <div class="max-w-md w-full h-full md:h-[92vh] bg-black md:rounded-3xl border-0 md:border-2 border-slate-800 shadow-2xl relative overflow-hidden flex flex-col">
+            
+            <!-- Floating Top Control Bar -->
+            <div class="absolute top-0 left-0 right-0 p-3 z-30 bg-gradient-to-b from-black/80 via-black/40 to-transparent flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">✨</span>
+                        <div>
+                            <h3 class="text-xs font-black text-white tracking-wide flex items-center gap-1.5">
+                                <span>SerboReels</span>
+                                <span class="text-[8px] bg-gradient-to-r from-pink-500 to-rose-500 text-white px-1.5 py-0.2 rounded font-black uppercase">Shorts</span>
+                            </h3>
+                            <span id="reels-clip-counter" class="text-[9px] font-bold text-slate-400">1 / 12</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1.5">
+                        <!-- Script Switcher (Latinica / Cyrillic) -->
+                        <button id="reels-script-toggle-btn" onclick="SerboReels.toggleScript()" title="Promeni pismo (Latinica/Ćirilica)" class="px-2.5 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-yellow-400 border border-slate-700/80 text-[10px] font-black active:scale-90 transition-transform">
+                            ЋИР
+                        </button>
+                        <!-- Close Feed -->
+                        <button onclick="SerboReels.closeFeed()" class="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-white flex items-center justify-center text-sm font-black active:scale-90 transition-transform border border-slate-700">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Category Filter Chips -->
+                <div class="flex gap-1.5 overflow-x-auto no-scrollbar pt-0.5">
+                    <button data-cat="all" onclick="SerboReels.filterCategory('all')" class="reels-cat-pill px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-pink-500 text-white shadow-md active:scale-95 transition-all shrink-0">
+                        Sve (12)
+                    </button>
+                    <button data-cat="cinema" onclick="SerboReels.filterCategory('cinema')" class="reels-cat-pill px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300 hover:bg-slate-700 active:scale-95 transition-all shrink-0">
+                        🎬 Filmovi (4)
+                    </button>
+                    <button data-cat="cartoons" onclick="SerboReels.filterCategory('cartoons')" class="reels-cat-pill px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300 hover:bg-slate-700 active:scale-95 transition-all shrink-0">
+                        🧸 Crtaći (3)
+                    </button>
+                    <button data-cat="street" onclick="SerboReels.filterCategory('street')" class="reels-cat-pill px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300 hover:bg-slate-700 active:scale-95 transition-all shrink-0">
+                        ☕ Ulica (3)
+                    </button>
+                    <button data-cat="culture" onclick="SerboReels.filterCategory('culture')" class="reels-cat-pill px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300 hover:bg-slate-700 active:scale-95 transition-all shrink-0">
+                        🎺 Kultura (2)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Video Player Frame Area -->
+            <div id="reels-player-frame" class="w-full flex-1 relative bg-black">
+                <!-- Dynamically injected iframe player -->
+            </div>
+
+            <!-- Side Floating Actions Rail (Right side) -->
+            <div class="absolute right-3 bottom-36 z-20 flex flex-col items-center gap-3">
+                <!-- Like Button -->
+                <button id="reels-like-btn" onclick="SerboReels.likeCurrentReel()" class="flex flex-col items-center gap-0.5 group active:scale-90 transition-transform">
+                    <div class="w-10 h-10 rounded-full bg-slate-900/80 backdrop-blur-md border border-slate-700 flex items-center justify-center shadow-lg">
+                        <span id="reels-like-icon" class="text-2xl text-white">🤍</span>
+                    </div>
+                    <span class="text-[9px] font-black text-white/90 drop-shadow">Like</span>
+                </button>
+
+                <!-- Pronunciation (TTS) -->
+                <button onclick="SerboReels.pronounceCurrentSentence()" title="Izgovori rečenicu" class="flex flex-col items-center gap-0.5 group active:scale-90 transition-transform">
+                    <div class="w-10 h-10 rounded-full bg-slate-900/80 backdrop-blur-md border border-slate-700 flex items-center justify-center shadow-lg">
+                        <span class="text-xl">🗣️</span>
+                    </div>
+                    <span class="text-[9px] font-black text-white/90 drop-shadow">Izgovor</span>
+                </button>
+
+                <!-- Previous Reel -->
+                <button onclick="SerboReels.prevReel()" title="Prethodni klip" class="w-10 h-10 rounded-full bg-slate-900/80 backdrop-blur-md border border-slate-700 flex items-center justify-center text-white text-base shadow-lg active:scale-90 transition-transform">
+                    ▲
+                </button>
+
+                <!-- Next Reel -->
+                <button onclick="SerboReels.nextReel()" title="Sledeći klip" class="w-10 h-10 rounded-full bg-pink-600 hover:bg-pink-500 backdrop-blur-md border border-pink-400 flex items-center justify-center text-white text-base shadow-lg active:scale-90 transition-transform">
+                    ▼
+                </button>
+            </div>
+
+            <!-- Bottom Floating Subtitles & Info Area -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 pb-5 z-20 bg-gradient-to-t from-black via-black/80 to-transparent flex flex-col gap-2">
+                <!-- Clip Metadata Pill -->
+                <div class="flex items-center justify-between text-[11px] font-bold text-slate-300 pr-14">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-1.5">
+                            <span id="reels-current-cat" class="px-2 py-0.2 rounded-full text-[9px] font-black bg-pink-500/20 text-pink-300 border border-pink-500/40">🎬 Kultni Film</span>
+                            <span id="reels-clip-author" class="text-[10px] text-slate-400 truncate"></span>
+                        </div>
+                        <h4 id="reels-clip-title" class="text-xs font-black text-white truncate mt-0.5"></h4>
+                    </div>
+                </div>
+
+                <!-- Subtitles Box (Tappable Words) -->
+                <div id="reels-subtitles-box" class="w-full">
+                    <!-- Injected by SerboReels -->
+                </div>
+            </div>
+
+            <!-- Sliding Word Inspector Bottom Sheet (Tap-to-Translate) -->
+            <div id="reels-word-sheet" class="absolute bottom-0 left-0 right-0 p-5 bg-slate-900/98 backdrop-blur-xl border-t-2 border-pink-500/60 rounded-t-3xl shadow-2xl z-40 transform translate-y-full transition-transform duration-300 ease-out space-y-3">
+                <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto -mt-2 mb-2"></div>
+
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 id="reels-sheet-word" class="text-xl font-black text-white">Reč</h3>
+                            <span id="reels-sheet-casetag" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-yellow-400/20 text-yellow-300 border border-yellow-400/40">Padež</span>
+                        </div>
+                        <p id="reels-sheet-root" class="text-xs font-bold text-slate-400 mt-0.5"></p>
+                    </div>
+                    <button onclick="SerboReels.closeWordInspector()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center font-black text-xs active:scale-90 transition-transform">
+                        ✕
+                    </button>
+                </div>
+
+                <div class="p-3 rounded-2xl bg-slate-800/80 border border-slate-700/60">
+                    <span class="text-[10px] font-black text-pink-400 uppercase tracking-widest block">Engleski Prevod</span>
+                    <p id="reels-sheet-trans" class="text-sm font-bold text-white mt-0.5"></p>
+                </div>
+
+                <div class="flex gap-2 pt-1">
+                    <button id="reels-sheet-save-btn" class="flex-1 py-3 bg-gradient-to-r from-pink-600 via-rose-600 to-amber-500 hover:from-pink-500 hover:to-amber-400 text-white font-black text-xs uppercase tracking-wider rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-1.5">
+                        <span>⭐</span>
+                        <span>Dodaj u Flashcards (+10 XP)</span>
+                    </button>
+                    <button onclick="SerboReels.closeWordInspector(); if(!SerboReels.isPlaying) SerboReels.togglePlayPause();" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white font-black text-xs uppercase rounded-2xl active:scale-95 transition-transform">
+                        ▶ Nastavi
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <script src="seed-data.js?v=12" charset="UTF-8"></script>
     <script src="db.js?v=12" charset="UTF-8"></script>
     <script src="alphabet-data.js?v=12" charset="UTF-8"></script>
@@ -2070,6 +2234,7 @@
     <script src="grammar-tooltips.js?v=12" charset="UTF-8"></script>
     <script src="immersion-clips.js?v=12" charset="UTF-8"></script>
     <script src="streak-retention.js?v=12" charset="UTF-8"></script>
+    <script src="serbo-reels.js?v=12" charset="UTF-8"></script>
     <script src="app.js?v=12" charset="UTF-8"></script>
 </body>
 
