@@ -224,13 +224,9 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Haptic Sensory Vibrations (DONE)**: Tactile mechanical feedback for button taps (40ms), correct answers ([70, 40, 120]ms), wrong answers double-buzz ([120, 60, 180]ms), swipe feedback (50ms), and celebration fanfare. User toggleable in Profile settings.
 - [x] **Mobile Browser vs. Native Google Play Touch Refinement (DONE)**:
 
-<div style="color: #888888; color: gray;">
-<font color="#888888">
-<p style="color: #888888; color: gray; margin: 6px 0;">Revisit modal swipe-down-to-dismiss across all 20 modals with inner scroll detection (.overflow-y-auto) and edge swipe navigation.</p>
-<p style="color: #888888; color: gray; margin: 6px 0;">Fix mobile browser event interception (distinguishing between mobile web on Cloudflare vs. standalone APK/Google Play wrapper via TouchHaptics.isNativeApp(), overscroll-behavior-y: none;, and modal containment).</p>
-<p style="color: #888888; color: gray; margin: 6px 0;">Add smooth bi-directional horizontal swiping between bottom navigation tabs (Home ↔ Arcade ↔ Explore ↔ Mistakes ↔ Stats ↔ Profile) with hardware-accelerated 60 FPS CSS slide transitions and tactile swipe haptics.</p>
-</font>
-</div>
+- [x] Revisit modal swipe-down-to-dismiss across all 20 modals with inner scroll detection (.overflow-y-auto) and edge swipe navigation.
+- [x] Fix mobile browser event interception (distinguishing between mobile web on Cloudflare vs. standalone APK/Google Play wrapper via TouchHaptics.isNativeApp(), overscroll-behavior-y: none;, and modal containment).
+- [x] Add smooth bi-directional horizontal swiping between bottom navigation tabs (Home ↔ Arcade ↔ Explore ↔ Mistakes ↔ Stats ↔ Profile) with hardware-accelerated 60 FPS CSS slide transitions and tactile swipe haptics.
 
 > [!NOTE] 🔄 **QA REVISIT**: Come back once we finish building everything to thoroughly test and verify that all Priority 25 touch mechanics work correctly on real devices (20-modal swipe-down-to-dismiss with inner scroll detection, edge swipe navigation, bi-directional bottom nav horizontal swiping, and mobile browser gesture shield).
 
