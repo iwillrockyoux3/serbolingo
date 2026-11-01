@@ -156,6 +156,11 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - Create store listing, screenshots, feature graphics, and privacy policy.
   - Submit to Google Play Console.
   - Wrap the pure Vanilla HTML/JS codebase using a tool like Capacitor (by Ionic) to compile into native `.apk` / `.aab` (Android) and `.ipa` (iOS) files for wider reach.
+- [ ] **Dual-Platform Monetization & In-App Purchases (RevenueCat Architecture)**:
+  - **Google Play App (In-App Purchases / IAP)**: Google strictly requires Google Play Billing for digital goods (diamonds, gems, streak revivals) inside the Play Store APK. Google takes a 15% fee and pays monthly directly to developer bank account (IBAN/SWIFT).
+  - **Web / Cloudflare Browser Version**: Free from Google restrictions. Uses Stripe / PayPal Checkout on PC and mobile browsers (Chrome/Safari) with standard ~2.9% fee deposited directly to developer account.
+  - **Platform Auto-Detection**: Uses `Capacitor.isNativePlatform()` to automatically serve Google Play Billing inside the installed Android app and Stripe/PayPal inside web browsers, preventing any Google Play anti-steering policy violations.
+  - **Unified Inventory via RevenueCat**: Implement RevenueCat SDK (`purchases-capacitor` + RevenueCat Web Pay) so users keep their purchased diamonds and VIP streak status synced seamlessly whether they purchase on the web or in the Android app.
 
 ## 🎮 Priority 21: Online Arena & Multiplayer (AFTER Play Store Launch)
 > [!IMPORTANT]
