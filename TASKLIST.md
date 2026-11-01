@@ -107,7 +107,7 @@
 | P24.1 | Local Save Data Export & Import (JSON) | 🆕 New | `app.js`, `index.html` | ✅ DONE |
 | P28.1 | Adaptive 3-Minute Placement Test & Skill Tree Unlocks | 🆕 New | `placement-test.js`, `index.html` | ✅ DONE |
 | P44.1 | Smart Grammar Tooltips & Word Inspector in Lessons | 🆕 New | `grammar-tooltips.js`, `app.js`, `index.html` | ✅ DONE |
-| P25.1 | Native Touch Swipes & Pull-Down Modal Dismiss Physics | 🆕 New | `touch-haptics.js`, `index.html`, `styles.css` | 🔄 REVISIT |
+| P25.1 | Native Touch Swipes & Pull-Down Modal Dismiss Physics | 🆕 New | `touch-haptics.js`, `index.html`, `styles.css` | ✅ DONE |
 | P35.1 | Punchy Haptic Vibrations & Responsive Tablet Layout | 🆕 New | `touch-haptics.js`, `app.js`, `index.html`, `styles.css` | ✅ DONE |
 | P27.1 | Tinder-Style Flashcard Swipes & Memory Retention Heatmap | 🆕 New | `srs-engine.js`, `app.js`, `index.html`, `styles.css` | ✅ DONE |
 | P32.1 | Ranked Leagues Table Polish & Diamond Shop Expansion | 🆕 New | `league-system.js`, `index.html` | ✅ DONE |

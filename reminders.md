@@ -220,12 +220,12 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] Add an import function to allow users to move their progress to another device, protecting their local data from accidental cache clears (pp.importSaveData).
   - [x] 100% offline client-side Blob generation and FileReader rehydration with schema validation and confirmation safety.
 
-## 🔄 Priority 25: Native Mobile Touch Gestures & Swipe Physics (PENDING REVISIT)
+## ✅ Priority 25: Native Mobile Touch Gestures & Swipe Physics (DONE)
 - [x] **Haptic Sensory Vibrations (DONE)**: Tactile mechanical feedback for button taps (40ms), correct answers ([70, 40, 120]ms), wrong answers double-buzz ([120, 60, 180]ms), swipe feedback (50ms), and celebration fanfare. User toggleable in Profile settings.
-- [ ] **Mobile Browser vs. Native Google Play Touch Refinement**:
-  - Revisit modal swipe-down-to-dismiss and edge swipe back-and-forth navigation.
-  - Fix mobile browser event interception (distinguishing between mobile web on Cloudflare vs. standalone APK/Google Play wrapper).
-  - Add smooth bi-directional horizontal swiping between bottom navigation tabs (Home ↔ Arcade ↔ Explore ↔ Mistakes ↔ Profile).
+- [x] **Mobile Browser vs. Native Google Play Touch Refinement (DONE)**:
+  - Revisit modal swipe-down-to-dismiss across all 20 modals with inner scroll detection (`.overflow-y-auto`) and edge swipe navigation.
+  - Fix mobile browser event interception (distinguishing between mobile web on Cloudflare vs. standalone APK/Google Play wrapper via `TouchHaptics.isNativeApp()`, `overscroll-behavior-y: none;`, and modal containment).
+  - Add smooth bi-directional horizontal swiping between bottom navigation tabs (Home ↔ Arcade ↔ Explore ↔ Mistakes ↔ Stats ↔ Profile) with hardware-accelerated 60 FPS CSS slide transitions and tactile swipe haptics.
 
 ## ✅ Priority 26: Gamification & Economy (Duolingo Hooks) (DONE)
 - [x] **Streak Freezes & Shop**: In-app "Prodavnica" modal where users spend XP to buy Streak Freezes, Heart Refills, and Double XP power-ups.

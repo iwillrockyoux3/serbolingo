@@ -62,6 +62,7 @@
         <div id="confetti-container" class="absolute inset-0 pointer-events-none"></div>
         <div
             class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 text-center shadow-2xl fade-in relative overflow-hidden border-b-[10px] border-blue-600">
+            <div class="modal-drag-handle"></div>
             <div class="mb-4 text-7xl animate-bounce">🏆</div>
             <h2 class="text-2xl font-black text-slate-900 mb-2" data-i18n="goal_title">Cilj Ostvaren!</h2>
             <p class="text-slate-500 font-bold leading-relaxed mb-6" data-i18n="goal_msg">Bravo! Danas si dostigao svoj cilj. Samo tako
@@ -75,6 +76,7 @@
     <div id="alphabet-selection-modal"
         class="hidden fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 z-[200] flex-col justify-end transition-opacity opacity-0 pb-16">
         <div class="bg-white dark:bg-slate-800 w-full max-w-xl mx-auto rounded-t-3xl shadow-2xl overflow-hidden transform transition-transform translate-y-full flex flex-col max-h-[85vh]" id="alphabet-modal-content">
+            <div class="modal-drag-handle"></div>
             <div class="p-4 flex justify-between items-center border-b-2 border-slate-100 dark:border-slate-700">
                 <h2 class="text-xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">Izaberi Pismo</h2>
                 <button onclick="app.closeAlphabetModal()" class="w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-full text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-black">✕</button>
@@ -115,7 +117,7 @@
     <!-- GUIDE MODAL -->
     <div id="guide-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 z-[200] hidden flex-col justify-end transition-opacity opacity-0 pb-16">
         <div class="bg-white dark:bg-slate-800 w-full rounded-t-[2.5rem] p-6 shadow-2xl transition-transform translate-y-full h-[70vh] flex flex-col">
-            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6"></div>
+            <div class="modal-drag-handle w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6"></div>
             <h2 id="guide-modal-title" class="text-xl font-black text-slate-800 dark:text-white mb-4 uppercase tracking-wide">💡 Tips</h2>
             <div id="guide-modal-content" class="flex-1 overflow-y-auto text-slate-600 dark:text-slate-300 text-sm leading-relaxed pr-2">
                 <!-- Populated by JS -->
@@ -1382,6 +1384,7 @@
         class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div
             class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl transform transition-all scale-100 border-2 border-white dark:border-slate-700">
+            <div class="modal-drag-handle"></div>
             <div
                 class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl animate-bounce">
                 🔑
@@ -1408,6 +1411,7 @@
     <!-- Voice Recommendation Modal -->
     <div id="voice-recommendation-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl border-2 border-white dark:border-slate-700">
+            <div class="modal-drag-handle"></div>
             <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl animate-bounce">
                 🤖
             </div>
@@ -1431,6 +1435,7 @@
     <!-- YouTube API Key Modal -->
     <div id="yt-key-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm fade-in">
         <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl w-full max-w-sm text-center shadow-2xl border-2 border-white dark:border-slate-700">
+            <div class="modal-drag-handle"></div>
             <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                 🌐
             </div>
@@ -1758,6 +1763,7 @@
     <!-- League Weekly Results Celebration Modal (Priority 32) -->
     <div id="league-results-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[250] flex items-center justify-center p-4 fade-in">
         <div class="max-w-sm w-full bg-slate-900 border-2 border-amber-500/50 rounded-3xl p-6 shadow-2xl text-center space-y-4">
+            <div class="modal-drag-handle"></div>
             <div id="league-results-icon" class="text-6xl animate-bounce">🏆</div>
             <h3 id="league-results-title" class="text-xl font-black text-white uppercase tracking-tight">Kraj Nedelje!</h3>
             <p id="league-results-subtitle" class="text-xs font-bold text-slate-300 leading-relaxed"></p>
@@ -1959,6 +1965,7 @@
     <!-- 2. Dramatic Streak Repair Modal (Spasi Svoj Niz) -->
     <div id="streak-repair-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[270] flex items-center justify-center p-4 fade-in">
         <div class="max-w-sm w-full bg-slate-900 border-2 border-red-500/70 rounded-3xl p-6 shadow-2xl text-center space-y-4">
+            <div class="modal-drag-handle"></div>
             <div class="text-6xl animate-bounce">💔</div>
             <div>
                 <h3 class="text-xl font-black text-white uppercase tracking-tight">Tvoj niz se ugasio!</h3>
@@ -1998,6 +2005,7 @@
     <!-- 3. 5-Question Blitz Recovery Challenge Modal -->
     <div id="streak-challenge-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[280] flex items-center justify-center p-4 fade-in">
         <div class="max-w-md w-full bg-slate-900 border-2 border-amber-500/50 rounded-3xl p-6 shadow-2xl space-y-4">
+            <div class="modal-drag-handle"></div>
             <!-- Header & Progress -->
             <div class="flex items-center justify-between text-xs font-black text-slate-400">
                 <span id="streak-challenge-step" class="text-amber-400">Pitanje 1 od 5</span>
@@ -2023,6 +2031,7 @@
     <!-- 4. Shareable Milestone Card Modal (Instagram Story / WhatsApp) -->
     <div id="streak-milestone-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[290] flex items-center justify-center p-4 fade-in">
         <div class="max-w-xs w-full bg-gradient-to-b from-orange-950 via-slate-900 to-slate-950 border-2 border-amber-500/60 rounded-3xl p-6 shadow-2xl text-center space-y-4 relative overflow-hidden">
+            <div class="modal-drag-handle"></div>
             <!-- Decorative Background Glow -->
             <div class="absolute -top-12 -left-12 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
             <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-red-500/20 rounded-full blur-2xl pointer-events-none"></div>
@@ -2175,7 +2184,7 @@
 
             <!-- Sliding Word Inspector Bottom Sheet (Tap-to-Translate) -->
             <div id="reels-word-sheet" class="absolute bottom-0 left-0 right-0 p-5 bg-slate-900/98 backdrop-blur-xl border-t-2 border-pink-500/60 rounded-t-3xl shadow-2xl z-40 transform translate-y-full transition-transform duration-300 ease-out space-y-3">
-                <div class="w-10 h-1 bg-slate-700 rounded-full mx-auto -mt-2 mb-2"></div>
+                <div class="modal-drag-handle w-10 h-1 bg-slate-700 rounded-full mx-auto -mt-2 mb-2"></div>
 
                 <div class="flex items-center justify-between">
                     <div>

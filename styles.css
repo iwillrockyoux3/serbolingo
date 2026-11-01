@@ -7,6 +7,8 @@ body {
     -moz-text-size-adjust: 100%;
     text-size-adjust: 100%;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* ===================== MOBILE VIEWPORT SAFETY ===================== */
@@ -16,6 +18,7 @@ html {
     height: 100vh;
     height: 100dvh;
     overflow: hidden;
+    overscroll-behavior-y: none;
 }
 
 /* Pin bottom navigation to always be visible */
@@ -498,6 +501,44 @@ html {
 .modal-drag-handle:active {
     background-color: rgba(148, 163, 184, 0.85);
     cursor: grabbing;
+}
+
+/* --- PRIORITY 25: NAV TAB HORIZONTAL SLIDE TRANSITIONS --- */
+@keyframes viewSlideInRight {
+    0% {
+        opacity: 0.84;
+        transform: translate3d(28px, 0, 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes viewSlideInLeft {
+    0% {
+        opacity: 0.84;
+        transform: translate3d(-28px, 0, 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.view-slide-in-right {
+    animation: viewSlideInRight 0.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    will-change: transform, opacity;
+}
+
+.view-slide-in-left {
+    animation: viewSlideInLeft 0.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    will-change: transform, opacity;
+}
+
+/* Modal containment to prevent native mobile pull-to-refresh conflicts */
+[id$="-modal"] {
+    overscroll-behavior: contain;
 }
 
 /* --- PRIORITY 35: LANDSCAPE & TABLET LAYOUT OPTIMIZATION --- */

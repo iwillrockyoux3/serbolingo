@@ -2,12 +2,15 @@
 // 🛡️ SerboLingo — Native Touch Gestures & Haptic Vibrations (Priority 25 & Priority 35)
 // Features:
 // 1. Noticeable, punchy haptic vibrations (tap, correct, wrong, celebrate, swipe, shop) with user toggle.
-// 2. High-performance modal pull-down dismiss with spring physics and backdrop dismissal.
-// 3. Smooth rightward swipe-to-go-back to Home from any secondary view.
-// 4. Mobile browser gesture shield (prevents native pull-to-refresh conflicts).
+// 2. High-performance modal pull-down dismiss with spring physics, inner scroll detection, and backdrop dismissal.
+// 3. Smooth bi-directional horizontal swipe between bottom navigation tabs (Home ↔ Arcade ↔ Explore ↔ Mistakes ↔ Stats ↔ Profile).
+// 4. Edge swipe-to-go-back to Home from secondary views.
+// 5. Mobile browser gesture shield & standalone app detection (Cloudflare web vs. Google Play wrapper).
 
 (function () {
     'use strict';
+
+    const NAV_TABS = ['home', 'arcade', 'explore', 'mistakes', 'stats', 'profile'];
 
     const TouchHaptics = {
         // --- 1. HAPTIC VIBRATION CONTROLLER ---
@@ -94,18 +97,64 @@
             }
         },
 
+        // --- PLATFORM & STATE HELPERS ---
+        isNativeApp: function () {
+            return !!(
+                (typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) ||
+                (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+                (typeof navigator !== 'undefined' && navigator.standalone === true) ||
+                (typeof document !== 'undefined' && document.referrer && document.referrer.startsWith('android-app://'))
+            );
+        },
+
+        isModalOpen: function () {
+            return !!document.querySelector('[id$="-modal"]:not(.hidden), .celebration-overlay:not(.hidden)');
+        },
+
+        getActiveNavTab: function () {
+            for (let i = 0; i < NAV_TABS.length; i++) {
+                const el = document.getElementById('view-' + NAV_TABS[i]);
+                if (el && !el.classList.contains('hidden')) {
+                    return NAV_TABS[i];
+                }
+            }
+            return null;
+        },
+
         // --- 2. SWIPE PULL-DOWN-TO-DISMISS MODALS ---
         initSwipeDismiss: function () {
             const modals = [
+                // Core Gamification & Shop
                 { id: 'shop-modal', closeFn: () => typeof ShopEngine !== 'undefined' && ShopEngine.closeShop ? ShopEngine.closeShop() : document.getElementById('shop-modal')?.classList.add('hidden') },
                 { id: 'placement-modal', closeFn: () => typeof PlacementEngine !== 'undefined' && PlacementEngine.closeModal ? PlacementEngine.closeModal() : document.getElementById('placement-modal')?.classList.add('hidden') },
                 { id: 'visual-lens-modal', closeFn: () => typeof VisualLens !== 'undefined' && VisualLens.closeModal ? VisualLens.closeModal() : document.getElementById('visual-lens-modal')?.classList.add('hidden') },
                 { id: 'ghost-arena-modal', closeFn: () => typeof GhostEngine !== 'undefined' && GhostEngine.closeModal ? GhostEngine.closeModal() : document.getElementById('ghost-arena-modal')?.classList.add('hidden') },
                 { id: 'flashcard-swipe-modal', closeFn: () => typeof SrsEngine !== 'undefined' && SrsEngine.closeModal ? SrsEngine.closeModal() : document.getElementById('flashcard-swipe-modal')?.classList.add('hidden') },
+                
+                // Ranked Leagues & Locker
                 { id: 'league-modal', closeFn: () => typeof LeagueEngine !== 'undefined' && LeagueEngine.closeLeagueModal ? LeagueEngine.closeLeagueModal() : document.getElementById('league-modal')?.classList.add('hidden') },
                 { id: 'league-results-modal', closeFn: () => typeof LeagueEngine !== 'undefined' && LeagueEngine.closeResultsModal ? LeagueEngine.closeResultsModal() : document.getElementById('league-results-modal')?.classList.add('hidden') },
                 { id: 'locker-modal', closeFn: () => typeof LeagueEngine !== 'undefined' && LeagueEngine.closeLockerModal ? LeagueEngine.closeLockerModal() : document.getElementById('locker-modal')?.classList.add('hidden') },
-                { id: 'guide-modal', closeFn: () => typeof SkillTree !== 'undefined' && SkillTree.closeGuideModal ? SkillTree.closeGuideModal() : document.getElementById('guide-modal')?.classList.add('hidden') }
+                
+                // Guides & Alphabets
+                { id: 'guide-modal', closeFn: () => typeof app !== 'undefined' && app.closeGuide ? app.closeGuide() : document.getElementById('guide-modal')?.classList.add('hidden') },
+                { id: 'alphabet-selection-modal', closeFn: () => typeof app !== 'undefined' && app.closeAlphabetModal ? app.closeAlphabetModal() : document.getElementById('alphabet-selection-modal')?.classList.add('hidden') },
+                { id: 'goal-modal', closeFn: () => typeof app !== 'undefined' && app.closeGoalModal ? app.closeGoalModal() : document.getElementById('goal-modal')?.classList.add('hidden') },
+
+                // Immersion & SerboReels
+                { id: 'immersion-modal', closeFn: () => typeof ImmersionClips !== 'undefined' && ImmersionClips.closeModal ? ImmersionClips.closeModal() : document.getElementById('immersion-modal')?.classList.add('hidden') },
+                { id: 'serbo-reels-modal', closeFn: () => typeof SerboReels !== 'undefined' && SerboReels.closeFeed ? SerboReels.closeFeed() : document.getElementById('serbo-reels-modal')?.classList.add('hidden') },
+
+                // Streak Retention Engine (Priority 37)
+                { id: 'streak-hub-modal', closeFn: () => typeof StreakEngine !== 'undefined' && StreakEngine.closeStreakModal ? StreakEngine.closeStreakModal() : document.getElementById('streak-hub-modal')?.classList.add('hidden') },
+                { id: 'streak-repair-modal', closeFn: () => typeof StreakEngine !== 'undefined' && StreakEngine.closeRepairModal ? StreakEngine.closeRepairModal() : document.getElementById('streak-repair-modal')?.classList.add('hidden') },
+                { id: 'streak-challenge-modal', closeFn: () => typeof StreakEngine !== 'undefined' && StreakEngine.closeChallengeModal ? StreakEngine.closeChallengeModal() : document.getElementById('streak-challenge-modal')?.classList.add('hidden') },
+                { id: 'streak-milestone-modal', closeFn: () => typeof StreakEngine !== 'undefined' && StreakEngine.closeMilestoneModal ? StreakEngine.closeMilestoneModal() : document.getElementById('streak-milestone-modal')?.classList.add('hidden') },
+
+                // Utility & API Keys
+                { id: 'api-key-modal', closeFn: () => typeof app !== 'undefined' && app.closeApiKeyModal ? app.closeApiKeyModal() : document.getElementById('api-key-modal')?.classList.add('hidden') },
+                { id: 'voice-recommendation-modal', closeFn: () => document.getElementById('voice-recommendation-modal')?.classList.add('hidden') },
+                { id: 'yt-key-modal', closeFn: () => document.getElementById('yt-key-modal')?.classList.add('hidden') }
             ];
 
             modals.forEach(m => {
@@ -122,17 +171,25 @@
             let isDragging = false;
             let targetCard = null;
 
-            // Target the inner modal card
-            targetCard = modalEl.querySelector('.modal-card, .rounded-3xl, .rounded-2xl, div > div') || modalEl;
+            // Target the inner modal card (including bottom sheets with rounded-t-3xl)
+            targetCard = modalEl.querySelector('#alphabet-modal-content, .modal-card, .rounded-3xl, .rounded-2xl, .rounded-t-3xl, .rounded-t-[2.5rem], .rounded-[2.5rem], div > div') || modalEl;
 
             const onTouchStart = (e) => {
                 if (modalEl.classList.contains('hidden')) return;
+                if (e.touches.length !== 1) return;
+
                 const touch = e.touches[0];
                 startY = touch.clientY;
                 startX = touch.clientX;
                 startTime = Date.now();
 
-                // If user touches inside a scrolled element with scrollTop > 5, allow native scroll
+                // If user touches inside a scrolled inner element with scrollTop > 5, allow native inner scroll
+                const scrollableInner = e.target.closest('.overflow-y-auto, [class*="overflow-y"]');
+                if (scrollableInner && scrollableInner.scrollTop > 5) {
+                    isDragging = false;
+                    return;
+                }
+
                 if (modalEl.scrollTop > 5) {
                     isDragging = false;
                     return;
@@ -152,6 +209,12 @@
 
                 // Ignore if mainly horizontal movement
                 if (deltaX > Math.abs(deltaY) && Math.abs(deltaY) < 15) {
+                    return;
+                }
+
+                // If inner scrollable is still scrolled, don't drag modal down
+                const scrollableInner = e.target.closest('.overflow-y-auto, [class*="overflow-y"]');
+                if (scrollableInner && scrollableInner.scrollTop > 0 && deltaY > 0) {
                     return;
                 }
 
@@ -215,7 +278,133 @@
             });
         },
 
-        // --- 3. SWIPE-BACK NAVIGATION TO HOME ---
+        // --- 3. BI-DIRECTIONAL HORIZONTAL SWIPE BETWEEN BOTTOM NAV TABS ---
+        switchNavTab: function (tabName, dir) {
+            if (typeof app === 'undefined' || !app.navigate) return;
+
+            const targetEl = document.getElementById('view-' + tabName);
+            if (targetEl) {
+                targetEl.classList.remove('view-slide-in-right', 'view-slide-in-left');
+                void targetEl.offsetWidth; // Force CSS reflow
+                targetEl.classList.add(dir === 'next' ? 'view-slide-in-right' : 'view-slide-in-left');
+                setTimeout(() => {
+                    targetEl.classList.remove('view-slide-in-right', 'view-slide-in-left');
+                }, 260);
+            }
+
+            app.navigate(tabName);
+        },
+
+        initNavSwipe: function () {
+            let startX = 0;
+            let startY = 0;
+            let startTime = 0;
+            let isSwipeActive = false;
+            let isHorizLocked = false;
+            let isVertLocked = false;
+
+            document.addEventListener('touchstart', (e) => {
+                if (e.touches.length !== 1) return;
+
+                // Don't swipe tabs if any modal or celebration is open
+                if (TouchHaptics.isModalOpen()) return;
+
+                // Don't swipe tabs if inside special views (lesson, karaoke, commute, auth)
+                const blocked = ['view-lesson', 'view-karaoke', 'view-audio-commute', 'view-auth'];
+                for (let i = 0; i < blocked.length; i++) {
+                    const el = document.getElementById(blocked[i]);
+                    if (el && !el.classList.contains('hidden')) return;
+                }
+
+                // Don't swipe tabs if user touched an interactive control, canvas, game, or slider
+                if (e.target.closest('canvas, input, textarea, select, #arcade-game-container, .no-swipe, [data-no-swipe]')) {
+                    return;
+                }
+
+                const currentTab = TouchHaptics.getActiveNavTab();
+                if (!currentTab) return;
+
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                startTime = Date.now();
+                isSwipeActive = true;
+                isHorizLocked = false;
+                isVertLocked = false;
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isSwipeActive) return;
+
+                const touch = e.touches[0];
+                const dx = touch.clientX - startX;
+                const dy = touch.clientY - startY;
+
+                // Lock direction on initial 12px move
+                if (!isHorizLocked && !isVertLocked) {
+                    if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) {
+                        isVertLocked = true;
+                        isSwipeActive = false; // User is scrolling vertically
+                        return;
+                    }
+                    if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) {
+                        isHorizLocked = true;
+                    }
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchend', (e) => {
+                if (!isSwipeActive || !isHorizLocked) {
+                    isSwipeActive = false;
+                    isHorizLocked = false;
+                    isVertLocked = false;
+                    return;
+                }
+
+                isSwipeActive = false;
+                isHorizLocked = false;
+                isVertLocked = false;
+
+                const touch = (e.changedTouches && e.changedTouches[0]) || (e.touches && e.touches[0]);
+                if (!touch) return;
+
+                const deltaX = touch.clientX - startX;
+                const deltaY = Math.abs(touch.clientY - startY);
+                const dt = Math.max(1, Date.now() - startTime);
+                const velocity = Math.abs(deltaX) / dt;
+
+                // Swipe gesture thresholds
+                const isFastSwipe = velocity > 0.28 && Math.abs(deltaX) > 45;
+                const isLongSwipe = Math.abs(deltaX) > 85;
+                const isDominated = Math.abs(deltaX) > deltaY * 1.35;
+
+                if ((isFastSwipe || isLongSwipe) && isDominated) {
+                    const currentTab = TouchHaptics.getActiveNavTab();
+                    const currentIndex = NAV_TABS.indexOf(currentTab);
+                    if (currentIndex === -1) return;
+
+                    let targetIndex = -1;
+                    let dir = '';
+
+                    if (deltaX < 0) {
+                        // Swiped Left -> Move to Next Tab
+                        targetIndex = currentIndex + 1;
+                        dir = 'next';
+                    } else {
+                        // Swiped Right -> Move to Previous Tab
+                        targetIndex = currentIndex - 1;
+                        dir = 'prev';
+                    }
+
+                    if (targetIndex >= 0 && targetIndex < NAV_TABS.length) {
+                        const nextTab = NAV_TABS[targetIndex];
+                        TouchHaptics.vibrate('swipe');
+                        TouchHaptics.switchNavTab(nextTab, dir);
+                    }
+                }
+            }, { passive: true });
+        },
+
+        // --- 4. SWIPE-BACK NAVIGATION (EDGE SWIPE FALLBACK) ---
         initSwipeBack: function () {
             let startX = 0;
             let startY = 0;
@@ -230,8 +419,7 @@
                 startTime = Date.now();
 
                 // If any modal is currently visible, don't trigger view swipe back
-                const openModal = document.querySelector('#shop-modal:not(.hidden), #placement-modal:not(.hidden), #ghost-arena-modal:not(.hidden), #visual-lens-modal:not(.hidden), #flashcard-swipe-modal:not(.hidden), #guide-modal:not(.hidden)');
-                if (openModal) {
+                if (TouchHaptics.isModalOpen()) {
                     isValidSwipe = false;
                     return;
                 }
@@ -245,15 +433,15 @@
                 const isLesson = lessonView && !lessonView.classList.contains('hidden');
                 const isAuth = authView && !authView.classList.contains('hidden');
 
-                // Don't swipe back if already on Home, inside a Lesson (avoid accidental forfeit), or on Auth screen
+                // Don't swipe back if already on Home, inside a Lesson, or on Auth screen
                 if (isHome || isLesson || isAuth) {
                     isValidSwipe = false;
                     return;
                 }
 
-                // Allow swipe starting on the left 40% of the screen or within 80px
+                // Allow swipe starting on the left 30% of the screen or within 80px
                 const screenWidth = window.innerWidth || 360;
-                if (startX <= Math.max(80, screenWidth * 0.4)) {
+                if (startX <= Math.max(80, screenWidth * 0.3)) {
                     isValidSwipe = true;
                 } else {
                     isValidSwipe = false;
@@ -270,7 +458,7 @@
                 const deltaY = Math.abs(touch.clientY - startY);
                 const dt = Math.max(1, Date.now() - startTime);
 
-                // Rightward swipe: deltaX > 60px, primarily horizontal (deltaX > deltaY * 1.4), and reasonable speed
+                // Rightward swipe from edge: deltaX > 60px, primarily horizontal
                 if (deltaX > 60 && deltaY < 65 && (deltaX / dt) > 0.22) {
                     TouchHaptics.vibrate('swipe');
                     if (typeof app !== 'undefined' && app.navigate) {
@@ -280,10 +468,10 @@
             }, { passive: true });
         },
 
-        // --- 4. GLOBAL TACTILE BUTTON HAPTICS ---
+        // --- 5. GLOBAL TACTILE BUTTON HAPTICS ---
         initButtonHaptics: function () {
             document.addEventListener('click', (e) => {
-                const btn = e.target.closest('button, .option-btn, [role="button"], .dir-btn, .nav-btn, .grammar-word, .modal-drag-handle');
+                const btn = e.target.closest('button, .option-btn, [role="button"], .dir-btn, .nav-btn, .grammar-word, .modal-drag-handle, .category-chip');
                 if (btn) {
                     TouchHaptics.vibrate('tap');
                 }
@@ -292,16 +480,19 @@
 
         // --- INITIALIZER ---
         init: function () {
-            // Initialize touch swipe dismiss on modals
+            // 1. Initialize touch swipe dismiss on all 20 modals
             this.initSwipeDismiss();
 
-            // Initialize edge swipe back to Home
+            // 2. Initialize bi-directional horizontal swipe between bottom nav tabs
+            this.initNavSwipe();
+
+            // 3. Initialize edge swipe back fallback to Home
             this.initSwipeBack();
 
-            // Initialize global button tap tactile feedback
+            // 4. Initialize global button tap tactile feedback
             this.initButtonHaptics();
 
-            // Sync settings UI once DOM ready
+            // 5. Sync settings UI once DOM ready
             setTimeout(() => {
                 this.updateSettingsUI();
             }, 100);
