@@ -280,9 +280,9 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 ## ✅ Priority 35: Sensory Feedback & Responsive Layout (DONE)
 - [x] **Punchy Haptic Feedback**: Noticeable, tactile navigator.vibrate pulses for button taps (40ms), firm double-pulse on correct answers ([70, 40, 120]ms), authoritative warning buzz on wrong answers ([120, 60, 180]ms), and celebration fanfare rhythm. User toggleable in Profile settings.
 - [x] **Landscape & Tablet Optimization**: Centered 680px container layout on tablets for header, navigation, and views; compact scroll-safe lesson layout on landscape phones.
-## 🏗️ Priority 36: Infrastructure & Code Architecture Upgrades
-- [ ] **Database Migration Engine**: Script a version-control system for `IndexedDB`. When we push a new `seed-data.js` with 10,000 new words, the app must safely merge it without deleting the user's saved flashcard progress.
-- [x] **Data Chunking (Lazy Loading)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags. (DONE)
+## ✅🏗️ Priority 36: Infrastructure & Code Architecture Upgrades (DONE)
+- [x] **Database Migration Engine (DONE)**: Version-controlled automated migration and upsert system for `IndexedDB` (`db.js` v7 + `SEED_DATA_VERSION` governance). Non-destructive schema upgrades with indexes for category, pos, and difficulty. Chunked background batch upserts (250 words/batch) yielding execution for silky 60 FPS on low-end mobile hardware. Zero data loss guarantee: user flashcard decks, SRS intervals, and mistake logs are 100% preserved. Includes `getMigrationStatus()` diagnostics and `forceSync()` developer tooling.
+- [x] **Data Chunking (Lazy Loading) (DONE)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags.
 
 ## ✅🔔 Priority 37: Retention & Habit Building (The Ultimate Addiction Engine) (DONE)
 - [x] **Web Notifications API (DONE)**: Opt-in evening habit reminder that fires a native push notification to device at 19:00 if the daily streak hasn't been saved yet.

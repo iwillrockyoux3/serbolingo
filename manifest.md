@@ -16,7 +16,7 @@
 |:-----|------:|-----:|:------------|
 | [`index.html`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/index.html) | 1,077 | 86 KB | Main SPA shell — all 12 views, modals, nav, SVG icons, CDN imports |
 | [`app.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/app.js) | 3,251 | 185 KB | Core controller — state management, auth, navigation, Omni-Bar search, daily reset, XP/streak/hearts, Chart.js stats, Canvas whiteboard, TTS pipeline, Gemini AI handlers, UI_STRINGS localization |
-| [`db.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/db.js) | 227 | 9 KB | IndexedDB wrapper (`SerboLingoDB` v5) — dictionary store, seeding, category queries, search, chunk injection |
+| [`db.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/db.js) | 422 | 15 KB | IndexedDB engine & migration manager (`SerboLingoDB` v7) — non-destructive schema upgrades, versioned background upserts, 60 FPS chunked batches, dictionary search/indexing |
 | [`styles.css`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/styles.css) | 607 | 14 KB | Tailwind extensions — custom animations (confetti, arcade-fall/flip/pulse), 3D squishy buttons, progress ring, radar chart, dark mode theme |
 | [`sw.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/sw.js) | 134 | 5 KB | PWA Service Worker (v12) — Pre-caches app shell, stale-while-revalidate for CDN libraries, 100% offline fallback |
 | [`manifest.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.json) | 48 | 1.2 KB | Web App Manifest — Standalone display mode, theme colors, responsive app icons |
@@ -26,7 +26,7 @@
 
 | File | Lines | Size | Description |
 |:-----|------:|-----:|:------------|
-| [`seed-data.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/seed-data.js) | 3,458 | 698 KB | Master offline dictionary — ~3,500 entries with EN/SR translations, gender, part of speech, phonetics, difficulty tiers, bilingual example sentences |
+| [`seed-data.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/seed-data.js) | 3,532 | 700 KB | Master offline dictionary (v2.0) — ~3,500 entries with EN/SR translations, gender, part of speech, phonetics, difficulty tiers, bilingual example sentences, SEED_DATA_VERSION governance |
 | [`seed-data.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/seed-data.json) | — | — | Backup/alternate JSON format of the dictionary |
 
 > **SRS Logic Lives In**: `app.js` (mistake tracking via `state.mistakeLog`, star/favorites system, review lesson generation)

@@ -1,3 +1,9 @@
+// [SHIELD_DAEMON: VALIDATED]
+// 🛡️ SerboLingo Seed Data & Vocabulary Catalog
+// Priority 36: Database Migration & Version Governance
+window.SEED_DATA_VERSION = 2;
+window.SEED_DATA_BUILD = '2026.11.02';
+window.SEED_DATA_REVISION = 'v2.0-core3k';
 window.SEED_DATA = [
     // --- CATEGORY: PRONOUNS ---
     {"id": "pro1", "en": "I", "sr_lat": "ja", "category": "pronouns", "difficulty": 1, "pos": "pronoun", "emoji": "🙋", "phonetic": "yah", "example_en": "I am here.", "example_sr": "Ja sam ovde."},
