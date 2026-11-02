@@ -45,6 +45,10 @@
 ## 📚 Priority 1: Massive Vocabulary Database Expansion
 - [ ] **Thousands of Categorized Words (seed-data.js & IndexedDB)**:
   - Expand database to reach **15,000+ words and phrases** (massive scaling goal).
+  - **Vocabulary Staged Milestones & Multi-Language Scaling Target**:
+    - Current: ~3,000 core words & 6,000+ bilingual sentences (A1-B1 foundations).
+    - Milestone 2: 5,000 words & phrases threshold (B2 working fluency).
+    - Ultimate Goal: 15,000+ words, idioms, and sentences per language pack (~5-6 MB IndexedDB per language) for full C2 Native Mastery grade across any supported language.
 - [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)
 - [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)
 - [x] **Omni-Bar "Fuzzy Search" & Typo Tolerance (DONE)**:
