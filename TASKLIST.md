@@ -87,7 +87,7 @@
 | P3.1 | Štampana/Pisana script display toggle in Settings | 🆕 New | `app.js`, `index.html` | ✅ DONE |
 | P3.2 | Dedicated printed vs. cursive letter lessons | 🆕 New | `skill-tree.js`, `question-engine.js` | ✅ DONE |
 | P4.1 | Canvas finger-tracing engine for Cyrillic | 🆕 New | New file or `app.js` | ✅ DONE |
-| P6.1 | Smart error review with SRS prioritization | 🔧 Enhance | `app.js` (mistake logic) | ⬜ TODO |
+| P6.1 | Smart error review with SuperMemo-2 SRS prioritization | 🔧 Enhance | `srs-engine.js`, `app.js`, `question-engine.js`, `index.html` | ✅ DONE |
 | P7.1 | Streak Freeze (Štit za Niz) purchase/earn | 🆕 New | `shop-engine.js`, `app.js` | ✅ DONE |
 | P7.2 | Daily Quests shop & Mystery Chests | 🆕 New | `shop-engine.js`, `index.html` | ✅ DONE |
 | P17.1 | Hands-free commute audio mode (Pimsleur-style) | 🆕 New | New file | ⬜ TODO |

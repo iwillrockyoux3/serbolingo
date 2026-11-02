@@ -66,10 +66,13 @@
 
 ## ✅ Priority 5: Unit "Cheat Sheet" Grammar Notes (LingoDeer-Style)
 - [x] Bite-Sized Grammar Guides: A quick "Guidebook / Tips" tab attached to each Skill Tree node via guideHtml. Visual charts breaking down grammatical shifts in simple explanations before lessons start.
-## ✅ Priority 6: The Mistake Vault ("Moje Greške" / Smart Error Review)
+## ✅ Priority 6: The Mistake Vault ("Moje Greške" / Smart Error Review) (DONE)
 - [x] 1-Click Mistake Clearing: Automatically captures any question or word answered incorrectly in lessons, skill tree, or minigames. Dedicated "Mistakes" review screen with SRS prioritization to clear weaknesses permanently.
-- [ ] **True SRS Algorithm (SuperMemo-2)** *(Pending Upgrade)*:
-  - Implement the SM2 mathematical algorithm to properly space out reviews (1 day, 3 days, 10 days) for true long-term memory retention instead of just basic mistake logging.
+- [x] **True SRS Algorithm (SuperMemo-2) (DONE)**:
+  - Mathematical SM-2 algorithm implemented across all modules with repetition tracking, ease factors (EF 1.3 - 3.0), and interval spacing (1 day, 3 days, 7 days, 14 days, 30+ days).
+  - Universal review hook: automatically updates both `state.srsData` and `state.mistakeLog` across standard lessons, practice, and Arcade Slang.
+  - Due-date prioritization: Mistake review lessons and Mistake Vault prioritize cards due today (`nextReview <= todayStr`) before memory decays.
+  - Mistake Vault 2.0: Live SRS metrics dashboard (Due Today, Average Retention %, Mastered Count), 4 filter tabs (Sve, 🔴 Za Danas, 🟡 U toku, 🟢 Savladano), dynamic retention progress bars (0-100%), and 1-tap audio pronunciation.
 
 ## ✅ Priority 7: Streak Freeze & Daily Quests Shop (DONE)
 - [x] **Gamification Expansion**:

@@ -925,9 +925,33 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="text-xl font-black tracking-tight text-slate-800 dark:text-slate-100" data-i18n="mistakes_title">Moje Greške</h2>
-                    <p class="text-xs text-slate-500 font-medium" data-i18n="mistakes_desc">Mistake Vault</p>
+                    <p class="text-xs text-slate-500 font-medium" data-i18n="mistakes_desc">Mistake Vault & SuperMemo-2 SRS</p>
                 </div>
                 <div class="text-4xl">🧠</div>
+            </div>
+
+            <!-- SRS Metrics Dashboard (Priority 6) -->
+            <div id="mistakes-stats-banner" class="grid grid-cols-3 gap-2 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800/80 dark:to-slate-900/80 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="text-center">
+                    <span class="block text-[10px] font-black uppercase text-red-500 tracking-wider">Za Danas</span>
+                    <span id="srs-stat-due" class="text-lg font-black text-slate-800 dark:text-white">0</span>
+                </div>
+                <div class="text-center border-x border-slate-200 dark:border-slate-700">
+                    <span class="block text-[10px] font-black uppercase text-blue-500 tracking-wider">Pamćenje</span>
+                    <span id="srs-stat-retention" class="text-lg font-black text-slate-800 dark:text-white">100%</span>
+                </div>
+                <div class="text-center">
+                    <span class="block text-[10px] font-black uppercase text-emerald-500 tracking-wider">Savladano</span>
+                    <span id="srs-stat-mastered" class="text-lg font-black text-slate-800 dark:text-white">0</span>
+                </div>
+            </div>
+
+            <!-- Filter Chips (Priority 6) -->
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+                <button id="srs-filter-all" onclick="app.setMistakesFilter('all')" class="category-chip px-3 py-1.5 rounded-xl text-xs font-black transition-all bg-blue-600 text-white shadow-sm shadow-blue-500/20 active:scale-95">Sve (<span id="srs-chip-all-count">0</span>)</button>
+                <button id="srs-filter-due" onclick="app.setMistakesFilter('due')" class="category-chip px-3 py-1.5 rounded-xl text-xs font-black transition-all bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 active:scale-95">🔴 Za Danas (<span id="srs-chip-due-count">0</span>)</button>
+                <button id="srs-filter-learning" onclick="app.setMistakesFilter('learning')" class="category-chip px-3 py-1.5 rounded-xl text-xs font-black transition-all bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 active:scale-95">🟡 U toku (<span id="srs-chip-learning-count">0</span>)</button>
+                <button id="srs-filter-mastered" onclick="app.setMistakesFilter('mastered')" class="category-chip px-3 py-1.5 rounded-xl text-xs font-black transition-all bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 active:scale-95">🟢 Savladano (<span id="srs-chip-mastered-count">0</span>)</button>
             </div>
 
             <!-- Empty State -->
@@ -2223,7 +2247,7 @@
     <script src="alphabet-data.js?v=12" charset="UTF-8"></script>
     <script src="explore-hub.js?v=12" charset="UTF-8"></script>
     <script src="karaoke.js?v=12" charset="UTF-8"></script>
-    <script src="question-engine.js?v=12" charset="UTF-8"></script>
+    <script src="question-engine.js?v=13" charset="UTF-8"></script>
     <script src="skill-tree.js?v=12" charset="UTF-8"></script>
     <script src="roleplay.js?v=12" charset="UTF-8"></script>
     <script src="stories.js?v=12" charset="UTF-8"></script>
@@ -2238,13 +2262,13 @@
     <script src="shop-engine.js?v=12" charset="UTF-8"></script>
     <script src="placement-test.js?v=12" charset="UTF-8"></script>
     <script src="league-system.js?v=12" charset="UTF-8"></script>
-    <script src="srs-engine.js?v=12" charset="UTF-8"></script>
+    <script src="srs-engine.js?v=13" charset="UTF-8"></script>
     <script src="touch-haptics.js?v=12" charset="UTF-8"></script>
     <script src="grammar-tooltips.js?v=12" charset="UTF-8"></script>
     <script src="immersion-clips.js?v=12" charset="UTF-8"></script>
     <script src="streak-retention.js?v=12" charset="UTF-8"></script>
     <script src="serbo-reels.js?v=12" charset="UTF-8"></script>
-    <script src="app.js?v=12" charset="UTF-8"></script>
+    <script src="app.js?v=13" charset="UTF-8"></script>
 </body>
 
 </html>

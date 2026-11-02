@@ -500,11 +500,36 @@ const QuestionEngine = {
         const allWords = await dbInstance.getAllWords();
         if (!allWords || allWords.length === 0) return [];
         
-        let mistakeIds = Object.keys(mistakeLog || {});
+        const srsData = (typeof state !== 'undefined' && state.srsData) ? state.srsData : {};
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        // Gather all candidate IDs from mistakeLog or srsData
+        const candidateSet = new Set();
+        Object.keys(mistakeLog || {}).forEach(id => candidateSet.add(id));
+        Object.keys(srsData).forEach(id => {
+            const r = srsData[id];
+            if (r.nextReview && r.nextReview <= todayStr) candidateSet.add(id);
+        });
+
+        let mistakeIds = Array.from(candidateSet);
         if (mistakeIds.length === 0) return [];
         
-        // Sort IDs by mistake count descending
-        mistakeIds.sort((a, b) => mistakeLog[b] - mistakeLog[a]);
+        // Priority 6: Sort IDs by True SuperMemo-2 Spaced Repetition Urgency:
+        // 1. Overdue or due today first
+        // 2. Lowest repetition count (0 reps = unlearned/failed)
+        // 3. Lowest easeFactor / highest error weight
+        mistakeIds.sort((a, b) => {
+            const rA = srsData[a] || { repetitions: 0, nextReview: todayStr, easeFactor: 2.5 };
+            const rB = srsData[b] || { repetitions: 0, nextReview: todayStr, easeFactor: 2.5 };
+            const isDueA = (rA.nextReview || '') <= todayStr ? 1 : 0;
+            const isDueB = (rB.nextReview || '') <= todayStr ? 1 : 0;
+            if (isDueA !== isDueB) return isDueB - isDueA;
+            if (rA.repetitions !== rB.repetitions) return rA.repetitions - rB.repetitions;
+            const wA = (mistakeLog && mistakeLog[a]) || 0;
+            const wB = (mistakeLog && mistakeLog[b]) || 0;
+            return wB - wA;
+        });
+
         const selectedIds = mistakeIds.slice(0, count);
         
         let selectedWords = allWords.filter(w => selectedIds.includes(w.id));

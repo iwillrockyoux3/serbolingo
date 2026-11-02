@@ -45,7 +45,7 @@
             return srs[wordId];
         },
 
-        recordReview: function (wordId, isKnown) {
+        recordReview: function (wordId, isKnown, quality = null) {
             const srs = this.getSrsData();
             const record = this.getWordRecord(wordId);
             const today = new Date();
@@ -53,16 +53,29 @@
 
             record.lastReviewed = todayStr;
 
-            if (isKnown) {
-                record.repetitions = (record.repetitions || 0) + 1;
-                if (record.repetitions === 1) {
+            // Default quality score if not provided:
+            // 5 = clean correct, 3 = correct with minor typo, 1 = failed
+            const q = (quality !== null && quality !== undefined)
+                ? Math.max(0, Math.min(5, Number(quality)))
+                : (isKnown ? 4 : 1);
+
+            if (isKnown && q >= 3) {
+                // Successful review (q = 3, 4, 5)
+                if (record.repetitions === 0) {
                     record.interval = 1;
-                } else if (record.repetitions === 2) {
+                } else if (record.repetitions === 1) {
                     record.interval = 3;
                 } else {
                     record.interval = Math.min(60, Math.round((record.interval || 3) * (record.easeFactor || 2.5)));
                 }
-                record.easeFactor = Math.min(3.0, (record.easeFactor || 2.5) + 0.1);
+                record.repetitions = (record.repetitions || 0) + 1;
+
+                // Classic SuperMemo-2 Ease Factor formula:
+                // EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+                const efDelta = 0.1 - (5 - q) * (0.08 + (5 - q) * 0.02);
+                record.easeFactor = Math.min(3.0, Math.max(1.3, parseFloat(((record.easeFactor || 2.5) + efDelta).toFixed(2))));
+
+                // Memory strength boosts with successful repetitions (capped at 100)
                 record.strength = Math.min(100, Math.max(50, 40 + (record.repetitions * 15)));
 
                 // Decrement mistake weight in legacy mistakeLog
@@ -71,9 +84,10 @@
                     if (state.mistakeLog[wordId] === 0) delete state.mistakeLog[wordId];
                 }
             } else {
+                // Failed review (q < 3 or isKnown is false)
                 record.repetitions = 0;
                 record.interval = 1;
-                record.easeFactor = Math.max(1.3, (record.easeFactor || 2.5) - 0.2);
+                record.easeFactor = Math.max(1.3, parseFloat(((record.easeFactor || 2.5) - 0.2).toFixed(2)));
                 record.strength = Math.max(15, (record.strength || 40) - 25);
 
                 // Increment in mistakeLog
@@ -82,7 +96,7 @@
                 }
             }
 
-            // Calculate next review date
+            // Calculate next review date based on interval
             const nextDate = new Date(today);
             nextDate.setDate(nextDate.getDate() + (record.interval || 1));
             record.nextReview = nextDate.toISOString().split('T')[0];
@@ -90,6 +104,62 @@
             if (typeof app !== 'undefined' && app.saveStats) {
                 app.saveStats();
             }
+        },
+
+        getRetentionScore: function (record) {
+            if (!record) return 30;
+            const base = record.strength || 30;
+            if (!record.lastReviewed) return base;
+
+            const last = new Date(record.lastReviewed);
+            const now = new Date();
+            const elapsedDays = Math.max(0, Math.round((now - last) / (1000 * 60 * 60 * 24)));
+            const interval = Math.max(1, record.interval || 1);
+
+            // Ebbinghaus forgetting curve decay: R = base * e^(-0.35 * t / I)
+            const decayed = base * Math.exp(-0.35 * (elapsedDays / interval));
+            return Math.min(100, Math.max(10, Math.round(decayed)));
+        },
+
+        getCardStage: function (record) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            if (!record || record.repetitions === 0 || (record.nextReview && record.nextReview <= todayStr)) {
+                return 'critical'; // 🔴 Due today or 0 repetitions
+            }
+            if (record.repetitions < 4 || (record.interval || 0) < 14) {
+                return 'learning'; // 🟡 Active repetition phase
+            }
+            return 'mastered'; // 🟢 Mastered (4+ reps, >= 14d)
+        },
+
+        getTimeUntilReview: function (record) {
+            if (!record || !record.nextReview) return 'Danas!';
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const next = new Date(record.nextReview);
+            next.setHours(0, 0, 0, 0);
+            const diffDays = Math.round((next - today) / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) return `Kasni ${Math.abs(diffDays)}d!`;
+            if (diffDays === 0) return 'Danas!';
+            if (diffDays === 1) return 'Sutra';
+            return `za ${diffDays} dana`;
+        },
+
+        getDueWords: function () {
+            const srs = this.getSrsData();
+            const mistakeLog = (typeof state !== 'undefined' && state.mistakeLog) ? state.mistakeLog : {};
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            const dueIds = new Set();
+            Object.keys(mistakeLog).forEach(id => dueIds.add(id));
+            Object.keys(srs).forEach(id => {
+                const r = srs[id];
+                if (r.nextReview && r.nextReview <= todayStr) {
+                    dueIds.add(id);
+                }
+            });
+            return Array.from(dueIds);
         },
 
         calculateBrainHealth: function () {
@@ -103,16 +173,16 @@
             let mastered = 0;
             let learning = 0;
             let critical = 0;
-            const todayStr = new Date().toISOString().split('T')[0];
 
             keys.forEach(k => {
                 const r = srs[k];
-                const strength = r.strength || 30;
+                const strength = this.getRetentionScore(r);
                 totalStrength += strength;
 
-                if (r.nextReview && r.nextReview <= todayStr) {
+                const stage = this.getCardStage(r);
+                if (stage === 'critical') {
                     critical++;
-                } else if (strength >= 80) {
+                } else if (stage === 'mastered') {
                     mastered++;
                 } else {
                     learning++;

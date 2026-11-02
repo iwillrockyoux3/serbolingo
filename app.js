@@ -1018,49 +1018,211 @@ const app = {
             app.navigate('home');
         }
     },
+    setMistakesFilter: (filter) => {
+        state._mistakesFilter = filter;
+        if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');
+        app.renderMistakes();
+    },
     renderMistakes: async () => {
         const listEl = document.getElementById('mistakes-list');
         const emptyEl = document.getElementById('mistakes-empty-state');
         const btnEl = document.getElementById('mistakes-review-btn');
         const badgeEl = document.getElementById('mistakes-count-badge');
         
+        if (!listEl) return;
         listEl.innerHTML = '';
         
-        const mistakeIds = Object.keys(state.mistakeLog || {});
-        if (mistakeIds.length === 0) {
-            emptyEl.classList.remove('hidden');
-            btnEl.classList.add('hidden');
+        if (!state.mistakeLog) state.mistakeLog = {};
+        if (!state.srsData) state.srsData = {};
+        
+        // Gather all active word IDs tracked in either mistakeLog or srsData
+        const allIdsSet = new Set([
+            ...Object.keys(state.mistakeLog),
+            ...Object.keys(state.srsData)
+        ]);
+        const allIds = Array.from(allIdsSet);
+        
+        if (allIds.length === 0) {
+            if (emptyEl) emptyEl.classList.remove('hidden');
+            if (btnEl) btnEl.classList.add('hidden');
+            const dueStat = document.getElementById('srs-stat-due');
+            const retStat = document.getElementById('srs-stat-retention');
+            const mastStat = document.getElementById('srs-stat-mastered');
+            if (dueStat) dueStat.textContent = '0';
+            if (retStat) retStat.textContent = '100%';
+            if (mastStat) mastStat.textContent = '0';
+            ['all', 'due', 'learning', 'mastered'].forEach(f => {
+                const el = document.getElementById(`srs-chip-${f}-count`);
+                if (el) el.textContent = '0';
+            });
             return;
         }
         
-        emptyEl.classList.add('hidden');
-        btnEl.classList.remove('hidden');
-        badgeEl.textContent = mistakeIds.length;
+        if (emptyEl) emptyEl.classList.add('hidden');
+        if (btnEl) btnEl.classList.remove('hidden');
         
-        mistakeIds.sort((a, b) => state.mistakeLog[b] - state.mistakeLog[a]);
+        // Compute live SM-2 metrics for all tracked words
+        const todayStr = new Date().toISOString().split('T')[0];
+        let dueCount = 0;
+        let learningCount = 0;
+        let masteredCount = 0;
+        let totalRetention = 0;
         
-        const displayIds = mistakeIds.slice(0, 50);
+        const cardMetadata = {};
+        for (const id of allIds) {
+            const rec = window.SrsEngine ? window.SrsEngine.getWordRecord(id) : { repetitions: 0, interval: 1, strength: 30 };
+            const retention = window.SrsEngine ? window.SrsEngine.getRetentionScore(rec) : (rec.strength || 30);
+            const stage = window.SrsEngine ? window.SrsEngine.getCardStage(rec) : ((rec.nextReview && rec.nextReview <= todayStr) ? 'critical' : 'learning');
+            const timing = window.SrsEngine ? window.SrsEngine.getTimeUntilReview(rec) : 'Danas!';
+            
+            cardMetadata[id] = { rec, retention, stage, timing };
+            totalRetention += retention;
+            
+            if (stage === 'critical') dueCount++;
+            else if (stage === 'mastered') masteredCount++;
+            else learningCount++;
+        }
+        
+        // Update header banner
+        const avgRetention = Math.round(totalRetention / allIds.length);
+        const dueStat = document.getElementById('srs-stat-due');
+        const retStat = document.getElementById('srs-stat-retention');
+        const mastStat = document.getElementById('srs-stat-mastered');
+        if (dueStat) dueStat.textContent = dueCount;
+        if (retStat) retStat.textContent = `${avgRetention}%`;
+        if (mastStat) mastStat.textContent = masteredCount;
+        
+        // Update chip counters
+        const cAll = document.getElementById('srs-chip-all-count');
+        const cDue = document.getElementById('srs-chip-due-count');
+        const cLearn = document.getElementById('srs-chip-learning-count');
+        const cMast = document.getElementById('srs-chip-mastered-count');
+        if (cAll) cAll.textContent = allIds.length;
+        if (cDue) cDue.textContent = dueCount;
+        if (cLearn) cLearn.textContent = learningCount;
+        if (cMast) cMast.textContent = masteredCount;
+        if (badgeEl) badgeEl.textContent = dueCount > 0 ? dueCount : allIds.length;
+        
+        // Active filter
+        const filter = state._mistakesFilter || 'all';
+        ['all', 'due', 'learning', 'mastered'].forEach(f => {
+            const btn = document.getElementById(`srs-filter-${f}`);
+            if (btn) {
+                if (f === filter) {
+                    btn.className = 'category-chip px-3 py-1.5 rounded-xl text-xs font-black transition-all bg-blue-600 text-white shadow-sm shadow-blue-500/20 active:scale-95';
+                } else {
+                    btn.className = 'category-chip px-3 py-1.5 rounded-xl text-xs font-black transition-all bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 active:scale-95';
+                }
+            }
+        });
+        
+        // Filter and sort items by True SM-2 Urgency:
+        // Overdue/due first, then lowest retention, then highest mistake weight
+        let filteredIds = allIds.filter(id => {
+            if (filter === 'all') return true;
+            if (filter === 'due') return cardMetadata[id].stage === 'critical';
+            if (filter === 'learning') return cardMetadata[id].stage === 'learning';
+            if (filter === 'mastered') return cardMetadata[id].stage === 'mastered';
+            return true;
+        });
+        
+        filteredIds.sort((a, b) => {
+            const metaA = cardMetadata[a];
+            const metaB = cardMetadata[b];
+            const isCritA = metaA.stage === 'critical' ? 1 : 0;
+            const isCritB = metaB.stage === 'critical' ? 1 : 0;
+            if (isCritA !== isCritB) return isCritB - isCritA;
+            if (metaA.retention !== metaB.retention) return metaA.retention - metaB.retention;
+            const wA = state.mistakeLog[a] || 0;
+            const wB = state.mistakeLog[b] || 0;
+            return wB - wA;
+        });
+        
+        const displayIds = filteredIds.slice(0, 50);
+        
+        if (displayIds.length === 0) {
+            listEl.innerHTML = `
+                <div class="text-center py-8 text-slate-400 dark:text-slate-500 text-sm font-medium">
+                    Nema reči u ovoj kategoriji.
+                </div>
+            `;
+            return;
+        }
         
         for (const id of displayIds) {
             const word = await window.appDb.getWord(id);
             if (!word) continue;
-            const weight = state.mistakeLog[id];
             
+            const meta = cardMetadata[id];
             const isToEn = state.settings.learningDirection === 'sr_to_en';
-            const primary = isToEn ? word.en : word.sr;
-            const secondary = isToEn ? word.sr : word.en;
+            
+            // Script parity for Serbian text
+            const srDisplay = (state.settings.script === 'cyrillic' && word.sr_cyr)
+                ? word.sr_cyr
+                : (word.sr_lat || word.sr || '');
+            const primary = isToEn ? word.en : srDisplay;
+            const secondary = isToEn ? srDisplay : word.en;
+            
+            const retention = meta.retention;
+            const timing = meta.timing;
+            const stage = meta.stage;
+            
+            // Color coding based on retention
+            let barColor = 'bg-red-500';
+            let stageBadge = 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800';
+            let stageText = `🔴 ${timing}`;
+            if (stage === 'mastered') {
+                barColor = 'bg-emerald-500';
+                stageBadge = 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800';
+                stageText = `🟢 Savladano (${meta.rec.interval || 14}d)`;
+            } else if (stage === 'learning') {
+                barColor = 'bg-amber-500';
+                stageBadge = 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800';
+                stageText = `🟡 ${timing}`;
+            }
+            
+            const phoneticStr = word.phonetic ? `• [${word.phonetic}]` : '';
+            const posStr = word.pos ? `<span class="uppercase tracking-wider font-extrabold text-[9px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400">${word.pos}</span>` : '';
+            const audioWord = (word.sr_lat || word.sr || '').replace(/'/g, "\\'");
             
             const item = document.createElement('div');
-            item.className = 'bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border-2 border-slate-100 dark:border-slate-700 flex justify-between items-center transition-all hover:border-blue-200 dark:hover:border-blue-800';
+            item.className = 'bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border-2 border-slate-100 dark:border-slate-700 flex flex-col gap-3 transition-all hover:border-blue-200 dark:hover:border-blue-800';
             
             item.innerHTML = `
-                <div>
-                    <h4 class="font-black text-slate-800 dark:text-white text-lg">${primary}</h4>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">${secondary}</p>
+                <div class="flex items-start justify-between gap-3">
+                    <div class="space-y-0.5">
+                        <div class="flex items-center gap-2">
+                            <h4 class="font-black text-slate-800 dark:text-white text-base">${primary}</h4>
+                            <button onclick="event.stopPropagation(); app.speakPhrase('${audioWord}', 'sr-RS'); if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');" class="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/60 active:scale-95 transition-all flex items-center justify-center text-xs" title="Izgovor">
+                                🔊
+                            </button>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 text-xs font-medium">${secondary} <span class="text-slate-400 text-[10px] font-normal">${phoneticStr}</span></p>
+                    </div>
+                    <div class="flex flex-col items-end gap-1.5">
+                        <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg ${stageBadge}">
+                            ${stageText}
+                        </span>
+                        <div class="flex items-center gap-1.5">
+                            ${posStr}
+                            <button onclick="app.toggleFlashcard('${id}'); setTimeout(() => app.renderMistakes(), 100);" class="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 transition-colors px-1" title="Ukloni iz grešaka">✖</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-col items-end gap-2">
-                    <span class="text-[10px] font-black uppercase tracking-wider px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg">Weight: ${weight}</span>
-                    <button onclick="app.toggleFlashcard('${id}'); setTimeout(() => app.renderMistakes(), 100);" class="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 transition-colors">Ukloni ✖</button>
+                
+                <!-- Retention Progress Bar & Ease Factor -->
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-3 text-[10px] text-slate-400 font-bold">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span>Pamćenje:</span>
+                        <div class="flex-1 max-w-[120px] bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                            <div class="${barColor} h-full rounded-full transition-all duration-300" style="width: ${retention}%"></div>
+                        </div>
+                        <span class="text-slate-600 dark:text-slate-300 font-extrabold">${retention}%</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-400">
+                        <span>Faza: <strong class="text-slate-600 dark:text-slate-300">${meta.rec.repetitions || 0}</strong></span>
+                        <span>EF: <strong class="text-slate-600 dark:text-slate-300">${meta.rec.easeFactor || 2.5}</strong></span>
+                    </div>
                 </div>
             `;
             listEl.appendChild(item);
@@ -1068,13 +1230,14 @@ const app = {
     },
     startMistakeReview: async () => {
         const mistakeIds = Object.keys(state.mistakeLog || {});
-        if (mistakeIds.length === 0) return;
+        const srsKeys = (state.srsData) ? Object.keys(state.srsData) : [];
+        if (mistakeIds.length === 0 && srsKeys.length === 0) return;
         
         try {
             ACTIVE_LESSON = await window.QuestionEngine.generateMistakeReviewLesson(window.appDb, state.mistakeLog, 10);
             
             if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
-                app.showToast('Greška pri kreiranju lekcije.', 'error');
+                app.showToast('Nema reči za ponavljanje / No words due for review.', 'info');
                 return;
             }
             state.currentLevelKey = 'PRACTICE';
@@ -2408,10 +2571,14 @@ const app = {
                     window.LeagueEngine.recordUserXp(earnedXp);
                 }
                 
-                // Phase 4: SRS Logic - decay mistake
-                if (l.wordId && state.mistakeLog[l.wordId]) {
-                    state.mistakeLog[l.wordId]--;
-                    if (state.mistakeLog[l.wordId] <= 0) delete state.mistakeLog[l.wordId];
+                // Priority 6: True SuperMemo-2 SRS Logic - record correct review
+                if (l.wordId) {
+                    if (window.SrsEngine && typeof window.SrsEngine.recordReview === 'function') {
+                        window.SrsEngine.recordReview(l.wordId, true, 5);
+                    } else if (state.mistakeLog[l.wordId]) {
+                        state.mistakeLog[l.wordId]--;
+                        if (state.mistakeLog[l.wordId] <= 0) delete state.mistakeLog[l.wordId];
+                    }
                 }
                 
                 // Phase 4: Quest logic
@@ -2466,9 +2633,13 @@ const app = {
                 state.hearts--;
                 state.lastLessonMistakes = (state.lastLessonMistakes || 0) + 1;
                 
-                // Phase 4: SRS Logic - log mistake
+                // Priority 6: True SuperMemo-2 SRS Logic - record failed review
                 if (l.wordId) {
-                    state.mistakeLog[l.wordId] = (state.mistakeLog[l.wordId] || 0) + 1;
+                    if (window.SrsEngine && typeof window.SrsEngine.recordReview === 'function') {
+                        window.SrsEngine.recordReview(l.wordId, false, 1);
+                    } else {
+                        state.mistakeLog[l.wordId] = (state.mistakeLog[l.wordId] || 0) + 1;
+                    }
                 }
             }
 
@@ -2506,6 +2677,9 @@ const app = {
             if (isC) {
                 if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('correct');
                 if (hasTypoWarning) {
+                    if (l.wordId && window.SrsEngine && typeof window.SrsEngine.recordReview === 'function') {
+                        window.SrsEngine.recordReview(l.wordId, true, 3);
+                    }
                     document.getElementById('feedback-title').innerText = "Tačno sa greškom!";
                     document.getElementById('feedback-title').className = "font-black text-sm text-amber-600 dark:text-amber-400";
                     document.getElementById('feedback-msg').innerHTML = `⚠️ Obrati pažnju: pravilno se piše "${displayCorrect}"<p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni reči gore u pitanju za gramatičko objašnjenje</p>`;
@@ -3293,16 +3467,21 @@ const app = {
     },
     toggleFlashcard: (id) => {
         if (!state.mistakeLog) state.mistakeLog = {};
-        if (state.mistakeLog[id]) {
+        if (!state.srsData) state.srsData = {};
+        if (state.mistakeLog[id] || state.srsData[id]) {
             delete state.mistakeLog[id];
+            delete state.srsData[id];
             app.showToast("Uklonjeno iz rečnika / Removed from flashcards", "info");
         } else {
             state.mistakeLog[id] = 5; // Give it high weight so it appears in Practice mode
+            if (window.SrsEngine) {
+                window.SrsEngine.getWordRecord(id);
+            }
             app.showToast("Dodato u rečnik / Added to flashcards!", "success");
         }
         app.saveStats();
         // Re-render search results to update star color
-        const query = document.getElementById('omni-search').value;
+        const query = document.getElementById('omni-search')?.value;
         if (query) app.handleSearch(query);
     },
     editProfileName: () => {
