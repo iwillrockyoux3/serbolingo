@@ -114,6 +114,7 @@
 | P34.1 | Hardcore Immersion Mode (100% Serbian UI) & Native Speaker Clips Hub | 🆕 New | `immersion-clips.js`, `app.js`, `index.html` | ✅ TESTING |
 | P37.1 | Ultimate Streak Retention & Duolingo Addiction Engine | 🆕 New | `streak-retention.js`, `app.js`, `index.html` | ✅ DONE |
 | P45.1 | SerboReels — TikTok-Style Video Immersion & Tap-to-Translate | 🆕 New | `serbo-reels.js`, `index.html` | ✅ DONE |
+| P36.1 | Database Migration Engine (Versioned Non-Destructive IndexedDB Upsert) | 🆕 New | `db.js`, `seed-data.js` | 🔄 IN PROGRESS |
 
 ### ⚪ Future / Moonshot
 
