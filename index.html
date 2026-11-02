@@ -966,6 +966,11 @@
                 <span>🎴</span> <span>Flashcard Swipe (Brzo Ponavljanje)</span>
             </button>
 
+            <!-- Smart Paced Story Mode (Priority 38) -->
+            <button id="mistakes-smart-story-btn" onclick="SmartStoryEngine.startFromMistakes()" class="w-full py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white font-black rounded-2xl shadow-lg shadow-orange-500/25 active:scale-95 transition-transform text-sm uppercase tracking-wider mb-2 flex items-center justify-center gap-2">
+                <span>📖</span> <span>Pametna Priča (Vežbaj kroz priču)</span> <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold ml-1">✨ AI / Offline</span>
+            </button>
+
             <!-- Review Button -->
             <button id="mistakes-review-btn" onclick="app.startMistakeReview()" class="hidden w-full py-4 bg-gradient-to-r from-orange-400 to-red-500 text-white font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-sm uppercase tracking-wider mb-4">
                 ⚡ Clear Weaknesses (<span id="mistakes-count-badge">0</span>)
@@ -2268,6 +2273,7 @@
     <script src="immersion-clips.js?v=13" charset="UTF-8"></script>
     <script src="streak-retention.js?v=13" charset="UTF-8"></script>
     <script src="serbo-reels.js?v=13" charset="UTF-8"></script>
+    <script src="smart-story.js?v=13" charset="UTF-8"></script>
     <script src="app.js?v=13" charset="UTF-8"></script>
 </body>
 

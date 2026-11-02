@@ -40,6 +40,7 @@ const PRECACHE_ASSETS = [
     './immersion-clips.js?v=13',
     './streak-retention.js?v=13',
     './serbo-reels.js?v=13',
+    './smart-story.js?v=13',
     './app.js?v=13'
 ];
 

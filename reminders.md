@@ -298,8 +298,13 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **PWA & Home Screen Widgets (DONE)**: Fully integrated with Service Worker (`sw.js`), `manifest.json`, and dynamic browser prompt for 1-tap installation directly to mobile/desktop home screen.
 - [ ] **Pending Final Sweep & QA Note**: Once all priorities and full app development are completed, revisit Priority 37 to thoroughly test and verify all streak retention mechanics on real devices (Web Notifications at 19:00, midnight risk countdown, 150 💎 gem repair & 5-question recovery challenge, Streak Society tier perks, and Instagram/WhatsApp card sharing).
 
-## 📚 Priority 38: Smart Paced Story Mode
-- [ ] **Dynamic Bedtime Stories**: Instead of static stories, the app uses AI to generate a unique short story containing *only* the specific 20 words the user struggled with most that week.
+## ✅📚 Priority 38: Smart Paced Story Mode ("Pametne Priče") (DONE)
+- [x] **Dynamic Contextual Bedtime & Cultural Stories (DONE)**:
+  - [x] **Weakness-Targeted Story Weaver**: Dynamically extracts the user's due/weakest vocabulary from `state.mistakeLog` and `state.srsData` and weaves them into engaging cultural Serbian narratives (`smart-story.js`).
+  - [x] **Dual AI & 100% Offline Generator**: Online Gemini model cascading (`gemini-2.5-flash` → `2.0-flash` → `1.5-flash`) paired with 3 rich offline cultural templates (Kafana "Znak Pitanja", Kalenić Pijaca, Knez Mihailova) for zero-latency airplane mode play.
+  - [x] **Interactive Story Reader**: Full-screen mobile dialogue bubbles with dual-script parity (Latinica / Ćirilica), glowing target-word pills (`✨ [reč]`), 1-tap word inspector, and native audio pronunciation (`app.speakPhrase`).
+  - [x] **Comprehension Checkpoint & SRS Progress Sync**: In-story comprehension quiz, +25 XP reward, and automated SuperMemo-2 SRS status updates (`SrsEngine.recordReview(wordId, true, 4)`) that immediately boost memory retention in the Mistake Vault!
+  - [x] **Seamless Entry Points**: 1-tap launcher banner in `#view-mistakes` ("📖 Pametna Priča") and hero banner in the Stories menu (`stories.js`).
 
 ## 📷 Priority 39: Optical Character Recognition (AI Visual Lens)
 - [ ] **Camera Translation**: Tap a camera icon, point the phone at a real Serbian restaurant menu or street sign, and the app reads the text, translates it, and adds the new words directly to your Flashcard deck.

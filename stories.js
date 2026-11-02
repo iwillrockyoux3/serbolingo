@@ -148,6 +148,17 @@ const StoriesEngine = {
                     <button onclick="document.getElementById('stories-menu-modal').remove()" class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-xl text-slate-600 dark:text-slate-300 active:scale-95 transition-transform">❌</button>
                 </div>
                 <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                    <!-- Featured: Smart Paced Story Mode (Priority 38) -->
+                    <button onclick="document.getElementById('stories-menu-modal')?.remove(); if (window.SmartStoryEngine) SmartStoryEngine.startFromMistakes();" class="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 p-5 rounded-3xl border-2 border-amber-300 text-white shadow-xl shadow-orange-500/20 active:scale-95 transition-transform text-left flex flex-col relative overflow-hidden group">
+                        <div class="absolute -right-3 -bottom-3 text-7xl opacity-20 group-hover:scale-110 transition-transform">✨</div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-white/25 text-white px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider">🌟 DINAMIČKI AI & OFFLINE</span>
+                            <span class="bg-black/20 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold">SM-2 Spaced Repetition</span>
+                        </div>
+                        <h3 class="text-xl font-black text-white mb-1 relative z-10">📖 Pametna Priča (Tvoje Greške)</h3>
+                        <p class="text-xs font-bold text-amber-100 mb-2 relative z-10">Smart Paced Story from Your Weak Words</p>
+                        <p class="text-xs text-white/95 relative z-10 leading-relaxed font-medium">Ubacujemo reči koje si pogrešio direktno u zabavan kulturni dijalog uz proveru razumevanja i +25 XP!</p>
+                    </button>
         `;
         
         this.STORIES.forEach(story => {
