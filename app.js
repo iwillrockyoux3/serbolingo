@@ -787,6 +787,9 @@ const app = {
             if (boostEl && state.inventory) {
                 boostEl.textContent = state.inventory.xpBoosts || 0;
             }
+            if (window.TrophyEngine && typeof window.TrophyEngine.updateArcadeBanner === 'function') {
+                window.TrophyEngine.updateArcadeBanner();
+            }
         }
         if (vid === 'mistakes') {
             app.renderMistakes();

@@ -96,22 +96,94 @@ const ArcadeEngine = {
     },
 
     _renderGameOver: function(title, score, playAgainFnName) {
+        let isWin = false;
+        let numScore = 0;
+        if (typeof score === 'number') {
+            numScore = score;
+            isWin = score > 0;
+        } else if (typeof score === 'string') {
+            if (score.toLowerCase().includes('won') || score.toLowerCase().includes('pobed')) {
+                isWin = true;
+                numScore = 1;
+            }
+        }
+        const isBot = (ArcadeEngine.currentMode === 'bot' || ArcadeEngine.currentMode === 'ghost' || String(title).includes('Bot') || String(title).includes('pobedio'));
+        
+        let trophyResult = null;
+        if (window.TrophyEngine && typeof window.TrophyEngine.recordGameResult === 'function') {
+            trophyResult = window.TrophyEngine.recordGameResult(title || playAgainFnName, numScore, isWin, isBot);
+        }
+
+        const newHighBadge = trophyResult?.isNewHigh ? `
+            <div class="inline-flex items-center gap-1.5 bg-amber-400 text-amber-950 px-3 py-1 rounded-full text-xs font-black shadow-md shadow-amber-400/30 animate-pulse mb-3">
+                <span>🌟</span> <span>NOVI LIČNI REKORD!</span>
+            </div>
+        ` : '';
+
+        const newMedalsBadge = (trophyResult?.newlyUnlocked && trophyResult.newlyUnlocked.length > 0) ? `
+            <div class="bg-gradient-to-r from-amber-500/25 to-orange-500/25 border-2 border-amber-400/60 p-3.5 rounded-2xl mb-4 text-center w-full max-w-sm">
+                <span class="text-xs font-black text-amber-300 uppercase tracking-wider block">🎖️ OTKLJUČAN NOVI TROFEJ!</span>
+                <p class="text-sm font-bold text-white mt-1">${trophyResult.newlyUnlocked.map(m => `${m.icon} ${m.title_sr} (+${m.xp} XP)`).join(', ')}</p>
+            </div>
+        ` : '';
+
+        const botStreakBadge = isBot ? `
+            <div class="text-xs text-orange-400 font-bold mb-3">
+                🔥 Niz pobeda protiv botova: <span class="font-black text-white">${trophyResult?.currentBotStreak || 0}</span> (Najbolji: ${trophyResult?.maxBotStreak || 0})
+            </div>
+        ` : '';
+
+        const bestScoreStr = trophyResult ? trophyResult.bestScore : numScore;
+
         return `
-            <div class="flex flex-col items-center justify-center h-full w-full bg-gray-900 text-white p-6 text-center">
-                <h2 class="text-4xl font-bold mb-4">Game Over</h2>
-                <h3 class="text-2xl mb-8">${title}</h3>
-                <p class="text-xl mb-8">Final Score: ${score}</p>
-                <button onclick="ArcadeEngine.${playAgainFnName}()" class="px-6 py-3 bg-blue-600 rounded-lg text-xl mb-4 font-bold">Play Again</button>
-                <button onclick="ArcadeEngine._hideOverlay()" class="px-6 py-3 bg-gray-600 rounded-lg text-xl font-bold">Back to Arcade</button>
+            <div class="flex flex-col items-center justify-center h-full w-full bg-slate-900 text-white p-6 text-center overflow-y-auto">
+                <div class="text-6xl mb-3">${isWin ? '🎉' : '💀'}</div>
+                <h2 class="text-3xl font-black mb-1 tracking-tight">${isWin ? 'Pobeda!' : 'Kraj Igre'}</h2>
+                <h3 class="text-lg text-slate-300 font-bold mb-4">${title}</h3>
+                
+                ${newHighBadge}
+                ${newMedalsBadge}
+
+                <div class="bg-slate-800/90 border border-slate-700 p-4 rounded-2xl w-full max-w-xs mb-6 space-y-1">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Tvoj Rezultat:</div>
+                    <div class="text-3xl font-black text-white">${score}</div>
+                    <div class="text-[11px] font-bold text-amber-400 pt-1 border-t border-slate-700/60 mt-1">🏆 Najbolji rezultat: ${bestScoreStr}</div>
+                </div>
+
+                ${botStreakBadge}
+
+                <div class="flex flex-col gap-2.5 w-full max-w-xs">
+                    <button onclick="ArcadeEngine.${playAgainFnName}()" class="w-full py-3.5 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl text-base font-black shadow-lg shadow-blue-500/25 active:scale-95 transition-all uppercase tracking-wide">
+                        🔄 Igraj Ponovo
+                    </button>
+                    <button onclick="TrophyEngine.openCabinetModal()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 rounded-xl text-sm font-black shadow-md shadow-orange-500/20 active:scale-95 transition-all uppercase tracking-wide flex items-center justify-center gap-1.5">
+                        <span>🏆</span> <span>Vitrina sa Trofejima</span>
+                    </button>
+                    <button onclick="ArcadeEngine._hideOverlay()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-sm font-bold active:scale-95 transition-all">
+                        🕹️ Nazad u Igraonicu
+                    </button>
+                </div>
             </div>
         `;
     },
 
     _renderLevelComplete: function(level, nextFnStr) {
+        if (window.TrophyEngine && typeof window.TrophyEngine.recordGameResult === 'function') {
+            window.TrophyEngine.recordGameResult('level_complete', level, true, false);
+        }
         return `
-            <div class="flex flex-col items-center justify-center h-full w-full bg-gray-900 text-white p-6 text-center">
-                <h2 class="text-4xl font-bold mb-4 text-green-400">Level ${level} Complete!</h2>
-                <button onclick="${nextFnStr}" class="px-6 py-3 bg-green-600 rounded-lg text-xl font-bold mt-8">Next Level</button>
+            <div class="flex flex-col items-center justify-center h-full w-full bg-slate-900 text-white p-6 text-center">
+                <div class="text-5xl mb-3">⭐</div>
+                <h2 class="text-3xl font-black mb-2 text-emerald-400">Nivo ${level} Završen!</h2>
+                <p class="text-sm text-slate-400 mb-6 font-bold">Level ${level} Complete! Sjajan napredak!</p>
+                <div class="flex flex-col gap-3 w-full max-w-xs">
+                    <button onclick="${nextFnStr}" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 rounded-xl text-lg font-black shadow-lg shadow-emerald-500/25 active:scale-95 transition-all">
+                        Sledeći Nivo ➡️
+                    </button>
+                    <button onclick="TrophyEngine.openCabinetModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-black active:scale-95 transition-all flex items-center justify-center gap-1">
+                        <span>🏆</span> <span>Vitrina sa Trofejima</span>
+                    </button>
+                </div>
             </div>
         `;
     },

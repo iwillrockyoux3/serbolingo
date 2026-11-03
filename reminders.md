@@ -104,9 +104,12 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 ## ✅ Priority 12: Arcade Expansion (40 Total Minigames & Modes + Solo/Bot Mode)
 - [x] Solo vs. AI Bot Mode Selector: Solo Mode (Levels 1-10) and Vs. AI Bot Mode (Marko Bot, Ana Bot) with live race progress bars.
 - [x] **40 Total Minigames & Interactive Modes built & wired in Arcade Grid**: Karaoke Reader, Milioner, Spojnice, Kucanje, Udari Reč, Vešala, Slagalica, Slepi Miš, Zmija, Papagaj, Prevodilac, Memorija, Graditelj Rečenica, Tačno/Netačno, Pogodi Sliku, Osmosmerka, Ukrštenica, Rečko, Baloni, Razvrstaj, Freestyle Rap, Rep Bitka, Padajuće Reči, Ruski Rulet (Lockout), Bomba, Svemirski Osvajači, Simon Kaže, Kolo Sreće, Blokovi, Iznenadna Smrt, Priče, Popuni Prazninu, Sleng & Žargon, Akcenat, Muzika & Tekstovi, Brza Trka, Dvoboj, Pijaca, Pikado, Detektiv.
-<!-- -->
-- [ ] **Local Trophy Cabinet** *(Pending Upgrade)*:
-  - Build a showcase room tracking high scores, win streaks against the Bots, and awarding Bronze/Silver/Gold medals for minigames.
+- [x] **Local Trophy Cabinet ("Vitrina sa Trofejima") (DONE)**:
+  - [x] **High Score & Personal Bests Tracker**: Automatically records and updates high scores across all 40 Arcade minigames (`trophy-cabinet.js`).
+  - [x] **Bot Win Streak Counter**: Tracks active & all-time record win streaks against bot opponents (Marko_Bot, Ana_Bot, Ghost bots).
+  - [x] **20 Tiered Achievement Medals**: Bronze 🥉, Silver 🥈, Gold 🥇, and Diamond 💎 trophies awarding +15 to +200 bonus XP upon unlock.
+  - [x] **Enhanced Game Over Screen**: Instant high score badges (`🌟 NOVI LIČNI REKORD!`), trophy unlock celebration banners, bot streak counters, and 1-tap "Vitrina sa Trofejima" launcher.
+  - [x] **3D Showcase Shelf Modal**: Glassmorphism room with 4 tier filter tabs, live progress bars on locked achievements, and real-time trophy counter banner in `#view-arcade`.
 
 ## ✅ Priority 13: Cloze Mastery (Fill-in-the-Blank Context Engine)
 - [x] Busuu / Clozemaster Context Trainer: 5,000+ real conversational Serbian sentences with 1 key missing word. Rapid-fire contextual fill-in-the-blank practice to build natural language instincts.

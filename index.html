@@ -513,7 +513,7 @@
                 </div>
 
                 <!-- Ghost Arena Launcher (Priority 21: Offline Ghost Multiplayer) -->
-                <div class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 border-2 border-indigo-500/40 rounded-2xl p-4 mb-6 shadow-lg shadow-indigo-950/30 flex items-center justify-between">
+                <div class="bg-gradient-to-r from-indigo-900/90 to-purple-900/90 border-2 border-indigo-500/40 rounded-2xl p-4 mb-4 shadow-lg shadow-indigo-950/30 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-2xl shrink-0">
                             👻
@@ -525,6 +525,25 @@
                     </div>
                     <button onclick="GhostEngine.openModal()" class="py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-1.5 shrink-0">
                         <span>⚔️</span> <span>Arena</span>
+                    </button>
+                </div>
+
+                <!-- Trophy Cabinet Launcher (Priority 12: Vitrina sa Trofejima) -->
+                <div class="bg-gradient-to-r from-amber-600/90 via-orange-600/90 to-yellow-600/90 border-2 border-yellow-400/50 rounded-2xl p-4 mb-6 shadow-lg shadow-orange-950/20 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-yellow-400/20 border border-yellow-300/40 flex items-center justify-center text-2xl shrink-0 shadow-inner">
+                            🏆
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <h3 class="text-white font-black text-base leading-tight">Vitrina sa Trofejima</h3>
+                                <span class="bg-black/25 text-yellow-200 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">20 Trofeja</span>
+                            </div>
+                            <p class="text-yellow-100 text-xs font-medium">Rekordi igrica, medalje i niz pobeda protiv botova</p>
+                        </div>
+                    </div>
+                    <button onclick="TrophyEngine.openCabinetModal()" class="py-2.5 px-4 bg-yellow-400 hover:bg-yellow-300 text-yellow-950 font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-1.5 shrink-0">
+                        <span>🎖️</span> <span>Vidi Vitrinu</span>
                     </button>
                 </div>
 
@@ -2262,6 +2281,7 @@
     <script src="rhythm.js?v=13" charset="UTF-8"></script>
     <script src="ghost-arena.js?v=13" charset="UTF-8"></script>
     <script src="arcade.js?v=13" charset="UTF-8"></script>
+    <script src="trophy-cabinet.js?v=13" charset="UTF-8"></script>
     <script src="visual-lens.js?v=13" charset="UTF-8"></script>
     <script src="commute.js?v=13" charset="UTF-8"></script>
     <script src="shop-engine.js?v=13" charset="UTF-8"></script>

@@ -29,6 +29,7 @@ const PRECACHE_ASSETS = [
     './rhythm.js?v=13',
     './ghost-arena.js?v=13',
     './arcade.js?v=13',
+    './trophy-cabinet.js?v=13',
     './visual-lens.js?v=13',
     './commute.js?v=13',
     './shop-engine.js?v=13',
