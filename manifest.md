@@ -39,6 +39,7 @@
 | [`question-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/question-engine.js) | 662 | 28 KB | 12+ question type generator — MCQ, speech recognition, picture/emoji, listening, fill-blank, scrambled word order, canvas whiteboard, hangman, matching pairs, letter-by-letter spelling, drag-drop punctuation, SM-2 prioritized mistake review lessons |
 | [`alphabet-data.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/alphabet-data.js) | 73 | 7 KB | Complete 30-letter Serbian alphabet matrix — Latin + Cyrillic with anchor words, emojis, phonetics |
 | [`grammar-tooltips.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/grammar-tooltips.js) | 1,280 | 70 KB | Smart Grammar Tooltips & Interactive Word Inspector — Deep linguistic engine (SR_CORE_GRAMMAR, EN_CORE_GRAMMAR, SEED_DATA indexing), gender/tense/case badges, collocations, syntax notes, bilingual audio & examples |
+| [`grammar-sandbox.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/grammar-sandbox.js) | 570 | 28 KB | Interactive Grammar Sandbox & 2-in-1 Sentence Hub (Priority 41) — Word-by-word sentence trainer (50+ curated sentences) + Color-coded Lego SVO grammar blocks (blue/red/green/purple) |
 
 ## [04_AUDIO] — TTS, Speech Recognition & Pitch Analysis
 

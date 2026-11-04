@@ -1208,8 +1208,12 @@ const ArcadeEngine = {
         nextQuestion();
     },
 
-    // 11. Sentence Builder
+    // 11. Sentence Builder (2-in-1 Sentence Hub & Lego Grammar Sandbox)
     startSentenceBuilder: function() {
+        if (window.GrammarSandbox && typeof window.GrammarSandbox.openHub === 'function') {
+            window.GrammarSandbox.openHub();
+            return;
+        }
         this._cleanup();
         this._showOverlay();
         const overlay = document.getElementById('arcade-game-overlay');

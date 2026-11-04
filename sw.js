@@ -38,6 +38,7 @@ const PRECACHE_ASSETS = [
     './srs-engine.js?v=13',
     './touch-haptics.js?v=13',
     './grammar-tooltips.js?v=13',
+    './grammar-sandbox.js?v=13',
     './immersion-clips.js?v=13',
     './streak-retention.js?v=13',
     './serbo-reels.js?v=13',

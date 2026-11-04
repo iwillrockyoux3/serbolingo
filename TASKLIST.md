@@ -118,6 +118,7 @@
 | P6.1 | True SuperMemo-2 SRS Algorithm & Mistake Vault 2.0 | 🆕 New | `srs-engine.js`, `app.js`, `index.html` | ✅ DONE |
 | P38.1 | Smart Paced Story Mode (AI + Offline Procedural Weak Words Weaver) | 🆕 New | `smart-story.js`, `index.html`, `stories.js` | ✅ DONE |
 | P12.1 | Local Trophy Cabinet & Achievement Medals ("Vitrina sa Trofejima") | 🆕 New | `trophy-cabinet.js`, `arcade.js`, `index.html` | ✅ DONE |
+| P41.1 | Interactive Grammar Sandbox & 2-in-1 Sentence Builder Hub | 🆕 New | `grammar-sandbox.js`, `arcade.js`, `index.html` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 

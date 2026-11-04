@@ -315,8 +315,13 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 ## 🗂️ Priority 40: Custom Community Decks
 - [ ] **User-Created Vocab Lists**: Allow users to build custom folders (e.g., "Medical Terms", "Football Vocabulary") and share them with other users via a generated link.
 
-## 🧩 Priority 41: Interactive Grammar Sandbox
-- [ ] **Visual Sentence Builder**: Instead of typing, users drag and drop "Lego blocks" of words. Noun blocks are blue, Verb blocks are red. It visually teaches sentence structure (SVO).
+## ✅🧱 Priority 41: Interactive Grammar Sandbox & 2-in-1 Sentence Hub (DONE)
+- [x] **2-in-1 Sentence Builder Hub & Lego Sandbox (DONE)**:
+  - [x] **2-in-1 Hub Mode Selector**: Housed cleanly inside the existing "Graditelj Rečenica" Arcade tile, preserving the exact 40-game grid symmetry without dangling cards.
+  - [x] **Polished Word-by-Word Trainer (Mode 1)**: Replaced random dictionary concatenation with a curated database of 50+ real conversational sentences (A1-B2), native audio pronunciation, lives system (❤️❤️❤️), and XP rewards.
+  - [x] **Color-Coded Lego Grammar Blocks (Mode 2)**: Blue (Nouns / Imenice), Red (Verbs / Glagoli), Green (Adjectives / Pridevi), Purple (Prepositions / Predlozi), and Orange (Adverbs / Prilozi).
+  - [x] **Puzzle Challenges & Free Laboratory**: 12 SVO progressive blueprint puzzles + Free Sandbox exploration with real-time syntactic structure analysis and TTS narration.
+  - [x] **Dual-Script & Audio Parity**: Full support for Latinica & Ćirilica with instant word/phrase pronunciation and haptic feedback.
 
 ## 🌐 Priority 42: Cloudflare Free Plan for Online Services
 - [ ] **Cloudflare Infrastructure**: Use Cloudflare's free plan for CDN, DNS, DDoS protection, and caching when the app goes live with online services (leaderboards, multiplayer, friend finder).
