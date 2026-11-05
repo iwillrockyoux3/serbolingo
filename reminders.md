@@ -279,10 +279,15 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Gemini Grammar Breakdown**: When a user gets a question wrong, an "Explain Why" button appears. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made. (ALREADY BUILT in app.js lines 3260-3330, Gemini model cascade with offline fallback.)
 - [ ] **AI Accent Coach** *(Pending - Build Later)*: Give a 0-100% pronunciation score comparing the user's voice pitch to a native Belgrade speaker.
 
-## ✅📺 Priority 34: Real-World Native Media & Immersion (BUILT - EXPERIMENTAL / USER TESTING)
+## ✅📺 Priority 34: Real-World Native Media & Hardcore Immersion Mode (DONE)
 - [x] **Native Speaker Clips**: 16 curated acoustic immersion clips with looping playback, speed controls (1.0x / 0.75x), script switching (Latin / Cyrillic / Hidden), voice shadowing test, and 1-click SRS Flashcard deck synchronization (`immersion-clips.js`).
-- [x] **Hardcore Immersion Mode**: Profile settings toggle that switches 100% of the UI into pure Serbian (`sr_lat` or `sr_cyr`), stripping English labels and adding a header `100% RS` badge. (Built experimentally for testing and evaluation).
-- [ ] **🔄 QA REVISIT (P34.1)**: Come back to verify and confirm Hardcore Immersion Mode is fully working — test the profile toggle, all UI labels switching to Serbian, script switching (Latin ↔ Cyrillic), and the `100% RS` header badge display on both mobile and desktop.
+- [x] **Hardcore Immersion Mode**: Profile settings toggle that switches 100% of the UI into pure Serbian (`sr_lat`), stripping English labels and adding a header `100% RS` badge. Cyrillic script toggle dropped from general UI (kept only in Alphabet Hub for cultural study).
+
+> [!NOTE] Future Multi-Language Immersion Architecture Note:
+> When expanding to other languages (Spanish, German, Japanese, etc.), replicate the Hardcore Immersion Mode pattern for each:
+> - `100% ES` badge for full Spanish UI, `100% DE` for German, `100% JP` for Japanese, etc.
+> - Dynamic UI label switching per language using the same `sr_lat` architecture pattern with new locale keys.
+> - Each language pack inherits the same profile toggle, header badge, and immersion clip infrastructure.
 
 ## ✅ Priority 35: Sensory Feedback & Responsive Layout (DONE)
 - [x] **Punchy Haptic Feedback**: Noticeable, tactile navigator.vibrate pulses for button taps (40ms), firm double-pulse on correct answers ([70, 40, 120]ms), authoritative warning buzz on wrong answers ([120, 60, 180]ms), and celebration fanfare rhythm. User toggleable in Profile settings.
@@ -359,3 +364,42 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 > 1. Test all SerboReels features end-to-end on real devices (play/pause, subtitles, word inspector, XP awards).
 > 2. Fix any bugs or UI overflow issues found during testing.
 > 3. Upgrade SerboReels to work with **other languages** beyond Serbian ↔ English (multi-language clip support).
+
+## 🐛 Priority 46: In-App Bug, Error & Feedback Reporting System ("Prijavi Problem")
+- [ ] **In-App Report Modal**: Accessible from Profile/Settings via a "Prijavi Problem" button. Users select a category (Bug, UI Glitch, Translation Error, Feature Request, Other) and describe the issue.
+- [ ] **Automatic Diagnostic Snapshot**: On submit, the app silently captures device tier, browser/OS, screen size, current view, app version, localStorage size, and last 10 console errors — attached to the report as a JSON payload.
+- [ ] **Webhook Delivery**: Reports are sent via a lightweight webhook (Discord webhook, Google Forms, or Cloudflare Worker endpoint) so the developer receives instant notifications without needing a full backend.
+- [ ] **Bug Hunter XP Reward**: Users earn +25 XP and a "Bug Hunter" badge for their first 3 valid reports, encouraging community-driven QA.
+- [ ] **Report History**: Users can view their submitted reports and see status updates (Primljeno / U obradi / Reseno).
+
+> [!NOTE] Multi-Language Scaling: This system is language-agnostic — it works identically for Spanish, German, Japanese, or any future language pack.
+
+## 💬 Priority 47: Global Community Forum & Discussion Hub ("Forum Zajednice")
+- [ ] **Grammar Q and A Board**: Users post grammar questions (e.g., "When do I use Dativ vs. Lokativ?") and the community or AI answers. Upvotes surface the best answers.
+- [ ] **Culture and Media Discussions**: Threads for Serbian music, movies, travel tips, and cultural context — building a living community around the language.
+- [ ] **Study Buddy Finder**: Users can post availability and find study partners for text/voice practice sessions.
+- [ ] **Upvote and Reputation System**: Active community helpers earn reputation points and exclusive profile badges ("Forum Guru", "Pomagac").
+- [ ] **Moderation and Safety**: Report button on every post, AI-assisted auto-moderation for spam and inappropriate content, and community guidelines.
+
+> [!NOTE] Multi-Language Scaling: Forum categories auto-expand per language (e.g., "Spanish Grammar", "Japanese Culture") when new language packs are added.
+
+## 🌍 Priority 48: The Global Polyglot Ecosystem ("Svet Jezika")
+- [ ] **Master Concept ID Schema**: Transition the database to a universal concept-based architecture where each entry (e.g., Concept #0001 = "water") contains translations for English, Serbian, Spanish, German, French, Japanese, etc.
+- [ ] **Language Pack Scaling**:
+  - [ ] 3,000 words per pack for A1-B1 foundations.
+  - [ ] 5,000 words per pack for B2 working fluency.
+  - [ ] 15,000 words per pack for C2 native mastery.
+- [ ] **Target Languages**: Spanish (ES), German (DE), French (FR), Japanese (JP), and English for native Serbian speakers (RS to EN).
+- [ ] **Modular Voice Packs**: Downloadable offline audio packs per language (~150MB each) with fallback to native device TTS.
+- [ ] **Full Engine Inheritance**: Every language pack automatically inherits all existing systems — SuperMemo-2 SRS, Mistake Vault, Tinder Swipe Reviews, Arcade with 40 minigames, Grammar Sandbox, SerboReels, Smart Stories, Trophy Cabinet, Streak Society, Leagues, and Hardcore Immersion Mode.
+- [ ] **Dynamic Language Switcher**: Profile setting to swap active language pair without losing progress. All XP, streaks, and SRS data tracked independently per language.
+
+> [!NOTE] Key Architectural Insight: The core engines (SM-2, IndexedDB chunking, Arcade, Reels, Stories, Sandbox, Trophy Cabinet) are already fully decoupled from language strings. Expansion requires only new concept datasets and audio packs — zero engine rewrites.
+
+## 🎙️ Priority 49: AI Accent Coach & Waveform Pitch Matcher
+- [ ] **Real-Time Voice Pitch Overlay**: Uses Web Audio API to capture the user's spoken Serbian and overlays their pitch waveform against a native Belgrade speaker's reference waveform in real-time.
+- [ ] **0-100% Pronunciation Score**: Algorithmic comparison of pitch contour, vowel length, and stress placement gives an instant accuracy percentage.
+- [ ] **Targeted Drill Mode**: Identifies specific phonemes the user struggles with (e.g., rolled "r", soft "c" vs. hard "c") and generates focused repetition drills.
+- [ ] **Before/After Progress Tracking**: Saves pronunciation score history so users can see their accent improvement over weeks.
+
+> [!NOTE] Multi-Language Scaling: Accent Coach adapts to any language by swapping the reference waveform dataset (e.g., Madrid Spanish, Standard German Hochdeutsch, Tokyo Japanese).

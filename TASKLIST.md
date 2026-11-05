@@ -5,7 +5,7 @@
 > For the full 22-priority roadmap, see [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md).  
 > For the categorized file index, see [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md).
 
-**Last Updated**: September 27, 2026
+**Last Updated**: November 6, 2026
 
 ---
 
@@ -111,7 +111,7 @@
 | P35.1 | Punchy Haptic Vibrations & Responsive Tablet Layout | 🆕 New | `touch-haptics.js`, `app.js`, `index.html`, `styles.css` | ✅ DONE |
 | P27.1 | Tinder-Style Flashcard Swipes & Memory Retention Heatmap | 🆕 New | `srs-engine.js`, `app.js`, `index.html`, `styles.css` | ✅ DONE |
 | P32.1 | Ranked Leagues Table Polish & Diamond Shop Expansion | 🆕 New | `league-system.js`, `index.html` | ✅ DONE |
-| P34.1 | Hardcore Immersion Mode (100% Serbian UI) & Native Speaker Clips Hub | 🆕 New | `immersion-clips.js`, `app.js`, `index.html` | ✅ TESTING |
+| P34.1 | Hardcore Immersion Mode (100% Serbian UI) & Native Speaker Clips Hub | 🆕 New | `immersion-clips.js`, `app.js`, `index.html` | ✅ DONE |
 | P37.1 | Ultimate Streak Retention & Duolingo Addiction Engine | 🆕 New | `streak-retention.js`, `app.js`, `index.html` | ✅ DONE |
 | P45.1 | SerboReels — TikTok-Style Video Immersion & Tap-to-Translate | 🆕 New | `serbo-reels.js`, `index.html` | ✅ DONE |
 | P36.1 | Database Migration Engine (Versioned Non-Destructive IndexedDB Upsert) | 🆕 New | `db.js`, `seed-data.js` | ✅ DONE |
@@ -130,6 +130,10 @@
 | P22.1 | Smartwatch companion | 🆕 New | ⬜ FUTURE |
 | P22.2 | AR object tagging | 🆕 New | ⬜ FUTURE |
 | P22.3 | Home screen widgets | 🆕 New | ⬜ FUTURE |
+| P46.1 | In-App Bug & Feedback Reporting System ("Prijavi Problem") | 🆕 New | ⬜ FUTURE |
+| P47.1 | Global Community Forum & Discussion Hub ("Forum Zajednice") | 🆕 New | ⬜ FUTURE |
+| P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
+| P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ⬜ FUTURE |
 
 ---
 
@@ -146,8 +150,8 @@
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20) | 0/6 | 6 |
-| Moonshots (P21-P22) | 0/5 | 5 |
-| **TOTAL** | **31/57** | **26** |
+| Moonshots (P21-P22, P46-P49) | 1/9 | 8 |
+| **TOTAL** | **32/61** | **29** |
 
 ---
 
