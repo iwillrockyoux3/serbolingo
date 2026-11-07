@@ -380,7 +380,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Upvote & Reputation System (DONE)**: Tactile haptic upvoting on threads and replies with live counters. Gamified rewards: `+5 XP` for new discussions, `+15 XP` for helpful answers, and `+25 XP` bonus for 3+ upvotes.
 - [x] **10 Authentic Pre-Populated Seed Discussions (DONE)**: High-quality linguistic and cultural threads ready to explore on day one.
 - [x] **Moderation & Safety (DONE)**: 1-click report flag (`🚩 Prijavi`) hides inappropriate content locally. Full author deletion controls for own posts.
-- [x] **Seamless Explore Integration (DONE)**: High-visibility hero banner in Explore view (`view-explore`) and dedicated modal `#forum-modal`.
+- [x] **Seamless Profile & Community Hub Integration (DONE)**: High-visibility card in Profile view (`view-profile`) alongside bug reporting, and dedicated modal `#forum-modal`.
 
 > [!NOTE] 🌐 **Multi-Language Scaling**: Forum category tags (`langPair`) auto-expand per language (e.g. Spanish Grammar, German Culture, Japanese Exchange) when new language packs are unlocked in Priority 48.
 ## 🌍 Priority 48: The Global Polyglot Ecosystem ("Svet Jezika")
