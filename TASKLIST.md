@@ -121,6 +121,7 @@
 | P41.1 | Interactive Grammar Sandbox & 2-in-1 Sentence Builder Hub | 🆕 New | `grammar-sandbox.js`, `arcade.js`, `index.html` | ✅ DONE |
 | P46.1 | In-App Bug & Feedback Reporting System ("Prijavi Problem") | 🆕 New | `bug-report.js`, `index.html`, `sw.js` | ✅ DONE |
 | P47.1 | Global Community Forum & Discussion Hub ("Forum Zajednice") | 🆕 New | `community-forum.js`, `index.html`, `sw.js` | ✅ DONE |
+| P43.1 | Omegle-Style Language Exchange Hub ("Slučajni Sagovornik") | 🆕 New | `language-exchange.js`, `index.html`, `sw.js` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 
@@ -151,7 +152,7 @@
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20) | 0/6 | 6 |
 | Moonshots (P21-P22, P48-P49) | 1/7 | 6 |
-| **TOTAL** | **34/59** | **25** |
+| **TOTAL** | **35/60** | **25** |
 
 ---
 

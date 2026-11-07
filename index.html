@@ -1270,26 +1270,31 @@
             </div>
 
 
-            <!-- Community Forum (Priority 47) -->
+            <!-- Community Forum & Language Exchange (Priority 47 & 43) -->
             <div class="space-y-3">
-                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1">Zajednica & Diskusije</h3>
+                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1">Zajednica & Razgovor</h3>
                 <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-2 flex items-center justify-center text-2xl shadow-md text-white font-black shrink-0">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 p-2 flex items-center justify-center text-2xl shadow-md text-white font-black shrink-0">
                             💬
                         </div>
                         <div class="flex-1">
-                            <h4 class="text-xs font-black text-slate-800 dark:text-white">Forum Zajednice</h4>
-                            <p class="text-[10px] text-slate-400 dark:text-slate-500 leading-tight">Postavi pitanje o padežima i gramatici, pronađi partnera za vežbu ili podeli omiljene filmove!</p>
+                            <h4 class="text-xs font-black text-slate-800 dark:text-white">Zajednica & Slučajni Sagovornik</h4>
+                            <p class="text-[10px] text-slate-400 dark:text-slate-500 leading-tight">Uključi se u diskusije na forumu ili pokreni 1v1 razgovor sa učenicima i domaćim govornicima!</p>
                         </div>
                     </div>
-                    <button onclick="CommunityForum.openForum()"
-                        class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs rounded-xl shadow-md shadow-indigo-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-                        <span>💬</span> <span>Otvori Forum Zajednice</span>
-                    </button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        <button onclick="CommunityForum.openForum()"
+                            class="py-3 px-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs rounded-xl shadow-md shadow-indigo-500/20 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                            <span>💬</span> <span>Forum Zajednice</span>
+                        </button>
+                        <button onclick="LanguageExchange.openModal()"
+                            class="py-3 px-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-black text-xs rounded-xl shadow-md shadow-orange-500/20 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                            <span>⚡</span> <span>Slučajni Sagovornik</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-
             <!-- Bug & Feedback Reporting (Priority 46) -->
             <div class="space-y-3">
                 <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1">Pomoć & Povratne Informacije</h3>
@@ -2348,6 +2353,29 @@
         </div>
     </div>
     <!-- Global Community Forum Modal (Priority 47) -->
+    <!-- Language Exchange Hub Modal (Priority 43) -->
+    <div id="exchange-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[200] flex flex-col p-3 md:p-6 fade-in overflow-y-auto">
+        <div class="max-w-xl w-full mx-auto my-auto bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[85vh] max-h-[85vh]">
+            <div class="modal-drag-handle"></div>
+            <!-- Header -->
+            <div class="p-3.5 bg-white dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl p-1 bg-amber-500/20 rounded-xl">⚡</span>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-800 dark:text-white leading-tight">Slučajni Sagovornik</h3>
+                        <p class="text-[10px] font-bold text-slate-400">1v1 & Grupna Razmena Jezika</p>
+                    </div>
+                </div>
+                <button onclick="LanguageExchange.closeModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700/60 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center font-black text-sm active:scale-90 transition-transform">
+                    ✕
+                </button>
+            </div>
+            <!-- Body Container -->
+            <div id="exchange-body-container" class="flex-1 overflow-y-auto">
+                <!-- Dynamically populated by LanguageExchange.render() -->
+            </div>
+        </div>
+    </div>
     <div id="forum-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[200] flex flex-col p-3 md:p-6 fade-in overflow-y-auto">
         <div class="max-w-2xl w-full mx-auto my-auto bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col min-h-[85vh] max-h-[92vh]">
             <div class="modal-drag-handle"></div>
@@ -2447,6 +2475,7 @@
     <script src="streak-retention.js?v=13" charset="UTF-8"></script>
     <script src="serbo-reels.js?v=13" charset="UTF-8"></script>
     <script src="smart-story.js?v=13" charset="UTF-8"></script>
+    <script src="language-exchange.js?v=13" charset="UTF-8"></script>
     <script src="community-forum.js?v=13" charset="UTF-8"></script>
     <script src="bug-report.js?v=13" charset="UTF-8"></script>
     <script src="app.js?v=13" charset="UTF-8"></script>

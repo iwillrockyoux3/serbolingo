@@ -331,14 +331,16 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 ## 🌐 Priority 42: Cloudflare Free Plan for Online Services
 - [ ] **Cloudflare Infrastructure**: Use Cloudflare's free plan for CDN, DNS, DDoS protection, and caching when the app goes live with online services (leaderboards, multiplayer, friend finder).
 
-## 💬 Priority 43: Omegle-Style Language Exchange Hub
-- [ ] **1v1 or Group Chat for Language Practice**:
-  - Match with random learners or friends for text chat, voice calling, or video calling to practice Serbian/English conversation skills.
-  - Language exchange pairing: match Serbian speakers learning English with English speakers learning Serbian.
-  - Group rooms for study sessions with up to 4-6 people.
-  - Optional AI moderator that suggests conversation topics and corrects grammar in real-time.
-  - Safety features: report/block buttons, auto-moderation for inappropriate content.
+## ✅⚡ Priority 43: Omegle-Style Language Exchange Hub ("Slučajni Sagovornik") (DONE)
+- [x] **1v1 Language Roulette Matchmaking (DONE)**: Instant pairing matching Serbian learners with native Serbian speakers learning English, and vice versa. Realistic radar search animation with haptic connection vibration (`language-exchange.js`).
+- [x] **12 Diverse Simulated Personas + Gemini Online AI (DONE)**: Hybrid dual-tier conversational engine. 100% offline-ready with 12 authentic personas (Milica from Belgrade, Liam from London, Carlos from Madrid, Sakura from Tokyo, Dragan from Valjevo) with natural typing delays (`...`) and cultural personalities, plus online Gemini cascade for dynamic human-level chat.
+- [x] **Private Friend Room Codes & Group Tables (DONE)**: Direct pairing with study buddies from the Forum via 6-digit room codes (e.g., `BG-4921`) and 4-person group study tables.
+- [x] **In-Chat Pedagogical Power Tools (DONE)**: Tap-to-translate gloss on partner bubbles, 🪄 "Ispravi moju gramatiku" one-tap AI grammar assistant before sending, and 💡 Icebreaker prompt cards (Kafana talk, Travel, Food, Grammar challenges).
+- [x] **Voice Audio TTS & Web Speech Input (DONE)**: Native TTS voice playback of partner messages and speech-to-text voice input.
+- [x] **Safety & Moderation Shield (DONE)**: Instant skip (`⏭️ Sledeći`), block (`🚫 Blokiraj`), and report (`🚩 Prijavi`) controls with local blocklist persistence.
+- [x] **XP Rewards & Profile Integration (DONE)**: Awards `+10 XP` for every 3 exchanges with progress celebration, accessible via Profile community card and dedicated `#exchange-modal`.
 
+> [!NOTE] 🌐 **Multi-Language Scaling**: Persona definitions and matchmaking direction logic are modular (`sr_en`, `es_en`, `de_en`, etc.), ready to inherit new language pairs in Priority 48.
 ## ✅ Priority 44: Smart Grammar Tooltips & Interactive Word Inspector (DONE)
 - [x] **Smart Grammar Tooltips**: Tapping any word in lessons or feedback prompts shows instant morphology, Serbian case tags (Akuzativ, Genitiv, Dativ/Lokativ, Instrumental, Množina), verb tenses, root lemma, translation, audio pronunciation, and 1-tap Flashcard saving.
 
