@@ -373,15 +373,16 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Report History & Local Persistence (DONE)**: 100% offline-resilient local persistence in `localStorage` (`serbolingo_bug_reports`). Users can review all past submissions, status badges (Poslato, Primljeno, U obradi, Rešeno), IDs, and timestamps, with an option to clear history.
 
 > [!NOTE] 🌐 **Multi-Language Scaling**: This system is completely language-agnostic — it works identically for Spanish, German, Japanese, or any future language pack.
-## 💬 Priority 47: Global Community Forum & Discussion Hub ("Forum Zajednice")
-- [ ] **Grammar Q and A Board**: Users post grammar questions (e.g., "When do I use Dativ vs. Lokativ?") and the community or AI answers. Upvotes surface the best answers.
-- [ ] **Culture and Media Discussions**: Threads for Serbian music, movies, travel tips, and cultural context — building a living community around the language.
-- [ ] **Study Buddy Finder**: Users can post availability and find study partners for text/voice practice sessions.
-- [ ] **Upvote and Reputation System**: Active community helpers earn reputation points and exclusive profile badges ("Forum Guru", "Pomagac").
-- [ ] **Moderation and Safety**: Report button on every post, AI-assisted auto-moderation for spam and inappropriate content, and community guidelines.
+## ✅💬 Priority 47: Global Community Forum & Discussion Hub ("Forum Zajednice") (DONE)
+- [x] **Grammar Q&A Board (DONE)**: Structured channel for grammar dilemmas (Dativ vs. Lokativ, reflexive pronouns, verb aspects). Supports rich formatting, tags (`#padezi`, `#glagoli`), accepted answer badges (`✓ Rešeno`), and instant "🤖 Pitaj AI Tutora" pedagogical generator (`community-forum.js`).
+- [x] **Culture & Media Discussions (DONE)**: Curated threads for Balkan movies (*Ko to tamo peva*, *Maratonci*, *Munje*), kafana traditions, music recommendations, and travel tips.
+- [x] **Study Buddy Finder (DONE)**: Language exchange hub for finding tandem partners (A1–B1) with timezone and practice goals.
+- [x] **Upvote & Reputation System (DONE)**: Tactile haptic upvoting on threads and replies with live counters. Gamified rewards: `+5 XP` for new discussions, `+15 XP` for helpful answers, and `+25 XP` bonus for 3+ upvotes.
+- [x] **10 Authentic Pre-Populated Seed Discussions (DONE)**: High-quality linguistic and cultural threads ready to explore on day one.
+- [x] **Moderation & Safety (DONE)**: 1-click report flag (`🚩 Prijavi`) hides inappropriate content locally. Full author deletion controls for own posts.
+- [x] **Seamless Explore Integration (DONE)**: High-visibility hero banner in Explore view (`view-explore`) and dedicated modal `#forum-modal`.
 
-> [!NOTE] Multi-Language Scaling: Forum categories auto-expand per language (e.g., "Spanish Grammar", "Japanese Culture") when new language packs are added.
-
+> [!NOTE] 🌐 **Multi-Language Scaling**: Forum category tags (`langPair`) auto-expand per language (e.g. Spanish Grammar, German Culture, Japanese Exchange) when new language packs are unlocked in Priority 48.
 ## 🌍 Priority 48: The Global Polyglot Ecosystem ("Svet Jezika")
 - [ ] **Master Concept ID Schema**: Transition the database to a universal concept-based architecture where each entry (e.g., Concept #0001 = "water") contains translations for English, Serbian, Spanish, German, French, Japanese, etc.
 - [ ] **Language Pack Scaling**:

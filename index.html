@@ -876,6 +876,29 @@
                 </div>
             </div>
 
+
+            <!-- Community Forum Banner (Priority 47) -->
+            <div onclick="window.CommunityForum && CommunityForum.openForum()"
+                class="bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-600 text-white p-4 rounded-2xl shadow-xl border-2 border-indigo-400/50 cursor-pointer active:scale-98 transition-all relative overflow-hidden group">
+                <div class="absolute -right-3 -bottom-3 text-6xl opacity-20 group-hover:scale-110 transition-transform">💬</div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-black uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <span>💬</span>
+                                <span>Forum Zajednice</span>
+                            </span>
+                            <span class="text-[9px] font-black uppercase tracking-wider bg-emerald-400 text-slate-900 px-1.5 py-0.5 rounded-full animate-pulse">Aktivno</span>
+                            <span class="text-[9px] font-bold bg-black/30 px-1.5 py-0.5 rounded-full text-indigo-200">Q&A Hub</span>
+                        </div>
+                        <h3 class="text-base font-black tracking-tight leading-snug">Diskusije, Padeži & Pomoć Učenicima</h3>
+                        <p class="text-[11px] text-white/90 font-medium">Postavi pitanje o gramatici, pronađi partnera za razgovor ili podeli preporuke za filmove i kulturu!</p>
+                    </div>
+                    <div class="w-11 h-11 rounded-full bg-white/25 backdrop-blur-sm flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform shadow-md">
+                        ▶
+                    </div>
+                </div>
+            </div>
             <!-- Search Area with Smart Modes -->
             <div class="space-y-2">
                 <div class="relative w-full shadow-sm rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus-within:border-blue-400 dark:focus-within:border-blue-500 transition-colors">
@@ -2326,6 +2349,77 @@
             </div>
         </div>
     </div>
+    <!-- Global Community Forum Modal (Priority 47) -->
+    <div id="forum-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[200] flex flex-col p-3 md:p-6 fade-in overflow-y-auto">
+        <div class="max-w-2xl w-full mx-auto my-auto bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col min-h-[85vh] max-h-[92vh]">
+            <div class="modal-drag-handle"></div>
+            <!-- Modal Header -->
+            <div class="p-4 bg-white dark:bg-slate-800/90 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl p-1.5 bg-blue-500/20 rounded-xl">💬</span>
+                    <div>
+                        <h3 class="text-base font-black text-slate-800 dark:text-white leading-tight">Forum Zajednice</h3>
+                        <p class="text-[11px] font-bold text-slate-400">Pitaj, odgovori i uči zajedno sa drugima</p>
+                    </div>
+                </div>
+                <button onclick="CommunityForum.closeForum()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700/60 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center font-black text-sm active:scale-90 transition-transform">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Body Container (injected dynamically) -->
+            <div id="forum-body-container" class="p-4 flex-1 overflow-y-auto space-y-3">
+                <!-- Injected by CommunityForum.render() -->
+            </div>
+        </div>
+    </div>
+
+    <!-- New Thread Creation Modal -->
+    <div id="forum-new-thread-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[220] flex flex-col p-4 fade-in overflow-y-auto">
+        <div class="max-w-md w-full mx-auto my-auto bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+            <div class="modal-drag-handle"></div>
+            <div class="p-4 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">✍️</span>
+                    <h3 class="text-sm font-black text-slate-800 dark:text-white">Nova Diskusija</h3>
+                </div>
+                <button onclick="CommunityForum.closeNewThreadModal()" class="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-300 flex items-center justify-center font-bold text-xs active:scale-90">
+                    ✕
+                </button>
+            </div>
+            <div class="p-4 space-y-3">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400">Kategorija</label>
+                    <select id="new-thread-category" class="w-full mt-1 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-bold outline-none focus:border-blue-500">
+                        <option value="grammar">📚 Gramatika & Padeži</option>
+                        <option value="culture">🎬 Kultura & Film</option>
+                        <option value="buddy">🤝 Partner za Učenje</option>
+                        <option value="ideas">💡 Predlozi & Ankete</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400">Naslov Pitanja / Teme</label>
+                    <input type="text" id="new-thread-title" placeholder="Jasno i kratko formuliši pitanje..." class="w-full mt-1 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-medium outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400">Opis i detalji</label>
+                    <textarea id="new-thread-content" placeholder="Opiši detaljnije problem, rečenicu koju prevodiš ili situaciju..." class="w-full mt-1 h-28 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-medium resize-none outline-none focus:border-blue-500"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400">Oznake (Tags - opciono)</label>
+                    <input type="text" id="new-thread-tags" placeholder="#padezi, #akuzativ, #savet" class="w-full mt-1 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-medium outline-none focus:border-blue-500">
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button onclick="CommunityForum.closeNewThreadModal()" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs rounded-xl active:scale-95">
+                        Otkaži
+                    </button>
+                    <button onclick="CommunityForum.submitNewThread()" class="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xs rounded-xl shadow-md active:scale-95">
+                        Objavi (+5 XP)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="seed-data.js?v=13" charset="UTF-8"></script>
     <script src="db.js?v=13" charset="UTF-8"></script>
     <script src="alphabet-data.js?v=13" charset="UTF-8"></script>
@@ -2355,6 +2449,7 @@
     <script src="streak-retention.js?v=13" charset="UTF-8"></script>
     <script src="serbo-reels.js?v=13" charset="UTF-8"></script>
     <script src="smart-story.js?v=13" charset="UTF-8"></script>
+    <script src="community-forum.js?v=13" charset="UTF-8"></script>
     <script src="bug-report.js?v=13" charset="UTF-8"></script>
     <script src="app.js?v=13" charset="UTF-8"></script>
 </body>

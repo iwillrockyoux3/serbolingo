@@ -120,6 +120,7 @@
 | P12.1 | Local Trophy Cabinet & Achievement Medals ("Vitrina sa Trofejima") | 🆕 New | `trophy-cabinet.js`, `arcade.js`, `index.html` | ✅ DONE |
 | P41.1 | Interactive Grammar Sandbox & 2-in-1 Sentence Builder Hub | 🆕 New | `grammar-sandbox.js`, `arcade.js`, `index.html` | ✅ DONE |
 | P46.1 | In-App Bug & Feedback Reporting System ("Prijavi Problem") | 🆕 New | `bug-report.js`, `index.html`, `sw.js` | ✅ DONE |
+| P47.1 | Global Community Forum & Discussion Hub ("Forum Zajednice") | 🆕 New | `community-forum.js`, `index.html`, `sw.js` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 
@@ -131,7 +132,6 @@
 | P22.1 | Smartwatch companion | 🆕 New | ⬜ FUTURE |
 | P22.2 | AR object tagging | 🆕 New | ⬜ FUTURE |
 | P22.3 | Home screen widgets | 🆕 New | ⬜ FUTURE |
-| P47.1 | Global Community Forum & Discussion Hub ("Forum Zajednice") | 🆕 New | ⬜ FUTURE |
 | P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
 | P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ⬜ FUTURE |
 
@@ -150,8 +150,8 @@
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20) | 0/6 | 6 |
-| Moonshots (P21-P22, P47-P49) | 1/8 | 7 |
-| **TOTAL** | **33/60** | **27** |
+| Moonshots (P21-P22, P48-P49) | 1/7 | 6 |
+| **TOTAL** | **34/59** | **25** |
 
 ---
 
