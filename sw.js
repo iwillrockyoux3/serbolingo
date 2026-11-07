@@ -43,6 +43,7 @@ const PRECACHE_ASSETS = [
     './streak-retention.js?v=13',
     './serbo-reels.js?v=13',
     './smart-story.js?v=13',
+    './bug-report.js?v=13',
     './app.js?v=13'
 ];
 

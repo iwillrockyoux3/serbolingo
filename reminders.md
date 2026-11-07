@@ -365,15 +365,14 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 > 2. Fix any bugs or UI overflow issues found during testing.
 > 3. Upgrade SerboReels to work with **other languages** beyond Serbian ↔ English (multi-language clip support).
 
-## 🐛 Priority 46: In-App Bug, Error & Feedback Reporting System ("Prijavi Problem")
-- [ ] **In-App Report Modal**: Accessible from Profile/Settings via a "Prijavi Problem" button. Users select a category (Bug, UI Glitch, Translation Error, Feature Request, Other) and describe the issue.
-- [ ] **Automatic Diagnostic Snapshot**: On submit, the app silently captures device tier, browser/OS, screen size, current view, app version, localStorage size, and last 10 console errors — attached to the report as a JSON payload.
-- [ ] **Webhook Delivery**: Reports are sent via a lightweight webhook (Discord webhook, Google Forms, or Cloudflare Worker endpoint) so the developer receives instant notifications without needing a full backend.
-- [ ] **Bug Hunter XP Reward**: Users earn +25 XP and a "Bug Hunter" badge for their first 3 valid reports, encouraging community-driven QA.
-- [ ] **Report History**: Users can view their submitted reports and see status updates (Primljeno / U obradi / Reseno).
+## ✅🐛 Priority 46: In-App Bug, Error & Feedback Reporting System ("Prijavi Problem") (DONE)
+- [x] **In-App Report Modal (DONE)**: Accessible from Profile/Settings via a "Prijavi Problem" button. Clean 2-tab modal (Novi Izveštaj / Istorija). Users select a category (Bug, UI Greška, Pogrešan Prevod, Predlog, Ostalo) and describe the issue with tactile haptics.
+- [x] **Automatic Diagnostic Snapshot (DONE)**: On submit, the engine silently captures device tier (FLAGSHIP / MID / BUDGET), cores, RAM, browser/OS, viewport and screen resolution, pixel ratio, current view, dark mode state, app version (v13), PWA standalone status, localStorage size, and buffer of the last 10 JavaScript errors and unhandled promise rejections.
+- [x] **Webhook Delivery (DONE)**: Direct Discord webhook payload with color-coded embed, device diagnostic grid, error traces, and timestamp. Works with any custom webhook endpoint; configurable in-app via collapsible advanced settings.
+- [x] **Bug Hunter XP Reward (DONE)**: Users earn +25 XP and a celebration toast for their first 3 submitted reports, with progress tracking towards "Bug Hunter Veteran" milestone.
+- [x] **Report History & Local Persistence (DONE)**: 100% offline-resilient local persistence in `localStorage` (`serbolingo_bug_reports`). Users can review all past submissions, status badges (Poslato, Primljeno, U obradi, Rešeno), IDs, and timestamps, with an option to clear history.
 
-> [!NOTE] Multi-Language Scaling: This system is language-agnostic — it works identically for Spanish, German, Japanese, or any future language pack.
-
+> [!NOTE] 🌐 **Multi-Language Scaling**: This system is completely language-agnostic — it works identically for Spanish, German, Japanese, or any future language pack.
 ## 💬 Priority 47: Global Community Forum & Discussion Hub ("Forum Zajednice")
 - [ ] **Grammar Q and A Board**: Users post grammar questions (e.g., "When do I use Dativ vs. Lokativ?") and the community or AI answers. Upvotes surface the best answers.
 - [ ] **Culture and Media Discussions**: Threads for Serbian music, movies, travel tips, and cultural context — building a living community around the language.
