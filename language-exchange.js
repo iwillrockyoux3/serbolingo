@@ -1,5 +1,5 @@
 // [SHIELD_DAEMON: VALIDATED]
-// language-exchange.js — Priority 43 & 43.2: Ultra-Safe Video/Voice Roulette & Match Filters
+// language-exchange.js — Priority 43, 43.2 & 43.3: Ultra-Safe Video/Voice Roulette, Moderation Escalation & Dual-Button Safety
 // Pure vanilla JS, zero dependencies, offline-first resilient, UTF-8 armored
 // SerboLingo Technical Constitution v3.0 compliant
 
@@ -7,14 +7,28 @@
     'use strict';
 
     // ═══════════════════════════════════════════════════════════
-    // §1  STORAGE KEYS & CONSTANTS
+    // §1  STORAGE KEYS & CONSTANTS (Priority 43, 43.2 & 43.3)
     // ═══════════════════════════════════════════════════════════
-    const STORAGE_BLOCKED   = 'serbolingo_exchange_blocked';
-    const STORAGE_HISTORY   = 'serbolingo_exchange_history';
-    const STORAGE_STATS     = 'serbolingo_exchange_stats';
-    const STORAGE_FRIENDS   = 'serbolingo_exchange_friends';
-    const STORAGE_18PLUS    = 'serbolingo_18plus_accepted';
-    const STORAGE_FILTERS   = 'serbolingo_exchange_filters';
+    const STORAGE_BLOCKED     = 'serbolingo_exchange_blocked';
+    const STORAGE_HISTORY     = 'serbolingo_exchange_history';
+    const STORAGE_STATS       = 'serbolingo_exchange_stats';
+    const STORAGE_FRIENDS     = 'serbolingo_exchange_friends';
+    const STORAGE_18PLUS      = 'serbolingo_18plus_accepted';
+    const STORAGE_FILTERS     = 'serbolingo_exchange_filters';
+    const STORAGE_REPORTS     = 'serbolingo_exchange_reports';
+    const STORAGE_SUSPENSION  = 'serbolingo_exchange_suspension';
+    const STORAGE_WARNING_ACK = 'serbolingo_exchange_warning_ack';
+    const STORAGE_APPEALS     = 'serbolingo_exchange_appeals';
+
+    // Progressive Ban Ladder: 4 unique reports required before timeout triggers
+    const REPORTS_PER_STRIKE  = 4;
+    const BAN_DURATIONS_MS = {
+        1: 1 * 60 * 60 * 1000,          // Strike 1: 1 Hour
+        2: 4 * 60 * 60 * 1000,          // Strike 2: 4 Hours
+        3: 24 * 60 * 60 * 1000,         // Strike 3: 24 Hours (1 Day)
+        4: 7 * 24 * 60 * 60 * 1000,     // Strike 4: 7 Days (1 Week)
+        5: Infinity                     // Strike 5: Permanent Ban (Permaban)
+    };
 
     // ═══════════════════════════════════════════════════════════
     // §2  12 AUTHENTIC PERSONAS (Offline & Instant Match Roster)
@@ -423,6 +437,7 @@
             if (this.searchTimer) { clearTimeout(this.searchTimer); this.searchTimer = null; }
             if (this.typingTimer) { clearTimeout(this.typingTimer); this.typingTimer = null; }
             if (this._safeBlurTimer) { clearTimeout(this._safeBlurTimer); this._safeBlurTimer = null; }
+            if (this._suspensionInterval) { clearInterval(this._suspensionInterval); this._suspensionInterval = null; }
         },
 
         cleanupHardware: function() {
@@ -807,8 +822,9 @@
             if (window.TouchHaptics && TouchHaptics.tap) TouchHaptics.tap();
         },
 
-        confirmNSFWReportAndSkip: function() {
+        confirmNSFWReportAndBlockAndSkip: function() {
             if (this.partner) {
+                this.confirmReportCurrent('NSFW / Neprimeren sadržaj');
                 var blocked = this._getBlockedList();
                 if (blocked.indexOf(this.partner.id) === -1) {
                     blocked.push(this.partner.id);
@@ -824,6 +840,22 @@
 
             if (window.app) app.showToast('🚨 Prijavljeno i trajno blokirano. Spajam sa sledećim...', 'error');
             if (window.TouchHaptics && TouchHaptics.notification) TouchHaptics.notification();
+
+            this.nextPartner();
+        },
+
+        confirmNSFWReportAndSkip: function() {
+            // Backward-compatible alias
+            this.confirmNSFWReportAndBlockAndSkip();
+        },
+
+        skipWithoutReport: function() {
+            this._nsfwShieldActive = false;
+            var shield = document.getElementById('exchange-nsfw-shield');
+            if (shield) shield.classList.add('hidden');
+
+            if (window.app) app.showToast('⏭️ Preskočeno bez prijave. Spajam sa sledećim...', 'info');
+            if (window.TouchHaptics && TouchHaptics.tap) TouchHaptics.tap();
 
             this.nextPartner();
         },
@@ -1087,30 +1119,525 @@
             if (window.TouchHaptics && TouchHaptics.tap) TouchHaptics.tap();
         },
 
-        // ── Moderation & Stats ──────────────────────────────
-        blockCurrent: function() {
-            if (!this.partner) return;
-            if (confirm('Da li želiš da blokiraš sagovornika ' + this.partner.name + '? Više se nećete spajati.')) {
-                var blocked = this._getBlockedList();
-                blocked.push(this.partner.id);
-                try {
-                    localStorage.setItem(STORAGE_BLOCKED, JSON.stringify(blocked));
-                } catch(e) {}
-
-                if (window.app) app.showToast('Korisnik blokiran.', 'info');
-                this.nextPartner();
+        // ═════════════════════════════════════════════════════
+        // §10 MODERATION, ESCALATION & DUAL-BUTTON ENGINE (P43.3)
+        // ═════════════════════════════════════════════════════
+        _getReporterId: function() {
+            var repId = localStorage.getItem('serbolingo_exchange_reporter_id');
+            if (!repId) {
+                repId = 'rep_' + Math.random().toString(36).substring(2, 10);
+                try { localStorage.setItem('serbolingo_exchange_reporter_id', repId); } catch(e) {}
             }
+            return repId;
         },
 
-        reportCurrent: function() {
-            // Triggers the authoritative NSFW Panic Shield with 2-Button Choice
-            this.triggerNSFWShield();
+        _getReportsData: function() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_REPORTS)) || {};
+            } catch(e) { return {}; }
+        },
+
+        _saveReportsData: function(data) {
+            try {
+                localStorage.setItem(STORAGE_REPORTS, JSON.stringify(data));
+            } catch(e) {}
+        },
+
+        _getSuspension: function() {
+            try {
+                var s = JSON.parse(localStorage.getItem(STORAGE_SUSPENSION));
+                if (s && typeof s === 'object') return s;
+            } catch(e) {}
+            return {
+                isSuspended: false,
+                banUntil: 0,
+                strikeLevel: 0,
+                reason: '',
+                appealSubmitted: false,
+                appealId: null
+            };
+        },
+
+        _saveSuspension: function(s) {
+            try {
+                localStorage.setItem(STORAGE_SUSPENSION, JSON.stringify(s));
+            } catch(e) {}
+        },
+
+        _getAppeals: function() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_APPEALS)) || [];
+            } catch(e) { return []; }
+        },
+
+        _saveAppeals: function(list) {
+            try {
+                localStorage.setItem(STORAGE_APPEALS, JSON.stringify(list));
+            } catch(e) {}
         },
 
         _getBlockedList: function() {
             try {
                 return JSON.parse(localStorage.getItem(STORAGE_BLOCKED)) || [];
             } catch(e) { return []; }
+        },
+
+        checkSuspension: function() {
+            var s = this._getSuspension();
+            if (!s || !s.isSuspended) return false;
+
+            if (s.banUntil !== 'INFINITY' && typeof s.banUntil === 'number' && Date.now() >= s.banUntil) {
+                // Auto-lift expired suspension
+                s.isSuspended = false;
+                s.banUntil = 0;
+                this._saveSuspension(s);
+                if (this._suspensionInterval) {
+                    clearInterval(this._suspensionInterval);
+                    this._suspensionInterval = null;
+                }
+                if (window.app) app.showToast('✅ Vaša privremena suspenzija je istekla. Dobrodošli nazad!', 'success');
+                return false;
+            }
+            return true;
+        },
+
+        startSuspensionCountdownTimer: function() {
+            if (this._suspensionInterval) {
+                clearInterval(this._suspensionInterval);
+                this._suspensionInterval = null;
+            }
+
+            var self = this;
+            this._suspensionInterval = setInterval(function() {
+                var el = document.getElementById('exchange-suspension-countdown-text');
+                if (!el) {
+                    clearInterval(self._suspensionInterval);
+                    self._suspensionInterval = null;
+                    return;
+                }
+
+                var s = self._getSuspension();
+                if (!s || !s.isSuspended) {
+                    clearInterval(self._suspensionInterval);
+                    self._suspensionInterval = null;
+                    self.render();
+                    return;
+                }
+
+                if (s.banUntil === 'INFINITY') {
+                    el.textContent = 'Trajna zabrana pristupa (Permaban)';
+                    return;
+                }
+
+                var remainingMs = s.banUntil - Date.now();
+                if (remainingMs <= 0) {
+                    clearInterval(self._suspensionInterval);
+                    self._suspensionInterval = null;
+                    self.checkSuspension();
+                    self.render();
+                    return;
+                }
+
+                var totalSec = Math.floor(remainingMs / 1000);
+                var h = Math.floor(totalSec / 3600);
+                var m = Math.floor((totalSec % 3600) / 60);
+                var sec = totalSec % 60;
+
+                var text = '';
+                if (h > 0) text += h + 'h ';
+                text += (m < 10 && h > 0 ? '0' : '') + m + 'm ';
+                text += (sec < 10 ? '0' : '') + sec + 's';
+
+                el.textContent = text;
+            }, 1000);
+        },
+
+        // ── 🚩 REPORT ACTION (Community Strike - Needs 4 unique reporters) ──
+        reportCurrent: function() {
+            if (!this.partner) return;
+            var modal = document.getElementById('exchange-report-modal');
+            if (modal) {
+                var nameEl = document.getElementById('exchange-report-target-name');
+                if (nameEl) nameEl.textContent = this.partner.name;
+                modal.classList.remove('hidden');
+            } else {
+                if (confirm('Prijavi sagovornika ' + this.partner.name + ' za neprimereno ponašanje?')) {
+                    this.confirmReportCurrent('Neprimereno ponašanje');
+                }
+            }
+            if (window.TouchHaptics && TouchHaptics.tap) TouchHaptics.tap();
+        },
+
+        closeReportModal: function() {
+            var modal = document.getElementById('exchange-report-modal');
+            if (modal) modal.classList.add('hidden');
+            if (window.TouchHaptics && TouchHaptics.tap) TouchHaptics.tap();
+        },
+
+        confirmReportCurrent: function(category) {
+            if (!this.partner) return;
+
+            var targetId = this.partner.id;
+            var reporterId = this._getReporterId();
+            var allReports = this._getReportsData();
+
+            if (!allReports[targetId]) {
+                allReports[targetId] = {
+                    reportsCount: 0,
+                    reporters: [],
+                    strikes: 0,
+                    lastReport: Date.now()
+                };
+            }
+
+            var record = allReports[targetId];
+
+            if (record.reporters.indexOf(reporterId) !== -1) {
+                if (window.app) app.showToast('⚠️ Već ste prijavili ovog korisnika. Za sankciju je potrebno 4 različite osobe.', 'info');
+                this.closeReportModal();
+                return;
+            }
+
+            // Register unique report
+            record.reporters.push(reporterId);
+            record.reportsCount++;
+            record.lastReport = Date.now();
+
+            var prevStrikes = record.strikes || 0;
+            var newStrikes = Math.floor(record.reportsCount / REPORTS_PER_STRIKE);
+
+            if (newStrikes > prevStrikes) {
+                record.strikes = newStrikes;
+                console.log('[LanguageExchange] Target ' + targetId + ' reached Strike ' + newStrikes + ' (' + record.reportsCount + ' unique reports)!');
+            }
+
+            this._saveReportsData(allReports);
+            this.closeReportModal();
+
+            // CRUCIAL RULE: Report does NOT block the user.
+            if (window.app) {
+                app.showToast('🚩 Prijava zabeležena (' + record.reportsCount + '/4 za sankciju). Hvala što čuvaš zajednicu!', 'success');
+            }
+            if (window.TouchHaptics && TouchHaptics.notification) TouchHaptics.notification();
+        },
+
+        // ── 🚫 BLOCK ACTION (Personal Exclusion - 100% Permanent) ──
+        blockCurrent: function() {
+            if (!this.partner) return;
+            var partnerName = this.partner.name;
+            var partnerId = this.partner.id;
+
+            if (confirm('Da li želiš da blokiraš sagovornika ' + partnerName + '?\n\nOva osoba se više NIKADA neće pojavljivati u tvojim spajanjima (možeš je odblokirati u Lobiju).')) {
+                var blocked = this._getBlockedList();
+                if (blocked.indexOf(partnerId) === -1) {
+                    blocked.push(partnerId);
+                    try {
+                        localStorage.setItem(STORAGE_BLOCKED, JSON.stringify(blocked));
+                    } catch(e) {}
+                }
+
+                if (window.app) app.showToast('🚫 ' + partnerName + ' je blokiran/a.', 'info');
+                if (window.TouchHaptics && TouchHaptics.notification) TouchHaptics.notification();
+                this.nextPartner();
+            }
+        },
+
+        // ── Blocked Users Management (View & Unblock) ──
+        showBlockedUsersModal: function() {
+            var modal = document.getElementById('exchange-blocked-modal');
+            if (modal) {
+                this.renderBlockedUsersList();
+                modal.classList.remove('hidden');
+            }
+            if (window.TouchHaptics && TouchHaptics.tap) TouchHaptics.tap();
+        },
+
+        closeBlockedUsersModal: function() {
+            var modal = document.getElementById('exchange-blocked-modal');
+            if (modal) modal.classList.add('hidden');
+            if (window.TouchHaptics && TouchHaptics.tap) TouchHaptics.tap();
+        },
+
+        unblockUser: function(id) {
+            var blocked = this._getBlockedList().filter(function(bId) { return bId !== id; });
+            try {
+                localStorage.setItem(STORAGE_BLOCKED, JSON.stringify(blocked));
+            } catch(e) {}
+
+            if (window.app) app.showToast('✅ Korisnik je odblokiran i ponovo dostupan za razgovor.', 'success');
+            if (window.TouchHaptics && TouchHaptics.correctAnswer) TouchHaptics.correctAnswer();
+
+            this.renderBlockedUsersList();
+            if (this.state === 'LOBBY') {
+                var counterEl = document.getElementById('exchange-blocked-counter-badge');
+                if (counterEl) counterEl.textContent = blocked.length;
+            }
+        },
+
+        renderBlockedUsersList: function() {
+            var container = document.getElementById('exchange-blocked-users-list');
+            if (!container) return;
+
+            var blocked = this._getBlockedList();
+            if (blocked.length === 0) {
+                container.innerHTML =
+                    '<div class="py-8 text-center text-slate-400 space-y-1">' +
+                        '<div class="text-3xl">🕊️</div>' +
+                        '<div class="text-xs font-bold">Nema blokiranih sagovornika</div>' +
+                        '<div class="text-[10px]">Tvoja lista blokiranih je trenutno prazna.</div>' +
+                    '</div>';
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < blocked.length; i++) {
+                var bId = blocked[i];
+                var persona = PERSONAS.find(function(p) { return p.id === bId; });
+                var name = persona ? persona.name : ('Korisnik (' + bId + ')');
+                var avatar = persona ? persona.avatar : '👤';
+                var city = persona ? persona.city : 'SerboLingo korisnik';
+
+                html +=
+                    '<div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">' +
+                        '<div class="flex items-center gap-2.5 min-w-0">' +
+                            '<span class="text-xl shrink-0">' + avatar + '</span>' +
+                            '<div class="min-w-0">' +
+                                '<div class="font-bold text-slate-800 dark:text-white truncate">' + esc(name) + '</div>' +
+                                '<div class="text-[10px] text-slate-400 truncate">' + esc(city) + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<button onclick="LanguageExchange.unblockUser(\'' + bId + '\')" ' +
+                            'class="px-2.5 py-1 bg-slate-200 dark:bg-slate-800 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 text-slate-700 dark:text-slate-300 rounded-lg text-[10px] font-bold active:scale-95 transition-all shrink-0">' +
+                            'Odblokiraj' +
+                        '</button>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        },
+
+        // ── ⚠️ "WARNING FIRST" POLICY ──
+        showCommunityWarning: function(force) {
+            var seen = localStorage.getItem(STORAGE_WARNING_ACK);
+            if (seen === 'true' && !force) return;
+
+            var modal = document.getElementById('exchange-community-warning-modal');
+            if (modal) modal.classList.remove('hidden');
+            if (window.TouchHaptics && TouchHaptics.notification) TouchHaptics.notification();
+        },
+
+        acknowledgeCommunityWarning: function() {
+            var check = document.getElementById('exchange-warning-checkbox');
+            if (check && !check.checked) {
+                if (window.app) app.showToast('Molimo potvrdite da prihvatate pravila zajednice.', 'error');
+                return;
+            }
+
+            try {
+                localStorage.setItem(STORAGE_WARNING_ACK, 'true');
+            } catch(e) {}
+
+            var modal = document.getElementById('exchange-community-warning-modal');
+            if (modal) modal.classList.add('hidden');
+
+            if (window.app) app.showToast('✅ Zvanična opomena prihvaćena. Hvala na razumevanju!', 'success');
+            if (window.TouchHaptics && TouchHaptics.correctAnswer) TouchHaptics.correctAnswer();
+        },
+
+        triggerCommunityWarning: function() {
+            this.showCommunityWarning(true);
+        },
+
+        // ── 📩 HUMAN REVIEW & APPEALS SYSTEM ──
+        showAppealModal: function() {
+            var modal = document.getElementById('exchange-appeal-modal');
+            if (modal) {
+                var textEl = document.getElementById('exchange-appeal-text');
+                if (textEl) textEl.value = '';
+                modal.classList.remove('hidden');
+            }
+            if (window.TouchHaptics && TouchHaptics.tap) TouchHaptics.tap();
+        },
+
+        closeAppealModal: function() {
+            var modal = document.getElementById('exchange-appeal-modal');
+            if (modal) modal.classList.add('hidden');
+            if (window.TouchHaptics && TouchHaptics.tap) TouchHaptics.tap();
+        },
+
+        submitAppeal: function() {
+            var textEl = document.getElementById('exchange-appeal-text');
+            var reasonEl = document.getElementById('exchange-appeal-reason');
+            var text = textEl ? textEl.value.trim() : '';
+            var reason = reasonEl ? reasonEl.value : 'Lažna prijava';
+
+            if (!text || text.length < 10) {
+                if (window.app) app.showToast('Molimo detaljnije opišite vašu žalbu (barem 10 karaktera).', 'error');
+                return;
+            }
+
+            var appeal = {
+                id: 'appeal_' + Date.now(),
+                timestamp: new Date().toISOString(),
+                reason: reason,
+                text: text,
+                status: 'PENDING_REVIEW'
+            };
+
+            var appeals = this._getAppeals();
+            appeals.push(appeal);
+            this._saveAppeals(appeals);
+
+            var s = this._getSuspension();
+            s.appealSubmitted = true;
+            s.appealId = appeal.id;
+            this._saveSuspension(s);
+
+            this.closeAppealModal();
+
+            if (window.app) app.showToast('📩 Žalba uspešno poslata! Tim za moderaciju će pregledati slučaj.', 'success');
+            if (window.TouchHaptics && TouchHaptics.correctAnswer) TouchHaptics.correctAnswer();
+
+            this.render();
+        },
+
+        resolveAppeal: function(approved) {
+            var s = this._getSuspension();
+            var appeals = this._getAppeals();
+            if (appeals.length > 0) {
+                appeals[appeals.length - 1].status = approved ? 'APPROVED' : 'REJECTED';
+                this._saveAppeals(appeals);
+            }
+
+            if (approved) {
+                s.isSuspended = false;
+                s.banUntil = 0;
+                s.strikeLevel = 0;
+                s.appealSubmitted = false;
+                this._saveSuspension(s);
+
+                if (window.app) app.showToast('✅ Žalba usvojena! Suspenzija je ukinuta.', 'success');
+                this.state = 'LOBBY';
+                this.render();
+            } else {
+                s.appealSubmitted = false;
+                this._saveSuspension(s);
+                if (window.app) app.showToast('❌ Žalba odbijena nakon pregleda.', 'error');
+                this.render();
+            }
+        },
+
+        // ── 🧪 QA & SIMULATION HELPERS ──
+        simulateUserSuspension: function(hours, strikeLevel) {
+            var level = strikeLevel || 1;
+            var banUntil = (hours === 'inf' || level >= 5) ? 'INFINITY' : (Date.now() + (hours * 3600 * 1000));
+            var s = {
+                isSuspended: true,
+                banUntil: banUntil,
+                strikeLevel: level,
+                reason: 'Višestruke prijave članova zajednice (QA Simulacija)',
+                appealSubmitted: false,
+                appealId: null
+            };
+            this._saveSuspension(s);
+            if (window.app) app.showToast('🛑 Simulirana suspenzija: Nivo ' + level + ' (' + (hours === 'inf' ? 'Trajno' : hours + 'h') + ')', 'warning');
+            this.render();
+        },
+
+        clearSuspension: function() {
+            var s = {
+                isSuspended: false,
+                banUntil: 0,
+                strikeLevel: 0,
+                reason: '',
+                appealSubmitted: false,
+                appealId: null
+            };
+            this._saveSuspension(s);
+            if (this._suspensionInterval) {
+                clearInterval(this._suspensionInterval);
+                this._suspensionInterval = null;
+            }
+            if (window.app) app.showToast('✅ Suspenzija poništena (QA Reset).', 'success');
+            this.state = 'LOBBY';
+            this.render();
+        },
+
+        renderSuspension: function(container) {
+            var s = this._getSuspension();
+            var isPermaban = s.banUntil === 'INFINITY' || s.strikeLevel >= 5;
+            var appealSubmitted = !!s.appealSubmitted;
+
+            var countdownHtml = isPermaban ?
+                '<div class="text-sm font-black text-red-500 uppercase tracking-wider">Trajna zabrana pristupa (Permaban)</div>' :
+                '<div class="space-y-1">' +
+                    '<div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Preostalo vreme suspenzije</div>' +
+                    '<div id="exchange-suspension-countdown-text" class="text-2xl font-mono font-black text-amber-500 dark:text-amber-400 animate-pulse">Učitavam...</div>' +
+                '</div>';
+
+            var appealsSectionHtml = '';
+            if (appealSubmitted) {
+                appealsSectionHtml =
+                    '<div class="w-full p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-left space-y-1">' +
+                        '<div class="text-xs font-black text-amber-700 dark:text-amber-300 flex items-center gap-1.5">' +
+                            '<span>⏳</span> <span>Status žalbe: U toku pregleda</span>' +
+                        '</div>' +
+                        '<p class="text-[11px] text-amber-800 dark:text-amber-200/80 leading-relaxed">' +
+                            'Tvoja žalba je zabeležena. Moderator zajednice će proveriti verodostojnost prijava i ukinuti suspenziju ukoliko su prijave bile lažne.' +
+                        '</p>' +
+                        '<div class="pt-2 flex justify-end gap-1.5">' +
+                            '<button onclick="LanguageExchange.resolveAppeal(true)" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold active:scale-95 transition-all">' +
+                                '🧪 QA Test: Usvoji Žalbu' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>';
+            } else {
+                appealsSectionHtml =
+                    '<div class="w-full space-y-2">' +
+                        '<p class="text-[11px] text-slate-400">Smatraš da su prijave lažne ili da je došlo do greške?</p>' +
+                        '<button onclick="LanguageExchange.showAppealModal()" ' +
+                            'class="w-full p-3 rounded-2xl bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 text-white font-black text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-2">' +
+                            '<span>📩</span> <span>Podnesi Žalbu (Appeal)</span>' +
+                        '</button>' +
+                    '</div>';
+            }
+
+            container.innerHTML =
+                '<div class="flex flex-col items-center justify-center py-10 px-4 space-y-6 text-center max-w-md mx-auto">' +
+                    '<!-- Lock Icon -->' +
+                    '<div class="w-20 h-20 rounded-3xl bg-red-500/20 text-red-500 dark:text-red-400 border-2 border-red-500/30 flex items-center justify-center text-4xl shadow-xl shadow-red-500/10 animate-bounce">' +
+                        '🔒' +
+                    '</div>' +
+
+                    '<!-- Title & Reason -->' +
+                    '<div class="space-y-1.5">' +
+                        '<h3 class="text-lg font-black text-slate-900 dark:text-white">Privremeno ste suspendovani iz razgovora</h3>' +
+                        '<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs font-black">' +
+                            '<span>Nivo sankcije:</span> <span>Prekršaj ' + (s.strikeLevel || 1) + '/5</span>' +
+                        '</div>' +
+                        '<p class="text-xs text-slate-500 dark:text-slate-400 mt-2 max-w-xs leading-relaxed">' +
+                            'Vaš nalog je privremeno ograničen zbog prijava od strane 4 ili više različitih korisnika radi zaštite bezbednosti zajednice.' +
+                        '</p>' +
+                    '</div>' +
+
+                    '<!-- Countdown Clock -->' +
+                    '<div class="w-full p-4 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">' +
+                        countdownHtml +
+                    '</div>' +
+
+                    '<!-- Appeals Box -->' +
+                    appealsSectionHtml +
+
+                    '<!-- QA Test Reset Helper -->' +
+                    '<div class="pt-2">' +
+                        '<button onclick="LanguageExchange.clearSuspension()" class="px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-[10px] font-bold active:scale-95 transition-all">' +
+                            '🧪 QA Reset: Ukloni Suspenziju' +
+                        '</button>' +
+                    '</div>' +
+                '</div>';
+
+            if (!isPermaban) {
+                this.startSuspensionCountdownTimer();
+            }
         },
 
         _awardExchangeXP: function() {
@@ -1143,6 +1670,12 @@
             var body = document.getElementById('exchange-body-container');
             if (!body) return;
 
+            if (this.checkSuspension()) {
+                this.renderSuspension(body);
+                this.renderModals(body);
+                return;
+            }
+
             if (this.state === 'LOBBY') {
                 this.renderLobby(body);
             } else if (this.state === 'SEARCHING') {
@@ -1152,11 +1685,47 @@
             } else if (this.state === 'DISCONNECTED') {
                 this.renderDisconnected(body);
             }
+
+            this.renderModals(body);
         },
 
         renderLobby: function(container) {
             var buddies = this.getStudyBuddies();
+            var blockedList = this._getBlockedList();
             var f = this._filters;
+
+            var blockedCardHtml =
+                '<div class="w-full p-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between text-left">' +
+                    '<div class="flex items-center gap-2.5 min-w-0">' +
+                        '<span class="text-xl shrink-0">🚫</span>' +
+                        '<div class="min-w-0">' +
+                            '<div class="text-xs font-black text-slate-800 dark:text-white flex items-center gap-1.5">' +
+                                '<span>Blokirani Sagovornici</span>' +
+                                '<span id="exchange-blocked-counter-badge" class="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">' + blockedList.length + '</span>' +
+                            '</div>' +
+                            '<div class="text-[10px] text-slate-400 truncate">Upravljaj osobama koje si isključio/la iz spajanja</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<button onclick="LanguageExchange.showBlockedUsersModal()" ' +
+                        'class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold active:scale-95 transition-all shrink-0">' +
+                        'Upravljaj' +
+                    '</button>' +
+                '</div>';
+
+            var qaBarHtml =
+                '<div class="w-full p-2.5 rounded-2xl bg-slate-100/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-center justify-between text-[10px]">' +
+                    '<span class="font-bold text-slate-400 flex items-center gap-1">' +
+                        '<span>🛡️</span> <span>QA Sandbox:</span>' +
+                    '</span>' +
+                    '<div class="flex gap-1.5">' +
+                        '<button onclick="LanguageExchange.triggerCommunityWarning()" class="px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 font-bold active:scale-95 transition-all">' +
+                            '⚠️ Opomena' +
+                        '</button>' +
+                        '<button onclick="LanguageExchange.simulateUserSuspension(1, 1)" class="px-2 py-0.5 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 font-bold active:scale-95 transition-all">' +
+                            '🔒 Suspenzija 1h' +
+                        '</button>' +
+                    '</div>' +
+                '</div>';
 
             var buddiesHtml = '';
             if (buddies.length > 0) {
@@ -1288,6 +1857,9 @@
                     '<!-- Saved Study Buddies Container -->' +
                     buddiesHtml +
 
+                    '<!-- Blocked Users Management Card (P43.3) -->' +
+                    blockedCardHtml +
+
                     '<!-- Room Code Private Join -->' +
                     '<div class="w-full p-4 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2">' +
                         '<div class="text-xs font-black text-slate-700 dark:text-slate-200 text-left flex items-center gap-1.5">' +
@@ -1302,6 +1874,9 @@
                             '</button>' +
                         '</div>' +
                     '</div>' +
+
+                    '<!-- QA Moderation Sandbox Test Bar -->' +
+                    qaBarHtml +
 
                     '<!-- Safe & Friendly Pledge Footer -->' +
                     '<div class="flex items-center gap-2 text-[10px] text-slate-400">' +
@@ -1365,8 +1940,8 @@
                             '</div>' +
                         '</div>' +
 
-                        '<!-- Right Top Controls -->' +
-                        '<div class="flex items-center gap-1.5 shrink-0">' +
+                        '<!-- Right Top Controls (Dual-Button Safety & Moderation) -->' +
+                        '<div class="flex items-center gap-1 shrink-0">' +
                             '<!-- Save Study Buddy Button -->' +
                             '<button onclick="LanguageExchange.saveStudyBuddy()" ' +
                                 'class="p-1.5 rounded-xl border text-xs transition-colors ' + (isBuddy ? 'bg-amber-500/20 text-amber-500 border-amber-500/30' : 'text-slate-400 hover:text-amber-500 border-transparent') + '" ' +
@@ -1375,17 +1950,31 @@
                             '</button>' +
 
                             '<!-- NSFW Panic Shield Button -->' +
+                            '<button onclick="LanguageExchange.triggerNSFWShield()" ' +
+                                'class="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 dark:text-red-400 rounded-xl text-xs border border-red-500/20 active:scale-95 transition-all" ' +
+                                'title="NSFW Zaštitni Štit / Zamagli ekran">' +
+                                '🚨' +
+                            '</button>' +
+
+                            '<!-- 🚩 REPORT BUTTON (Community Strike - does NOT block) -->' +
                             '<button onclick="LanguageExchange.reportCurrent()" ' +
-                                'class="px-2 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-xl text-[10px] font-bold border border-red-500/20 active:scale-95 transition-all flex items-center gap-1" ' +
-                                'title="Prijavi neprimereno / Cenzuriši">' +
-                                '<span>🚨</span> <span>Štit</span>' +
+                                'class="px-2 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-xl text-[10px] font-bold border border-amber-500/20 active:scale-95 transition-all flex items-center gap-1" ' +
+                                'title="Prijavi neprikladno ponašanje (Prijava zajednici)">' +
+                                '<span>🚩</span> <span>Prijavi</span>' +
+                            '</button>' +
+
+                            '<!-- 🚫 BLOCK BUTTON (Personal Exclusion - 100% Permanent) -->' +
+                            '<button onclick="LanguageExchange.blockCurrent()" ' +
+                                'class="px-2 py-1 bg-slate-200 dark:bg-slate-700 hover:bg-red-600 hover:text-white text-slate-700 dark:text-slate-300 rounded-xl text-[10px] font-bold active:scale-95 transition-all flex items-center gap-1" ' +
+                                'title="Trajno blokiraj ovog korisnika">' +
+                                '<span>🚫</span> <span>Blok</span>' +
                             '</button>' +
 
                             '<!-- Next Partner Button -->' +
                             '<button onclick="LanguageExchange.nextPartner()" ' +
                                 'class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-[10px] font-black active:scale-95 transition-all flex items-center gap-1 shadow-sm" ' +
                                 'title="Sledeći sagovornik">' +
-                                '<span>⏭️</span> <span>Sledeći</span>' +
+                                '<span>⏭️</span> <span class="hidden xs:inline">Sledeći</span>' +
                             '</button>' +
                         '</div>' +
                     '</div>' +
@@ -1473,60 +2062,6 @@
                             '</button>' +
                         '</div>' +
                     '</div>' +
-
-                    '<!-- OVERLAY 1: 18+ Safety & Community Pledge Modal -->' +
-                    '<div id="exchange-18plus-modal" class="hidden absolute inset-0 bg-slate-950/95 backdrop-blur-md z-40 flex flex-col items-center justify-center p-6 text-center space-y-4">' +
-                        '<div class="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-3xl">' +
-                            '🛡️' +
-                        '</div>' +
-                        '<div class="space-y-1.5 max-w-xs">' +
-                            '<h3 class="text-base font-black text-white">18+ Bezbednosni Zavet</h3>' +
-                            '<p class="text-xs text-slate-300 leading-relaxed">' +
-                                'SerboLingo ima nultu toleranciju na golotinju, neprimereno ponašanje i uznemiravanje. Prekršaji se kažnjavaju trajnim banom uređaja.' +
-                            '</p>' +
-                            '<p class="text-[11px] text-amber-400 font-bold">' +
-                                'Potvrđujem da sam punoletan/na i da ću poštovati sagovornike.' +
-                            '</p>' +
-                        '</div>' +
-                        '<div class="flex gap-2 w-full max-w-xs pt-2">' +
-                            '<button onclick="LanguageExchange.decline18Plus()" ' +
-                                'class="flex-1 p-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs active:scale-95 transition-all">' +
-                                'Odustani' +
-                            '</button>' +
-                            '<button onclick="LanguageExchange.accept18Plus()" ' +
-                                'class="flex-1 p-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xs shadow-lg active:scale-95 transition-all">' +
-                                '✅ Prihvatam' +
-                            '</button>' +
-                        '</div>' +
-                    '</div>' +
-
-                    '<!-- OVERLAY 2: NSFW Panic Shield (Skip or Stay Choice) -->' +
-                    '<div id="exchange-nsfw-shield" class="hidden absolute inset-0 bg-red-950/95 backdrop-blur-xl z-50 flex flex-col items-center justify-center p-6 text-center space-y-4">' +
-                        '<div class="w-20 h-20 rounded-3xl bg-red-600/30 border-2 border-red-500 text-red-400 flex items-center justify-center text-4xl shadow-2xl animate-pulse">' +
-                            '🚨' +
-                        '</div>' +
-                        '<div class="space-y-2 max-w-sm">' +
-                            '<h3 class="text-lg font-black text-white">Ekran je cenzurisan radi zaštite!</h3>' +
-                            '<p class="text-xs text-red-200 leading-relaxed">' +
-                                'Prijavljen je sumnjiv ili neprimeren sadržaj. Mikrofon i video su automatski privremeno obustavljeni radi vaše bezbednosti.' +
-                            '</p>' +
-                            '<p class="text-[11px] text-slate-300 font-medium">' +
-                                'Izaberite šta želite da uradite:' +
-                            '</p>' +
-                        '</div>' +
-                        '<div class="flex flex-col gap-2.5 w-full max-w-xs pt-2">' +
-                            '<!-- Option 1: Skip & Permanently Ban Offender -->' +
-                            '<button onclick="LanguageExchange.confirmNSFWReportAndSkip()" ' +
-                                'class="w-full p-3.5 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black text-xs shadow-xl shadow-red-600/40 active:scale-95 transition-all flex items-center justify-center gap-2">' +
-                                '<span>⏭️</span> <span>Sledeći Sagovornik (Preporučeno & Trajni Ban)</span>' +
-                            '</button>' +
-                            '<!-- Option 2: Stay & Uncensor (False Alarm / Dismiss) -->' +
-                            '<button onclick="LanguageExchange.dismissNSFWShieldAndStay()" ' +
-                                'class="w-full p-3 rounded-2xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 active:scale-95 transition-all flex items-center justify-center gap-2">' +
-                                '<span>✅</span> <span>Sve je u redu / Ostani (Odblokiraj ekran)</span>' +
-                            '</button>' +
-                        '</div>' +
-                    '</div>' +
                 '</div>';
 
             this.renderMessageStream();
@@ -1596,8 +2131,184 @@
                         '</button>' +
                     '</div>' +
                 '</div>';
+        },
+
+        renderModals: function(container) {
+            if (!container) return;
+            var existing = document.getElementById('exchange-modals-wrapper');
+            if (existing) return;
+
+            var wrapper = document.createElement('div');
+            wrapper.id = 'exchange-modals-wrapper';
+            wrapper.innerHTML =
+                '<!-- OVERLAY 1: 18+ Safety & Community Pledge Modal -->' +
+                '<div id="exchange-18plus-modal" class="hidden absolute inset-0 bg-slate-950/95 backdrop-blur-md z-40 flex flex-col items-center justify-center p-6 text-center space-y-4">' +
+                    '<div class="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-3xl">' +
+                        '🛡️' +
+                    '</div>' +
+                    '<div class="space-y-1.5 max-w-xs">' +
+                        '<h3 class="text-base font-black text-white">18+ Bezbednosni Zavet</h3>' +
+                        '<p class="text-xs text-slate-300 leading-relaxed">' +
+                            'SerboLingo ima nultu toleranciju na golotinju, neprimereno ponašanje i uznemiravanje. Prekršaji se kažnjavaju trajnim banom uređaja.' +
+                        '</p>' +
+                        '<p class="text-[11px] text-amber-400 font-bold">' +
+                            'Potvrđujem da sam punoletan/na i da ću poštovati sagovornike.' +
+                        '</p>' +
+                    '</div>' +
+                    '<div class="flex gap-2 w-full max-w-xs pt-2">' +
+                        '<button onclick="LanguageExchange.decline18Plus()" ' +
+                            'class="flex-1 p-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs active:scale-95 transition-all">' +
+                            'Odustani' +
+                        '</button>' +
+                        '<button onclick="LanguageExchange.accept18Plus()" ' +
+                            'class="flex-1 p-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xs shadow-lg active:scale-95 transition-all">' +
+                            '✅ Prihvatam' +
+                        '</button>' +
+                    '</div>' +
+                '</div>' +
+
+                '<!-- OVERLAY 2: NSFW Panic Shield (3 Actions) -->' +
+                '<div id="exchange-nsfw-shield" class="hidden absolute inset-0 bg-red-950/95 backdrop-blur-xl z-50 flex flex-col items-center justify-center p-6 text-center space-y-4">' +
+                    '<div class="w-20 h-20 rounded-3xl bg-red-600/30 border-2 border-red-500 text-red-400 flex items-center justify-center text-4xl shadow-2xl animate-pulse">' +
+                        '🚨' +
+                    '</div>' +
+                    '<div class="space-y-2 max-w-sm">' +
+                        '<h3 class="text-lg font-black text-white">Ekran je cenzurisan radi zaštite!</h3>' +
+                        '<p class="text-xs text-red-200 leading-relaxed">' +
+                            'Prijavljen je sumnjiv ili neprimeren sadržaj. Mikrofon i video su automatski privremeno obustavljeni radi vaše bezbednosti.' +
+                        '</p>' +
+                        '<p class="text-[11px] text-slate-300 font-medium">' +
+                            'Izaberite šta želite da uradite:' +
+                        '</p>' +
+                    '</div>' +
+                    '<div class="flex flex-col gap-2 w-full max-w-xs pt-1">' +
+                        '<button onclick="LanguageExchange.confirmNSFWReportAndBlockAndSkip()" ' +
+                            'class="w-full p-3 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black text-xs shadow-xl shadow-red-600/40 active:scale-95 transition-all flex items-center justify-center gap-2">' +
+                            '<span>🚨</span> <span>Prijavi, Blokiraj i Sledeći</span>' +
+                        '</button>' +
+                        '<button onclick="LanguageExchange.skipWithoutReport()" ' +
+                            'class="w-full p-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 active:scale-95 transition-all flex items-center justify-center gap-2">' +
+                            '<span>⏭️</span> <span>Samo Preskoči Sagovornika</span>' +
+                        '</button>' +
+                        '<button onclick="LanguageExchange.dismissNSFWShieldAndStay()" ' +
+                            'class="w-full p-2.5 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 font-bold text-xs border border-slate-800 active:scale-95 transition-all flex items-center justify-center gap-2">' +
+                            '<span>✅</span> <span>Sve je u redu / Ostani (Odblokiraj)</span>' +
+                        '</button>' +
+                    '</div>' +
+                '</div>' +
+
+                '<!-- OVERLAY 3: Formal Community Report Modal (P43.3) -->' +
+                '<div id="exchange-report-modal" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex flex-col items-center justify-center p-4 text-center">' +
+                    '<div class="max-w-xs w-full bg-slate-900 border border-slate-700 p-5 rounded-3xl space-y-3.5 shadow-2xl text-left">' +
+                        '<div class="flex items-center gap-2.5">' +
+                            '<span class="text-2xl p-1.5 bg-amber-500/20 rounded-xl">🚩</span>' +
+                            '<div>' +
+                                '<h4 class="text-xs font-black text-white">Prijava Neprikladnog Ponašanja</h4>' +
+                                '<p class="text-[10px] text-slate-400">Sagovornik: <span id="exchange-report-target-name" class="font-bold text-amber-400">Korisnik</span></p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="space-y-1.5">' +
+                            '<label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Razlog prijave:</label>' +
+                            '<select id="exchange-report-reason-select" class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-medium outline-none">' +
+                                '<option value="harassment">Uvrede / Uznemiravanje</option>' +
+                                '<option value="nsfw">Neprimeren / Eksplicitan sadržaj</option>' +
+                                '<option value="troll">Odbija učenje jezika / Trolovanje</option>' +
+                                '<option value="spam">Spam ili reklame</option>' +
+                                '<option value="other">Ostalo</option>' +
+                            '</select>' +
+                        '</div>' +
+                        '<div class="p-2.5 rounded-xl bg-blue-950/40 border border-blue-800/40 text-[10px] text-blue-200 leading-relaxed">' +
+                            'ℹ️ Prijava utiče na reputaciju sagovornika (potrebno je 4 nezavisne prijave za suspenziju). Prijava NE blokira osobu za vas automatski – ako više ne želite susrete, koristite dugme Blokiraj.' +
+                        '</div>' +
+                        '<div class="flex gap-2 pt-1">' +
+                            '<button onclick="LanguageExchange.closeReportModal()" class="flex-1 p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs active:scale-95 transition-all text-center">Odustani</button>' +
+                            '<button onclick="LanguageExchange.confirmReportCurrent(document.getElementById(\'exchange-report-reason-select\').value)" class="flex-1 p-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-black text-xs shadow-md active:scale-95 transition-all text-center">🚩 Prijavi</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+
+                '<!-- OVERLAY 4: Formal Community Warning Modal (P43.3) -->' +
+                '<div id="exchange-community-warning-modal" class="hidden absolute inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col items-center justify-center p-4 text-center">' +
+                    '<div class="max-w-sm w-full bg-slate-900 border-2 border-amber-500/40 p-6 rounded-3xl space-y-4 shadow-2xl text-left">' +
+                        '<div class="flex items-center gap-3">' +
+                            '<span class="text-3xl p-2 bg-amber-500/20 text-amber-400 rounded-2xl">⚠️</span>' +
+                            '<div>' +
+                                '<h4 class="text-sm font-black text-white">Zvanična Opomena Zajednice</h4>' +
+                                '<p class="text-[10px] text-amber-400 font-bold">Standardi bezbednosti i komunikacije</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="text-xs text-slate-300 space-y-2 leading-relaxed">' +
+                            '<p>Zabeležene su prijave na vaše ponašanje tokom razgovora. SerboLingo je platforma za učenje jezika sa nultom tolerancijom na uznemiravanje i neprimeren sadržaj.</p>' +
+                            '<ul class="list-disc pl-4 text-[11px] text-slate-400 space-y-1">' +
+                                '<li>Bez uvreda i neprijatnih komentara</li>' +
+                                '<li>Bez golotinje i neprimerenog ponašanja</li>' +
+                                '<li>Fokus na zajedničku vežbu jezika</li>' +
+                            '</ul>' +
+                            '<p class="text-[10px] text-amber-300 font-bold">Svako dalje kršenje vodi do automatske suspenzije (1h, 4h, 24h, 7 dana ili trajno).</p>' +
+                        '</div>' +
+                        '<div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 flex items-center gap-2.5">' +
+                            '<input type="checkbox" id="exchange-warning-checkbox" class="w-4 h-4 rounded text-blue-600 focus:ring-0 cursor-pointer">' +
+                            '<label for="exchange-warning-checkbox" class="text-[11px] font-bold text-slate-200 cursor-pointer">Razumem pravila i prihvatam odgovornost</label>' +
+                        '</div>' +
+                        '<button onclick="LanguageExchange.acknowledgeCommunityWarning()" class="w-full p-3 rounded-2xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-black text-xs shadow-lg active:scale-95 transition-all text-center">' +
+                            'Razumem i Prihvatam' +
+                        '</button>' +
+                    '</div>' +
+                '</div>' +
+
+                '<!-- OVERLAY 5: Appeal Submission Modal (P43.3) -->' +
+                '<div id="exchange-appeal-modal" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex flex-col items-center justify-center p-4 text-center">' +
+                    '<div class="max-w-sm w-full bg-slate-900 border border-slate-700 p-5 rounded-3xl space-y-3.5 shadow-2xl text-left">' +
+                        '<div class="flex items-center gap-2.5">' +
+                            '<span class="text-2xl p-1.5 bg-blue-500/20 rounded-xl">📩</span>' +
+                            '<div>' +
+                                '<h4 class="text-xs font-black text-white">Podnošenje Žalbe na Suspenziju</h4>' +
+                                '<p class="text-[10px] text-slate-400">Moderator zajednice će pregledati tvoj slučaj</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="space-y-1.5">' +
+                            '<label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kategorija žalbe:</label>' +
+                            '<select id="exchange-appeal-reason" class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-medium outline-none">' +
+                                '<option value="Lažna prijava zlonamernih korisnika">Lažna prijava zlonamernih korisnika</option>' +
+                                '<option value="Nesporazum u komunikaciji (jezička barijera)">Nesporazum u komunikaciji (jezička barijera)</option>' +
+                                '<option value="Nenamerna tehnička greška">Nenamerna tehnička greška</option>' +
+                                '<option value="Ostalo">Ostalo</option>' +
+                            '</select>' +
+                        '</div>' +
+                        '<div class="space-y-1.5">' +
+                            '<label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Objašnjenje (maks. 500 karaktera):</label>' +
+                            '<textarea id="exchange-appeal-text" maxlength="500" rows="3" placeholder="Opišite detaljno šta se dogodilo..." class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-medium outline-none resize-none"></textarea>' +
+                        '</div>' +
+                        '<div class="flex gap-2 pt-1">' +
+                            '<button onclick="LanguageExchange.closeAppealModal()" class="flex-1 p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs active:scale-95 transition-all text-center">Odustani</button>' +
+                            '<button onclick="LanguageExchange.submitAppeal()" class="flex-1 p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md active:scale-95 transition-all text-center">Pošalji Žalbu</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+
+                '<!-- OVERLAY 6: Blocked Users Management Modal (P43.3) -->' +
+                '<div id="exchange-blocked-modal" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex flex-col items-center justify-center p-4 text-center">' +
+                    '<div class="max-w-sm w-full bg-slate-900 border border-slate-700 p-5 rounded-3xl space-y-3.5 shadow-2xl text-left flex flex-col max-h-[80vh]">' +
+                        '<div class="flex items-center justify-between">' +
+                            '<div class="flex items-center gap-2">' +
+                                '<span class="text-xl">🚫</span>' +
+                                '<h4 class="text-xs font-black text-white">Blokirani Sagovornici</h4>' +
+                            '</div>' +
+                            '<button onclick="LanguageExchange.closeBlockedUsersModal()" class="text-slate-400 hover:text-white text-sm font-black p-1">✕</button>' +
+                        '</div>' +
+                        '<p class="text-[10px] text-slate-400">Osobe sa ove liste su trajno isključene iz spajanja. Možeš ih odblokirati u svakom trenutku.</p>' +
+                        '<div id="exchange-blocked-users-list" class="space-y-2 overflow-y-auto max-h-56 pr-1 flex-1">' +
+                            '<!-- Injected by renderBlockedUsersList() -->' +
+                        '</div>' +
+                        '<button onclick="LanguageExchange.closeBlockedUsersModal()" class="w-full p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs active:scale-95 transition-all text-center">' +
+                            'Zatvori' +
+                        '</button>' +
+                    '</div>' +
+                '</div>';
+
+            container.appendChild(wrapper);
         }
     };
 
-    console.log('[LanguageExchange] ⚡ Engine v2.0 initialized (Phase 43.2 Ultra-Safe Video/Voice Roulette & Match Filters active).');
+    console.log('[LanguageExchange] ⚡ Engine v3.0 initialized (Priority 43, 43.2 & 43.3 Active: Dual-Button Safety, Escalation Ladder & Appeals).');
 })();

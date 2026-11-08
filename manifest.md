@@ -1,4 +1,4 @@
-# 📋 SerboLingo — Categorized Source Manifest
+﻿# 📋 SerboLingo — Categorized Source Manifest
 
 > [!IMPORTANT]
 > This manifest is the **ANTI-DUPLICATION SHIELD** (Constitution Section 3).  
@@ -72,7 +72,7 @@
 | [`trophy-cabinet.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/trophy-cabinet.js) | 440 | 21 KB | Local Trophy Cabinet & Achievements (Priority 12) — High score tracking across 40 minigames, Bot win streaks, 20 tiered medals (Bronze to Diamond), automated game-over evaluation, and 3D showcase shelf |
 | [`bug-report.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/bug-report.js) | 360 | 17 KB | In-App Bug & Feedback Reporting System (Priority 46) — In-app report modal, category selector, automatic diagnostic snapshot (device tier, screen, view, errors), Discord webhook delivery, Bug Hunter XP rewards, and local report history |
 | [`community-forum.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/community-forum.js) | 590 | 32 KB | Global Community Forum & Discussion Hub (Priority 47) — 4 discussion channels (Gramatika, Kultura, Partner, Predlozi), 10 pre-populated seed discussions, thread/reply CRUD, upvoting with tactile haptics, reputation & XP rewards, AI Tutor instant analysis, and moderation |
-| [`language-exchange.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/language-exchange.js) | 1603 | 90 KB | Ultra-Safe Video/Voice Roulette, Match Filters & Exchange Hub (Priority 43 & 43.2) — Unified 1v1 & group rooms, live mic/camera toggles with PiP self-view, 2s safe-connect frosted blur, 18+ safety pledge, NSFW panic shield (2-button skip or stay), pre-match filters (country, gender, medium), study buddy saving, 12 authentic personas, and Gemini AI cascade |
+| [`language-exchange.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/language-exchange.js) | 2314 | 131 KB | Ultra-Safe Video/Voice Roulette, Match Filters, Moderation Escalation & Dual-Button Safety (Priority 43, 43.2 & 43.3) — Unified 1v1 & group rooms, live mic/camera toggles with PiP self-view, 2s safe-connect frosted blur, 18+ safety pledge, NSFW panic shield, pre-match filters (country, gender, medium), study buddy saving, 12 authentic personas, separate 🚩 Report (4-report strike ladder) vs 🚫 Block (permanent exclusion) buttons, blocked users management modal, "Warning First" formal community warning modal, progressive ban ladder (1h, 4h, 24h, 7d, permaban) with locked lobby & live countdown, and in-app appeals system (Podnesi Žalbu) |
 
 | [`karaoke.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/karaoke.js) | 572 | 28 KB | Bilingual speech-recognition reader — levels A1-B2, live word tracking, word translations, TTS replay |
 | [`rhythm.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/rhythm.js) | 567 | 26 KB | Music lyrics synchronizer — YouTube IFrame API playback + SpeechRecognition singing/recitation scoring |
