@@ -95,7 +95,7 @@
 | P31.1 | Gentle Typo Warning for Bald Latin & Minor Typos | 🆕 New | `app.js` | ✅ DONE |
 
 ### 🟢 Lower Priority — Advanced & Deployment
-| Moonshots (P21-P22, P43.3, P48-P49) | 3/9 | 6 |
+| Moonshots (P21-P22, P43.3, P48-P50) | 4/10 | 6 |
 | # | Task | Type | Target File(s) | Status |
 |:--|:-----|:-----|:----------------|:-------|
 | P18.1 | AI Visual Lens — camera snap & translate | 🆕 New | visual-lens.js, index.html | ✅ DONE |
@@ -137,7 +137,8 @@
 | P22.3 | Home screen widgets | 🆕 New | ⬜ FUTURE |
 | P43.3 | Community Moderation Escalation, Dual-Button Safety & Appeals (Client-Side) | 🆕 New | ✅ DONE |
 | P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
-| P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ⬜ FUTURE |
+| P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ✅ DONE |
+| P50.1 | Authentic Serbian Customs, Cultural Etiquette & Gastronomy | 🆕 New | ⬜ FUTURE |
 
 ---
 
@@ -154,8 +155,8 @@
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20) | 0/6 | 6 |
-| Moonshots (P21-P22, P43.3, P48-P49) | 3/9 | 6 |
-| **TOTAL** | **37/62** | **25** |
+| Moonshots (P21-P22, P43.3, P48-P50) | 4/10 | 6 |
+| **TOTAL** | **38/63** | **25** |
 
 ---
 

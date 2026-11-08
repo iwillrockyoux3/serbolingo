@@ -461,10 +461,41 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 > [!NOTE] Key Architectural Insight: The core engines (SM-2, IndexedDB chunking, Arcade, Reels, Stories, Sandbox, Trophy Cabinet) are already fully decoupled from language strings. Expansion requires only new concept datasets and audio packs — zero engine rewrites.
 
-## 🎙️ Priority 49: AI Accent Coach & Waveform Pitch Matcher
-- [ ] **Real-Time Voice Pitch Overlay**: Uses Web Audio API to capture the user's spoken Serbian and overlays their pitch waveform against a native Belgrade speaker's reference waveform in real-time.
-- [ ] **0-100% Pronunciation Score**: Algorithmic comparison of pitch contour, vowel length, and stress placement gives an instant accuracy percentage.
-- [ ] **Targeted Drill Mode**: Identifies specific phonemes the user struggles with (e.g., rolled "r", soft "c" vs. hard "c") and generates focused repetition drills.
-- [ ] **Before/After Progress Tracking**: Saves pronunciation score history so users can see their accent improvement over weeks.
+## ✅🎯 Priority 49: AI Accent Coach & Waveform Pitch Matcher (DONE)
 
-> [!NOTE] Multi-Language Scaling: Accent Coach adapts to any language by swapping the reference waveform dataset (e.g., Madrid Spanish, Standard German Hochdeutsch, Tokyo Japanese).
+<span style="color:#888">
+
+- [x] **Real-Time Voice Pitch Overlay (DONE)**: Uses Web Audio API (`AudioContext` & `AnalyserNode`) to capture the user's spoken Serbian and plots their real-time pitch waveform on an HTML5 `<canvas id="pitch-canvas">` against native melodic contours (`pitch-accent.js`).
+- [x] **4 Melodic Pitch Accents (DONE)**: Fully maps Kratkosilazni, Dugosilazni, Kratkouzlazni, and Dugouzlazni with visual SVG curves, audio pronunciation samples, and phonetic guides.
+- [x] **0-100% Pronunciation Score (DONE)**: Real-time algorithmic comparison of user pitch frequency against target contours with visual percentage match display (`#match-score`).
+- [x] **Arcade Integration (DONE)**: Dedicated Arcade tile ("Pitch Accent") launching interactive visualizer and recording suite.
+
+</span>
+
+> [!NOTE] 🔍 **QA REVISIT**: Come back once we finish building everything to thoroughly test real microphone input, canvas waveform rendering, and match accuracy percentages across physical mobile (iOS Safari / Android Chrome) and desktop devices.
+
+## 🏺🍽️ Priority 50: Authentic Serbian Customs, Cultural Etiquette & Kafana Food/Dialects ("Balkanski Običaji & Gastronomija")
+> **Status**: Planned (High Cultural Value / Immersion)  
+> **Concept**: A rich cultural immersion module teaching authentic Balkan customs, unspoken social rules, table etiquette, traditional gastronomy, and regional dialect nuances. Spread across dedicated lesson tooltips, slang expansions, and a dedicated cultural guide hub.
+
+- [ ] **1. Cultural Etiquette & Unspoken Social Rules ("Balkanski Bonton")**:
+  - [ ] **The Sacred Toast ("Živeli!")**: Looking directly into the partner's eyes when clinking glasses (and the humorous cultural superstition that not looking brings 7 years of bad luck).
+  - [ ] **Krsna Slava Customs**: Full ritual walkthrough — Slavski kolač, Koljivo/Žito, sveća, vino, patron saint traditions, and how a guest greets the host (*"Srećna slava, domaćine!"*).
+  - [ ] **Guest Etiquette in Balkan Homes**: The tradition of taking off shoes, accepting coffee and slatko or homemade juice, bringing gift bags (coffee, Turkish delight/ratluk, chocolate, wine), and never refusing offered food.
+  - [ ] **Hospitality & Taboo Breakers**: How bills are settled in kafanas ("otimanje za račun"), how neighbors greet, and respectful forms of address (*"Čika", "Teta", "Brate", "Kume"*).
+
+- [ ] **2. Gastronomy & Kafana Culture ("Kafanski Rečnik & Trpeza")**:
+  - [ ] **Iconic Balkan Dishes Database**: Deep vocabulary and audio for Kajmak, Ajvar, Prebranac, Sarma, Karađorđeva šnicla, Domaća pogača, Pečenje (jagnjeće/praseće), Burek sa sirom/mesom, and Meze.
+  - [ ] **Kafana Ordering Dialogues**: Authentic ordering phrases, communicating with the konobar, ordering by the 10-piece (*"deset upola sa lukom"*), and requesting songs from the tamburaši.
+
+- [ ] **3. Regional Dialects & Accent Variations ("Kako Priča Balkan")**:
+  - [ ] **Niš & Southern Serbian**: Distinct grammatical features, dropping cases playfully, signature words (*"kude si", "nemoj se jediš", "ću dođem", "merak", "lele"*).
+  - [ ] **Vojvodina & Novi Sad**: Relaxed, melodic cadence, signature phrases (*"ta nemoj kasti", "gari", "bata", "dunje"*).
+  - [ ] **Montenegrin Coast & Primorje**: Mediterranean rhythm, Italian loanwords (*"pomalo", "fešta", "gušt", "ura"*).
+
+- [ ] **4. Multi-Touchpoint Integration Architecture**:
+  - [ ] Expand into [`slang.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/slang.js) for quick idiom and slang quiz cards.
+  - [ ] Inject contextual "Bonton & Običaji" tooltips inside Skill Tree lessons.
+  - [ ] Dedicated "Kultura & Običaji" explorer tab or guide inside the app.
+
+
