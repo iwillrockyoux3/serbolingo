@@ -133,6 +133,7 @@
 | P22.1 | Smartwatch companion | 🆕 New | ⬜ FUTURE |
 | P22.2 | AR object tagging | 🆕 New | ⬜ FUTURE |
 | P22.3 | Home screen widgets | 🆕 New | ⬜ FUTURE |
+| P43.2 | Ultra-Safe Video/Voice Roulette & Advanced Match Filters (Phase 2) | 🆕 New | ⬜ FUTURE |
 | P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
 | P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ⬜ FUTURE |
 
@@ -151,8 +152,8 @@
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20) | 0/6 | 6 |
-| Moonshots (P21-P22, P48-P49) | 1/7 | 6 |
-| **TOTAL** | **35/60** | **25** |
+| Moonshots (P21-P22, P43.2, P48-P49) | 1/8 | 7 |
+| **TOTAL** | **35/61** | **26** |
 
 ---
 

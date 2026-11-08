@@ -331,7 +331,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 ## 🌐 Priority 42: Cloudflare Free Plan for Online Services
 - [ ] **Cloudflare Infrastructure**: Use Cloudflare's free plan for CDN, DNS, DDoS protection, and caching when the app goes live with online services (leaderboards, multiplayer, friend finder).
 
-## ✅⚡ Priority 43: Omegle-Style Language Exchange Hub ("Slučajni Sagovornik") (DONE)
+## ✅⚡ Priority 43: Omegle-Style Language Exchange Hub ("Slučajni Sagovornik") (Phase 1 DONE / Phase 2 Planned)
 - [x] **1v1 Language Roulette Matchmaking (DONE)**: Instant pairing matching Serbian learners with native Serbian speakers learning English, and vice versa. Realistic radar search animation with haptic connection vibration (`language-exchange.js`).
 - [x] **12 Diverse Simulated Personas + Gemini Online AI (DONE)**: Hybrid dual-tier conversational engine. 100% offline-ready with 12 authentic personas (Milica from Belgrade, Liam from London, Carlos from Madrid, Sakura from Tokyo, Dragan from Valjevo) with natural typing delays (`...`) and cultural personalities, plus online Gemini cascade for dynamic human-level chat.
 - [x] **Private Friend Room Codes & Group Tables (DONE)**: Direct pairing with study buddies from the Forum via 6-digit room codes (e.g., `BG-4921`) and 4-person group study tables.
@@ -339,6 +339,28 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Voice Audio TTS & Web Speech Input (DONE)**: Native TTS voice playback of partner messages and speech-to-text voice input.
 - [x] **Safety & Moderation Shield (DONE)**: Instant skip (`⏭️ Sledeći`), block (`🚫 Blokiraj`), and report (`🚩 Prijavi`) controls with local blocklist persistence.
 - [x] **XP Rewards & Profile Integration (DONE)**: Awards `+10 XP` for every 3 exchanges with progress celebration, accessible via Profile community card and dedicated `#exchange-modal`.
+
+### 🚀 Priority 43.2: Ultra-Safe Video/Voice Roulette, Real-People Cloud & Advanced Filters (Upcoming / Phase 2)
+- [ ] **Unified All-in-One Room & Hardware Controls**:
+  - [ ] Single matchmaking pool (no queue splitting) ensuring fast connections without dividing active users.
+  - [ ] Default privacy mode: Rooms start with text chat active while **Microphone and Camera are MUTED by default**.
+  - [ ] Live in-call tactile toggles: 💬 Tekstualni Čet (always available for notes & translation), 🎤 Mikrofon (tap to unmute and speak), 📹 Kamera (tap to turn on video when comfortable).
+  - [ ] Picture-in-Picture (PiP) video layout: Main viewport displays partner's video stream (or avatar if video is off), with a floating self-camera preview box in the bottom corner.
+- [ ] **Advanced Pre-Match Filters (Lobby Modal)**:
+  - [ ] **Automatic Language Alignment (Default)**: Automatically pairs users based on their active Profile learning direction (`sr_to_en` vs `en_to_sr`).
+  - [ ] **Country / Region Selector**: Filter by specific regions (*Svejedno / Srbija / Bosna i Hercegovina / Crna Gora / Dijaspora*).
+  - [ ] **Gender Preference**: Optional filter (*Bilo ko / Samo Žene / Samo Muškarci*).
+  - [ ] **Medium Filter**: Optional preference (*Svejedno / Želim razgovor glasom / Samo kuckanje tekstom*).
+- [ ] **Safety, Anti-NSFW Moderation & Legal Protection Shield**:
+  - [ ] **🔞 18+ Safety & Community Pledge**: Mandatory one-time confirmation modal before unlocking camera/video access for legal and app store compliance ("Nulta tolerancija na neprimereno ponašanje i golotinju. Trajni ban prekršiocima").
+  - [ ] **🛡️ 2-Second "Safe-Connect" Initial Frosted Blur**: New video streams start with a gentle frosted blur for 2 seconds to eliminate sudden jump-scares, lifting automatically once safe.
+  - [ ] **⚠️ NSFW Panic Shield**: 1-click `🚩 Prijavi golotinju / neprimeren sadržaj` button instantly blacks out / blurs the screen with an authoritative warning overlay, auto-disconnects, and adds the offender to a permanent device/hardware ban list.
+  - [ ] Quick-action `⏭️ Sledeći Sagovornik` (Skip) and `🚫 Blokiraj` buttons always accessible.
+- [ ] **Real-People Cloud Backend & WebRTC P2P Signaling (Phase 3 Integration)**:
+  - [ ] Free Supabase / Firebase Realtime queue for real device-to-device matchmaking without expensive Node backends.
+  - [ ] WebRTC Peer-to-Peer direct connection via free public Google STUN servers (`stun.l.google.com:19302`) for low-latency live microphone voice calls and video feeds.
+  - [ ] **Hybrid Fallback Guarantee**: If the real human queue is empty (e.g. 3 AM scenario), automatically pairs with the 12 AI Personas so learners never experience dead waiting screens.
+  - [ ] **⭐ "Dodaj u Prijatelje" (Save as Study Buddy)**: 1-click button at the end of positive conversations to save the partner's profile/room code directly into the Profile friends list for future practice.
 
 > [!NOTE] 🌐 **Multi-Language Scaling**: Persona definitions and matchmaking direction logic are modular (`sr_en`, `es_en`, `de_en`, etc.), ready to inherit new language pairs in Priority 48.
 ## ✅ Priority 44: Smart Grammar Tooltips & Interactive Word Inspector (DONE)
