@@ -357,6 +357,30 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] **⚠️ NSFW Panic Shield (2-Button Choice)**: 1-click `🚨 Štit / Prijavi` button instantly blacks out / blurs the screen with an authoritative warning overlay, auto-mutes, and gives the user two explicit choices: `⏭️ Sledeći Sagovornik (Preporučeno & Trajni Ban)` or `✅ Sve je u redu / Ostani (Odblokiraj ekran)`.
   - [x] Quick-action `⏭️ Sledeći Sagovornik` (Skip) and `🚫 Blokiraj` buttons always accessible.
 - [x] **⭐ "Dodaj u Prijatelje" (Save as Study Buddy) (DONE)**: 1-click button at the top of the chat or disconnect screen to save partner to `serbolingo_exchange_friends` with generated room code, with saved buddy list and 1-click invite in the lobby.
+
+### 🛡️ Priority 43.3: Community Moderation, Dual-Button Safety & Appeals Architecture (Upcoming)
+- [ ] **Dual-Button Architecture (Separation of Report vs. Block)**:
+  - [ ] **🚩 Prijavi (Report — Community Strike)**:
+    - Adds +1 strike to the reported user's community record.
+    - Requires **4 unique reports from 4 distinct users** before any global timeout/ban triggers (prevents trolling, accidental clicks, and griefing).
+    - **Crucial Rule**: Reporting does **NOT** automatically block the user for the reporter. Unless the reporter also clicks "Blokiraj", they remain eligible to match in the future.
+  - [ ] **🚫 Blokiraj (Block — Personal Exclusion)**:
+    - 100% personal exclusion. Immediately excludes the user from the reporter's matchmaking pool forever.
+    - Persisted in `serbolingo_exchange_blocked` and manageable in Profile Settings ("Upravljaj blokiranim korisnicima").
+    - Users can view their blocked list and click `Odblokiraj` anytime to restore them.
+- [ ] **Progressive Escalation Ban Ladder (Escalating Timeouts)**:
+  - [ ] **Strike 1** (4 unique reports): **1-Hour Timeout** (cooldown period).
+  - [ ] **Strike 2** (+4 unique reports): **4-Hour Suspension**.
+  - [ ] **Strike 3** (+4 unique reports): **24-Hour Suspension** (1 Full Day).
+  - [ ] **Strike 4** (+4 unique reports): **7-Day Lockout** (1 Full Week).
+  - [ ] **Strike 5** (+4 unique reports): **Permanent Ban (Permaban)**.
+  - [ ] **Active Suspension Display**: Banned users see a locked matching button with live countdown timer (*"Privremeno ste suspendovani iz razgovora. Preostalo vreme: 38m 12s"*).
+- [ ] **"Warning First" Policy (No Sudden Instant Bans Even for Emergencies)**:
+  - [ ] Even for emergency triggers or severe complaints, users receive a prominent **Formal Community Warning (`⚠️ Zvanična Opomena Zajednice`)** first rather than an instant ban.
+  - [ ] User must click *"Razumem i Prihvatam"* before joining further sessions. Progressive bans apply only if violations continue.
+- [ ] **Human Review & Appeals System (`📩 Podnesi Žalbu / Appeal`)**:
+  - [ ] Suspended users receive an in-app `[Podnesi Žalbu]` button to explain their case (e.g., false report by a troll).
+  - [ ] Human moderator / admin dashboard reviews appeal and report logs. If the report was false or malicious, the strike is revoked immediately, user is reinstated, and false reporters can be penalized.
 - [ ] **Real-People Cloud Backend & WebRTC P2P Signaling (Phase 3 Integration)**:
   - [ ] Free Supabase / Firebase Realtime queue for real device-to-device matchmaking without expensive Node backends.
   - [ ] WebRTC Peer-to-Peer direct connection via free public Google STUN servers (`stun.l.google.com:19302`) for low-latency live microphone voice calls and video feeds.
