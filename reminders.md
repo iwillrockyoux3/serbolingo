@@ -332,6 +332,9 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [ ] **Cloudflare Infrastructure**: Use Cloudflare's free plan for CDN, DNS, DDoS protection, and caching when the app goes live with online services (leaderboards, multiplayer, friend finder).
 
 ## ✅⚡ Priority 43: Omegle-Style Language Exchange Hub ("Slučajni Sagovornik") (Phase 1 DONE / Phase 2 Planned)
+
+<span style="color:#888">
+
 - [x] **1v1 Language Roulette Matchmaking (DONE)**: Instant pairing matching Serbian learners with native Serbian speakers learning English, and vice versa. Realistic radar search animation with haptic connection vibration (`language-exchange.js`).
 - [x] **12 Diverse Simulated Personas + Gemini Online AI (DONE)**: Hybrid dual-tier conversational engine. 100% offline-ready with 12 authentic personas (Milica from Belgrade, Liam from London, Carlos from Madrid, Sakura from Tokyo, Dragan from Valjevo) with natural typing delays (`...`) and cultural personalities, plus online Gemini cascade for dynamic human-level chat.
 - [x] **Private Friend Room Codes & Group Tables (DONE)**: Direct pairing with study buddies from the Forum via 6-digit room codes (e.g., `BG-4921`) and 4-person group study tables.
@@ -340,7 +343,12 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Safety & Moderation Shield (DONE)**: Instant skip (`⏭️ Sledeći`), block (`🚫 Blokiraj`), and report (`🚩 Prijavi`) controls with local blocklist persistence.
 - [x] **XP Rewards & Profile Integration (DONE)**: Awards `+10 XP` for every 3 exchanges with progress celebration, accessible via Profile community card and dedicated `#exchange-modal`.
 
+</span>
+
 ### ✅ Priority 43.2: Ultra-Safe Video/Voice Roulette & Match Filters (Phase 2 DONE)
+
+<span style="color:#888">
+
 - [x] **Unified All-in-One Room & Hardware Controls (DONE)**:
   - [x] Single matchmaking pool (no queue splitting) ensuring fast connections without dividing active users.
   - [x] Default privacy mode: Rooms start with text chat active while **Microphone and Camera are MUTED by default**.
@@ -358,7 +366,12 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] Quick-action `⏭️ Sledeći Sagovornik` (Skip) and `🚫 Blokiraj` buttons always accessible.
 - [x] **⭐ "Dodaj u Prijatelje" (Save as Study Buddy) (DONE)**: 1-click button at the top of the chat or disconnect screen to save partner to `serbolingo_exchange_friends` with generated room code, with saved buddy list and 1-click invite in the lobby.
 
+</span>
+
 ### 🛡️ Priority 43.3: Community Moderation, Dual-Button Safety & Appeals Architecture (Client-Side Done, Cloud Next)
+
+<span style="color:#888">
+
 - [x] **Dual-Button Architecture (Separation of Report vs. Block) (DONE)**:
   - [x] **🚩 Prijavi (Report - Community Strike) (DONE)**:
     - Adds +1 strike to the reported user's community record.
@@ -381,12 +394,16 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Human Review & Appeals System (`📩 Podnesi Žalbu / Appeal`) (DONE)**:
   - [x] Suspended users receive an in-app `[Podnesi Žalbu]` button to explain their case (e.g., false report by a troll).
   - [x] Human moderator review logs & simulation hooks (`resolveAppeal`). If the report was false or malicious, the strike is revoked immediately, user is reinstated.
+
+</span>
+
 - [ ] **Real-People Cloud Backend & WebRTC P2P Signaling (Phase 3 Integration - Future)**:
   - [ ] Free Supabase / Firebase Realtime queue for real device-to-device matchmaking without expensive Node backends.
   - [ ] WebRTC Peer-to-Peer direct connection via free public Google STUN servers (`stun.l.google.com:19302`) for low-latency live microphone voice calls and video feeds.
   - [ ] **Hybrid Fallback Guarantee**: If the real human queue is empty (e.g. 3 AM scenario), automatically pairs with the 12 AI Personas so learners never experience dead waiting screens.
 
 > [!NOTE] ðŸŒ **Multi-Language Scaling**: Persona definitions and matchmaking direction logic are modular (sr_en, es_en, de_en, etc.), ready to inherit new language pairs in Priority 48.
+
 ## ✅ Priority 44: Smart Grammar Tooltips & Interactive Word Inspector (DONE)
 - [x] **Smart Grammar Tooltips**: Tapping any word in lessons or feedback prompts shows instant morphology, Serbian case tags (Akuzativ, Genitiv, Dativ/Lokativ, Instrumental, Množina), verb tenses, root lemma, translation, audio pronunciation, and 1-tap Flashcard saving.
 
