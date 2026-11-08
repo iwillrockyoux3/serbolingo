@@ -1,4 +1,4 @@
-# 📌 SerboLingo — Master Upcoming Tasks & Reminders
+﻿# 📌 SerboLingo — Master Upcoming Tasks & Reminders
 
 > [!IMPORTANT]
 > This document tracks all agreed upcoming features, content expansions, and deployment steps ready to be built in our next sessions.
@@ -340,27 +340,27 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Safety & Moderation Shield (DONE)**: Instant skip (`⏭️ Sledeći`), block (`🚫 Blokiraj`), and report (`🚩 Prijavi`) controls with local blocklist persistence.
 - [x] **XP Rewards & Profile Integration (DONE)**: Awards `+10 XP` for every 3 exchanges with progress celebration, accessible via Profile community card and dedicated `#exchange-modal`.
 
-### 🚀 Priority 43.2: Ultra-Safe Video/Voice Roulette, Real-People Cloud & Advanced Filters (Upcoming / Phase 2)
-- [ ] **Unified All-in-One Room & Hardware Controls**:
-  - [ ] Single matchmaking pool (no queue splitting) ensuring fast connections without dividing active users.
-  - [ ] Default privacy mode: Rooms start with text chat active while **Microphone and Camera are MUTED by default**.
-  - [ ] Live in-call tactile toggles: 💬 Tekstualni Čet (always available for notes & translation), 🎤 Mikrofon (tap to unmute and speak), 📹 Kamera (tap to turn on video when comfortable).
-  - [ ] Picture-in-Picture (PiP) video layout: Main viewport displays partner's video stream (or avatar if video is off), with a floating self-camera preview box in the bottom corner.
-- [ ] **Advanced Pre-Match Filters (Lobby Modal)**:
-  - [ ] **Automatic Language Alignment (Default)**: Automatically pairs users based on their active Profile learning direction (`sr_to_en` vs `en_to_sr`).
-  - [ ] **Country / Region Selector**: Filter by specific regions (*Svejedno / Srbija / Bosna i Hercegovina / Crna Gora / Dijaspora*).
-  - [ ] **Gender Preference**: Optional filter (*Bilo ko / Samo Žene / Samo Muškarci*).
-  - [ ] **Medium Filter**: Optional preference (*Svejedno / Želim razgovor glasom / Samo kuckanje tekstom*).
-- [ ] **Safety, Anti-NSFW Moderation & Legal Protection Shield**:
-  - [ ] **🔞 18+ Safety & Community Pledge**: Mandatory one-time confirmation modal before unlocking camera/video access for legal and app store compliance ("Nulta tolerancija na neprimereno ponašanje i golotinju. Trajni ban prekršiocima").
-  - [ ] **🛡️ 2-Second "Safe-Connect" Initial Frosted Blur**: New video streams start with a gentle frosted blur for 2 seconds to eliminate sudden jump-scares, lifting automatically once safe.
-  - [ ] **⚠️ NSFW Panic Shield**: 1-click `🚩 Prijavi golotinju / neprimeren sadržaj` button instantly blacks out / blurs the screen with an authoritative warning overlay, auto-disconnects, and adds the offender to a permanent device/hardware ban list.
-  - [ ] Quick-action `⏭️ Sledeći Sagovornik` (Skip) and `🚫 Blokiraj` buttons always accessible.
+### ✅ Priority 43.2: Ultra-Safe Video/Voice Roulette & Match Filters (Phase 2 DONE)
+- [x] **Unified All-in-One Room & Hardware Controls (DONE)**:
+  - [x] Single matchmaking pool (no queue splitting) ensuring fast connections without dividing active users.
+  - [x] Default privacy mode: Rooms start with text chat active while **Microphone and Camera are MUTED by default**.
+  - [x] Live in-call tactile toggles: 💬 Tekstualni Čet (always available for notes & translation), 🎤 Mikrofon (tap to unmute and speak), 📹 Kamera (tap to turn on video when comfortable).
+  - [x] Picture-in-Picture (PiP) video layout: Main viewport displays partner's video stream (or avatar if video is off), with a floating self-camera preview box in the bottom corner.
+- [x] **Advanced Pre-Match Filters (Lobby Modal) (DONE)**:
+  - [x] **Automatic Language Alignment (Default)**: Automatically pairs users based on their active Profile learning direction (`sr_to_en` vs `en_to_sr`).
+  - [x] **Country / Region Selector**: Filter by specific regions (*Svejedno / Srbija / Bosna i Hercegovina / Crna Gora / Dijaspora*).
+  - [x] **Gender Preference**: Optional filter (*Bilo ko / Samo Žene / Samo Muškarci*).
+  - [x] **Medium Filter**: Optional preference (*Svejedno / Želim razgovor glasom / Samo kuckanje tekstom*).
+- [x] **Safety, Anti-NSFW Moderation & Legal Protection Shield (DONE)**:
+  - [x] **🔞 18+ Safety & Community Pledge**: Mandatory one-time confirmation modal before unlocking camera/video access for legal and app store compliance ("Nulta tolerancija na neprimereno ponašanje i golotinju. Trajni ban prekršiocima").
+  - [x] **🛡️ 2-Second "Safe-Connect" Initial Frosted Blur**: New video streams start with a gentle frosted blur for 2 seconds to eliminate sudden jump-scares, lifting automatically once safe.
+  - [x] **⚠️ NSFW Panic Shield (2-Button Choice)**: 1-click `🚨 Štit / Prijavi` button instantly blacks out / blurs the screen with an authoritative warning overlay, auto-mutes, and gives the user two explicit choices: `⏭️ Sledeći Sagovornik (Preporučeno & Trajni Ban)` or `✅ Sve je u redu / Ostani (Odblokiraj ekran)`.
+  - [x] Quick-action `⏭️ Sledeći Sagovornik` (Skip) and `🚫 Blokiraj` buttons always accessible.
+- [x] **⭐ "Dodaj u Prijatelje" (Save as Study Buddy) (DONE)**: 1-click button at the top of the chat or disconnect screen to save partner to `serbolingo_exchange_friends` with generated room code, with saved buddy list and 1-click invite in the lobby.
 - [ ] **Real-People Cloud Backend & WebRTC P2P Signaling (Phase 3 Integration)**:
   - [ ] Free Supabase / Firebase Realtime queue for real device-to-device matchmaking without expensive Node backends.
   - [ ] WebRTC Peer-to-Peer direct connection via free public Google STUN servers (`stun.l.google.com:19302`) for low-latency live microphone voice calls and video feeds.
   - [ ] **Hybrid Fallback Guarantee**: If the real human queue is empty (e.g. 3 AM scenario), automatically pairs with the 12 AI Personas so learners never experience dead waiting screens.
-  - [ ] **⭐ "Dodaj u Prijatelje" (Save as Study Buddy)**: 1-click button at the end of positive conversations to save the partner's profile/room code directly into the Profile friends list for future practice.
 
 > [!NOTE] 🌐 **Multi-Language Scaling**: Persona definitions and matchmaking direction logic are modular (`sr_en`, `es_en`, `de_en`, etc.), ready to inherit new language pairs in Priority 48.
 ## ✅ Priority 44: Smart Grammar Tooltips & Interactive Word Inspector (DONE)

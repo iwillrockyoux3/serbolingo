@@ -1,4 +1,4 @@
-# 📝 SerboLingo — Active Task Tracker
+﻿# 📝 SerboLingo — Active Task Tracker
 
 > [!IMPORTANT]
 > This file tracks **what we're actively working on RIGHT NOW**.  
@@ -122,6 +122,7 @@
 | P46.1 | In-App Bug & Feedback Reporting System ("Prijavi Problem") | 🆕 New | `bug-report.js`, `index.html`, `sw.js` | ✅ DONE |
 | P47.1 | Global Community Forum & Discussion Hub ("Forum Zajednice") | 🆕 New | `community-forum.js`, `index.html`, `sw.js` | ✅ DONE |
 | P43.1 | Omegle-Style Language Exchange Hub ("Slučajni Sagovornik") | 🆕 New | `language-exchange.js`, `index.html`, `sw.js` | ✅ DONE |
+| P43.2 | Ultra-Safe Video/Voice Roulette & Match Filters (Phase 2 Upgrade) | 🆕 New | `language-exchange.js`, `index.html`, `sw.js` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 
@@ -133,7 +134,6 @@
 | P22.1 | Smartwatch companion | 🆕 New | ⬜ FUTURE |
 | P22.2 | AR object tagging | 🆕 New | ⬜ FUTURE |
 | P22.3 | Home screen widgets | 🆕 New | ⬜ FUTURE |
-| P43.2 | Ultra-Safe Video/Voice Roulette & Advanced Match Filters (Phase 2) | 🆕 New | ⬜ FUTURE |
 | P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
 | P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ⬜ FUTURE |
 
@@ -152,8 +152,8 @@
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20) | 0/6 | 6 |
-| Moonshots (P21-P22, P43.2, P48-P49) | 1/8 | 7 |
-| **TOTAL** | **35/61** | **26** |
+| Moonshots (P21-P22, P43.2, P48-P49) | 2/8 | 6 |
+| **TOTAL** | **36/61** | **25** |
 
 ---
 
