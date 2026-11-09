@@ -155,14 +155,21 @@
         getRetentionData: function () {
             try {
                 const raw = localStorage.getItem(this.STORAGE_KEY);
-                if (raw) return JSON.parse(raw);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (!parsed.reminderTime) parsed.reminderTime = '19:00';
+                    if (parsed.reminderNote === undefined) parsed.reminderNote = '';
+                    return parsed;
+                }
             } catch (e) {
                 console.error('[StreakEngine] Failed to read retention data:', e);
             }
             return {
                 notificationsEnabled: false,
                 lastNotificationDate: null,
-                celebratedMilestones: []
+                celebratedMilestones: [],
+                reminderTime: '19:00',
+                reminderNote: ''
             };
         },
 
@@ -926,6 +933,71 @@
             }
         },
 
+        updateReminderTime: function (timeStr) {
+            if (!timeStr) return;
+            const data = this.getRetentionData();
+            data.reminderTime = timeStr;
+            this.saveRetentionData(data);
+            if (window.app && window.app.showToast) {
+                window.app.showToast(`⏰ Vreme podsetnika postavljeno na ${timeStr}!`, 'info');
+            }
+        },
+
+        updateReminderNote: function (noteStr) {
+            const data = this.getRetentionData();
+            data.reminderNote = noteStr ? noteStr.trim() : '';
+            this.saveRetentionData(data);
+        },
+
+        testNotification: function () {
+            const data = this.getRetentionData();
+            const note = data.reminderNote ? `\n📝 "${data.reminderNote}"` : '';
+            const appState = window.appState || window.state;
+            const streak = appState ? (appState.streak || 0) : 0;
+            const bodyText = (streak > 0
+                ? `Ostalo je još par sati do ponoći! Uradi 1 brzu lekciju da ne izgubiš niz od ${streak} dana! 🔥`
+                : 'Ne zaboravi svoju današnju lekciju srpskog jezika! 🚀') + note;
+
+            if (!('Notification' in window)) {
+                if (window.app && window.app.showToast) {
+                    window.app.showToast('Obaveštenja nisu podržana u ovom pregledaču.', 'info');
+                }
+                return;
+            }
+
+            if (Notification.permission === 'granted') {
+                try {
+                    new Notification('⚠️ SerboLingo Podsetnik (Test)', {
+                        body: bodyText,
+                        icon: 'icons/icon-192.png'
+                    });
+                    if (window.app && window.app.showToast) {
+                        window.app.showToast('🔔 Test obaveštenje uspešno poslato!', 'success');
+                    }
+                } catch (e) {
+                    console.log('Test notification error:', e);
+                }
+            } else {
+                Notification.requestPermission().then(perm => {
+                    if (perm === 'granted') {
+                        try {
+                            new Notification('⚠️ SerboLingo Podsetnik (Test)', {
+                                body: bodyText,
+                                icon: 'icons/icon-192.png'
+                            });
+                            if (window.app && window.app.showToast) {
+                                window.app.showToast('🔔 Test obaveštenje uspešno poslato!', 'success');
+                            }
+                        } catch (e) {}
+                    } else {
+                        if (window.app && window.app.showToast) {
+                            window.app.showToast('Dozvola za obaveštenja nije data.', 'info');
+                        }
+                    }
+                });
+            }
+        },
+
         checkAndFireNotification: function () {
             const data = this.getRetentionData();
             if (!data.notificationsEnabled) return;
@@ -935,18 +1007,25 @@
             if (data.lastNotificationDate === today) return; // Already fired today
 
             const now = new Date();
-            const hour = now.getHours();
+            const currentHour = now.getHours();
+            const currentMin = now.getMinutes();
 
-            // Fire between 18:00 and 22:00 if lesson is not done today
-            if (hour >= 18 && !this.isLessonDoneToday()) {
+            const timeParts = (data.reminderTime || '19:00').split(':');
+            const targetHour = parseInt(timeParts[0], 10) || 19;
+            const targetMin = parseInt(timeParts[1], 10) || 0;
+
+            const isTime = (currentHour === targetHour && currentMin >= targetMin) || (currentHour > targetHour && currentHour <= 23);
+
+            if (isTime && !this.isLessonDoneToday()) {
                 const appState = window.appState || window.state;
                 const streak = appState ? (appState.streak || 0) : 0;
+                const note = data.reminderNote ? `\n📝 "${data.reminderNote}"` : '';
 
                 try {
                     new Notification('⚠️ Tvoj SerboLingo niz je u opasnosti!', {
-                        body: streak > 0
+                        body: (streak > 0
                             ? `Ostalo je još par sati do ponoći! Uradi 1 brzu lekciju da ne izgubiš niz od ${streak} dana! 🔥`
-                            : 'Ne zaboravi svoju današnju lekciju srpskog jezika! 🚀',
+                            : 'Ne zaboravi svoju današnju lekciju srpskog jezika! 🚀') + note,
                         icon: 'icons/icon-192.png'
                     });
                     data.lastNotificationDate = today;
@@ -960,15 +1039,30 @@
         updateProfileNotificationUI: function () {
             const btn = document.getElementById('btn-streak-notif');
             const knob = document.getElementById('knob-streak-notif');
-            if (!btn || !knob) return;
+            const timeInput = document.getElementById('streak-reminder-time');
+            const noteInput = document.getElementById('streak-reminder-note');
+            const container = document.getElementById('streak-reminder-settings-box');
 
-            const enabled = this.getRetentionData().notificationsEnabled;
-            if (enabled) {
-                btn.className = 'w-12 h-7 bg-blue-500 rounded-full relative transition-colors duration-300';
-                knob.className = 'absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform translate-x-5';
-            } else {
-                btn.className = 'w-12 h-7 bg-slate-300 dark:bg-slate-700 rounded-full relative transition-colors duration-300';
-                knob.className = 'absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform translate-x-0';
+            const data = this.getRetentionData();
+            const enabled = data.notificationsEnabled;
+
+            if (btn && knob) {
+                if (enabled) {
+                    btn.className = 'w-12 h-7 bg-blue-500 rounded-full relative transition-colors duration-300';
+                    knob.className = 'absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform translate-x-5';
+                    if (container) container.classList.remove('hidden');
+                } else {
+                    btn.className = 'w-12 h-7 bg-slate-300 dark:bg-slate-700 rounded-full relative transition-colors duration-300';
+                    knob.className = 'absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform translate-x-0';
+                    if (container) container.classList.add('hidden');
+                }
+            }
+
+            if (timeInput && data.reminderTime) {
+                timeInput.value = data.reminderTime;
+            }
+            if (noteInput && data.reminderNote !== undefined) {
+                noteInput.value = data.reminderNote;
             }
         }
     };

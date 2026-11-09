@@ -1,4 +1,4 @@
-﻿# 📌 SerboLingo — Master Upcoming Tasks & Reminders
+# 📌 SerboLingo — Master Upcoming Tasks & Reminders
 
 > [!IMPORTANT]
 > This document tracks all agreed upcoming features, content expansions, and deployment steps ready to be built in our next sessions.
@@ -209,9 +209,16 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [ ] **Smartwatch Companion (Wear OS / Apple Watch)**:
   - A micro-app for the wrist that gives users a 60-second flashcard session, a "Word of the Day" notification, or lets them practice speaking into their watch while walking.
 - [ ] **AR (Augmented Reality) Object Tagging**:
-  - Instead of just translating text, the user points their phone camera at a physical object in their room (like a table, dog, or window), and the app uses AI image recognition to make the Serbian word float in 3D space over the object.
-- [ ] **Home Screen Widgets**:
-  - iOS and Android native widgets so the user can see their Streak, Daily XP goal, or a "Serbian Word of the Day" right on their phone's home screen without even opening the app.
+  - Instead of just translating text, the user points their phone camera at a physical object in their room (like a table, dog, or window), and the app uses AI image recognition to make the Serbian word float in 3D space over the object. (Phase 1 Live Camera Vision built in Visual Lens; 3D WebXR rendering planned for Capacitor mobile release).
+<span style="color:#888">
+- [x] **Home Screen Widgets & PWA Mobile App Shortcuts (DONE)**:
+  - Added native PWA `shortcuts` to `manifest.json` for quick access from the phone's home screen icon long-press menu:
+    - 1. **Dnevni Niz (Streak)**: Direct jump to streak retention hub (`?action=streak`).
+    - 2. **AI Visual Lens**: Live camera object/text scanner (`?action=lens`).
+    - 3. **Fleškartice**: Direct launch into Flashcard Swipe review (`?action=flashcards`).
+    - 4. **Razmena Jezika**: Instant entry into conversational roulette (`?action=exchange`).
+  - Added URL parameter routing in `app.js` to automatically open the respective modal/view on tap.
+</span>
 
 
 ## 🌍 Priority 23: The "Ultimate Learning App" Expansion (Multi-Language Ecosystem)
@@ -297,7 +304,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Data Chunking (Lazy Loading) (DONE)**: db.js already has processChunk() and loadChunk() methods for background dictionary injection via script tags.
 
 ## ✅🔔 Priority 37: Retention & Habit Building (The Ultimate Addiction Engine) (DONE)
-- [x] **Web Notifications API (DONE)**: Opt-in evening habit reminder that fires a native push notification to device at 19:00 if the daily streak hasn't been saved yet.
+- [x] **Web Notifications API & Custom Time/Note Picker (DONE)**: Opt-in evening habit reminder that fires a native push notification to device if the daily streak hasn't been saved yet. Features a custom time picker (HH:MM) in Profile Settings, personal study reminder note, and instant notification test button.
 - [x] **Streak-at-Risk Visual Alarm (DONE)**: Top bar flame icon transforms into a pulsating urgent alert (`.streak-risk-alarm`) and home view risk banner countdown to midnight ("⚠️ Tvoj niz ističe za Xh Ym! Uradi lekciju odmah").
 - [x] **Spasi Svoj Niz (Streak Repair Modal) (DONE)**: When a streak is broken without freeze shields, user gets a 24h recovery window to rescue it using 150 💎 Dijamanata or by beating a 5-Question Blitz Recovery Challenge for free.
 - [x] **Društvo Niza (Streak Society VIP Tiers) (DONE)**: 4-tier milestone VIP progression (Bronzani 7d, Srebrni 14d, Zlatni 30d, Opsidijanski 50d) with auto-awarded free streak freezes, exclusive profile frames, and league glows.
@@ -314,11 +321,44 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] **Comprehension Checkpoint & SRS Progress Sync**: In-story comprehension quiz, +25 XP reward, and automated SuperMemo-2 SRS status updates (`SrsEngine.recordReview(wordId, true, 4)`) that immediately boost memory retention in the Mistake Vault!
   - [x] **Seamless Entry Points**: 1-tap launcher banner in `#view-mistakes` ("📖 Pametna Priča") and hero banner in the Stories menu (`stories.js`).
 
-## 📷 Priority 39: Optical Character Recognition (AI Visual Lens)
-- [ ] **Camera Translation**: Tap a camera icon, point the phone at a real Serbian restaurant menu or street sign, and the app reads the text, translates it, and adds the new words directly to your Flashcard deck.
+## ✅📷 Priority 39: Optical Character Recognition & Live AI Visual Lens (DONE)
 
-## 🗂️ Priority 40: Custom Community Decks
-- [ ] **User-Created Vocab Lists**: Allow users to build custom folders (e.g., "Medical Terms", "Football Vocabulary") and share them with other users via a generated link.
+<span style="color:#888">
+
+- [x] **Live Camera Viewfinder with MediaDevices (`visual-lens.js`) (DONE)**:
+  - Integrated `navigator.mediaDevices.getUserMedia` for a real-time mobile camera feed inside the `#visual-lens-modal`.
+  - Tactile round shutter button (`📸`) captures the active video frame to an in-memory canvas with automatic mobile downsampling (&lt;1024px) to preserve budget device RAM.
+  - Quick-action Camera Flip button (`🔄 Okreni`) toggles between environment (rear) and user (selfie) cameras.
+  - Secondary `📁 Galerija` button and zero-permission fallback box (`#lens-fallback-box`) for devices without camera hardware.
+- [x] **2-in-1 Unified AI Scanner (Merged Object + Text/OCR) (DONE)**:
+  - Removed cumbersome manual mode toggling. A single universal Gemini Vision prompt automatically detects real-world objects, extracted text (restaurant menus, street signs, labels), or both in a single pass.
+  - Dual-script parity (Latinica & Ćirilica) with 1-tap `ĆIR ➔ LAT` switcher.
+  - Native Serbian TTS audio pronunciation for detected terms and full extracted text.
+  - Touch-scrollable translation container (`max-h-[60vh] overflow-y-auto`) preventing layout overflow on narrow mobile screens.
+  - 1-click star save to SuperMemo-2 Flashcards & Custom Decks (`⭐ Dodaj u Fleškartice (+10 XP)`).
+  - Pre-cached offline zero-key demo samples (`🍎 Jabuka`, `☕ Kafa`, `📋 Meni`).
+  - Auto-reset on modal close/open (cleans base64 data, stops camera stream tracks, resets viewfinder).
+- [ ] **Pending Final Sweep & QA Note**: Once all priorities and full app development are completed, revisit Priority 39 to thoroughly test and verify live camera permissions and frame capture on physical iOS & Android devices.
+
+</span>
+
+## ✅🗂️ Priority 40: Custom Community Decks & Personal Word Folders (DONE)
+
+<span style="color:#888">
+
+- [x] **User-Created Vocab Lists & Folders (`srs-engine.js` & `#view-mistakes`) (DONE)**:
+  - Users can build and name custom thematic flashcard folders (e.g., "🍽️ Hrana & Kafana", "✈️ Putovanja & Prevoz", "💼 Posao", "❤️ Ljubav").
+  - Clean horizontal scrollable deck chip bar embedded directly inside the Mistake Vault view.
+  - Dedicated "➕ Novi Špil" modal (`#custom-deck-modal`) with custom emoji picker and name validation.
+  - Pre-seeded with 2 authentic Balkan starter decks (Food & Travel) for immediate value.
+- [x] **Targeted Flashcard Swipe Review (DONE)**:
+  - Tapping any custom deck chip launches Tinder-style Flashcard Swipe filtered exclusively to that deck's words.
+- [x] **1-Click JSON Export & Import (Community Sharing & Backups) (DONE)**:
+  - **📤 Izvezi**: Serializes any deck into a portable `.json` file (`serbolingo-deck-[name].json`) ready to share with friends, classmates, or backup locally.
+  - **📥 Uvezi**: FileReader file input loads community-shared deck JSON files, validating structure and immediately appending them to the user's active decks.
+- [ ] **Pending Final Sweep & QA Note**: Once all priorities and full app development are completed, revisit Priority 40 to thoroughly test and verify custom deck creation, JSON file export/import, and swipe review sessions across browsers.
+
+</span>
 
 ## ✅🧱 Priority 41: Interactive Grammar Sandbox & 2-in-1 Sentence Hub (DONE)
 - [x] **2-in-1 Sentence Builder Hub & Lego Sandbox (DONE)**:

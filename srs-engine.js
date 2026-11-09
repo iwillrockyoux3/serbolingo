@@ -751,14 +751,271 @@
             if (typeof TouchHaptics !== 'undefined') {
                 TouchHaptics.vibrate('tap');
             }
+        },
+
+        // --- 7. CUSTOM COMMUNITY DECKS & FOLDERS (Priority 40) ---
+        CUSTOM_DECKS_STORAGE: 'serbolingo_custom_decks',
+        _selectedDeckEmoji: '🍽️',
+
+        getDefaultDecks: function () {
+            return [
+                {
+                    id: 'deck_food',
+                    name: 'Hrana & Kafana',
+                    emoji: '🍽️',
+                    createdAt: '2026-11-10',
+                    words: [
+                        { id: 'w_cevapi', sr: 'Ćevapi', sr_lat: 'Ćevapi', en: 'Grilled meat sausages', pos: 'imenica (m.r.)', example_sr: 'Deset ćevapa sa lukom i kajmakom.', example_en: 'Ten cevapi with onion and clotted cream.' },
+                        { id: 'w_kajmak', sr: 'Kajmak', sr_lat: 'Kajmak', en: 'Clotted cream spread', pos: 'imenica (m.r.)', example_sr: 'Vruća lepinja sa kajmakom je najbolja.', example_en: 'Hot flatbread with kajmak is the best.' },
+                        { id: 'w_rakija', sr: 'Rakija', sr_lat: 'Rakija', en: 'Fruit brandy', pos: 'imenica (ž.r.)', example_sr: 'Domaća šljivovica se pije za zdravlje.', example_en: 'Homemade plum brandy is drank for health.' },
+                        { id: 'w_racun', sr: 'Račun', sr_lat: 'Račun', en: 'Bill / Check', pos: 'imenica (m.r.)', example_sr: 'Konobar, račun molim!', example_en: 'Waiter, check please!' }
+                    ]
+                },
+                {
+                    id: 'deck_travel',
+                    name: 'Putovanja & Prevoz',
+                    emoji: '✈️',
+                    createdAt: '2026-11-10',
+                    words: [
+                        { id: 'w_karta', sr: 'Karta', sr_lat: 'Karta', en: 'Ticket', pos: 'imenica (ž.r.)', example_sr: 'Jedna povratna karta za Beograd.', example_en: 'One return ticket for Belgrade.' },
+                        { id: 'w_stanica', sr: 'Stanica', sr_lat: 'Stanica', en: 'Station', pos: 'imenica (ž.r.)', example_sr: 'Autobuska stanica je blizu centra.', example_en: 'The bus station is near the center.' },
+                        { id: 'w_pasos', sr: 'Pasoš', sr_lat: 'Pasoš', en: 'Passport', pos: 'imenica (m.r.)', example_sr: 'Pripremite pasoš za pasošku kontrolu.', example_en: 'Prepare your passport for passport control.' },
+                        { id: 'w_aerodrom', sr: 'Aerodrom', sr_lat: 'Aerodrom', en: 'Airport', pos: 'imenica (m.r.)', example_sr: 'Aerodrom Nikola Tesla se nalazi u Surčinu.', example_en: 'Nikola Tesla Airport is located in Surcin.' }
+                    ]
+                }
+            ];
+        },
+
+        getCustomDecks: function () {
+            try {
+                const raw = localStorage.getItem(this.CUSTOM_DECKS_STORAGE);
+                if (raw) return JSON.parse(raw);
+            } catch (e) {
+                console.warn('[SrsEngine] Failed to read custom decks:', e);
+            }
+            const defaults = this.getDefaultDecks();
+            this.saveCustomDecks(defaults);
+            return defaults;
+        },
+
+        saveCustomDecks: function (decks) {
+            try {
+                localStorage.setItem(this.CUSTOM_DECKS_STORAGE, JSON.stringify(decks));
+            } catch (e) {
+                console.error('[SrsEngine] Failed to save custom decks:', e);
+            }
+        },
+
+        renderCustomDecks: function () {
+            const listEl = document.getElementById('custom-decks-list');
+            if (!listEl) return;
+
+            const decks = this.getCustomDecks();
+            if (!decks || decks.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-xs text-slate-400 py-2 italic">
+                        Nemate kreiranih špilova. Kliknite na "➕ Novi Špil" da napravite prvi!
+                    </div>
+                `;
+                return;
+            }
+
+            listEl.innerHTML = decks.map(d => {
+                const count = (d.words && d.words.length) || 0;
+                return `
+                    <div class="shrink-0 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700/80 rounded-2xl p-2.5 flex items-center gap-2 shadow-sm hover:border-blue-500/50 transition-all group">
+                        <button onclick="SrsEngine.openDeckSwipeSession('${d.id}')" class="flex items-center gap-2 text-left active:scale-95 transition-transform" title="Pokreni swipe vežbu za ovaj špil">
+                            <span class="text-2xl">${d.emoji || '📁'}</span>
+                            <div>
+                                <h5 class="text-xs font-black text-slate-800 dark:text-white leading-tight">${d.name}</h5>
+                                <span class="text-[10px] font-bold text-blue-500">${count} ${count === 1 ? 'reč' : 'reči'}</span>
+                            </div>
+                        </button>
+                        <div class="flex items-center gap-1 pl-1 border-l border-slate-200 dark:border-slate-800 ml-1">
+                            <button onclick="SrsEngine.exportDeckJson('${d.id}')" class="p-1 text-slate-400 hover:text-blue-500 text-xs active:scale-90 transition-transform" title="Izvezi špil kao JSON fajl">
+                                📤
+                            </button>
+                            <button onclick="SrsEngine.deleteCustomDeck('${d.id}')" class="p-1 text-slate-400 hover:text-red-500 text-xs active:scale-90 transition-transform" title="Obriši špil">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        },
+
+        openCreateDeckModal: function () {
+            const modal = document.getElementById('custom-deck-modal');
+            if (modal) modal.classList.remove('hidden');
+            const input = document.getElementById('new-deck-name-input');
+            if (input) {
+                input.value = '';
+                setTimeout(() => input.focus(), 100);
+            }
+            this._selectedDeckEmoji = '🍽️';
+        },
+
+        closeCreateDeckModal: function () {
+            const modal = document.getElementById('custom-deck-modal');
+            if (modal) modal.classList.add('hidden');
+        },
+
+        selectDeckEmoji: function (emoji) {
+            this._selectedDeckEmoji = emoji;
+            if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');
+            if (window.app && window.app.showToast) {
+                window.app.showToast(`Izabran emoji: ${emoji}`, 'info');
+            }
+        },
+
+        confirmCreateDeck: function () {
+            const input = document.getElementById('new-deck-name-input');
+            const name = input ? input.value.trim() : '';
+            if (!name) {
+                if (window.app && window.app.showToast) {
+                    window.app.showToast('Unesite naziv špila!', 'error');
+                }
+                return;
+            }
+
+            const decks = this.getCustomDecks();
+            const newDeck = {
+                id: 'deck_' + Date.now(),
+                name: name,
+                emoji: this._selectedDeckEmoji || '📁',
+                createdAt: new Date().toISOString().split('T')[0],
+                words: []
+            };
+
+            decks.push(newDeck);
+            this.saveCustomDecks(decks);
+            this.closeCreateDeckModal();
+            this.renderCustomDecks();
+
+            if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('success');
+            if (window.app && window.app.showToast) {
+                window.app.showToast(`🎉 Špil "${name}" je uspešno kreiran!`, 'success');
+            }
+        },
+
+        deleteCustomDeck: function (deckId) {
+            if (!confirm('Da li ste sigurni da želite da obrišete ovaj špil?')) return;
+            let decks = this.getCustomDecks();
+            decks = decks.filter(d => d.id !== deckId);
+            this.saveCustomDecks(decks);
+            this.renderCustomDecks();
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Špil je uklonjen.', 'info');
+            }
+        },
+
+        exportDeckJson: function (deckId) {
+            const decks = this.getCustomDecks();
+            const deck = decks.find(d => d.id === deckId);
+            if (!deck) return;
+
+            const jsonStr = JSON.stringify(deck, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `serbolingo-deck-${deck.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            if (window.app && window.app.showToast) {
+                window.app.showToast(`📤 Špil "${deck.name}" je sačuvan kao fajl!`, 'success');
+            }
+        },
+
+        triggerDeckImport: function () {
+            const input = document.getElementById('custom-deck-import-input');
+            if (input) input.click();
+        },
+
+        handleDeckImportFile: function (event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!imported || !imported.name) {
+                        throw new Error('Nevalidan format špila');
+                    }
+
+                    const decks = this.getCustomDecks();
+                    const newId = 'deck_' + Date.now();
+                    imported.id = newId;
+                    if (!imported.words) imported.words = [];
+
+                    decks.push(imported);
+                    this.saveCustomDecks(decks);
+                    this.renderCustomDecks();
+
+                    if (window.app && window.app.showToast) {
+                        window.app.showToast(`📥 Uvezen špil "${imported.name}" sa ${imported.words.length} reči!`, 'success');
+                    }
+                } catch (err) {
+                    console.error('[SrsEngine] Import failed:', err);
+                    if (window.app && window.app.showToast) {
+                        window.app.showToast('Greška pri uvozu: fajl nije validan JSON špil.', 'error');
+                    }
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        },
+
+        openDeckSwipeSession: function (deckId) {
+            const decks = this.getCustomDecks();
+            const deck = decks.find(d => d.id === deckId);
+            if (!deck || !deck.words || deck.words.length === 0) {
+                if (window.app && window.app.showToast) {
+                    window.app.showToast(`Špil "${deck ? deck.name : ''}" je prazan. Dodajte reči pre ponavljanja!`, 'info');
+                }
+                return;
+            }
+
+            this.deck = deck.words.map((w, idx) => ({
+                id: w.id || ('cw_' + idx),
+                sr_lat: w.sr || w.sr_lat || 'Reč',
+                en: w.en || '',
+                category: deck.name,
+                pos: w.pos || 'reč',
+                example_sr: w.example_sr || '',
+                example_en: w.example_en || ''
+            }));
+
+            this.currentIndex = 0;
+            this.knownCount = 0;
+            this.reviewCount = 0;
+            this.isFlipped = false;
+
+            const modal = document.getElementById('flashcard-swipe-modal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            this.renderCardStack();
+            this.updateProgressBar();
+
+            if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');
         }
     };
 
     // Auto-hook into page ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => SrsEngine.renderHeatmap());
+        document.addEventListener('DOMContentLoaded', () => {
+            SrsEngine.renderHeatmap();
+            SrsEngine.renderCustomDecks();
+        });
     } else {
-        setTimeout(() => SrsEngine.renderHeatmap(), 200);
+        setTimeout(() => {
+            SrsEngine.renderHeatmap();
+            SrsEngine.renderCustomDecks();
+        }, 200);
     }
 
     // Expose globally

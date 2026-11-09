@@ -991,6 +991,33 @@
                 <span>📖</span> <span>Pametna Priča (Vežbaj kroz priču)</span> <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold ml-1">✨ AI / Offline</span>
             </button>
 
+            <!-- Custom Community Decks (Priority 40) -->
+            <div id="custom-decks-container" class="bg-slate-100 dark:bg-slate-800/80 p-3.5 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-2.5 mb-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">📁</span>
+                        <div>
+                            <h4 class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-wider">Moji Špilovi (Custom Decks)</h4>
+                            <p class="text-[10px] text-slate-400">Kreiraj sopstvene tematske foldere reči</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="SrsEngine.openCreateDeckModal()" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-black active:scale-95 transition-all flex items-center gap-1 shadow-sm">
+                            <span>➕</span> <span>Novi Špil</span>
+                        </button>
+                        <button onclick="SrsEngine.triggerDeckImport()" class="px-2.5 py-1.5 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold active:scale-95 transition-all" title="Uvezi špil iz JSON fajla">
+                            <span>📥</span>
+                        </button>
+                        <input type="file" id="custom-deck-import-input" accept=".json" class="hidden" onchange="SrsEngine.handleDeckImportFile(event)">
+                    </div>
+                </div>
+
+                <!-- Horizontal scrollable list of custom decks -->
+                <div id="custom-decks-list" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+                    <!-- Populated dynamically by SrsEngine.renderCustomDecks() -->
+                </div>
+            </div>
+
             <!-- Review Button -->
             <button id="mistakes-review-btn" onclick="app.startMistakeReview()" class="hidden w-full py-4 bg-gradient-to-r from-orange-400 to-red-500 text-white font-black rounded-2xl shadow-lg active:scale-95 transition-transform text-sm uppercase tracking-wider mb-4">
                 ⚡ Clear Weaknesses (<span id="mistakes-count-badge">0</span>)
@@ -1093,21 +1120,47 @@
                         </button>
                     </div>
 
-                    <!-- Streak Reminders Web Notifications Toggle (Priority 37) -->
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-lg">🔔</div>
-                            <div>
-                                <span class="font-bold text-sm text-slate-700 dark:text-slate-200">Podsetnici za Niz</span>
-                                <p class="text-[9px] text-slate-400">Obaveštenje u 19:00 ako niz nije sačuvan</p>
+                    <!-- Streak Reminders Web Notifications Toggle (Priority 37 & Custom Time/Notes) -->
+                    <div class="space-y-3 p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-slate-200 dark:bg-slate-700 rounded-xl text-lg">🔔</div>
+                                <div>
+                                    <span class="font-bold text-sm text-slate-700 dark:text-slate-200">Podsetnici za Niz</span>
+                                    <p class="text-[9px] text-slate-400">Dnevno obaveštenje za čuvanje niza</p>
+                                </div>
                             </div>
+                            <button onclick="StreakEngine.toggleNotifications()" id="btn-streak-notif"
+                                class="w-12 h-7 bg-slate-300 dark:bg-slate-700 rounded-full relative transition-colors duration-300">
+                                <div id="knob-streak-notif"
+                                    class="absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform translate-x-0">
+                                </div>
+                            </button>
                         </div>
-                        <button onclick="StreakEngine.toggleNotifications()" id="btn-streak-notif"
-                            class="w-12 h-7 bg-slate-300 dark:bg-slate-700 rounded-full relative transition-colors duration-300">
-                            <div id="knob-streak-notif"
-                                class="absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform translate-x-0">
+
+                        <!-- Expandable Custom Settings (Time Picker & Personal Note) -->
+                        <div id="streak-reminder-settings-box" class="hidden space-y-2.5 pt-2 border-t border-slate-200 dark:border-slate-700">
+                            <div class="flex items-center justify-between">
+                                <label for="streak-reminder-time" class="text-xs font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                                    <span>⏰</span> <span>Vreme podsetnika:</span>
+                                </label>
+                                <input type="time" id="streak-reminder-time" value="19:00" onchange="StreakEngine.updateReminderTime(this.value)"
+                                    class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl px-2.5 py-1 text-xs font-bold text-slate-800 dark:text-slate-100 outline-none focus:border-blue-500">
                             </div>
-                        </button>
+
+                            <div class="space-y-1">
+                                <label for="streak-reminder-note" class="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                                    <span>📝</span> <span>Lična poruka uz podsetnik (opciono):</span>
+                                </label>
+                                <input type="text" id="streak-reminder-note" placeholder="npr. Uradi 5 minuta pre spavanja..." onchange="StreakEngine.updateReminderNote(this.value)"
+                                    class="w-full text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-100 font-medium outline-none focus:border-blue-500">
+                            </div>
+
+                            <button onclick="StreakEngine.testNotification()"
+                                class="w-full py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-500 border border-blue-500/30 rounded-xl font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                                <span>🔔</span> <span>Testiraj Obaveštenje Sad</span>
+                            </button>
+                        </div>
                     </div>
 
 
@@ -1549,8 +1602,8 @@
         </div>
     </div>
 
-    <!-- AI Visual Lens Modal (Priority 18: Snap & Translate) -->
-    <div id="visual-lens-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[200] flex flex-col p-4 md:p-6 fade-in overflow-y-auto">
+    <!-- AI Visual Lens Modal (Priority 18 & 39: Live Camera & Unified Snap & Translate) -->
+    <div id="visual-lens-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[200] flex flex-col p-4 md:p-6 fade-in overflow-y-auto">
         <div class="max-w-md w-full mx-auto my-auto bg-slate-900 border-2 border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
             <div class="modal-drag-handle"></div>
             <!-- Modal Header -->
@@ -1559,7 +1612,7 @@
                     <span class="text-2xl p-1.5 bg-blue-500/20 rounded-xl">📷</span>
                     <div>
                         <h3 class="text-base font-black text-white leading-tight">AI Visual Lens</h3>
-                        <p class="text-[11px] font-bold text-slate-400">Prevedi svet oko sebe kamerom</p>
+                        <p class="text-[11px] font-bold text-slate-400">Prevedi svet oko sebe kamerom (Objekti &amp; Tekst)</p>
                     </div>
                 </div>
                 <button onclick="VisualLens.closeModal()" class="w-8 h-8 rounded-full bg-slate-700/60 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center font-black text-sm active:scale-90 transition-transform">
@@ -1567,75 +1620,92 @@
                 </button>
             </div>
 
-            <!-- Mode Selector Switcher -->
-            <div class="p-3 bg-slate-950/60 border-b border-slate-800 flex gap-2">
-                <button id="lens-mode-object" onclick="VisualLens.setMode('object')" class="flex-1 py-2.5 text-xs font-black rounded-xl bg-blue-600 text-white shadow-md transition-all flex items-center justify-center gap-1.5">
-                    <span>🍏</span> <span>Objekat (Object)</span>
-                </button>
-                <button id="lens-mode-ocr" onclick="VisualLens.setMode('ocr')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5">
-                    <span>📄</span> <span>Tekst / Znak (OCR)</span>
-                </button>
-            </div>
-
             <!-- Main Content Viewport -->
             <div class="p-4 space-y-4">
-                <!-- Hidden file/camera input -->
+                <!-- Hidden file/camera inputs -->
                 <input type="file" id="visual-lens-file-input" accept="image/*" class="hidden">
 
-                <!-- Placeholder / Capture Actions Box -->
-                <div id="lens-placeholder-container" class="border-2 border-dashed border-slate-700 hover:border-blue-500/60 rounded-3xl p-6 text-center bg-slate-950/40 transition-colors flex flex-col items-center justify-center min-h-[220px]">
-                    <div class="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-3xl mb-3 animate-pulse">
-                        📸
-                    </div>
-                    <h4 class="text-sm font-black text-white mb-1">Uslikaj ili izaberi sliku</h4>
-                    <p class="text-xs text-slate-400 mb-5 max-w-xs leading-relaxed">
-                        Prepoznaj predmete, restoranske menije, ulične table i natpise sa prevodom.
-                    </p>
-
-                    <!-- Capture Buttons Grid -->
-                    <div class="flex flex-col sm:flex-row gap-2.5 w-full">
-                        <button onclick="VisualLens.triggerCamera()" class="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black text-xs shadow-lg shadow-blue-600/30 active:scale-95 transition-all flex items-center justify-center gap-2">
-                            <span>📷</span> <span>Uslikaj kamerom</span>
-                        </button>
-                        <button onclick="VisualLens.triggerGallery()" class="flex-1 py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-2">
-                            <span>🖼️</span> <span>Izaberi iz galerije</span>
-                        </button>
-                    </div>
-
-                    <!-- Quick Demo Shortcuts -->
-                    <div class="mt-4 pt-4 border-t border-slate-800/80 w-full">
-                        <p class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-2">Isprobaj besplatan demo uzorak:</p>
-                        <div class="flex justify-center gap-2">
-                            <button onclick="VisualLens.loadDemo('apple')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-[11px] font-bold text-slate-300 transition-colors flex items-center gap-1">
-                                <span>🍎</span> <span>Jabuka</span>
-                            </button>
-                            <button onclick="VisualLens.loadDemo('coffee')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-[11px] font-bold text-slate-300 transition-colors flex items-center gap-1">
-                                <span>☕</span> <span>Kafa</span>
-                            </button>
-                            <button onclick="VisualLens.loadDemo('menu')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-[11px] font-bold text-slate-300 transition-colors flex items-center gap-1">
-                                <span>📋</span> <span>Meni</span>
-                            </button>
+                <!-- 1. LIVE CAMERA VIEWFINDER -->
+                <div id="lens-viewfinder-container" class="space-y-3">
+                    <div class="relative w-full h-[260px] bg-black rounded-3xl overflow-hidden border-2 border-slate-700 shadow-inner flex items-center justify-center">
+                        <video id="lens-camera-video" playsinline autoplay muted class="w-full h-full object-cover"></video>
+                        <!-- Scanner Focus Frame -->
+                        <div class="absolute inset-4 border-2 border-dashed border-white/40 rounded-2xl pointer-events-none flex items-center justify-center">
+                            <span class="text-[10px] font-bold text-white/80 bg-black/50 px-2.5 py-1 rounded-full backdrop-blur-sm border border-white/20">
+                                🎯 Usmjeri na objekat, znak ili tekst
+                            </span>
                         </div>
+                    </div>
+
+                    <!-- Viewfinder Controls: Flip, Tactile Shutter, Gallery -->
+                    <div class="flex items-center justify-between px-3 pt-1">
+                        <button onclick="VisualLens.flipCamera()" class="p-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-2xl border border-slate-700 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5 shadow-md" title="Okreni kameru">
+                            <span>🔄</span> <span class="text-[11px]">Okreni</span>
+                        </button>
+
+                        <!-- Large Round Shutter Button -->
+                        <button onclick="VisualLens.captureFrame()" class="w-16 h-16 rounded-full bg-gradient-to-tr from-red-600 to-rose-500 hover:from-red-500 hover:to-rose-400 border-4 border-white shadow-2xl active:scale-90 transition-transform flex items-center justify-center text-3xl text-white shadow-red-900/50" title="Uslikaj i prevedi">
+                            📸
+                        </button>
+
+                        <button onclick="VisualLens.triggerGallery()" class="p-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-2xl border border-slate-700 text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5 shadow-md" title="Izaberi iz galerije">
+                            <span>📁</span> <span class="text-[11px]">Galerija</span>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Preview Box with Scanning Radar -->
-                <div id="lens-preview-container" class="hidden relative rounded-2xl overflow-hidden border-2 border-slate-700 bg-black min-h-[180px] max-h-[260px] flex items-center justify-center">
+                <!-- 2. CAPTURED PREVIEW BOX WITH SCANNING RADAR -->
+                <div id="lens-preview-container" class="hidden relative rounded-3xl overflow-hidden border-2 border-slate-700 bg-black min-h-[180px] max-h-[260px] flex items-center justify-center">
                     <img id="lens-preview-img" src="" alt="Captured Image" class="w-full h-full object-contain max-h-[260px]">
                     
                     <!-- Retake Floating Action -->
-                    <button onclick="VisualLens.triggerCamera()" class="absolute top-2 right-2 p-2 bg-slate-900/80 hover:bg-slate-800 text-white rounded-xl backdrop-blur-sm border border-slate-700 text-xs font-bold active:scale-90 transition-transform flex items-center gap-1">
+                    <button onclick="VisualLens.retakePhoto()" class="absolute top-2.5 right-2.5 px-3 py-1.5 bg-slate-900/90 hover:bg-slate-800 text-white rounded-xl backdrop-blur-sm border border-slate-700 text-xs font-bold active:scale-90 transition-transform flex items-center gap-1.5 shadow-lg">
                         <span>🔄</span> <span>Nova slika</span>
                     </button>
 
                     <!-- Scanning Radar Overlay -->
-                    <div id="lens-scanning-overlay" class="hidden absolute inset-0 bg-blue-900/30 backdrop-blur-[2px] flex flex-col items-center justify-center p-4">
+                    <div id="lens-scanning-overlay" class="hidden absolute inset-0 bg-blue-900/40 backdrop-blur-[2px] flex flex-col items-center justify-center p-4">
                         <div class="w-12 h-12 rounded-full border-4 border-blue-400 border-t-transparent animate-spin mb-3"></div>
-                        <span class="text-sm font-black text-white drop-shadow-md animate-pulse">AI skenira sliku...</span>
+                        <span class="text-sm font-black text-white drop-shadow-md animate-pulse">AI analizira sliku...</span>
                     </div>
                 </div>
 
-                <!-- Results Output Card -->
+                <!-- 3. FALLBACK BOX (If camera permission denied or no camera device) -->
+                <div id="lens-fallback-box" class="hidden border-2 border-dashed border-slate-700 hover:border-blue-500/60 rounded-3xl p-6 text-center bg-slate-950/40 transition-colors flex flex-col items-center justify-center min-h-[200px]">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-3xl mb-3">
+                        📷
+                    </div>
+                    <h4 class="text-sm font-black text-white mb-1">Kamera nije direktno dostupna</h4>
+                    <p class="text-xs text-slate-400 mb-4 max-w-xs leading-relaxed">
+                        Možete uslikati preko sistemske kamere ili izabrati sliku iz galerije telefona.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-2.5 w-full">
+                        <button onclick="VisualLens.triggerCameraInput()" class="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black text-xs shadow-lg shadow-blue-600/30 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <span>📷</span> <span>Uslikaj kamerom</span>
+                        </button>
+                        <button onclick="VisualLens.triggerGallery()" class="flex-1 py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <span>📁</span> <span>Izaberi iz galerije</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. QUICK DEMO SAMPLES -->
+                <div class="pt-2 border-t border-slate-800/80 w-full">
+                    <p class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-2">Isprobaj besplatan demo uzorak:</p>
+                    <div class="flex justify-center gap-2">
+                        <button onclick="VisualLens.loadDemo('apple')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-[11px] font-bold text-slate-300 transition-colors flex items-center gap-1 active:scale-95">
+                            <span>🍎</span> <span>Jabuka</span>
+                        </button>
+                        <button onclick="VisualLens.loadDemo('coffee')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-[11px] font-bold text-slate-300 transition-colors flex items-center gap-1 active:scale-95">
+                            <span>☕</span> <span>Kafa</span>
+                        </button>
+                        <button onclick="VisualLens.loadDemo('menu')" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-[11px] font-bold text-slate-300 transition-colors flex items-center gap-1 active:scale-95">
+                            <span>📋</span> <span>Meni</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. RESULTS OUTPUT CONTAINER (Touch-scrollable) -->
                 <div id="visual-lens-results-container">
                     <!-- Dynamic analysis card injected here -->
                 </div>
@@ -1806,6 +1876,43 @@
                         ✓
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Custom Deck Modal (Priority 40) -->
+    <div id="custom-deck-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[220] flex items-center justify-center p-4 fade-in">
+        <div class="max-w-sm w-full mx-auto bg-slate-900 border-2 border-slate-700 rounded-3xl shadow-2xl p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">📁</span>
+                    <div>
+                        <h3 class="text-base font-black text-white">Novi Tematski Špil</h3>
+                        <p class="text-[10px] text-slate-400">Kreiraj sopstvenu grupu reči za ponavljanje</p>
+                    </div>
+                </div>
+                <button onclick="SrsEngine.closeCreateDeckModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center font-bold active:scale-90 transition-transform">✕</button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label for="new-deck-name-input" class="block text-xs font-bold text-slate-400 mb-1">Naziv Špila:</label>
+                    <input type="text" id="new-deck-name-input" placeholder="npr. Kafana, Putovanje, Posao" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white font-bold outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">Izaberi Ikonu / Emoji:</label>
+                    <div class="flex gap-2 text-xl bg-slate-950 p-2 rounded-xl border border-slate-800 justify-around">
+                        <button type="button" onclick="SrsEngine.selectDeckEmoji('🍽️')" class="deck-emoji-btn p-1.5 rounded-lg hover:bg-slate-800 active:scale-95" title="Hrana">🍽️</button>
+                        <button type="button" onclick="SrsEngine.selectDeckEmoji('✈️')" class="deck-emoji-btn p-1.5 rounded-lg hover:bg-slate-800 active:scale-95" title="Putovanje">✈️</button>
+                        <button type="button" onclick="SrsEngine.selectDeckEmoji('💬')" class="deck-emoji-btn p-1.5 rounded-lg hover:bg-slate-800 active:scale-95" title="Razgovor">💬</button>
+                        <button type="button" onclick="SrsEngine.selectDeckEmoji('💼')" class="deck-emoji-btn p-1.5 rounded-lg hover:bg-slate-800 active:scale-95" title="Posao">💼</button>
+                        <button type="button" onclick="SrsEngine.selectDeckEmoji('❤️')" class="deck-emoji-btn p-1.5 rounded-lg hover:bg-slate-800 active:scale-95" title="Ljubav">❤️</button>
+                        <button type="button" onclick="SrsEngine.selectDeckEmoji('⭐')" class="deck-emoji-btn p-1.5 rounded-lg hover:bg-slate-800 active:scale-95" title="Zvezdica">⭐</button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="SrsEngine.closeCreateDeckModal()" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs active:scale-95 transition-all">Otkaži</button>
+                <button onclick="SrsEngine.confirmCreateDeck()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-xl text-xs shadow-lg shadow-blue-600/30 active:scale-95 transition-all">Kreiraj Špil</button>
             </div>
         </div>
     </div>

@@ -46,5 +46,35 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dnevni Niz (Streak)",
+      "short_name": "Niz",
+      "description": "Proveri i sačuvaj svoj dnevni niz",
+      "url": "./index.html?action=streak",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "AI Visual Lens",
+      "short_name": "Kamera",
+      "description": "Slikaj i prevedi svet oko sebe",
+      "url": "./index.html?action=lens",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Fleškartice (Flashcards)",
+      "short_name": "Ponavljanje",
+      "description": "Brzo ponavljanje reči kroz fleškartice",
+      "url": "./index.html?action=flashcards",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Razmena Jezika (Chat)",
+      "short_name": "Razmena",
+      "description": "Vežbaj konverzaciju sa sagovornikom",
+      "url": "./index.html?action=exchange",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
   ]
 }

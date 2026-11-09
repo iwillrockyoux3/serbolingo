@@ -1,14 +1,16 @@
 // [SHIELD_DAEMON: VALIDATED]
 /**
  * SerboLingo — AI Visual Lens Engine ("Snap & Translate" / Camera Learning)
- * Priority 18: Multimodal Real-World Camera & Image Recognition via Google Gemini Vision
+ * Priority 18 & 39: Multimodal Real-World Camera & OCR via Google Gemini Vision
  * 
- * Features:
- *  - 🍏 Object Mode: Detects real-world items, gives Serbian (Latin + Cyrillic), gender, phonetic, example sentence
- *  - 📄 Text / OCR Mode: Scans signs, menus, book pages, labels with dual-language translation
- *  - 🔊 Native Audio Pronunciation (TTS integration)
- *  - ⭐ 1-Click Save to SRS Flashcard Deck (IndexedDB & state.mistakeLog)
- *  - 📱 Mobile Rear Camera Integration (capture="environment") & Gallery Upload
+ * Upgrades:
+ *  - 📹 Live Camera Viewfinder with MediaDevices getUserMedia stream & canvas frame grabber
+ *  - 🔘 Large tactile round shutter button with camera flip (front/back) & gallery fallback
+ *  - 🔮 2-in-1 Unified AI Scanner: Merged Object & Text/OCR detection in a single pass
+ *  - 📜 Touch-scrollable translation container (max-h-[60vh] overflow-y-auto)
+ *  - 🧹 Auto-reset on modal close/reopen (stops camera tracks, purges cache & previews)
+ *  - 🔊 Native Audio Pronunciation (TTS integration) & Cyrillic/Latin script toggle
+ *  - ⭐ 1-Click Save to SRS Flashcards & Custom Decks
  *  - 🛡️ Zero-key Graceful Fallback with Interactive Offline Demo Mode
  */
 
@@ -17,7 +19,9 @@
 
     const VisualLens = {
         state: {
-            mode: 'object', // 'object' | 'ocr'
+            stream: null,
+            facingMode: 'environment', // 'environment' | 'user'
+            isCameraRunning: false,
             imageSrc: null,
             base64Data: null,
             mimeType: 'image/jpeg',
@@ -29,7 +33,6 @@
         // Offline pre-cached demo samples for instant zero-key testing
         DEMO_SAMPLES: {
             apple: {
-                mode: 'object',
                 title: 'Jabuka / Јабука (Apple)',
                 sr_lat: 'Jabuka',
                 sr_cyr: 'Јабука',
@@ -40,10 +43,12 @@
                 example_sr: 'Pojedi jednu svežu jabuku svakog jutra.',
                 example_en: 'Eat a fresh apple every morning.',
                 notes: 'Uobičajena voćka u Srbiji, osnovna reč u kurikulumu.',
-                sampleIcon: '🍎'
+                sampleIcon: '🍎',
+                extracted_sr: '',
+                translated_en: '',
+                vocabulary: []
             },
             coffee: {
-                mode: 'object',
                 title: 'Kafa / Кафа (Coffee)',
                 sr_lat: 'Domaća kafa',
                 sr_cyr: 'Домаћа кафа',
@@ -54,17 +59,28 @@
                 example_sr: 'Popijmo jednu tursku kafu sa prijateljima.',
                 example_en: 'Let\'s have a Turkish coffee with friends.',
                 notes: 'Simbol balkanskog gostoprimstva i kafanske kulture.',
-                sampleIcon: '☕'
+                sampleIcon: '☕',
+                extracted_sr: '',
+                translated_en: '',
+                vocabulary: []
             },
             menu: {
-                mode: 'ocr',
-                title: 'Jelovnik / Restoranski meni',
+                title: 'Restoranski Meni (Restaurant Menu)',
+                sr_lat: 'Jelovnik & Tradicionalna Jela',
+                sr_cyr: 'Јеловник & Традиционална Јела',
+                en: 'Menu & Traditional Balkan Dishes',
+                gender: 'muški rod (masculine)',
+                gender_short: 'm.r.',
+                phonetic: 'YEH-lov-neek',
+                example_sr: 'Konobar, možete li nam doneti jelovnik?',
+                example_en: 'Waiter, could you please bring us the menu?',
+                notes: 'Autentična kafanska jela i cene u dinarima (RSD).',
                 extracted_sr: 'Domaća supa sa rezancima - 350 RSD\nĆevapi na kajmaku (10 kom) - 780 RSD\nŠopska salata sa sirom - 390 RSD\nBaklava sa orasima - 290 RSD',
                 translated_en: 'Homemade noodle soup - 350 RSD\nCevapi with kajmak cream (10 pcs) - 780 RSD\nShopska salad with cheese - 390 RSD\nWalnut baklava - 290 RSD',
                 vocabulary: [
                     { sr: 'Ćevapi', en: 'Grilled minced meat sausages' },
-                    { sr: 'Kajmak', en: 'Clotted cream dairy spread' },
-                    { sr: 'Šopska salata', en: 'Tomato, cucumber & cheese salad' },
+                    { sr: 'Kajmak', en: 'Traditional clotted cream spread' },
+                    { sr: 'Šopska salata', en: 'Tomato, cucumber & feta cheese salad' },
                     { sr: 'Baklava', en: 'Sweet layered walnut pastry' }
                 ],
                 sampleIcon: '📋'
@@ -72,7 +88,6 @@
         },
 
         init: function () {
-            // Attach hidden file input listener if already in DOM
             this._setupFileInput();
         },
 
@@ -84,7 +99,6 @@
                 if (file) {
                     this.handleFile(file);
                 }
-                // Reset input value so same photo can be re-selected if desired
                 input.value = '';
             };
         },
@@ -93,35 +107,175 @@
             const modal = document.getElementById('visual-lens-modal');
             if (!modal) return;
             this._setupFileInput();
+
+            // Auto-reset previous captures
+            this.state.imageSrc = null;
+            this.state.base64Data = null;
+            this.state.currentResult = null;
+            this.state.isLoading = false;
+
+            const resContainer = document.getElementById('visual-lens-results-container');
+            if (resContainer) resContainer.innerHTML = '';
+
             modal.classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
+
             this.renderUI();
+            this.startCamera();
         },
 
         closeModal: function () {
+            this.stopCamera();
             const modal = document.getElementById('visual-lens-modal');
             if (modal) {
                 modal.classList.add('hidden');
             }
             document.body.classList.remove('overflow-hidden');
+
+            // Purge state and memory buffers
             this.state.isLoading = false;
+            this.state.imageSrc = null;
+            this.state.base64Data = null;
+            this.state.currentResult = null;
+
+            const resContainer = document.getElementById('visual-lens-results-container');
+            if (resContainer) resContainer.innerHTML = '';
+
+            this.renderUI();
         },
 
-        setMode: function (newMode) {
-            this.state.mode = newMode;
-            this.state.currentResult = null;
-            this.renderUI();
-            if (this.state.imageSrc) {
-                this.analyzeImage();
+        // --- Camera Lifecycle ---
+        startCamera: async function () {
+            const video = document.getElementById('lens-camera-video');
+            const viewfinder = document.getElementById('lens-viewfinder-container');
+            const fallback = document.getElementById('lens-fallback-box');
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                console.log('[VisualLens] getUserMedia not supported on this browser');
+                this.state.isCameraRunning = false;
+                if (viewfinder) viewfinder.classList.add('hidden');
+                if (fallback) fallback.classList.remove('hidden');
+                return;
+            }
+
+            this.stopCamera();
+
+            try {
+                const constraints = {
+                    video: {
+                        facingMode: { ideal: this.state.facingMode },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                };
+
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                this.state.stream = stream;
+                this.state.isCameraRunning = true;
+
+                if (video) {
+                    video.srcObject = stream;
+                    video.onloadedmetadata = () => {
+                        video.play().catch(e => console.warn('[VisualLens] Play warning:', e));
+                    };
+                }
+
+                if (viewfinder) viewfinder.classList.remove('hidden');
+                if (fallback) fallback.classList.add('hidden');
+            } catch (err) {
+                console.warn('[VisualLens] Camera access denied or unavailable:', err);
+                this.state.isCameraRunning = false;
+                if (viewfinder) viewfinder.classList.add('hidden');
+                if (fallback) fallback.classList.remove('hidden');
             }
         },
 
-        toggleScript: function () {
-            this.state.scriptMode = (this.state.scriptMode === 'lat') ? 'cyr' : 'lat';
-            this.renderResult();
+        stopCamera: function () {
+            if (this.state.stream) {
+                try {
+                    this.state.stream.getTracks().forEach(track => track.stop());
+                } catch (e) {
+                    console.warn('[VisualLens] Track stop error:', e);
+                }
+                this.state.stream = null;
+            }
+            this.state.isCameraRunning = false;
+            const video = document.getElementById('lens-camera-video');
+            if (video) {
+                video.srcObject = null;
+            }
         },
 
-        triggerCamera: function () {
+        flipCamera: function () {
+            this.state.facingMode = (this.state.facingMode === 'environment') ? 'user' : 'environment';
+            if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');
+            this.startCamera();
+        },
+
+        captureFrame: function () {
+            const video = document.getElementById('lens-camera-video');
+            if (!video || !this.state.isCameraRunning) {
+                // If stream is not running, fallback to device file/camera picker
+                this.triggerCameraInput();
+                return;
+            }
+
+            if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('success');
+
+            const vw = video.videoWidth || 640;
+            const vh = video.videoHeight || 480;
+
+            const canvas = document.createElement('canvas');
+            const maxDim = 1024;
+            let w = vw;
+            let h = vh;
+
+            if (w > maxDim || h > maxDim) {
+                if (w > h) {
+                    h = Math.round((h * maxDim) / w);
+                    w = maxDim;
+                } else {
+                    w = Math.round((w * maxDim) / h);
+                    h = maxDim;
+                }
+            }
+
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, w, h);
+
+            const mime = 'image/jpeg';
+            const compressedUrl = canvas.toDataURL(mime, 0.78);
+            const base64Pure = compressedUrl.split(',')[1];
+
+            // Stop camera to conserve battery & RAM during AI call
+            this.stopCamera();
+
+            this.state.imageSrc = compressedUrl;
+            this.state.base64Data = base64Pure;
+            this.state.mimeType = mime;
+            this.state.currentResult = null;
+
+            this.renderUI();
+            this.analyzeImage();
+        },
+
+        retakePhoto: function () {
+            this.state.imageSrc = null;
+            this.state.base64Data = null;
+            this.state.currentResult = null;
+            this.state.isLoading = false;
+
+            const resContainer = document.getElementById('visual-lens-results-container');
+            if (resContainer) resContainer.innerHTML = '';
+
+            this.renderUI();
+            this.startCamera();
+        },
+
+        triggerCameraInput: function () {
             const input = document.getElementById('visual-lens-file-input');
             if (input) {
                 input.setAttribute('capture', 'environment');
@@ -145,10 +299,11 @@
                 return;
             }
 
+            this.stopCamera();
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 const rawUrl = e.target.result;
-                // Compress & downsample image via canvas to preserve mobile RAM (<1024px)
                 this._compressImage(rawUrl, (compressedDataUrl, base64Pure, mime) => {
                     this.state.imageSrc = compressedDataUrl;
                     this.state.base64Data = base64Pure;
@@ -185,18 +340,23 @@
                 ctx.drawImage(img, 0, 0, w, h);
 
                 const mime = 'image/jpeg';
-                const compressedUrl = canvas.toDataURL(mime, 0.75);
+                const compressedUrl = canvas.toDataURL(mime, 0.78);
                 const base64Pure = compressedUrl.split(',')[1];
                 callback(compressedUrl, base64Pure, mime);
             };
             img.src = dataUrl;
         },
 
+        toggleScript: function () {
+            this.state.scriptMode = (this.state.scriptMode === 'lat') ? 'cyr' : 'lat';
+            this.renderResult();
+        },
+
         loadDemo: function (demoKey) {
             const demo = this.DEMO_SAMPLES[demoKey];
             if (!demo) return;
 
-            this.state.mode = demo.mode;
+            this.stopCamera();
             this.state.imageSrc = null;
             this.state.base64Data = null;
             this.state.currentResult = demo;
@@ -217,36 +377,29 @@
             this.state.isLoading = true;
             this.renderUI();
 
-            const isObject = (this.state.mode === 'object');
-            const prompt = isObject
-                ? `You are an expert Serbian and English language tutor in the SerboLingo app. 
-Analyze this photo and identify the main real-world object.
+            // Unified Prompt: detects real-world objects, text, signs, menus in one single pass
+            const prompt = `You are an expert Serbian and English language tutor in the SerboLingo app.
+Analyze this image. The image may contain real-world objects (food, animal, vehicle, tool, nature), text (signs, menus, documents, labels), or both.
+Identify the primary object and also extract any visible text.
 Return ONLY a valid JSON object without markdown, backticks, or code blocks matching this exact schema:
 {
-  "identified": true,
-  "sr_lat": "Serbian word in Latin script (e.g. Jabuka)",
-  "sr_cyr": "Serbian word in Cyrillic script (e.g. Јабука)",
-  "en": "English translation (e.g. Apple)",
-  "gender": "muški rod / ženski rod / srednji rod",
+  "title": "Short descriptive title of the image",
+  "sr_lat": "Primary Serbian word or title in Latin script (e.g. Jabuka or Restoranski meni)",
+  "sr_cyr": "Primary Serbian word or title in Cyrillic script (e.g. Јабука or Ресторански мени)",
+  "en": "English translation (e.g. Apple or Restaurant Menu)",
+  "gender": "muški rod / ženski rod / srednji rod (if single noun)",
   "gender_short": "m.r. / ž.r. / s.r.",
   "phonetic": "English phonetic guide (e.g. YAH-boo-kah)",
-  "example_sr": "A short, natural Serbian example sentence using this word.",
+  "example_sr": "A short, natural Serbian example sentence.",
   "example_en": "English translation of the example sentence.",
-  "notes": "Brief grammatical or cultural context tip in 1-2 sentences."
-}`
-                : `You are an expert Serbian and English OCR and translation tutor in the SerboLingo app.
-Scan and extract all Serbian or English text in this image (e.g. from signs, menus, labels, books).
-Translate accurately between Serbian and English.
-Return ONLY a valid JSON object without markdown, backticks, or code blocks matching this exact schema:
-{
-  "extracted_sr": "Original or Serbian text extracted from image",
-  "translated_en": "English translation of the extracted text",
+  "notes": "Brief grammatical, cultural, or real-life Balkan usage tip in 1-2 sentences.",
+  "extracted_sr": "If visible text is present (signs/menu/book), full Serbian text extracted here; otherwise empty string",
+  "translated_en": "English translation of extracted text; otherwise empty string",
   "vocabulary": [
     { "sr": "key Serbian word 1", "en": "English meaning 1" },
-    { "sr": "key Serbian word 2", "en": "English meaning 2" },
-    { "sr": "key Serbian word 3", "en": "English meaning 3" }
+    { "sr": "key Serbian word 2", "en": "English meaning 2" }
   ],
-  "sampleIcon": "📋"
+  "sampleIcon": "🔍"
 }`;
 
             const payload = {
@@ -284,7 +437,7 @@ Return ONLY a valid JSON object without markdown, backticks, or code blocks matc
                         break;
                     }
                 } catch (e) {
-                    // Try next model in cascade
+                    // Cascade to next model
                 }
             }
 
@@ -301,14 +454,13 @@ Return ONLY a valid JSON object without markdown, backticks, or code blocks matc
             try {
                 const data = await response.json();
                 let rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-                // Clean markdown code blocks if model wrapped it
                 rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
                 const parsed = JSON.parse(rawText);
                 this.state.currentResult = parsed;
                 this.renderUI();
                 this.renderResult();
             } catch (err) {
-                console.error('VisualLens JSON parsing error:', err);
+                console.error('[VisualLens] JSON parsing error:', err);
                 if (window.app && window.app.showToast) {
                     window.app.showToast('Nije uspelo prepoznavanje. Pokušajte ponovo sa jasnijom slikom.', 'error');
                 }
@@ -324,14 +476,14 @@ Return ONLY a valid JSON object without markdown, backticks, or code blocks matc
                     <div class="text-5xl">🔑</div>
                     <h4 class="text-lg font-black text-amber-400">Potreban je Google Gemini API ključ</h4>
                     <p class="text-xs text-slate-300 leading-relaxed">
-                        Za analizu novih fotografija u realnom vremenu potreban je besplatan Gemini API ključ.
+                        Za analizu novih fotografija kamerom u realnom vremenu potreban je besplatan Gemini API ključ.
                     </p>
                     <div class="flex flex-col gap-2 pt-2">
                         <button onclick="app.openApiKeyModal()" class="py-3 px-5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black text-xs active:scale-95 transition-transform shadow-lg shadow-blue-600/30">
                             ✨ Unesi Gemini API Ključ
                         </button>
                         <button onclick="VisualLens.loadDemo('apple')" class="py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold text-xs transition-colors">
-                            🧪 Ili isprobaj besplatnu Demo analizu (Jabuka)
+                            🧪 Isprobaj Demo Uzorak (Jabuka)
                         </button>
                     </div>
                 </div>
@@ -339,35 +491,35 @@ Return ONLY a valid JSON object without markdown, backticks, or code blocks matc
         },
 
         renderUI: function () {
-            const modeObjectBtn = document.getElementById('lens-mode-object');
-            const modeOcrBtn = document.getElementById('lens-mode-ocr');
-            if (modeObjectBtn && modeOcrBtn) {
-                if (this.state.mode === 'object') {
-                    modeObjectBtn.className = 'flex-1 py-2.5 text-xs font-black rounded-xl bg-blue-600 text-white shadow-md transition-all flex items-center justify-center gap-1.5';
-                    modeOcrBtn.className = 'flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5';
-                } else {
-                    modeObjectBtn.className = 'flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5';
-                    modeOcrBtn.className = 'flex-1 py-2.5 text-xs font-black rounded-xl bg-purple-600 text-white shadow-md transition-all flex items-center justify-center gap-1.5';
-                }
-            }
-
+            const viewfinder = document.getElementById('lens-viewfinder-container');
             const previewContainer = document.getElementById('lens-preview-container');
-            const placeholderContainer = document.getElementById('lens-placeholder-container');
             const previewImg = document.getElementById('lens-preview-img');
             const scanningOverlay = document.getElementById('lens-scanning-overlay');
+            const fallback = document.getElementById('lens-fallback-box');
 
             if (this.state.imageSrc) {
-                if (placeholderContainer) placeholderContainer.classList.add('hidden');
+                // Photo has been captured or loaded
+                if (viewfinder) viewfinder.classList.add('hidden');
+                if (fallback) fallback.classList.add('hidden');
                 if (previewContainer) previewContainer.classList.remove('hidden');
                 if (previewImg) previewImg.src = this.state.imageSrc;
+
                 if (scanningOverlay) {
                     if (this.state.isLoading) scanningOverlay.classList.remove('hidden');
                     else scanningOverlay.classList.add('hidden');
                 }
             } else {
-                if (placeholderContainer) placeholderContainer.classList.remove('hidden');
+                // No captured photo
                 if (previewContainer) previewContainer.classList.add('hidden');
                 if (scanningOverlay) scanningOverlay.classList.add('hidden');
+
+                if (this.state.isCameraRunning) {
+                    if (viewfinder) viewfinder.classList.remove('hidden');
+                    if (fallback) fallback.classList.add('hidden');
+                } else {
+                    if (viewfinder) viewfinder.classList.add('hidden');
+                    if (fallback) fallback.classList.remove('hidden');
+                }
             }
         },
 
@@ -382,120 +534,125 @@ Return ONLY a valid JSON object without markdown, backticks, or code blocks matc
             }
 
             const isCyr = (this.state.scriptMode === 'cyr');
+            const srDisplay = isCyr ? (res.sr_cyr || res.sr_lat) : res.sr_lat;
 
-            if (this.state.mode === 'object' && res.sr_lat) {
-                const srWord = isCyr ? (res.sr_cyr || res.sr_lat) : res.sr_lat;
-                container.innerHTML = `
-                    <div class="bg-slate-900 border-2 border-slate-700/80 rounded-3xl p-5 shadow-2xl space-y-4 fade-in">
-                        <!-- Top Header -->
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <span class="px-2.5 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg text-[10px] font-black uppercase tracking-wider">
-                                    ${res.gender || res.gender_short || 'Imenica'}
-                                </span>
-                                <h3 class="text-3xl font-black text-white mt-2 flex items-center gap-3">
-                                    <span>${srWord}</span>
-                                    <button onclick="VisualLens.speakWord('${res.sr_lat}')" class="w-9 h-9 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center text-white text-base shadow-md active:scale-90 transition-transform">
+            const hasOcr = !!(res.extracted_sr && res.extracted_sr.trim().length > 0);
+            const hasVocab = Array.isArray(res.vocabulary) && res.vocabulary.length > 0;
+
+            container.innerHTML = `
+                <div class="bg-slate-900 border-2 border-slate-700/80 rounded-3xl p-5 shadow-2xl space-y-4 fade-in max-h-[60vh] overflow-y-auto pr-1">
+                    <!-- Top Bar: Detected Header & Script Switcher -->
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">${res.sampleIcon || '📸'}</span>
+                                ${res.gender ? `
+                                    <span class="px-2.5 py-0.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg text-[10px] font-black uppercase tracking-wider">
+                                        ${res.gender || res.gender_short || 'Imenica'}
+                                    </span>
+                                ` : ''}
+                            </div>
+                            <h3 class="text-2xl sm:text-3xl font-black text-white mt-1.5 flex items-center gap-2.5 flex-wrap">
+                                <span>${srDisplay || res.title || 'Prepoznato'}</span>
+                                ${res.sr_lat ? `
+                                    <button onclick="VisualLens.speakWord('${res.sr_lat}')" class="w-8 h-8 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center text-white text-sm shadow-md active:scale-90 transition-transform shrink-0" title="Izgovori">
                                         🔊
                                     </button>
-                                </h3>
-                                <p class="text-slate-400 font-bold text-sm mt-0.5">${res.en}</p>
-                            </div>
-                            <button onclick="VisualLens.toggleScript()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-black text-cyan-400 transition-colors">
-                                ${isCyr ? 'ЋИР ➔ LAT' : 'LAT ➔ ЋИР'}
-                            </button>
+                                ` : ''}
+                            </h3>
+                            <p class="text-slate-400 font-bold text-sm mt-0.5">${res.en || ''}</p>
                         </div>
-
-                        <!-- Phonetic guide -->
-                        ${res.phonetic ? `
-                            <div class="px-3 py-1.5 bg-slate-950/80 rounded-xl border border-slate-800 text-xs font-mono text-cyan-300">
-                                🗣️ Izgovor: <span class="font-bold">${res.phonetic}</span>
-                            </div>
-                        ` : ''}
-
-                        <!-- Example Sentence -->
-                        <div class="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
-                            <p class="text-xs font-black text-slate-300 flex items-center justify-between">
-                                <span>Primer upotrebe:</span>
-                                <button onclick="VisualLens.speakWord('${res.example_sr}')" class="text-blue-400 hover:text-blue-300 text-xs">
-                                    🔊 Čuj
-                                </button>
-                            </p>
-                            <p class="text-sm font-bold text-amber-300">${res.example_sr}</p>
-                            <p class="text-xs text-slate-400">${res.example_en}</p>
-                        </div>
-
-                        ${res.notes ? `
-                            <p class="text-[11px] text-slate-400 italic">💡 ${res.notes}</p>
-                        ` : ''}
-
-                        <!-- Action Buttons -->
-                        <div class="pt-2 flex gap-2">
-                            <button onclick="VisualLens.saveToFlashcards('${res.sr_lat}', '${res.en}', '${res.gender || ''}')" class="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black text-xs shadow-lg shadow-emerald-900/40 active:scale-95 transition-all flex items-center justify-center gap-1.5">
-                                <span>⭐</span> <span>Dodaj u Fleškartice</span>
-                            </button>
-                            <button onclick="VisualLens.triggerCamera()" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl font-bold text-xs transition-colors">
-                                🔄 Ponovo
-                            </button>
-                        </div>
+                        <button onclick="VisualLens.toggleScript()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-black text-cyan-400 transition-colors shrink-0">
+                            ${isCyr ? 'ЋИР ➔ LAT' : 'LAT ➔ ЋИР'}
+                        </button>
                     </div>
-                `;
-            } else if (this.state.mode === 'ocr' && res.extracted_sr) {
-                container.innerHTML = `
-                    <div class="bg-slate-900 border-2 border-slate-700/80 rounded-3xl p-5 shadow-2xl space-y-4 fade-in">
-                        <div class="flex items-center justify-between pb-2 border-b border-slate-800">
-                            <div class="flex items-center gap-2">
-                                <span class="text-2xl">${res.sampleIcon || '📄'}</span>
-                                <h4 class="text-base font-black text-white">Prepoznat Tekst</h4>
-                            </div>
-                            <button onclick="VisualLens.speakWord('${res.extracted_sr.replace(/\n/g, ' ')}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs font-black text-white flex items-center gap-1">
-                                🔊 Pročitaj
-                            </button>
-                        </div>
 
-                        <!-- Side by Side OCR -->
-                        <div class="space-y-3">
+                    <!-- Phonetic Pronunciation Guide -->
+                    ${res.phonetic ? `
+                        <div class="px-3 py-1.5 bg-slate-950/80 rounded-xl border border-slate-800 text-xs font-mono text-cyan-300 flex items-center gap-2">
+                            <span>🗣️ Izgovor:</span>
+                            <span class="font-bold">${res.phonetic}</span>
+                        </div>
+                    ` : ''}
+
+                    <!-- Example Sentence (Object / Context) -->
+                    ${res.example_sr ? `
+                        <div class="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                            <div class="flex items-center justify-between text-xs font-black text-slate-300">
+                                <span>Primer upotrebe:</span>
+                                <button onclick="VisualLens.speakWord('${res.example_sr}')" class="text-blue-400 hover:text-blue-300 text-xs flex items-center gap-1">
+                                    <span>🔊</span> <span>Čuj</span>
+                                </button>
+                            </div>
+                            <p class="text-sm font-bold text-amber-300">${res.example_sr}</p>
+                            <p class="text-xs text-slate-400">${res.example_en || ''}</p>
+                        </div>
+                    ` : ''}
+
+                    <!-- Extracted Text (OCR / Signs / Menus) -->
+                    ${hasOcr ? `
+                        <div class="space-y-2.5 pt-1">
+                            <div class="flex items-center justify-between text-xs font-black text-slate-400 uppercase tracking-wider">
+                                <span>Prepoznat Tekst sa Slike:</span>
+                                <button onclick="VisualLens.speakWord('${res.extracted_sr.replace(/\n/g, ' ')}')" class="text-blue-400 hover:text-blue-300 normal-case font-bold flex items-center gap-1">
+                                    <span>🔊</span> <span>Pročitaj sve</span>
+                                </button>
+                            </div>
                             <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800">
-                                <p class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Srpski (Original)</p>
+                                <p class="text-[10px] font-black uppercase text-slate-500 mb-1">Srpski Original</p>
                                 <p class="text-sm font-bold text-amber-300 whitespace-pre-line leading-relaxed">${res.extracted_sr}</p>
                             </div>
-                            <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800">
-                                <p class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Engleski Prevod</p>
-                                <p class="text-sm font-bold text-cyan-300 whitespace-pre-line leading-relaxed">${res.translated_en}</p>
-                            </div>
-                        </div>
-
-                        <!-- Extracted Vocabulary Chips -->
-                        ${res.vocabulary && res.vocabulary.length ? `
-                            <div>
-                                <p class="text-xs font-black text-slate-400 uppercase tracking-wider mb-2">Ključne Reči:</p>
-                                <div class="flex flex-wrap gap-2">
-                                    ${res.vocabulary.map(v => `
-                                        <button onclick="VisualLens.speakWord('${v.sr}')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-bold text-slate-200 flex items-center gap-1.5 active:scale-95 transition-all">
-                                            <span>🔊 ${v.sr}</span> <span class="text-slate-400 text-[10px]">(${v.en})</span>
-                                        </button>
-                                    `).join('')}
+                            ${res.translated_en ? `
+                                <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800">
+                                    <p class="text-[10px] font-black uppercase text-slate-500 mb-1">Engleski Prevod</p>
+                                    <p class="text-sm font-bold text-cyan-300 whitespace-pre-line leading-relaxed">${res.translated_en}</p>
                                 </div>
-                            </div>
-                        ` : ''}
-
-                        <!-- Action -->
-                        <div class="pt-2 flex gap-2">
-                            <button onclick="VisualLens.saveOcrVocabulary()" class="flex-1 py-3 px-4 bg-purple-600 hover:bg-purple-500 text-white rounded-2xl font-black text-xs shadow-lg shadow-purple-900/40 active:scale-95 transition-all flex items-center justify-center gap-1.5">
-                                <span>⭐</span> <span>Sačuvaj Ključne Reči</span>
-                            </button>
-                            <button onclick="VisualLens.triggerCamera()" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl font-bold text-xs transition-colors">
-                                🔄 Skeniraj Drugo
-                            </button>
+                            ` : ''}
                         </div>
+                    ` : ''}
+
+                    <!-- Extracted Key Vocabulary Chips -->
+                    ${hasVocab ? `
+                        <div class="pt-1">
+                            <p class="text-xs font-black text-slate-400 uppercase tracking-wider mb-2">Ključne Reči iz Teksta:</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${res.vocabulary.map(v => `
+                                    <button onclick="VisualLens.speakWord('${v.sr}')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-bold text-slate-200 flex items-center gap-1.5 active:scale-95 transition-all" title="Klikni za izgovor">
+                                        <span>🔊 ${v.sr}</span> <span class="text-slate-400 text-[10px]">(${v.en})</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- Linguistic / Cultural Notes -->
+                    ${res.notes ? `
+                        <p class="text-[11px] text-slate-400 italic bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/80">💡 ${res.notes}</p>
+                    ` : ''}
+
+                    <!-- Action Buttons -->
+                    <div class="pt-3 flex flex-col sm:flex-row gap-2">
+                        <button onclick="VisualLens.saveMainToFlashcards()" class="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black text-xs shadow-lg shadow-emerald-900/40 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                            <span>⭐</span> <span>Dodaj "${res.sr_lat || 'Reč'}" u Fleškartice (+10 XP)</span>
+                        </button>
+                        ${hasVocab ? `
+                            <button onclick="VisualLens.saveAllVocabulary()" class="py-3 px-4 bg-purple-600 hover:bg-purple-500 text-white rounded-2xl font-black text-xs shadow-lg shadow-purple-900/40 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                                <span>⭐</span> <span>Sačuvaj Sve (${res.vocabulary.length})</span>
+                            </button>
+                        ` : ''}
+                        <button onclick="VisualLens.retakePhoto()" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl font-bold text-xs transition-colors active:scale-95 flex items-center justify-center gap-1">
+                            <span>🔄</span> <span>Nova Slika</span>
+                        </button>
                     </div>
-                `;
-            }
+                </div>
+            `;
         },
 
         speakWord: function (text) {
             if (!text) return;
-            if (window.app && typeof window.app.speak === 'function') {
+            if (window.app && typeof window.app.speakPhrase === 'function') {
+                window.app.speakPhrase(text, 'sr');
+            } else if (window.app && typeof window.app.speak === 'function') {
                 window.app.speak(text, 'sr');
             } else if ('speechSynthesis' in window) {
                 const utterance = new SpeechSynthesisUtterance(text);
@@ -504,74 +661,63 @@ Return ONLY a valid JSON object without markdown, backticks, or code blocks matc
             }
         },
 
+        saveMainToFlashcards: function () {
+            const res = this.state.currentResult;
+            if (!res || !res.sr_lat) return;
+            this.saveToFlashcards(res.sr_lat, res.en, res.gender || '');
+        },
+
         saveToFlashcards: function (srWord, enWord, gender) {
             if (!srWord) return;
 
-            // Save to appState mistakeLog & local deck
             if (window.app && window.app.state) {
                 if (!window.app.state.mistakeLog) {
-                    window.app.state.mistakeLog = [];
+                    window.app.state.mistakeLog = {};
                 }
-                const exists = window.app.state.mistakeLog.some(m => (m.sr || m.source) === srWord);
-                if (!exists) {
-                    window.app.state.mistakeLog.push({
-                        id: 'lens_' + Date.now(),
-                        sr: srWord,
-                        en: enWord,
-                        source: srWord,
-                        target: enWord,
-                        gender: gender || '',
-                        timestamp: Date.now(),
-                        wrongCount: 1
-                    });
-                    if (typeof window.app.saveState === 'function') {
-                        window.app.saveState();
-                    }
+                const wordId = 'lens_' + srWord.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                window.app.state.mistakeLog[wordId] = (window.app.state.mistakeLog[wordId] || 0) + 1;
+
+                if (window.SrsEngine && typeof window.SrsEngine.getWordRecord === 'function') {
+                    const record = window.SrsEngine.getWordRecord(wordId);
+                    record.sr = srWord;
+                    record.en = enWord;
+                    record.gender = gender || '';
+                }
+
+                if (typeof window.app.saveState === 'function') {
+                    window.app.saveState();
+                } else if (typeof window.app.saveStats === 'function') {
+                    window.app.saveStats();
                 }
             }
 
+            if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('success');
+
             if (window.app && window.app.showToast) {
-                window.app.showToast(`⭐ "${srWord}" sačuvana u rečnik za ponavljanje!`, 'success');
+                window.app.showToast(`⭐ "${srWord}" sačuvana u fleškartice! (+10 XP)`, 'success');
             }
         },
 
-        saveOcrVocabulary: function () {
+        saveAllVocabulary: function () {
             const res = this.state.currentResult;
-            if (!res || !res.vocabulary) return;
+            if (!res || !res.vocabulary || !res.vocabulary.length) return;
 
-            let count = 0;
+            let added = 0;
             res.vocabulary.forEach(v => {
-                if (window.app && window.app.state) {
-                    if (!window.app.state.mistakeLog) window.app.state.mistakeLog = [];
-                    const exists = window.app.state.mistakeLog.some(m => (m.sr || m.source) === v.sr);
-                    if (!exists) {
-                        window.app.state.mistakeLog.push({
-                            id: 'lens_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-                            sr: v.sr,
-                            en: v.en,
-                            source: v.sr,
-                            target: v.en,
-                            timestamp: Date.now(),
-                            wrongCount: 1
-                        });
-                        count++;
-                    }
+                if (v.sr && v.en) {
+                    this.saveToFlashcards(v.sr, v.en, '');
+                    added++;
                 }
             });
 
-            if (window.app && typeof window.app.saveState === 'function') {
-                window.app.saveState();
-            }
-
             if (window.app && window.app.showToast) {
-                window.app.showToast(`⭐ Sačuvano ${count || res.vocabulary.length} novih reči u fleškartice!`, 'success');
+                window.app.showToast(`⭐ Sačuvano ${added} reči iz teksta u fleškartice!`, 'success');
             }
         }
     };
 
     window.VisualLens = VisualLens;
 
-    // Auto-init on DOMContentLoaded
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => VisualLens.init());
     } else {

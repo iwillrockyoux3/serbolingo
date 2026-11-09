@@ -1,4 +1,4 @@
-﻿# 📝 SerboLingo — Active Task Tracker
+# 📝 SerboLingo — Active Task Tracker
 
 > [!IMPORTANT]
 > This file tracks **what we're actively working on RIGHT NOW**.  
@@ -124,6 +124,8 @@
 | P43.1 | Omegle-Style Language Exchange Hub ("Slučajni Sagovornik") | 🆕 New | `language-exchange.js`, `index.html`, `sw.js` | ✅ DONE |
 | P43.2 | Ultra-Safe Video/Voice Roulette & Match Filters (Phase 2 Upgrade) | 🆕 New | `language-exchange.js`, `index.html`, `sw.js` | ✅ DONE |
 | P43.3 | Community Moderation Escalation, Dual-Button Safety & Appeals (Client-Side) | 🆕 New | `language-exchange.js`, `index.html`, `sw.js` | ✅ DONE |
+| P39.1 | Optical Character Recognition & Live AI Visual Lens (Live camera, unified scanner, touch-scroll) | 🆕 New | `visual-lens.js`, `index.html` | ✅ DONE |
+| P40.1 | Custom Community Decks & Personal Word Folders (Create decks, JSON export/import, swipe review) | 🆕 New | `srs-engine.js`, `index.html` | ✅ DONE |
 
 ### ⚪ Future / Moonshot
 
@@ -134,8 +136,7 @@
 | P21.2 | Real-time PvP duels (Cloud / Part 2) | 🆕 New | ⬜ FUTURE |
 | P22.1 | Smartwatch companion | 🆕 New | ⬜ FUTURE |
 | P22.2 | AR object tagging | 🆕 New | ⬜ FUTURE |
-| P22.3 | Home screen widgets | 🆕 New | ⬜ FUTURE |
-| P43.3 | Community Moderation Escalation, Dual-Button Safety & Appeals (Client-Side) | 🆕 New | ✅ DONE |
+| P22.3 | Home screen widgets & PWA Mobile App Shortcuts | 🆕 New | ✅ DONE |
 | P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
 | P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ✅ DONE |
 | P50.1 | Authentic Serbian Customs, Cultural Etiquette & Gastronomy | 🆕 New | ⬜ FUTURE |
@@ -154,9 +155,9 @@
 | Gamification & Stats | 7/7 | 0 |
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
-| Deployment (P18-P20) | 0/6 | 6 |
-| Moonshots (P21-P22, P43.3, P48-P50) | 4/10 | 6 |
-| **TOTAL** | **38/63** | **25** |
+| Deployment (P18-P20, P39, P40) | 2/8 | 6 |
+| Moonshots (P21-P22, P43.3, P48-P50) | 5/9 | 4 |
+| **TOTAL** | **41/64** | **23** |
 
 ---
 

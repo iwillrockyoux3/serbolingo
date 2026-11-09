@@ -386,6 +386,28 @@ const app = {
         if (state.user) {
             app.showMainApp();
         }
+
+        // PWA App Shortcuts Route Handler (?action=streak | lens | flashcards | exchange)
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const action = urlParams.get('action');
+            if (action) {
+                setTimeout(() => {
+                    if (action === 'streak' && window.StreakEngine) {
+                        window.StreakEngine.openStreakHub();
+                    } else if (action === 'lens' && window.VisualLens) {
+                        window.VisualLens.openModal();
+                    } else if (action === 'flashcards') {
+                        if (window.SrsEngine) window.SrsEngine.openSwipeSession();
+                        else app.navigate('mistakes');
+                    } else if (action === 'exchange' && window.LanguageExchange) {
+                        window.LanguageExchange.openModal();
+                    }
+                }, 400);
+            }
+        } catch (e) {
+            console.warn('[PWA Shortcuts] Route error:', e);
+        }
     },
     applyDarkMode: () => {
         const html = document.documentElement;
@@ -1034,6 +1056,9 @@ const app = {
         
         if (!listEl) return;
         listEl.innerHTML = '';
+        if (window.SrsEngine && typeof window.SrsEngine.renderCustomDecks === 'function') {
+            window.SrsEngine.renderCustomDecks();
+        }
         
         if (!state.mistakeLog) state.mistakeLog = {};
         if (!state.srsData) state.srsData = {};
