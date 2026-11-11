@@ -214,15 +214,17 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - A micro-app for the wrist that gives users a 60-second flashcard session, a "Word of the Day" notification, or lets them practice speaking into their watch while walking.
 - [ ] **AR (Augmented Reality) Object Tagging**:
   - Instead of just translating text, the user points their phone camera at a physical object in their room (like a table, dog, or window), and the app uses AI image recognition to make the Serbian word float in 3D space over the object. (Phase 1 Live Camera Vision built in Visual Lens; 3D WebXR rendering planned for Capacitor mobile release).
-<span style="color:#888">
-- [x] **Home Screen Widgets & PWA Mobile App Shortcuts (DONE)**:
-  - Added native PWA `shortcuts` to `manifest.json` for quick access from the phone's home screen icon long-press menu:
-    - 1. **Dnevni Niz (Streak)**: Direct jump to streak retention hub (`?action=streak`).
-    - 2. **AI Visual Lens**: Live camera object/text scanner (`?action=lens`).
-    - 3. **Fleškartice**: Direct launch into Flashcard Swipe review (`?action=flashcards`).
-    - 4. **Razmena Jezika**: Instant entry into conversational roulette (`?action=exchange`).
-  - Added URL parameter routing in `app.js` to automatically open the respective modal/view on tap.
-</span>
+<div style="color:#888">
+
+- [x] <span style="color:#888">**Home Screen Widgets & PWA Mobile App Shortcuts (DONE)**:</span>
+  - <span style="color:#888">Added native PWA `shortcuts` to `manifest.json` for quick access from the phone's home screen icon long-press menu:</span>
+    - <span style="color:#888">1. **Dnevni Niz (Streak)**: Direct jump to streak retention hub (`?action=streak`).</span>
+    - <span style="color:#888">2. **AI Visual Lens**: Live camera object/text scanner (`?action=lens`).</span>
+    - <span style="color:#888">3. **Fleškartice**: Direct launch into Flashcard Swipe review (`?action=flashcards`).</span>
+    - <span style="color:#888">4. **Razmena Jezika**: Instant entry into conversational roulette (`?action=exchange`).</span>
+  - <span style="color:#888">Added URL parameter routing in `app.js` to automatically open the respective modal/view on tap.</span>
+
+</div>
 
 
 ## 🌍 Priority 23: The "Ultimate Learning App" Expansion (Multi-Language Ecosystem)
@@ -237,12 +239,14 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 
 ## 💾 Priority 24: Save Data Sync System (Data Backup & Restore) (Local DONE / Cloud Future)
-<span style="color:#888">
-- [x] **Local Progress Export (DONE)**:
-  - [x] Add a button in Settings that lets users export their profile, XP, streaks, settings, shop items, and ghost roster to a .json file (pp.exportSaveData).
-  - [x] Add an import function to allow users to move their progress to another device, protecting their local data from accidental cache clears (pp.importSaveData).
-  - [x] 100% offline client-side Blob generation and FileReader rehydration with schema validation and confirmation safety.
-</span>
+<div style="color:#888">
+
+- [x] <span style="color:#888">**Local Progress Export (DONE)**:</span>
+  - <span style="color:#888">[x] Add a button in Settings that lets users export their profile, XP, streaks, settings, shop items, and ghost roster to a .json file (`app.exportSaveData`).</span>
+  - <span style="color:#888">[x] Add an import function to allow users to move their progress to another device, protecting their local data from accidental cache clears (`app.importSaveData`).</span>
+  - <span style="color:#888">[x] 100% offline client-side Blob generation and FileReader rehydration with schema validation and confirmation safety.</span>
+
+</div>
 - [ ] **Cross-Device Cloud Save Sync**:
   - **What it is**: Right now, you built a robust Local Save Data Export & Import (.json) system (Priority 24), which is brilliant for offline privacy and backups. Down the road, adding an optional cloud account sync (linking your local IndexedDB progress to a secure login) ensures users can switch seamlessly between their phone, tablet, and PC without manual file exports.
 
