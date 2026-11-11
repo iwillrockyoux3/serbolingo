@@ -148,11 +148,16 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [ ] **Scrollable OCR Output Container**: Make large/long translated OCR text passages smoothly scrollable with max-h and touch overflow-y scrolling so lengthy menus or book pages don't overflow the viewport.
   - [ ] **Auto-Reset on Modal Exit**: Automatically reset and clear the image preview, base64 cache, and previous analysis results when the user closes (closeModal()) and re-enters the Visual Lens modal, starting with a fresh clean viewfinder.
 
-## 📱 Priority 19: Progressive Web App (PWA) Offline Deployment
-- [ ] **PWA Offline Support**:
-  - Create `manifest.json` with app icons, theme colors, and standalone display mode.
-  - Create `sw.js` (Service Worker) to cache all HTML, CSS, JS, audio, and database assets.
-  - Enables "Add to Home Screen" installation on iOS & Android phones for 100% offline usage without App Stores.
+## ✅ 📱 Priority 19: Progressive Web App (PWA) Offline Deployment (DONE)
+<div style="color:#888">
+
+- [x] <span style="color:#888">**PWA Offline Support (DONE)**:</span>
+  - <span style="color:#888">[x] Create `manifest.json` with app icons, theme colors, and standalone display mode.</span>
+  - <span style="color:#888">[x] Create `sw.js` (Service Worker v12) to cache all HTML, CSS, JS, audio, and database assets.</span>
+  - <span style="color:#888">[x] Enables "Add to Home Screen" installation on iOS & Android phones, plus double-clickable `start_app.bat` desktop launcher.</span>
+  - <span style="color:#888">[x] Dynamic bilingual floating install banner adapting to learning direction & script.</span>
+
+</div>
 
 ## 🚀 Priority 20: Google Play Store & App Store Packaging (Capacitor)
 - [ ] **Native Mobile Hardware Wrappers (Priority 20)**:
@@ -181,7 +186,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 > The app must remain 100% offline-functional. Multiplayer is an ADDITIVE layer, not a replacement.
 
 - [x] **Offline "Ghost Bots" (Friend Codes) — (PART 1 COMPLETE)**:
-  - [x] Generate a short "Friend Code" from a user's stats (correctAnswers, 	otalAnswers, speed).
+  - [x] Generate a short "Friend Code" from a user's stats (correctAnswers, totalAnswers, speed).
   - [x] Users can input a code to download a friend's "Bot Profile" (GhostEngine.importCode).
   - [x] Play offline against your friend's ghost! The bot simulates their exact accuracy (e.g. 68%) and speed in Arcade races.
   - [x] Ghost Arena modal (#ghost-arena-modal) with 1-click Friend Code copying, starter ghosts (Luka, Milica), and Head-to-Head win/loss tracking.
@@ -463,19 +468,23 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 > **Status**: Completed (Benchmark from Kiku, Migaku & Lingopie)  
 > **Concept**: Learn Serbian & English through a high-dopamine vertical swipeable feed of short, authentic cultural video clips (similar to TikTok, Reels, or Kiku) paired with interactive bilingual subtitles and automated SRS flashcard extraction.
 
-- [x] ⚫ **1. Short-Form Immersion ("TikTok / Reels" Habit Loop) (DONE)**:
-  - ⚫ Vertical feed of 10–30 second real video clips turning language learning into passive entertainment with full mobile viewport ratio.
-  - ⚫ Zero lag on low-end mobile phones with clean play/pause tap overlay, audio pronunciation toggle, and clip switching.
-  - ⚫ Explore View placement positioned directly above "Izvorni Govor" for instant discovery.
-- [x] ⚫ **2. Authentic Balkan Pop Culture & Media Curation (DONE)**:
-  - ⚫ **Cult Serbian Cinema**: Iconic 15-second scenes from legendary movies (*"Ko to tamo peva"*, *"Maratonci trče počasni krug"*, *"Munje!"*, *"Lepa sela lepo gore"*).
-  - ⚫ **Dubbed Cartoons**: Nostalgic clips like *Sunđer Bob* (SpongeBob in Serbian), *Meda Padington*, and *Kralj Lavova*.
-  - ⚫ **Street Humor & Real-Life Dialogues**: Belgrade cafe ordering, taxi ride chats, market negotiations (*Kafić*, *Taksista*, *Kalenić pijaca*, *Guča trubači*, *Burek i jogurt*).
-- [x] ⚫ **3. Deep Learning Engine & Flashcard Integration (DONE)**:
-  - ⚫ **Tap-to-Translate Subtitles**: Built directly on our interactive word inspector. Clicking any subtitle word in the video instantly pauses the clip, reveals the translation + case/grammar breakdown, root lemma, and audio pronunciation.
-  - ⚫ **Auto-Save to SRS Flashcards**: One tap on the star (★) immediately adds the word into the Tinder-style SRS Flashcard deck in `srs-engine.js` with +10 XP bonus.
-  - ⚫ **Dual Subtitles & Script Parity**: Interactive dual subtitles with live Latin / Cyrillic script toggle (`LAT` / `ЋИР`) + English translation below it.
-  - ⚫ **Habit Loop Gamification**: Watching 3 reels awards +15 XP and triggers fanfare/confetti celebration.
+<div style="color:#888">
+
+- [x] <span style="color:#888">⚫ **1. Short-Form Immersion ("TikTok / Reels" Habit Loop) (DONE)**:</span>
+  - <span style="color:#888">⚫ Vertical feed of 10–30 second real video clips turning language learning into passive entertainment with full mobile viewport ratio.</span>
+  - <span style="color:#888">⚫ Zero lag on low-end mobile phones with clean play/pause tap overlay, audio pronunciation toggle, and clip switching.</span>
+  - <span style="color:#888">⚫ Explore View placement positioned directly above "Izvorni Govor" for instant discovery.</span>
+- [x] <span style="color:#888">⚫ **2. Authentic Balkan Pop Culture & Media Curation (DONE)**:</span>
+  - <span style="color:#888">⚫ **Cult Serbian Cinema**: Iconic 15-second scenes from legendary movies (*"Ko to tamo peva"*, *"Maratonci trče počasni krug"*, *"Munje!"*, *"Lepa sela lepo gore"*).</span>
+  - <span style="color:#888">⚫ **Dubbed Cartoons**: Nostalgic clips like *Sunđer Bob* (SpongeBob in Serbian), *Meda Padington*, and *Kralj Lavova*.</span>
+  - <span style="color:#888">⚫ **Street Humor & Real-Life Dialogues**: Belgrade cafe ordering, taxi ride chats, market negotiations (*Kafić*, *Taksista*, *Kalenić pijaca*, *Guča trubači*, *Burek i jogurt*).</span>
+- [x] <span style="color:#888">⚫ **3. Deep Learning Engine & Flashcard Integration (DONE)**:</span>
+  - <span style="color:#888">⚫ **Tap-to-Translate Subtitles**: Built directly on our interactive word inspector. Clicking any subtitle word in the video instantly pauses the clip, reveals the translation + case/grammar breakdown, root lemma, and audio pronunciation.</span>
+  - <span style="color:#888">⚫ **Auto-Save to SRS Flashcards**: One tap on the star (★) immediately adds the word into the Tinder-style SRS Flashcard deck in `srs-engine.js` with +10 XP bonus.</span>
+  - <span style="color:#888">⚫ **Dual Subtitles & Script Parity**: Interactive dual subtitles with live Latin / Cyrillic script toggle (`LAT` / `ЋИР`) + English translation below it.</span>
+  - <span style="color:#888">⚫ **Habit Loop Gamification**: Watching 3 reels awards +15 XP and triggers fanfare/confetti celebration.</span>
+
+</div>
 
 > [!NOTE] 🔄 **QA REVISIT**: Come back once we finish building everything to:
 > 1. Test all SerboReels features end-to-end on real devices (play/pause, subtitles, word inspector, XP awards).
