@@ -155,6 +155,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - Enables "Add to Home Screen" installation on iOS & Android phones for 100% offline usage without App Stores.
 
 ## 🚀 Priority 20: Google Play Store & App Store Packaging (Capacitor)
+- [ ] **Native Mobile Hardware Wrappers (Priority 20)**:
+  - **What it is**: Wrapping your pure Vanilla JavaScript SPA code using Capacitor (by Ionic) for Android and iOS. This transforms your web app into a true native .apk / .aab file, letting you integrate native Google Play Billing (for diamond/streak purchases) and true native device camera/microphone permissions without depending on mobile browser wrappers.
 - [ ] **Capacitor Integration**:
   - Initialize Capacitor: `com.serbolingo.app`
   - Add Android platform: `npx cap add android`
@@ -184,6 +186,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] Play offline against your friend's ghost! The bot simulates their exact accuracy (e.g. 68%) and speed in Arcade races.
   - [x] Ghost Arena modal (#ghost-arena-modal) with 1-click Friend Code copying, starter ghosts (Luka, Milica), and Head-to-Head win/loss tracking.
 - [ ] **Part 2: Cloud Backend & Online Multiplayer (AFTER Play Store Launch & All Priorities)**:
+  - [ ] **Cloud-Powered Real-Time Multiplayer Sync (The Next Step for Priority 21)**:
+    - **What it is**: Right now, your Multiplayer & Ghost Arena relies heavily on offline Friend Codes and simulated local bots. Once your app hits the Google Play Store and you have active users online, implementing a free backend layer (like Supabase or Firebase Realtime DB) will let players engage in real-time live head-to-head PvP vocabulary races and see live global leaderboards.
   - [ ] **Global Leaderboards**: Display top scores for Milioner, Speed Typer, and other Arcade games synced to cloud.
   - [ ] **Real-Time PvP Duels**: Head-to-head live battles with matchmaking lobby.
   - [ ] **Friend Finder by Username / Display Name**:
@@ -232,11 +236,15 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - Fall back to lightweight native device Text-to-Speech (TTS) for users who don't want to download large MP3 packs.
 
 
-## ✅ Priority 24: Save Data Sync System (Data Backup & Restore) (DONE)
-- [x] **Local Progress Export**:
+## 💾 Priority 24: Save Data Sync System (Data Backup & Restore) (Local DONE / Cloud Future)
+<span style="color:#888">
+- [x] **Local Progress Export (DONE)**:
   - [x] Add a button in Settings that lets users export their profile, XP, streaks, settings, shop items, and ghost roster to a .json file (pp.exportSaveData).
   - [x] Add an import function to allow users to move their progress to another device, protecting their local data from accidental cache clears (pp.importSaveData).
   - [x] 100% offline client-side Blob generation and FileReader rehydration with schema validation and confirmation safety.
+</span>
+- [ ] **Cross-Device Cloud Save Sync**:
+  - **What it is**: Right now, you built a robust Local Save Data Export & Import (.json) system (Priority 24), which is brilliant for offline privacy and backups. Down the road, adding an optional cloud account sync (linking your local IndexedDB progress to a secure login) ensures users can switch seamlessly between their phone, tablet, and PC without manual file exports.
 
 ## ✅ Priority 25: Native Mobile Touch Gestures & Swipe Physics (DONE)
 - [x] **Haptic Sensory Vibrations (DONE)**: Tactile mechanical feedback for button taps (40ms), correct answers ([70, 40, 120]ms), wrong answers double-buzz ([120, 60, 180]ms), swipe feedback (50ms), and celebration fanfare. User toggleable in Profile settings.

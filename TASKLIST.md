@@ -137,6 +137,7 @@
 | P22.1 | Smartwatch companion | 🆕 New | ⬜ FUTURE |
 | P22.2 | AR object tagging | 🆕 New | ⬜ FUTURE |
 | P22.3 | Home screen widgets & PWA Mobile App Shortcuts | 🆕 New | ✅ DONE |
+| P24.2 | Cross-Device Cloud Save Sync (Account link) | 🆕 New | ⬜ FUTURE |
 | P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
 | P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ✅ DONE |
 | P50.1 | Authentic Serbian Customs, Cultural Etiquette & Gastronomy | 🆕 New | ⬜ FUTURE |
@@ -156,8 +157,8 @@
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20, P39, P40) | 2/8 | 6 |
-| Moonshots (P21-P22, P43.3, P48-P50) | 5/9 | 4 |
-| **TOTAL** | **41/64** | **23** |
+| Moonshots (P21-P22, P24.2, P43.3, P48-P50) | 5/10 | 5 |
+| **TOTAL** | **41/65** | **24** |
 
 ---
 
