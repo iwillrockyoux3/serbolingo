@@ -9,7 +9,7 @@
 >   - 🌐 **Big Finale 1**: Free Cloud Real-Time Multiplayer, WebRTC & Forum Sync (Priority 21 & 43).
 >   - 📖 **Big Finale 2**: 15,000 Words & Sentences — Full CEFR C2 Complete Master Curriculum (Priority 1).
 >   - 🌍 **Big Finale 3**: The Global Polyglot Ecosystem — "Svet Jezika" across all world languages (Priority 48).
-> - **Deployment**: Capacitor Native Android APK / Google Play Store Release (Priority 20).
+> - **Deployment & Growth**: Capacitor Native Android APK / Google Play Store Release (Priority 20) & Zero-Dollar Organic Launch Playbook (Priority 51).
 
 ## 📊 🏆 Industry Benchmark & Curriculum Scale Goals
 **Objective**: Match or surpass the world's leading language apps in vocabulary count, lesson depth, and real-world practical phrases specifically for the **Serbian ↔ English** pair.
@@ -208,6 +208,18 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Stage 2 (Monetization & In-App Purchases via RevenueCat)**:
     - Free tier up to $2,500/month in tracked revenue.
     - Manages complex backend receipt validation for Google Play Billing, gem packs, streak freezes, and VIP subscriptions across Android and Web without writing custom payment server code.
+- [ ] **Strategic Subscription Pricing & High-Margin Unit Economics**:
+  - **Two-Tier Model**: **$5.99 / month** (~630 RSD) & **$35.99 / year** (~3,780 RSD, which averages ~$2.99 / month). Undercuts Duolingo ($13.99/mo) and Babbel ($14.99/mo) by >50%, breaking consumer resistance.
+  - **Lifetime Purchase Option**: **$79.99 one-time** (~8,400 RSD) for serious learners, expat families, and diaspora parents who prefer paying once with zero recurring friction.
+  - **Purchasing Power Parity (PPP) Regional Pricing**:
+    - *Tier 1 (US, UK, Western Europe, Australia)*: $9.99 / $7.99 monthly, $49.99 yearly.
+    - *Tier 2/3 (Balkans, Eastern Europe, LATAM, Asia)*: Localized $3.99 / $2.99 monthly equivalent.
+  - **In-App 7-Day Free Trial**: Included on annual plan to maximize subscriber opt-in conversion.
+  - **100,000 RSD/mo (~$950/mo) Target Blueprint**: Reached with only **~275 active subscribers** (approx. 60 monthly @ $5.09 net + 215 yearly @ $30.59 net).
+  - **85%+ Profit Margins**: Pure offline-first architecture requires zero cloud translation or recurring server bills, turning almost 100% of net payout into profit.
+- [ ] **Smart Subscription Recovery & Churn Prevention (Dwin-Backs)**:
+  - **"Pause Subscription for 1–3 Months"**: Offered instead of hard cancellation when users travel or take a break, preserving streak data, mistake logs, and lifetime stats while preventing churn.
+  - **Automated Win-Back Discounts**: Automated re-engagement push/email sent 14 days post-cancellation offering a 50% discount on the annual plan to restore lost progress.
 
 ## 🎮 Priority 21: Online Arena & Multiplayer (AFTER Play Store Launch)
 > [!IMPORTANT]
@@ -240,6 +252,11 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
     - Status indicators (in a match, studying, idle) and 1-click challenge invite buttons.
   - [ ] **Post-Match "Add Friend / Save Ghost" Prompt**:
     - Direct button on the Arcade Game Over screen after racing against another player/bot to add them as a friend or save their ghost profile to your roster with 1 tap.
+  - [ ] **Built-in Viral Referral Engine ("Podeli Mesec / Give 1 Month, Get 1 Month Free")**:
+    - **1-Tap Dynamic Referral Links**: Users generate a unique invite link (Firebase Dynamic Links / Supabase).
+    - **Dual Incentive**: When an invited friend installs and starts learning, both the referrer and new user instantly unlock **30 days of VIP / Premium features** for free, turning early users into a self-funding organic marketing team.
+  - [ ] **Social Proof & Challenge Invites**:
+    - Allow users to challenge a friend to a 7-day vocabulary streak or PvP duel directly via messaging apps (WhatsApp, Viber, Telegram) with deep-linking back into the app.
   - [ ] **Backend Server Setup / Recommended Options (Free Tier)**:
     - **Firebase (Spark Plan)**: Free Firestore real-time DB. Best for async ghost data storage, leaderboards, and turn-based games. Handles auth and user storage for free.
     - **Supabase (Free Plan)**: Open-source Firebase alternative on Postgres. Built-in Supabase Realtime broadcasts player actions without needing a custom WebSocket server.
@@ -268,6 +285,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 </div>
 
+- [ ] **Native Mobile Home Screen Widgets (Android Glance & iOS WidgetKit)**:
+  - While web PWA shortcuts are complete, a native mobile widget displays a live **"Word of the Day"**, a quick-tap flashcard review, or a visual **Memory Decay gauge** directly on the phone's home screen. Every phone unlock subtly prompts users to practice in under 2 minutes.
 
 ## 🌍 Priority 23: The "Ultimate Learning App" Expansion (Multi-Language Ecosystem)
 - [ ] **Universal Language Engine (Central Concept Schema)**:
@@ -339,6 +358,9 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - Add a prominent "📤 Podeli Profil" button on `#view-profile`.
   - Generates a sleek, high-resolution canvas bragging card (Avatar, Level, League Tier badge, Day Streak flame, Total XP, and Top Medals).
   - 100% offline, zero-backend — triggers native `navigator.share` on mobile or downloads image on PC for instant TikTok, Instagram, and WhatsApp bragging.
+- [ ] **Variable Reward Triggers & Time Badges ("Dopamine Boosts")**:
+  - **Contextual Badges**: Add time-specific badges such as *"Noćna Ptica / Night Owl"* (for practicing between 22:00 and 04:00), *"Rani Starosedelac"* (completing 3 lessons before 08:00), and *"Perfekcionista"* (100% accuracy on 5 consecutive sessions).
+  - **Unpredictable Mystery Chest Drops**: Variable chest algorithms with rare chances for diamond jackpots or 24h freeze shields, keeping rewards exciting and non-linear.
 
 ## ✅🤖 Priority 33: "Explain My Mistake" AI Tutor (Partially DONE)
 - [x] **Gemini Grammar Breakdown**: When a user gets a question wrong, an "Explain Why" button appears. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made. (ALREADY BUILT in app.js lines 3260-3330, Gemini model cascade with offline fallback.)
@@ -414,6 +436,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **1-Click JSON Export & Import (Community Sharing & Backups) (DONE)**:
   - **📤 Izvezi**: Serializes any deck into a portable `.json` file (`serbolingo-deck-[name].json`) ready to share with friends, classmates, or backup locally.
   - **📥 Uvezi**: FileReader file input loads community-shared deck JSON files, validating structure and immediately appending them to the user's active decks.
+- [ ] **1-Tap Messaging App Deck Sharing**:
+  - Add a direct `📤 Podeli preko WhatsApp / Viber` share action via `navigator.share` so users can send custom flashcard study decks directly to study buddies in one tap.
 - [ ] **Pending Final Sweep & QA Note**: Once all priorities and full app development are completed, revisit Priority 40 to thoroughly test and verify custom deck creation, JSON file export/import, and swipe review sessions across browsers.
 
 </span>
@@ -599,5 +623,41 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [ ] Expand into [`slang.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/slang.js) for quick idiom and slang quiz cards.
   - [ ] Inject contextual "Bonton & Običaji" tooltips inside Skill Tree lessons.
   - [ ] Dedicated "Kultura & Običaji" explorer tab or guide inside the app.
+
+## 📢🚀 Priority 51: Zero-Dollar Organic Marketing, ASO & Community Launch Playbook ("Organski Rast & Lansiranje")
+> **Status**: Planned (Zero Ad-Spend Customer Acquisition)  
+> **Concept**: A proven organic go-to-market strategy to acquire the first 100–300+ paying subscribers without spending a single dinar on paid advertising, leveraging targeted diaspora hubs, expat groups, viral short-form media, and App Store Optimization.
+
+- [ ] **1. App Store Optimization (ASO) Engine**:
+  - [ ] **Optimized Title & Subtitle Formula**:
+    - Primary Title: *"SerboLingo: Learn Serbian Fast"*
+    - Subtitle / Tagline: *"English to Serbian Dictionary & Grammar (Offline)"*
+  - [ ] **High-Volume Search Keywords**:
+    - Target phrases: *learn Serbian, Serbian vocabulary, Serbian Cyrillic, Serbian audio lessons, Serbian English translation offline, Serbian cases padeži*.
+    - High-conversion screenshot cards demonstrating Cyrillic tracing, SerboReels video immersion, and 100% offline functionality.
+
+- [ ] **2. Free Community Outreach & Niche Channel Infiltration**:
+  - [ ] **Reddit Communities**:
+    - Active participation in `r/serbian`, `r/serbia`, `r/languagelearning`, and `r/eupack`.
+    - Provide genuine value (answering grammar questions, clarifying case declensions, Cyrillic vs. Latin guides) and share natural links to the app.
+  - [ ] **Foreigner & Expat Facebook Groups**:
+    - Target: *"Expats in Belgrade"*, *"Living in Serbia"*, *"Foreigners in Novi Sad"*.
+    - Serve digital nomads, foreign spouses, and professionals needing conversational survival Serbian.
+  - [ ] **Serbian Diaspora Communities (The Secret Monopoly Weapon)**:
+    - Target: Millions of Serbians in the US, Australia, Canada, Germany, Austria, and Switzerland.
+    - Heritage language angle: Serbian parents who want their children to learn Cyrillic and speak with grandparents back home.
+
+- [ ] **3. High-Dopamine Short-Form Media (TikTok & Instagram Reels)**:
+  - [ ] **High-CTR Video Concepts**:
+    - *"3 Serbian words that don't exist in English"* (e.g., *Inat*, *Merak*, *Doček*).
+    - *"How to order coffee in Belgrade (Latin vs. Cyrillic)"*.
+    - *"The 7 Serbian cases made easy in 30 seconds"*.
+  - [ ] Direct link-in-bio leading to Play Store / PWA download.
+
+- [ ] **4. The 3-Phase Zero-Dollar Launch Roadmap**:
+  - [ ] **Phase 1 (Closed Beta & Review Seeding)**: Share 20–30 free lifetime access codes on `r/serbian` in exchange for honest initial reviews, priming the store algorithm.
+  - [ ] **Phase 2 (Indie Developer Story Public Launch)**: Share the authentic creator journey (*"I built a fast, 100% offline Serbian learning app to fix X"*).
+  - [ ] **Phase 3 (Consistent Content Rhythm)**: Publish 2–3 short videos or community guides weekly to maintain compounding organic installs.
+
 
 

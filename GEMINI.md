@@ -9,7 +9,22 @@ ANTIGRAVITY_CONSTITUTION = r"""
 
 🌌 Google Antigravity: Universal Multi-Language Architecture & SerboLingo Constitution (v5.0 Master)
 
-SECTION 00.1: THE 3-STEP INTERNAL VERIFICATION & JUDGE PROTOCOL (ZERO-DEFECT MANDATE)
+# 🚨 RULE 0: MANDATORY CONTEXT BOOT & ARTIFACT LOCK (LINE 1 PRE-FLIGHT)
+1. BEFORE generating ANY code, answering ANY query, or taking ANY file action, you MUST execute the following startup sequence in strict order:
+   - **Full Rule Ingestion:** Read all Global and Project instructions completely from Line 1 to the final line. Do not skim, assume defaults, or rely on conversation memory.
+   - **Triple-File Tracking Audit:** Read the full contents of `manifest.md`, `TASKLIST.md`, and `reminders.md`. If any tracking file is missing, automatically bootstrap it with a standard template.
+   - **Zero-Hallucination Gate:** Treat the contents of the three tracking files as the single source of truth for project architecture and pending tasks.
+2. **Context Sync Confirmation:** Every coding response MUST begin with the validation tag:
+   `[SHIELD_DAEMON: VALIDATED] 🛡️`
+   followed by a single line confirming active state sync: `[CONTEXT SYNC: Rules, manifest.md, TASKLIST.md, reminders.md verified]`.
+
+SECTION 00.1: MANDATORY ARTIFACT SCAN & TASK TRACKER SYNC (PRE-FLIGHT)
+1. 🔍 PRE-SESSION TRIPLE-FILE AUDIT: BEFORE proposing or writing ANY code, the AI MUST perform a mandatory pre-flight scan of `manifest.md`, `TASKLIST.md`, AND `reminders.md`. Verify active priorities, prevent duplicate features, and respect completed modules.
+2. 📝 AUTOMATED POST-SESSION DISK SYNC: Immediately upon completing a code modification, feature implementation, or bug fix, the AI MUST automatically update `TASKLIST.md` and `reminders.md` on disk, checking off finished items and updating line counts/timestamps.
+3. 📢 MANDATORY CHAT CONFIRMATION BANNER: At the conclusion of every response involving code changes, output a clear status banner confirming the sync:
+   `✅ ARTIFACTS SYNCED: manifest.md | TASKLIST.md | reminders.md updated.`
+
+SECTION 00.2: THE 3-STEP INTERNAL VERIFICATION & JUDGE PROTOCOL (ZERO-DEFECT MANDATE)
 CRITICAL: To ensure single-pass perfection on high-speed/Flash models, the AI MUST execute a rigorous 3-step internal review before rendering any final code block.
 
   🔍 STEP 1: THE ARCHITECTURAL TRACE (INTERNAL SCRATCHPAD)
@@ -27,7 +42,7 @@ CRITICAL: To ensure single-pass perfection on high-speed/Flash models, the AI MU
 - If the draft fails any judge check, rewrite it internally before outputting. 
 - Output ONLY verified, production-ready code with zero placeholders or "TODOs".
 
-SECTION 00.2: THE FLASH-HIGH PRECISION & DELIBERATE ENGINEERING PROTOCOL
+SECTION 00.3: THE FLASH-HIGH PRECISION & DELIBERATE ENGINEERING PROTOCOL
 CRITICAL: Speed is strictly subordinate to surgical accuracy, zero regression, and structural integrity. "Measure twice, cut once."
 
 1. 🐢 DELIBERATE PACING & DEEP PRE-FLIGHT AUDIT:
