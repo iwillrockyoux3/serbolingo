@@ -5,7 +5,7 @@
 > For the full 22-priority roadmap, see [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md).  
 > For the categorized file index, see [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md).
 
-**Last Updated**: November 6, 2026
+**Last Updated**: November 12, 2026
 
 ---
 
@@ -95,7 +95,6 @@
 | P31.1 | Gentle Typo Warning for Bald Latin & Minor Typos | 🆕 New | `app.js` | ✅ DONE |
 
 ### 🟢 Lower Priority — Advanced & Deployment
-| Moonshots (P21-P22, P43.3, P48-P50) | 4/10 | 6 |
 | # | Task | Type | Target File(s) | Status |
 |:--|:-----|:-----|:----------------|:-------|
 | P18.1 | AI Visual Lens — camera snap & translate | 🆕 New | visual-lens.js, index.html | ✅ DONE |
@@ -141,6 +140,10 @@
 | P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
 | P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ✅ DONE |
 | P50.1 | Authentic Serbian Customs, Cultural Etiquette & Gastronomy | 🆕 New | ⬜ FUTURE |
+| P12.2 | "Monty Winner" Celebration Studio & Multimedia Victory Flex | 🆕 New | ⬜ FUTURE |
+| P20.3 | Mobile Analytics & Attribution Stack (Firebase + RevenueCat) | 🆕 New | ⬜ FUTURE |
+| P21.3 | Self-Evolving Community Dictionary (Reddit-Style Voting Pipeline) | 🆕 New | ⬜ FUTURE |
+| P32.2 | "Podeli Profil" Share Profile Bragging Card | 🆕 New | ⬜ FUTURE |
 
 ---
 
@@ -157,8 +160,8 @@
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20, P39, P40) | 2/8 | 6 |
-| Moonshots (P21-P22, P24.2, P43.3, P48-P50) | 5/10 | 5 |
-| **TOTAL** | **41/65** | **24** |
+| Moonshots (P21-P22, P24.2, P43.3, P48-P50) | 5/14 | 9 |
+| **TOTAL** | **41/69** | **28** |
 
 ---
 

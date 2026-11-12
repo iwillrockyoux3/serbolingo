@@ -2,6 +2,14 @@
 
 > [!IMPORTANT]
 > This document tracks all agreed upcoming features, content expansions, and deployment steps ready to be built in our next sessions.
+>
+> ### 🗺️ The Strategic Roadmap & The 3 Big Finales:
+> - **Current Milestone (Small Features & Culture)**: Live AI Visual Lens, Custom Decks, PWA Shortcuts, Accent Pitch Matcher, and Priority 50 (Serbian Customs, Etiquette & Gastronomy).
+> - **The 3 Big Finales**:
+>   - 🌐 **Big Finale 1**: Free Cloud Real-Time Multiplayer, WebRTC & Forum Sync (Priority 21 & 43).
+>   - 📖 **Big Finale 2**: 15,000 Words & Sentences — Full CEFR C2 Complete Master Curriculum (Priority 1).
+>   - 🌍 **Big Finale 3**: The Global Polyglot Ecosystem — "Svet Jezika" across all world languages (Priority 48).
+> - **Deployment**: Capacitor Native Android APK / Google Play Store Release (Priority 20).
 
 ## 📊 🏆 Industry Benchmark & Curriculum Scale Goals
 **Objective**: Match or surpass the world's leading language apps in vocabulary count, lesson depth, and real-world practical phrases specifically for the **Serbian ↔ English** pair.
@@ -97,6 +105,14 @@
 - [x] **UI Wired**: 
 rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muzika & Tekstovi").
 
+> [!NOTE] 🎵 **Industry Benchmark — MeloLingo Inspiration & Future Polish**:
+> MeloLingo is a language-learning mobile app that teaches Spanish and French through short, original song-based lessons:
+> - **Music & Rhythm**: Lessons pair vocabulary and phrases with catchy music tracks to help you remember words through rhythm.
+> - **Interactive Lyrics**: Follow line-by-line highlighted text as the song plays, and tap any word for an instant English translation.
+> - **Active Practice**: Features fill-in-the-blank lyric games, sentence rebuilding, and spoken pronunciation exercises.
+> - **Progress Tracking**: Earn XP, level up, collect badges, maintain daily streaks, and save useful vocabulary into a personal phrasebook.
+> *Takeaway for SerboLingo*: Our `rhythm.js` and `karaoke.js` engines already implement line-by-line synced lyrics, interactive word tapping, and sing-along scoring. Revisit this benchmark when polishing rhythm mini-lessons and when expanding into Spanish and French under Priority 48 ("Svet Jezika").
+
 ## ✅ Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
 - [x] Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).
 - [x] **UI Wired**: stories.js script tag added to index.html. Launch tile added in Arcade grid ("Priče").
@@ -110,6 +126,12 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] **20 Tiered Achievement Medals**: Bronze 🥉, Silver 🥈, Gold 🥇, and Diamond 💎 trophies awarding +15 to +200 bonus XP upon unlock.
   - [x] **Enhanced Game Over Screen**: Instant high score badges (`🌟 NOVI LIČNI REKORD!`), trophy unlock celebration banners, bot streak counters, and 1-tap "Vitrina sa Trofejima" launcher.
   - [x] **3D Showcase Shelf Modal**: Glassmorphism room with 4 tier filter tabs, live progress bars on locked achievements, and real-time trophy counter banner in `#view-arcade`.
+- [ ] **"Monty Winner" Victory Celebration Studio & Multimedia Flex (Future Cloud Enhancement)**:
+  - **Dynamic Pop-Up**: High-energy full-screen celebration triggering on major achievements or monthly league wins ("You Did It! You're a Monty Winner! 🌟").
+  - **Multimedia Creator Studio**: Allows the winner to personalize their victory post with a typed quote/caption, a short selfie video reaction clip (5-10s), or a celebratory voice line.
+  - **Instant Gratification**: Immediate in-app diamond loot and exclusive profile badge.
+  - **Social Flex & App Intro Sizzle Reel**: Opt-in checkbox granting permission to curate their winning video/voice clip into the official app loading/intro sizzle reel.
+  - **Leaderboard Spotlight**: Clicking a winner's name on the leaderboard opens their rich winner card showcasing their multimedia victory snippet for the community. (Client-side quote/voice card in Phase 1; cloud video streaming in Phase 2).
 
 ## ✅ Priority 13: Cloze Mastery (Fill-in-the-Blank Context Engine)
 - [x] Busuu / Clozemaster Context Trainer: 5,000+ real conversational Serbian sentences with 1 key missing word. Rapid-fire contextual fill-in-the-blank practice to build natural language instincts.
@@ -179,6 +201,13 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Web / Cloudflare Browser Version**: Free from Google restrictions. Uses Stripe / PayPal Checkout on PC and mobile browsers (Chrome/Safari) with standard ~2.9% fee deposited directly to developer account.
   - **Platform Auto-Detection**: Uses `Capacitor.isNativePlatform()` to automatically serve Google Play Billing inside the installed Android app and Stripe/PayPal inside web browsers, preventing any Google Play anti-steering policy violations.
   - **Unified Inventory via RevenueCat**: Implement RevenueCat SDK (`purchases-capacitor` + RevenueCat Web Pay) so users keep their purchased diamonds and VIP streak status synced seamlessly whether they purchase on the web or in the Android app.
+- [ ] **Mobile App Analytics & Attribution Stack (Tracking Visitors, Buyers & Revenue)**:
+  - **Stage 1 (Launch & Organic Growth)**:
+    - **Google Play Console**: Out-of-the-box tracking for total downloads, active installs, uninstalls, crash rates, and net store revenue.
+    - **Google Analytics for Firebase (100% Free)**: Lightweight client event tracking for user funnels (`app_downloaded` → `onboarding_completed` → `lesson_completed` → `paywall_viewed`) to pinpoint where learners drop off.
+  - **Stage 2 (Monetization & In-App Purchases via RevenueCat)**:
+    - Free tier up to $2,500/month in tracked revenue.
+    - Manages complex backend receipt validation for Google Play Billing, gem packs, streak freezes, and VIP subscriptions across Android and Web without writing custom payment server code.
 
 ## 🎮 Priority 21: Online Arena & Multiplayer (AFTER Play Store Launch)
 > [!IMPORTANT]
@@ -193,6 +222,14 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [ ] **Part 2: Cloud Backend & Online Multiplayer (AFTER Play Store Launch & All Priorities)**:
   - [ ] **Cloud-Powered Real-Time Multiplayer Sync (The Next Step for Priority 21)**:
     - **What it is**: Right now, your Multiplayer & Ghost Arena relies heavily on offline Friend Codes and simulated local bots. Once your app hits the Google Play Store and you have active users online, implementing a free backend layer (like Supabase or Firebase Realtime DB) will let players engage in real-time live head-to-head PvP vocabulary races and see live global leaderboards.
+  - [ ] **Self-Evolving / Upvoting Community Dictionary (Reddit-Style 7-Day Consensus Pipeline)**:
+    - **Community Voting Queue**: When users submit new slang, definition updates, or flag errors via the `Predlozi` forum channel, a 168-hour (7-day) community voting clock starts.
+    - **Consensus Thresholds**:
+      - **High Consensus (≥ 90% Upvoted)**: Auto-Approved! Backend API merges the word directly into the live dictionary.
+      - **Moderate Consensus (60% – 89% Upvoted)**: Flagged for manual review on admin dashboard for final executive approval.
+      - **Controversial / Low (< 60% Upvoted)**: Auto-Rejected and archived.
+    - **Sybil Attack & Bot Defense**: Requires verified Google sign-in and a minimum quorum (e.g. at least 50 unique votes cast) to prevent friends or bots from forcing fake words.
+    - **Automated Profanity Pre-Filter**: Client and server-side filtering blocks slurs/offensive submissions before they reach the voting feed.
   - [ ] **Global Leaderboards**: Display top scores for Milioner, Speed Typer, and other Arcade games synced to cloud.
   - [ ] **Real-Time PvP Duels**: Head-to-head live battles with matchmaking lobby.
   - [ ] **Friend Finder by Username / Display Name**:
@@ -298,6 +335,10 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Profile Avatars & Titles (DONE)**: Unlockable animated avatars and titles (e.g., "Kafana Legend", "Grammar Nerd") bought with in-app gems.
 - [x] **Leaderboard Table Polish & Docked User Card (DONE)**: Fixed the leaderboard in "Statistika" -> "Prikaži celu tabelu" (`#league-modal`): eliminated sticky rank floating occlusion. Added persistent bottom user dock with rank status, zone indicator (`🟢 Napreduje` / `⚪ Ostaje` / `🔴 Ispada`), and 1-click "📍 Moj Rang" smooth scroll button.
 - [x] **Diamond Shop Catalog Expansion (DONE)**: Added 7 new animated avatars (Lion of Kalemegdan, Balkan Bear, Golden Striker, Guča Trumpeter, Balkan Vampire, Cosmic Polyglot, Clever Fox) and 8 new profile titles (Kralj Sabora, Derbi Fanatik, Kafedžija, Balkanski Šef, Brzi Prsti, Hodajući Rečnik, Snajper za Padeže, SerboLingo Zvezda) to spend diamonds on.
+- [ ] **"Podeli Profil" (Dedicated Profile Bragging Card & Native Share)**:
+  - Add a prominent "📤 Podeli Profil" button on `#view-profile`.
+  - Generates a sleek, high-resolution canvas bragging card (Avatar, Level, League Tier badge, Day Streak flame, Total XP, and Top Medals).
+  - 100% offline, zero-backend — triggers native `navigator.share` on mobile or downloads image on PC for instant TikTok, Instagram, and WhatsApp bragging.
 
 ## ✅🤖 Priority 33: "Explain My Mistake" AI Tutor (Partially DONE)
 - [x] **Gemini Grammar Breakdown**: When a user gets a question wrong, an "Explain Why" button appears. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made. (ALREADY BUILT in app.js lines 3260-3330, Gemini model cascade with offline fallback.)
