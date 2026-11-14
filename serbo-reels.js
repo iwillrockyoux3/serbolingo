@@ -25,10 +25,10 @@
                 subtitle: 'Kultna jugoslovenska komedija',
                 category: 'cinema',
                 categoryLabel: '🎬 Kultni Film',
-                ytId: 'k_v6n8_stzE', // Ko to tamo peva - Kultna Scena
+                ytId: 'PDtjBtuqoQA', // Centar Film - Za Beograd / Ko to tamo peva
                 start: 0,
                 duration: 18,
-                poster: 'https://img.youtube.com/vi/k_v6n8_stzE/hqdefault.jpg',
+                poster: 'https://img.youtube.com/vi/PDtjBtuqoQA/hqdefault.jpg',
                 author: 'Slobodan Šijan & Dušan Kovačević',
                 subSrLat: 'I tata bi, sine! Pa naravno da bi, ko ne bi želeo ovakvu priliku?',
                 subSrCyr: 'И тата би, сине! Па наравно да би, ко не би желео овакву прилику?',
@@ -47,10 +47,10 @@
                 subtitle: 'Porodica Topalović',
                 category: 'cinema',
                 categoryLabel: '🎬 Kultni Film',
-                ytId: 'HgPqk5qJm-Q', // Maratonci trce pocasni krug
+                ytId: '1x6bDQ0A-F4', // Centar Film - Ostali samo dugmici / Maratonci
                 start: 0,
                 duration: 20,
-                poster: 'https://img.youtube.com/vi/HgPqk5qJm-Q/hqdefault.jpg',
+                poster: 'https://img.youtube.com/vi/1x6bDQ0A-F4/hqdefault.jpg',
                 author: 'Dušan Kovačević',
                 subSrLat: 'Ala ga je opravio, svaka mu čast! Ostali samo dugmići.',
                 subSrCyr: 'Ала га је оправио, свака му част! Остали само дугмићи.',
@@ -69,10 +69,10 @@
                 subtitle: 'Beogradski noćni život i sleng',
                 category: 'cinema',
                 categoryLabel: '🎬 Kultni Film',
-                ytId: 'gBn0h3t3GX0', // Munje - Kultna Komedija
+                ytId: 'b1W_EK5c270', // Munje - Kultna Komedija
                 start: 5,
                 duration: 22,
-                poster: 'https://img.youtube.com/vi/gBn0h3t3GX0/hqdefault.jpg',
+                poster: 'https://img.youtube.com/vi/b1W_EK5c270/hqdefault.jpg',
                 author: 'Radivoje Andrić',
                 subSrLat: 'Brate, koja je poenta? Dolar u pezos, pezos u dinar, dinar u džep!',
                 subSrCyr: 'Брате, која је поента? Долар у пезос, пезос у динар, динар у џеп!',
@@ -90,10 +90,10 @@
                 subtitle: 'Legendarni filmski dijalog',
                 category: 'cinema',
                 categoryLabel: '🎬 Kultni Film',
-                ytId: 'hT8sRqjLsIQ', // Juzni Vetar - Akciona Scena
+                ytId: '0HaJzZ1XMCs', // Lepa Sela Lepo Gore - Ladno al standard
                 start: 0,
                 duration: 19,
-                poster: 'https://img.youtube.com/vi/hT8sRqjLsIQ/hqdefault.jpg',
+                poster: 'https://img.youtube.com/vi/0HaJzZ1XMCs/hqdefault.jpg',
                 author: 'Srđan Dragojević',
                 subSrLat: 'Kako je kod vas u Švedskoj? Ladno, al standard, jebi ga!',
                 subSrCyr: 'Како је код вас у Шведској? Ладно, ал стандард, јеби га!',
@@ -111,10 +111,10 @@
                 subtitle: 'Sinhronizovano na srpski jezik',
                 category: 'cartoons',
                 categoryLabel: '🧸 Sinhronizacija',
-                ytId: 'I3yfbOm-Pvc', // Sundjer Bob na srpskom
+                ytId: '5p2WQXc_ZL4', // Sundjer Bob Kockalone - Za pos'o sam spreman
                 start: 2,
                 duration: 17,
-                poster: 'https://img.youtube.com/vi/I3yfbOm-Pvc/hqdefault.jpg',
+                poster: 'https://img.youtube.com/vi/5p2WQXc_ZL4/hqdefault.jpg',
                 author: 'Srpska sinhronizacija (B92)',
                 subSrLat: 'Ja sam spreman! Ja sam spreman za najbolji posao na svetu!',
                 subSrCyr: 'Ја сам спреман! Ја сам спреман за најбољи посао на свету!',
@@ -133,10 +133,10 @@
                 subtitle: 'Kulturni bonton i lepo ponašanje',
                 category: 'cartoons',
                 categoryLabel: '🧸 Sinhronizacija',
-                ytId: 'WOkE3j6p35Y', // Alan Ford - Strip Dijalog
+                ytId: 'P76gLIKntAc', // Dizni crtani filmovi sinhronizovano
                 start: 0,
                 duration: 21,
-                poster: 'https://img.youtube.com/vi/WOkE3j6p35Y/hqdefault.jpg',
+                poster: 'https://img.youtube.com/vi/P76gLIKntAc/hqdefault.jpg',
                 author: 'Srpska sinhronizacija',
                 subSrLat: 'Dobar dan, gospodine. Da li biste želeli jedan ukusan sendvič od marmelade?',
                 subSrCyr: 'Добар дан, господине. Да ли бисте желели један укусан сендвич од мармеладе?',
@@ -154,10 +154,10 @@
                 subtitle: 'Domaća muzička sinhronizacija',
                 category: 'cartoons',
                 categoryLabel: '🧸 Sinhronizacija',
-                ytId: 'hTSg6S1h5V8', // Bajaga - Tisina
+                ytId: 'If6z5ax6HOA', // The Lion King - Hakuna Matata (Serbian)
                 start: 10,
                 duration: 24,
-                poster: 'https://img.youtube.com/vi/hTSg6S1h5V8/hqdefault.jpg',
+                poster: 'https://img.youtube.com/vi/If6z5ax6HOA/hqdefault.jpg',
                 author: 'Disney Srbija',
                 subSrLat: 'Hakuna Matata znači: bez briga i bez problema do kraja života!',
                 subSrCyr: 'Хакуна Матата значи: без брига и без проблема до краја живота!',
@@ -176,10 +176,10 @@
                 subtitle: 'Svakodnevni govor u Beogradu',
                 category: 'street',
                 categoryLabel: '☕ Ulica & Sleng',
-                ytId: 'QcTeOCn8E1M', // Learn Serbian - Basic Phrases
+                ytId: 'gZKmCxuwWQ4', // Learn Serbian - Dining Out in Cafe & Restaurant
                 start: 0,
                 duration: 18,
-                poster: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80',
+                poster: 'https://img.youtube.com/vi/gZKmCxuwWQ4/hqdefault.jpg',
                 author: 'SerboLingo Real-Life Dialogue',
                 subSrLat: 'Daj mi, molim te, jednu produženu s toplim mlekom i čašu kisele vode.',
                 subSrCyr: 'Дај ми, молим те, једну продужену с топлим млеком и чашу киселе воде.',
@@ -199,10 +199,10 @@
                 subtitle: 'Gradska gužva i razgovor',
                 category: 'street',
                 categoryLabel: '🚕 Ulica & Sleng',
-                ytId: 'rq7gtbA2Thg', // How to pronounce Serbian
+                ytId: 'rq7gtbA2Thg', // Unlock your Serbian - Real Life Dialogue
                 start: 0,
                 duration: 22,
-                poster: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80',
+                poster: 'https://img.youtube.com/vi/rq7gtbA2Thg/hqdefault.jpg',
                 author: 'Beogradska Priča',
                 subSrLat: 'Gde ćemo, šefe? Danas je neviđena gužva preko mosta Gazela!',
                 subSrCyr: 'Где ћемо, шефе? Данас је невиђена гужва преко моста Газела!',
@@ -221,10 +221,10 @@
                 subtitle: 'Kalenić pijaca u Beogradu',
                 category: 'street',
                 categoryLabel: '🍓 Ulica & Sleng',
-                ytId: 'mxKyqCfjUI0', // Serbian Greetings
+                ytId: '9AaD9jwGlH8', // Kalenic Pijaca Vracar Beograd
                 start: 0,
                 duration: 20,
-                poster: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=600&q=80',
+                poster: 'https://img.youtube.com/vi/9AaD9jwGlH8/hqdefault.jpg',
                 author: 'Pijačni Razgovor',
                 subSrLat: 'Domaćine, koliko su ti ove sveže domaće jagode? Izmeri mi kilo i po!',
                 subSrCyr: 'Домаћине, колико су ти ове свеже домаће јагоде? Измери ми кило и по!',
@@ -243,10 +243,10 @@
                 subtitle: 'Muzika, ritam i tradicija',
                 category: 'culture',
                 categoryLabel: '🎺 Kultura & Slavlje',
-                ytId: 'CIDzkexjK2o', // Serbian Rap/Music
+                ytId: 'EMAr98ozug0', // Dragacevski sabor u Guci - RTS Koncerti
                 start: 0,
                 duration: 24,
-                poster: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80',
+                poster: 'https://img.youtube.com/vi/EMAr98ozug0/hqdefault.jpg',
                 author: 'Dragačevski Sabor',
                 subSrLat: 'Kad truba zasvira u Guči, celo selo zaigra u kolu do zore!',
                 subSrCyr: 'Кад труба засвира у Гучи, цело село заигра у колу до зоре!',
@@ -265,10 +265,10 @@
                 subtitle: 'Zlatni standard: Burek i Jogurt',
                 category: 'culture',
                 categoryLabel: '🥧 Kultura & Hrana',
-                ytId: 'WR3ioPNPzKY', // Top 100 Serbian Words
+                ytId: 'xS-lEnNez1I', // Burek sa sirom kao iz pekare
                 start: 0,
                 duration: 19,
-                poster: 'https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=600&q=80',
+                poster: 'https://img.youtube.com/vi/xS-lEnNez1I/hqdefault.jpg',
                 author: 'Balkanski Gurman',
                 subSrLat: 'Vruć burek sa sirom i hladan gusti jogurt — to je jedini pravi lek!',
                 subSrCyr: 'Врућ бурек са сиром и хладан густи јогурт — то је једини прави лек!',
@@ -404,20 +404,21 @@
             // 2. Video Player Frame
             const frameContainer = document.getElementById('reels-player-frame');
             if (frameContainer) {
-                const originUrl = (window.location.origin && window.location.origin !== 'null' && !window.location.origin.startsWith('file:')) 
-                    ? window.location.origin 
-                    : 'https://iwillrockyoux3.github.io';
+                const originParam = (window.location.protocol.startsWith('http') && window.location.origin && window.location.origin !== 'null') 
+                    ? `&origin=${encodeURIComponent(window.location.origin)}` 
+                    : '';
 
-                // Responsive embed using official YouTube embed with origin parameter
+                // Responsive embed using official YouTube embed with strict referrer policy
                 frameContainer.innerHTML = `
                 <div class="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
                     <iframe 
                         id="reels-yt-iframe"
                         class="w-full h-full object-cover scale-[1.03]"
-                        src="https://www.youtube.com/embed/${clip.ytId}?autoplay=1&enablejsapi=1&rel=0&modestbranding=1&controls=0&loop=1&playlist=${clip.ytId}&start=${clip.start || 0}&playsinline=1&origin=${encodeURIComponent(originUrl)}"
+                        src="https://www.youtube.com/embed/${clip.ytId}?autoplay=1&enablejsapi=1&rel=0&modestbranding=1&controls=0&loop=1&playlist=${clip.ytId}&start=${clip.start || 0}&playsinline=1${originParam}"
                         title="${clip.title}"
                         frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen>
                     </iframe>
                     <!-- Invisible tap overlay to toggle play/pause -->
