@@ -3730,7 +3730,8 @@ const app = {
             } catch (e) { skillsCount = 0; }
         }
 
-        const baseUrl = window.location.origin + window.location.pathname;
+        const isLocalFile = window.location.protocol === 'file:' || !window.location.origin || window.location.origin === 'null';
+        const baseUrl = isLocalFile ? 'https://iwillrockyoux3.github.io/serbolingo/' : (window.location.origin + window.location.pathname);
         const params = new URLSearchParams({
             user: username,
             lvl: level,
