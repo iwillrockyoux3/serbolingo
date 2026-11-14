@@ -4184,7 +4184,7 @@ const app = {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
-    },,
+    },
     endLesson: () => { 
         if (typeof GrammarEngine !== 'undefined' && GrammarEngine.hideTooltip) {
             GrammarEngine.hideTooltip();
