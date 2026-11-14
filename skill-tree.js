@@ -248,6 +248,122 @@ const SKILL_TREE = [
     </div>
 </div>` },
 
+    // Priority 50: Cultural Etiquette & Slava Node
+    { id: 'balkanski_bonton', name: 'Balkanski Bonton', nameEn: 'Balkan Etiquette & Slava', emoji: '🥂', category: 'customs', prereqs: [], optional: true, difficulty: 2, guideHtml: `
+<div class="space-y-5 text-slate-800 dark:text-slate-100">
+    <div class="bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-orange-500/10 border-2 border-amber-500/30 rounded-2xl p-4">
+        <h3 class="text-base font-black text-amber-600 dark:text-amber-400 mb-1 flex items-center gap-2">
+            <span>🥂</span> Balkanski Bonton & Krsna Slava
+        </h3>
+        <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+            Kultura u Srbiji i na Balkanu počiva na nepisanim pravilima gostoprimstva, toplini i poštovanju običaja. Ovaj vodič otkriva ti ključne rituale slave, nazdravljanja i kućnog bontona.
+        </p>
+    </div>
+
+    <!-- Section 1: Krsna Slava -->
+    <div>
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+            <span>🕯️</span> Običaji Krsne Slave (UNESCO Baština)
+        </h4>
+        <div class="space-y-3">
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex items-baseline justify-between">
+                    <h5 class="text-base font-black text-slate-900 dark:text-white">Srećna slava, domaćine!</h5>
+                    <span class="text-xs font-serif text-slate-400">(Срећна слава, домаћине!)</span>
+                </div>
+                <p class="text-xs font-bold text-amber-600 dark:text-amber-400 mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Glavni svečani pozdrav pri ulasku u kuću</span></p>
+                <div class="mt-2 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60 text-[11px] text-slate-600 dark:text-slate-300">
+                    <span class="font-black text-amber-500">💡 OBIČAJ:</span> Domaćin dočekuje gosta na vratima sa osmehom i tri poljupca u obraz. Domaćin odgovara: <i>"Hvala, dobrodošli!"</i>.
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex items-baseline justify-between">
+                    <h5 class="text-base font-black text-slate-900 dark:text-white">Slavski kolač & Žito (Koljivo)</h5>
+                    <span class="text-xs font-serif text-slate-400">(Славски колач и жито)</span>
+                </div>
+                <p class="text-xs font-bold text-amber-600 dark:text-amber-400 mt-0.5">Značenje: <span class="font-medium text-slate-700 dark:text-slate-200">Sveti obredni hleb i kuvana pšenica sa medom</span></p>
+                <div class="mt-2 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60 text-[11px] text-slate-600 dark:text-slate-300">
+                    <span class="font-black text-amber-500">💡 RITUAL:</span> Po ulasku u kuću, svaki gost se prekrsti, uzme kašičicu žita (koljiva) iz posude i popije gutljaj vode u čast sveca zaštitnika.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Gostoprimstvo & Kafana -->
+    <div>
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+            <span>☕</span> Gostoprimstvo & Otimanje za račun
+        </h4>
+        <div class="space-y-3">
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <h5 class="text-base font-black text-slate-900 dark:text-white">Živeli u oči! (Gledanje u oči pri nazdravljanju)</h5>
+                <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">Pravilo: <span class="font-medium text-slate-700 dark:text-slate-200">Nikada ne skreći pogled dok kucaš čaše</span></p>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Po starom balkanskom verovanju, ko ne gleda u oči sagovornika dok nazdravlja imaće 7 godina loše sreće. Uvek nazdravi uz čvrst pogled i osmeh.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <h5 class="text-base font-black text-slate-900 dark:text-white">Otimanje za račun u kafani</h5>
+                <p class="text-xs font-bold text-rose-600 dark:text-rose-400 mt-0.5">Znak poštovanja: <span class="font-medium text-slate-700 dark:text-slate-200">Borba ko će pre da plati za celo društvo</span></p>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Deljenje računa u dinar se smatra hladnim. Pravi domaćin ili prijatelj uvek teatralno otima račun od konobara govoreći: <i>"Skloni novčanik, ja sam zvao!"</i>.</p>
+            </div>
+        </div>
+    </div>
+</div>` },
+
+    // Priority 50: Kafana Gastronomy Node
+    { id: 'kafanska_trpeza', name: 'Kafanska Trpeza', nameEn: 'Kafana Gastronomy', emoji: '🍖', category: 'gastronomy', prereqs: ['balkanski_bonton'], optional: true, difficulty: 2, guideHtml: `
+<div class="space-y-5 text-slate-800 dark:text-slate-100">
+    <div class="bg-gradient-to-r from-red-500/10 via-orange-500/10 to-amber-500/10 border-2 border-red-500/30 rounded-2xl p-4">
+        <h3 class="text-base font-black text-red-600 dark:text-red-400 mb-1 flex items-center gap-2">
+            <span>🍖</span> Tradicionalna Balkanska Trpeza
+        </h3>
+        <p class="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+            Kafana je srce društvenog života na Balkanu. Ovde se poslovi sklapaju uz meze, muzika svira "na uvce", a roštilj i domaća jela pripremaju sa posebnom ljubavlju.
+        </p>
+    </div>
+
+    <!-- Section 1: Ikonična Jela -->
+    <div>
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+            <span>🍲</span> Glavna Kafanska Jela
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-2xl">🥩</span>
+                    <h5 class="font-black text-slate-900 dark:text-white">Karađorđeva šnicla</h5>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 text-[11px]">Pohovani odrezak punjen zrelim kajmakom, serviran sa tartar sosom. Čuveni srpski specijalitet.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-2xl">🥬</span>
+                    <h5 class="font-black text-slate-900 dark:text-white">Domaća Sarma</h5>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 text-[11px]">Listovi kiselog kupusa punjeni mlevenim mesom i pirinčem, krčkani satima sa suvim mesom.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-2xl">🍲</span>
+                    <h5 class="font-black text-slate-900 dark:text-white">Prebranac</h5>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 text-[11px]">Zapečeni beli pasulj sa slatkom alevom paprikom i karamelizovanim lukom u zemljanoj posudi.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-2xl">🍢</span>
+                    <h5 class="font-black text-slate-900 dark:text-white">Ćevapi & Pljeskavica</h5>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 text-[11px]">Naručuje se kao <i>"deset upola s lukom"</i> (deset ćevapa u pola somuna) uz kajmak i urnebes.</p>
+            </div>
+        </div>
+    </div>
+</div>` },
+
     // --- TIER 1: FOUNDATION (all unlocked from start, paired layout) ---
     { id: 'alphabet', name: 'Azbuka', nameEn: 'Alphabet', emoji: '🔤', category: 'alphabet', prereqs: [], optional: false, difficulty: 1, guideHtml: `
 <div class="space-y-6">

@@ -89,13 +89,17 @@
   - [x] **Daily Quests (Dnevne Misije)**: 3 daily missions generated from dynamic quest pool with progress bars, rewards (+10-20 XP), and Mystery Chest all-complete celebration.
   - [x] **In-App XP Shop (#shop-modal)**: Spend earned XP on Streak Freezes (200 XP), Double XP 1h (150 XP), Heart Refills (100 XP), and Mystery Chest rolls (300 XP).
 
-## ✅ Priority 8: Istraži / Web & Media Learning Hub (Pop Culture & 3-Tab Explorer)
-- [x] Dedicated External Learning Search Engine: Search any Serbian/English topic. Categorized into 3 Interactive Tabs: 🎬 Video Tab (embedded YouTube lessons), 🖼️ Pictures / Infographics Tab (grammar charts, case tables), 📄 Text & Articles Tab (Serbian news, blog posts, reading passages with tap-to-translate).
-- [ ] **🍿 Pop Culture & Entertainment Immersion** *(content expansion still TODO)*:
-  - 🎨 **Crtaći & Anime (Serbian Dubbed Cartoons & Anime)**: Learn with clear cartoon voice acting (SpongeBob, Disney, anime in Serbian).
-  - 🍿 **Kultne Scene (Iconic Yugoslav & Serbian Cinema)**: Clips from "Ko to tamo peva", "Maratonci", "Munje", and "Južni vetar" with dual-language subtitles.
-  - 📖 **Stripovi & Comics**: Interactive Balkan comic panels (e.g., Alan Ford, Zagor, webcomics) with tap-to-translate dialogue bubbles.
-  - 🎬 **Serijske Drame (TV Show Clips)**: Real conversational drama and comedic dialogue clips.
+## ✅ Priority 8: Istraži / Web & Media Learning Hub (Pop Culture & 3-Tab Explorer) (DONE)
+<div style="color:#888">
+
+- [x] <span style="color:#888">Dedicated External Learning Search Engine: Search any Serbian/English topic. Categorized into 3 Interactive Tabs: 🎬 Video Tab (embedded YouTube lessons), 🖼️ Pictures / Infographics Tab (grammar charts, case tables), 📄 Text & Articles Tab (Serbian news, blog posts, reading passages with tap-to-translate).</span>
+- [x] <span style="color:#888">**🍿 Pop Culture & Entertainment Immersion (DONE)**:</span>
+  - <span style="color:#888">[x] 🎨 **Crtaći & Anime (Serbian Dubbed Cartoons & Anime)**: SpongeBob and Peppa Pig with clear Serbian cartoon voice acting in `explore-hub.js` and SerboReels.</span>
+  - <span style="color:#888">[x] 🍿 **Kultne Scene (Iconic Yugoslav & Serbian Cinema)**: Scenes from "Ko to tamo peva", "Maratonci", "Munje", and "Južni vetar" with dual-language subtitles.</span>
+  - <span style="color:#888">[x] 📖 **Stripovi & Comics**: Interactive Balkan comic panels (Alan Ford "Ko leti vredi", Zagor) with tap-to-translate dialogue bubbles in Articles.</span>
+  - <span style="color:#888">[x] 🎬 **Serijske Drame (TV Show Clips)**: Real conversational drama and comedic dialogue clips ("Otvorena Vrata", "Bolji Život").</span>
+
+</div>
 
 ## ✅ Priority 9: Bilingual Karaoke Reader (Karaoke Mode #1: Dual-Text & Audio)
 - [x] LingQ & Beelinguapp Style Dual Reader: Serbian folk tales, short modern stories, and cultural news with synchronized side-by-side English translations. Karaoke text highlighting matching the spoken audio. Tap any individual word to see definition, case, gender, and save to flashcards.
@@ -156,19 +160,22 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] Background audio playback support.
 - [x] Bidirectional learning tied to profile language direction setting.
 
-## ✅ Priority 18: AI Visual Lens ("Snap & Translate" / Camera Learning)
-- [x] **Camera / Image Recognition (Gemini Vision API)**:
-  - [x] Add a Camera icon button in the Omni-Bar / Home View (#omni-camera launches Visual Lens modal).
-  - [x] Allows user to take a photo or upload an image using phone camera (capture="environment" for rear camera).
-  - [x] **Object Mode**: Identifies objects in real life (e.g. Jabuka / Apple, gender [ž.r.], phonetic, pronunciation audio, example sentence).
-  - [x] **Text / OCR Mode**: Reads real-world signs, restaurant menus, book pages, or labels and provides instant Serbian ↔ English translation.
-  - [x] **1-Click Save**: Add any scanned object or translated text directly into user's Flashcards & Spaced Repetition deck.
-  - [x] **Zero-Key Offline Demo**: Instant sample testing for Jabuka, Kafa, and Restoranski meni without needing an active API key.
-<!-- -->
-- [ ] **Pending Polish & Camera Refinements** *(To be built in return pass)*:
-  - [ ] **Live Camera Viewfinder / WebRTC Stream**: Add direct live webcam / phone camera video feed (`navigator.mediaDevices.getUserMedia`) with a snap shutter button when pressing "Uslikaj kamerom" on PC/phone instead of file prompt.
-  - [ ] **Scrollable OCR Output Container**: Make large/long translated OCR text passages smoothly scrollable with max-h and touch overflow-y scrolling so lengthy menus or book pages don't overflow the viewport.
-  - [ ] **Auto-Reset on Modal Exit**: Automatically reset and clear the image preview, base64 cache, and previous analysis results when the user closes (closeModal()) and re-enters the Visual Lens modal, starting with a fresh clean viewfinder.
+## ✅ Priority 18: AI Visual Lens ("Snap & Translate" / Camera Learning) (DONE)
+<div style="color:#888">
+
+- [x] <span style="color:#888">**Camera / Image Recognition (Gemini Vision API)**:</span>
+  - <span style="color:#888">[x] Add a Camera icon button in the Omni-Bar / Home View (#omni-camera launches Visual Lens modal).</span>
+  - <span style="color:#888">[x] Allows user to take a photo or upload an image using phone camera (capture="environment" for rear camera).</span>
+  - <span style="color:#888">[x] **Object Mode**: Identifies objects in real life (e.g. Jabuka / Apple, gender [ž.r.], phonetic, pronunciation audio, example sentence).</span>
+  - <span style="color:#888">[x] **Text / OCR Mode**: Reads real-world signs, restaurant menus, book pages, or labels and provides instant Serbian ↔ English translation.</span>
+  - <span style="color:#888">[x] **1-Click Save**: Add any scanned object or translated text directly into user's Flashcards & Spaced Repetition deck.</span>
+  - <span style="color:#888">[x] **Zero-Key Offline Demo**: Instant sample testing for Jabuka, Kafa, and Restoranski meni without needing an active API key.</span>
+- [x] <span style="color:#888">**Camera Refinements & Viewfinder (DONE in Priority 39)**:</span>
+  - <span style="color:#888">[x] **Live Camera Viewfinder / WebRTC Stream**: Real-time camera feed (`navigator.mediaDevices.getUserMedia`) with snap shutter button in `#visual-lens-modal`.</span>
+  - <span style="color:#888">[x] **Scrollable OCR Output Container**: Touch overflow-y scrolling with `max-h-[60vh]`.</span>
+  - <span style="color:#888">[x] **Auto-Reset on Modal Exit**: Automatically clears base64 cache, stops stream tracks, and resets viewfinder on close.</span>
+
+</div>
 
 ## ✅ 📱 Priority 19: Progressive Web App (PWA) Offline Deployment (DONE)
 <div style="color:#888">
@@ -334,8 +341,12 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Dedicated UI**: Progress bar, clean prompt cards (no spoilers), tactile feedback, celebration screen, and home screen launcher banner.
 
 ## ⚙️ Priority 29: Technical Power-Ups
-- [ ] **Offline Audio Bundles**: Add "Download Offline Audio Pack" to save pre-generated MP3s for 1,000 common words into IndexedDB for airplane mode.
-- [ ] **Peer-to-Peer Friend Codes**: Let users generate a code to share stats and compete on a mini-leaderboard without a massive cloud backend.
+- [ ] **Offline Audio Bundles (Part of Big Finale 3)**: Add "Download Offline Audio Pack" to save pre-generated MP3s for common words into IndexedDB for airplane mode.
+<div style="color:#888">
+
+- [x] <span style="color:#888">**Peer-to-Peer Friend Codes (DONE)**: Fully implemented in `ghost-arena.js` (`GhostEngine.exportCode` & `importCode`) letting users generate compact codes, download friend bots, and race against their accuracy and speed offline.</span>
+
+</div>
 
 ## ✅🎭 Priority 30: "Untranslatable" Cultural Idioms & Slang (DONE)
 - [x] **Idioms & Terms of Endearment (DONE)**: Expanded with 50+ authentic cultural idioms and expressions across 5 curated categories: Beograd urban slang, Narodne izreke ("ljubi te baka sine", "bogu iza nogu", "puna kapa", "mlatiti praznu slamu", "kad na vrbi rodi grožđe", "košta ko svetog Petra kajgana"), Nežnost & ljubav ("dušo moja", "srce moje", "zlato moje", "sunce moje"), Kafanski život, and Južni govor.
@@ -354,17 +365,25 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Profile Avatars & Titles (DONE)**: Unlockable animated avatars and titles (e.g., "Kafana Legend", "Grammar Nerd") bought with in-app gems.
 - [x] **Leaderboard Table Polish & Docked User Card (DONE)**: Fixed the leaderboard in "Statistika" -> "Prikaži celu tabelu" (`#league-modal`): eliminated sticky rank floating occlusion. Added persistent bottom user dock with rank status, zone indicator (`🟢 Napreduje` / `⚪ Ostaje` / `🔴 Ispada`), and 1-click "📍 Moj Rang" smooth scroll button.
 - [x] **Diamond Shop Catalog Expansion (DONE)**: Added 7 new animated avatars (Lion of Kalemegdan, Balkan Bear, Golden Striker, Guča Trumpeter, Balkan Vampire, Cosmic Polyglot, Clever Fox) and 8 new profile titles (Kralj Sabora, Derbi Fanatik, Kafedžija, Balkanski Šef, Brzi Prsti, Hodajući Rečnik, Snajper za Padeže, SerboLingo Zvezda) to spend diamonds on.
-- [ ] **"Podeli Profil" (Dedicated Profile Bragging Card & Native Share)**:
-  - Add a prominent "📤 Podeli Profil" button on `#view-profile`.
-  - Generates a sleek, high-resolution canvas bragging card (Avatar, Level, League Tier badge, Day Streak flame, Total XP, and Top Medals).
-  - 100% offline, zero-backend — triggers native `navigator.share` on mobile or downloads image on PC for instant TikTok, Instagram, and WhatsApp bragging.
-- [ ] **Variable Reward Triggers & Time Badges ("Dopamine Boosts")**:
-  - **Contextual Badges**: Add time-specific badges such as *"Noćna Ptica / Night Owl"* (for practicing between 22:00 and 04:00), *"Rani Starosedelac"* (completing 3 lessons before 08:00), and *"Perfekcionista"* (100% accuracy on 5 consecutive sessions).
-  - **Unpredictable Mystery Chest Drops**: Variable chest algorithms with rare chances for diamond jackpots or 24h freeze shields, keeping rewards exciting and non-linear.
+<div style="color:#888">
 
-## ✅🤖 Priority 33: "Explain My Mistake" AI Tutor (Partially DONE)
-- [x] **Gemini Grammar Breakdown**: When a user gets a question wrong, an "Explain Why" button appears. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made. (ALREADY BUILT in app.js lines 3260-3330, Gemini model cascade with offline fallback.)
-- [ ] **AI Accent Coach** *(Pending - Build Later)*: Give a 0-100% pronunciation score comparing the user's voice pitch to a native Belgrade speaker.
+- [x] <span style="color:#888">**"Podeli Profil" (Dedicated Profile Bragging Card & Native Share) (DONE)**:</span>
+  - <span style="color:#888">[x] Added prominent "📤 Podeli Profil" button on `#view-profile`.</span>
+  - <span style="color:#888">[x] Generates sleek high-resolution 1080x1080 canvas bragging card (Avatar, Level, League Tier badge, Day Streak flame, Total XP, and Top Medals).</span>
+  - <span style="color:#888">[x] 100% offline, zero-backend — triggers native `navigator.share` on mobile or downloads PNG on PC with +10 XP reward (`app.shareProfileCard`).</span>
+- [x] <span style="color:#888">**Variable Reward Triggers & Time Badges ("Dopamine Boosts") (DONE)**:</span>
+  - <span style="color:#888">[x] **Contextual Badges**: Real-time evaluation in `app.checkTimeBadges()` awarding *"Noćna Ptica / Night Owl"* 🦉 (studying between 22:00-04:00), *"Rani Starosedelac"* 🌅 (studying 05:00-08:00), and *"Perfekcionista"* 🎯 (100% accuracy on lesson completion).</span>
+  - <span style="color:#888">[x] **Unpredictable Mystery Chest Drops**: Variable chest rolls awarding +10 to +50 bonus XP and diamond drops.</span>
+
+</div>
+
+## ✅🤖 Priority 33: "Explain My Mistake" AI Tutor (DONE)
+<div style="color:#888">
+
+- [x] <span style="color:#888">**Gemini Grammar Breakdown**: When a user gets a question wrong, an "Explain Why" button appears. The AI briefly explains the grammar rule (gender/case) based on the exact mistake made. (ALREADY BUILT in `app.js` lines 3260-3330, Gemini model cascade with offline fallback.)</span>
+- [x] <span style="color:#888">**AI Accent Coach (DONE in Priority 49)**: Full real-time HTML5 canvas audio waveform pitch matcher (`pitch-accent.js`) giving 0-100% pronunciation score against native melodic contours.</span>
+
+</div>
 
 ## ✅📺 Priority 34: Real-World Native Media & Hardcore Immersion Mode (DONE)
 - [x] **Native Speaker Clips**: 16 curated acoustic immersion clips with looping playback, speed controls (1.0x / 0.75x), script switching (Latin / Cyrillic / Hidden), voice shadowing test, and 1-click SRS Flashcard deck synchronization (`immersion-clips.js`).
@@ -436,8 +455,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **1-Click JSON Export & Import (Community Sharing & Backups) (DONE)**:
   - **📤 Izvezi**: Serializes any deck into a portable `.json` file (`serbolingo-deck-[name].json`) ready to share with friends, classmates, or backup locally.
   - **📥 Uvezi**: FileReader file input loads community-shared deck JSON files, validating structure and immediately appending them to the user's active decks.
-- [ ] **1-Tap Messaging App Deck Sharing**:
-  - Add a direct `📤 Podeli preko WhatsApp / Viber` share action via `navigator.share` so users can send custom flashcard study decks directly to study buddies in one tap.
+- [x] **1-Tap Messaging App Deck Sharing (DONE)**:
+  - Direct `💬 Podeli` button on custom deck cards in `#view-mistakes` invoking `SrsEngine.shareDeckMessaging()` with native `navigator.share` file attachment and WhatsApp/Viber web link fallbacks.
 - [ ] **Pending Final Sweep & QA Note**: Once all priorities and full app development are completed, revisit Priority 40 to thoroughly test and verify custom deck creation, JSON file export/import, and swipe review sessions across browsers.
 
 </span>
@@ -600,29 +619,30 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 > [!NOTE] 🔍 **QA REVISIT**: Come back once we finish building everything to thoroughly test real microphone input, canvas waveform rendering, and match accuracy percentages across physical mobile (iOS Safari / Android Chrome) and desktop devices.
 
-## 🏺🍽️ Priority 50: Authentic Serbian Customs, Cultural Etiquette & Kafana Food/Dialects ("Balkanski Običaji & Gastronomija")
-> **Status**: Planned (High Cultural Value / Immersion)  
-> **Concept**: A rich cultural immersion module teaching authentic Balkan customs, unspoken social rules, table etiquette, traditional gastronomy, and regional dialect nuances. Spread across dedicated lesson tooltips, slang expansions, and a dedicated cultural guide hub.
+## ✅🏺🍽️ Priority 50: Authentic Serbian Customs, Cultural Etiquette & Kafana Food/Dialects ("Balkanski Običaji & Gastronomija") (DONE)
+<div style="color:#888">
 
-- [ ] **1. Cultural Etiquette & Unspoken Social Rules ("Balkanski Bonton")**:
-  - [ ] **The Sacred Toast ("Živeli!")**: Looking directly into the partner's eyes when clinking glasses (and the humorous cultural superstition that not looking brings 7 years of bad luck).
-  - [ ] **Krsna Slava Customs**: Full ritual walkthrough — Slavski kolač, Koljivo/Žito, sveća, vino, patron saint traditions, and how a guest greets the host (*"Srećna slava, domaćine!"*).
-  - [ ] **Guest Etiquette in Balkan Homes**: The tradition of taking off shoes, accepting coffee and slatko or homemade juice, bringing gift bags (coffee, Turkish delight/ratluk, chocolate, wine), and never refusing offered food.
-  - [ ] **Hospitality & Taboo Breakers**: How bills are settled in kafanas ("otimanje za račun"), how neighbors greet, and respectful forms of address (*"Čika", "Teta", "Brate", "Kume"*).
+- [x] <span style="color:#888">**1. Cultural Etiquette & Unspoken Social Rules ("Balkanski Bonton") (DONE)**:</span>
+  - <span style="color:#888">[x] **The Sacred Toast ("Živeli!")**: Direct eye contact rule with 7-year superstition note, audio pronunciation, and cultural context.</span>
+  - <span style="color:#888">[x] **Krsna Slava Customs**: Full ritual walkthrough — Slavski kolač, Koljivo/Žito, sveća, vino, patron saint traditions, and greeting the host (*"Srećna slava, domaćine!"*).</span>
+  - <span style="color:#888">[x] **Guest Etiquette in Balkan Homes**: Taking off shoes, domestic coffee & slatko / homemade juice, gift bags (coffee 200g, ratluk, wine).</span>
+  - <span style="color:#888">[x] **Hospitality & Taboo Breakers**: Fighting over the bill ("otimanje za račun") and respectful forms of address (*Čika, Teta, Brate, Kume*).</span>
 
-- [ ] **2. Gastronomy & Kafana Culture ("Kafanski Rečnik & Trpeza")**:
-  - [ ] **Iconic Balkan Dishes Database**: Deep vocabulary and audio for Kajmak, Ajvar, Prebranac, Sarma, Karađorđeva šnicla, Domaća pogača, Pečenje (jagnjeće/praseće), Burek sa sirom/mesom, and Meze.
-  - [ ] **Kafana Ordering Dialogues**: Authentic ordering phrases, communicating with the konobar, ordering by the 10-piece (*"deset upola sa lukom"*), and requesting songs from the tamburaši.
+- [x] <span style="color:#888">**2. Gastronomy & Kafana Culture ("Kafanski Rečnik & Trpeza") (DONE)**:</span>
+  - <span style="color:#888">[x] **Iconic Balkan Dishes Database**: 30 new words added to `seed-data.js` (v3.0) and IndexedDB for Kajmak, Ajvar, Prebranac, Sarma, Karađorđeva šnicla, Domaća pogača, Pečenje, Burek sa sirom/mesom, Meze, Šljivovica, Ćevapi.</span>
+  - <span style="color:#888">[x] **Kafana Ordering Dialogues**: Authentic ordering by the 10-piece (*"deset upola sa lukom"*), waiter communication, and live song requests from tamburaši.</span>
 
-- [ ] **3. Regional Dialects & Accent Variations ("Kako Priča Balkan")**:
-  - [ ] **Niš & Southern Serbian**: Distinct grammatical features, dropping cases playfully, signature words (*"kude si", "nemoj se jediš", "ću dođem", "merak", "lele"*).
-  - [ ] **Vojvodina & Novi Sad**: Relaxed, melodic cadence, signature phrases (*"ta nemoj kasti", "gari", "bata", "dunje"*).
-  - [ ] **Montenegrin Coast & Primorje**: Mediterranean rhythm, Italian loanwords (*"pomalo", "fešta", "gušt", "ura"*).
+- [x] <span style="color:#888">**3. Regional Dialects & Accent Variations ("Kako Priča Balkan") (DONE)**:</span>
+  - <span style="color:#888">[x] **Niš & Southern Serbian**: Dropping cases playfully, signature terms (*"kude si", "nemoj se jediš", "ću dođem", "merak", "lele", "ću te izejem"*).</span>
+  - <span style="color:#888">[x] **Vojvodina & Novi Sad**: Melodic cadence, phrases (*"ta nemoj kasti", "gari", "polako samo"*).</span>
+  - <span style="color:#888">[x] **Montenegrin Coast & Primorje**: Mediterranean rhythm, loanwords (*"pomalo", "fešta", "gušt"*).</span>
 
-- [ ] **4. Multi-Touchpoint Integration Architecture**:
-  - [ ] Expand into [`slang.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/slang.js) for quick idiom and slang quiz cards.
-  - [ ] Inject contextual "Bonton & Običaji" tooltips inside Skill Tree lessons.
-  - [ ] Dedicated "Kultura & Običaji" explorer tab or guide inside the app.
+- [x] <span style="color:#888">**4. Multi-Touchpoint Integration Architecture (DONE)**:</span>
+  - <span style="color:#888">[x] Expanded into [`slang.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/slang.js) with 3 new interactive tabs: 🥂 Bonton, 🍖 Trpeza, and 🗺️ Dijalekti.</span>
+  - <span style="color:#888">[x] Injected two dedicated cultural skill nodes (`balkanski_bonton` & `kafanska_trpeza`) in [`skill-tree.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/skill-tree.js) with rich visual guidebooks.</span>
+  - <span style="color:#888">[x] Enriched Explore Hub ([`explore-hub.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/explore-hub.js)) with Slava Bonton and Alan Ford comic dialogue culture guides.</span>
+
+</div>
 
 ## 📢🚀 Priority 51: Zero-Dollar Organic Marketing, ASO & Community Launch Playbook ("Organski Rast & Lansiranje")
 > **Status**: Planned (Zero Ad-Spend Customer Acquisition)  

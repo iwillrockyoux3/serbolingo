@@ -2840,6 +2840,9 @@ const app = {
             window.LeagueEngine.updateHeaderBoostUI();
         }
         
+        // Priority 32.3: Time-Based & Dopamine Badges (Noćna Ptica, Rani Starosedelac, Perfekcionista)
+        app.checkTimeBadges();
+        
         if (state.currentSkillId === 'mistakes') {
             app.navigate('mistakes');
         } else {
@@ -2856,6 +2859,49 @@ const app = {
         });
         if (newUnlock) {
             app.saveStats();
+        }
+    },
+    checkTimeBadges: () => {
+        if (!state.badges) state.badges = [];
+        const hr = new Date().getHours();
+        
+        // 1. Noćna Ptica (Night Owl - studying between 22:00 and 04:00)
+        if (hr >= 22 || hr < 4) {
+            if (!state.badges.find(b => b.id === 'badge_nocna_ptica')) {
+                state.badges.push({
+                    id: 'badge_nocna_ptica',
+                    name: 'Noćna Ptica',
+                    icon: '🦉',
+                    date: new Date().toISOString()
+                });
+                setTimeout(() => app.showToast('🦉 Osvojena Značka: Noćna Ptica (Učenje kasno noću)!', 'success'), 1500);
+            }
+        }
+        
+        // 2. Rani Starosedelac (Early Bird - studying between 05:00 and 08:00)
+        if (hr >= 5 && hr < 8) {
+            if (!state.badges.find(b => b.id === 'badge_rani_starosedelac')) {
+                state.badges.push({
+                    id: 'badge_rani_starosedelac',
+                    name: 'Rani Starosedelac',
+                    icon: '🌅',
+                    date: new Date().toISOString()
+                });
+                setTimeout(() => app.showToast('🌅 Osvojena Značka: Rani Starosedelac (Jutarnji učenik)!', 'success'), 1500);
+            }
+        }
+        
+        // 3. Perfekcionista (Perfect Lesson)
+        if (state.lastLessonPerfect) {
+            if (!state.badges.find(b => b.id === 'badge_perfekcionista')) {
+                state.badges.push({
+                    id: 'badge_perfekcionista',
+                    name: 'Perfekcionista',
+                    icon: '🎯',
+                    date: new Date().toISOString()
+                });
+                setTimeout(() => app.showToast('🎯 Osvojena Značka: Perfekcionista (100% tačnost)!', 'success'), 1800);
+            }
         }
     },
     showAlphabetModal: () => {
@@ -3615,6 +3661,162 @@ const app = {
             }
         };
         reader.readAsText(file);
+    },
+    shareProfileCard: async () => {
+        try {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1080;
+            canvas.height = 1080;
+            const ctx = canvas.getContext('2d');
+
+            // Background Gradient (Balkan Royal Navy / Indigo)
+            const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);
+            bgGrad.addColorStop(0, '#0f172a');
+            bgGrad.addColorStop(0.5, '#1e1b4b');
+            bgGrad.addColorStop(1, '#0f172a');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, 1080, 1080);
+
+            // Subtle Serbian Flag Tricolor Accent on top edge
+            ctx.fillStyle = '#C6363C'; // Red
+            ctx.fillRect(0, 0, 1080, 16);
+            ctx.fillStyle = '#0C4076'; // Blue
+            ctx.fillRect(0, 16, 1080, 16);
+            ctx.fillStyle = '#FFFFFF'; // White
+            ctx.fillRect(0, 32, 1080, 16);
+
+            // Card Container with Glassmorphism
+            ctx.save();
+            ctx.fillStyle = 'rgba(30, 41, 59, 0.85)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.roundRect(80, 100, 920, 880, 48);
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+
+            // App Brand Header
+            ctx.font = 'bold 44px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#38bdf8';
+            ctx.textAlign = 'center';
+            ctx.fillText('🇷🇸 SerboLingo', 540, 190);
+
+            ctx.font = '600 24px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText('PASOŠ ZNANJA • LEARNER PASSPORT', 540, 235);
+
+            // Avatar Circle
+            const avatar = (state.user && state.user.avatar) || '👤';
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(540, 360, 90, 0, Math.PI * 2);
+            ctx.fillStyle = '#334155';
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 8;
+            ctx.fill();
+            ctx.stroke();
+            ctx.font = '85px system-ui';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(avatar, 540, 365);
+            ctx.restore();
+
+            // User Name & Title
+            const username = (state.user && state.user.name) || 'Korisnik';
+            ctx.font = '900 48px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText(username, 540, 500);
+
+            // Equipped Title or League Tier
+            let titleText = 'Kafana Legenda';
+            if (window.LeagueEngine) {
+                const userTier = window.LeagueEngine.getUserTier();
+                titleText = userTier.name + ' Liga';
+            }
+            ctx.font = '700 26px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText(titleText, 540, 545);
+
+            // Stats Grid (3 boxes: Streak, XP, Mastered)
+            const stats = [
+                { label: 'DNEVNI NIZ', val: `🔥 ${state.stats ? state.stats.streak || 1 : 1}d`, color: '#f97316' },
+                { label: 'UKUPNO XP', val: `⚡ ${state.stats ? state.stats.totalXp || 0 : 0}`, color: '#eab308' },
+                { label: 'SAVLAĐANO', val: `⭐ ${state.mistakeLog ? Object.keys(state.mistakeLog).length : 0}`, color: '#10b981' }
+            ];
+
+            const boxWidth = 260;
+            const boxY = 600;
+            stats.forEach((st, i) => {
+                const boxX = 130 + i * (boxWidth + 35);
+                ctx.save();
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(boxX, boxY, boxWidth, 140, 24);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = '900 36px Inter, system-ui, sans-serif';
+                ctx.fillStyle = st.color;
+                ctx.textAlign = 'center';
+                ctx.fillText(st.val, boxX + boxWidth / 2, boxY + 65);
+
+                ctx.font = '800 18px Inter, system-ui, sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(st.label, boxX + boxWidth / 2, boxY + 105);
+                ctx.restore();
+            });
+
+            // Footer Call To Action
+            ctx.font = '800 26px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('Učim srpski na SerboLingo! 🇷🇸', 540, 830);
+
+            ctx.font = '500 20px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText('100% Besplatna & Offline aplikacija za srpski jezik', 540, 870);
+
+            // Export to Blob and Share / Download
+            canvas.toBlob(async (blob) => {
+                if (!blob) return;
+                const file = new File([blob], `serbolingo-profil-${username}.png`, { type: 'image/png' });
+
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            title: `SerboLingo Profil: ${username}`,
+                            text: `Učim srpski na SerboLingo! 🔥 Moj niz: ${state.stats ? state.stats.streak || 1 : 1} dana | ⚡ ${state.stats ? state.stats.totalXp || 0 : 0} XP!`,
+                            files: [file]
+                        });
+                        app.addXp(10);
+                        app.showToast('📤 Profil uspešno podeljen! (+10 XP)', 'success');
+                        return;
+                    } catch (e) {
+                        /* user cancelled or share closed */
+                    }
+                }
+
+                // Desktop / Fallback download
+                const url = URL.createObjectURL(blob);
+                const dlAnchor = document.createElement('a');
+                dlAnchor.href = url;
+                dlAnchor.download = `serbolingo-profil-${username}.png`;
+                document.body.appendChild(dlAnchor);
+                dlAnchor.click();
+                document.body.removeChild(dlAnchor);
+                URL.revokeObjectURL(url);
+                app.addXp(10);
+                app.showToast('📸 Slika profila je preuzeta! (+10 XP)', 'success');
+            }, 'image/png');
+
+        } catch (err) {
+            console.error('Share profile failed:', err);
+            app.showToast('Greška prilikom deljenja profila.', 'error');
+        }
     },
     endLesson: () => { 
         if (typeof GrammarEngine !== 'undefined' && GrammarEngine.hideTooltip) {

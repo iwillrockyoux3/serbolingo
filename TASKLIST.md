@@ -139,16 +139,16 @@
 | P24.2 | Cross-Device Cloud Save Sync (Account link) | 🆕 New | ⬜ FUTURE |
 | P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
 | P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ✅ DONE |
-| P50.1 | Authentic Serbian Customs, Cultural Etiquette & Gastronomy | 🆕 New | ⬜ FUTURE |
+| P50.1 | Authentic Serbian Customs, Cultural Etiquette & Gastronomy | 🆕 New | ✅ DONE |
 | P12.2 | "Monty Winner" Celebration Studio & Multimedia Victory Flex | 🆕 New | ⬜ FUTURE |
 | P20.3 | Mobile Analytics & Attribution Stack (Firebase + RevenueCat) | 🆕 New | ⬜ FUTURE |
 | P20.4 | Pricing Architecture & Churn Recovery (Pause vs Cancel + 50% Win-Backs) | 🆕 New | ⬜ FUTURE |
 | P21.3 | Self-Evolving Community Dictionary (Reddit-Style Voting Pipeline) | 🆕 New | ⬜ FUTURE |
 | P21.4 | Built-In Viral Referral Engine (Give 1 Month, Get 1 Month) | 🆕 New | ⬜ FUTURE |
 | P22.4 | Native Mobile Home Screen Widgets (Android Glance & iOS WidgetKit) | 🆕 New | ⬜ FUTURE |
-| P32.2 | "Podeli Profil" Share Profile Bragging Card | 🆕 New | ⬜ FUTURE |
-| P32.3 | Time-Based Variable Dopamine Badges ("Night Owl" & "Accuracy Bonus") | 🆕 New | ⬜ FUTURE |
-| P40.2 | 1-Tap Messaging App Deck Sharing (WhatsApp/Viber) | 🆕 New | ⬜ FUTURE |
+| P32.2 | "Podeli Profil" Share Profile Bragging Card | 🆕 New | ✅ DONE |
+| P32.3 | Time-Based Variable Dopamine Badges ("Night Owl" & "Accuracy Bonus") | 🆕 New | ✅ DONE |
+| P40.2 | 1-Tap Messaging App Deck Sharing (WhatsApp/Viber) | 🆕 New | ✅ DONE |
 | P51.1 | Zero-Dollar Organic Marketing, ASO & Community Launch Playbook | 🆕 New | ⬜ FUTURE |
 
 ---
@@ -166,8 +166,8 @@
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20, P39, P40) | 2/8 | 6 |
-| Moonshots (P21-P22, P24.2, P43.3, P48-P51) | 5/20 | 15 |
-| **TOTAL** | **41/75** | **34** |
+| Moonshots (P21-P22, P24.2, P43.3, P48-P51) | 9/20 | 11 |
+| **TOTAL** | **45/75** | **30** |
 
 ---
 

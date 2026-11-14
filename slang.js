@@ -69,6 +69,28 @@ const SlangEngine = {
             { id: 'juz4', slang: 'Koji zajeb', sr_cyr: 'Који зајеб', meaning: 'What a massive mistake / Screw up', literal: 'What a fuck up', cultural_note: 'Raw southern exclamation after realizing a huge tactical blunder.', usage: 'Koji zajeb napraviše s tim dogovorom be!', tag: 'južni' },
             { id: 'juz5', slang: 'Ću te izejem', sr_cyr: 'Ћу те изејем', meaning: 'You\'re so cute I will eat you up', literal: 'I will eat you', cultural_note: 'Torlak dialect affection spoken by southern grandmothers and aunts to adorable babies.', usage: 'Dođi vamo kod bake, ću te izejem koliko si sladak!', tag: 'južni' },
             { id: 'juz6', slang: 'Kude si pošao', sr_cyr: 'Куде си пошао', meaning: 'Where are you off to?', literal: 'Whither have you set out', cultural_note: '"Kude" is the authentic southern dialect form of standard Serbian "gde".', usage: 'Kude si pošao po ovoj velikoj kiši?', tag: 'južni' }
+        ],
+        'bonton': [
+            { id: 'bon1', slang: 'Živeli u oči', sr_cyr: 'Живели у очи', meaning: 'Look into the eyes during a toast', literal: 'To life into the eyes', cultural_note: 'Crucial Serbian drinking rule: looking away or crossing arms while clinking brings bad luck. Always hold eye contact with a warm smile.', usage: 'Gledaj me u oči dok nazdravljamo - živeli!', tag: 'bonton' },
+            { id: 'bon2', slang: 'Srećna slava domaćine', sr_cyr: 'Срећна слава домаћине', meaning: 'Happy Patron Saint Day, honored host!', literal: 'Happy slava host', cultural_note: 'The traditional greeting upon stepping across the threshold on Slava. Host responds: "Hvala, dobrodošli!".', usage: 'Srećna slava domaćine, nek je sa zdravljem i veseljem!', tag: 'bonton' },
+            { id: 'bon3', slang: 'Izuj se slobodno', sr_cyr: 'Изуј се слободно', meaning: 'Feel free to take your shoes off', literal: 'Un-shoe yourself freely', cultural_note: 'Standard hospitality code in Balkan households. Guests usually offer to take off shoes, and hosts provide cozy papuče (slippers).', usage: 'Samo ostavi patike u hodniku i izuj se slobodno.', tag: 'bonton' },
+            { id: 'bon4', slang: 'Kafa i ratluk za domaćina', sr_cyr: 'Кафа и ратлук за домаћинина', meaning: 'Coffee and Turkish delight gift bag', literal: 'Coffee and ratluk for the host', cultural_note: 'Never enter a Balkan home empty-handed. The classic gift trio is ground coffee (200g), chocolate, and a bottle of wine or homemade juice.', usage: 'Ponesi ovu kesu, unutra su kafa i ratluk za domaćina.', tag: 'bonton' },
+            { id: 'bon5', slang: 'Otimanje za račun', sr_cyr: 'Отимање за рачун', meaning: 'Playful wrestling to pay the restaurant bill', literal: 'Snatching for the bill', cultural_note: 'It is considered impolite to split bills down to the cent. Friends dramatically compete to grab the bill first: "Ja plaćam!" "Nema šanse, ja sam zvao!".', usage: 'Nastalo je pravo otimanje za račun, ali ja sam pobedio.', tag: 'bonton' },
+            { id: 'bon6', slang: 'Čika i Teta', sr_cyr: 'Чика и Тета', meaning: 'Uncle and Auntie (respectful elder address)', literal: 'Uncle and Aunt', cultural_note: 'Used by children and young adults to address adult family friends and neighbors politely (e.g. Čika Dragan, Teta Zorica).', usage: 'Dobar dan, teta Zorice, kako ste danas?', tag: 'bonton' }
+        ],
+        'gastronomija': [
+            { id: 'gas1', slang: 'Deset upola s lukom', sr_cyr: 'Десет упола с луком', meaning: '10 cevapi in half somun with diced onion', literal: 'Ten in half with onion', cultural_note: 'The legendary standard order in any authentic ćevabdžinica across the Balkans.', usage: 'Majstore, meni jedne deset upola s lukom i kajmakom!', tag: 'trpeza' },
+            { id: 'gas2', slang: 'Vruća pogača i kajmak', sr_cyr: 'Врућа погача и кајмак', meaning: 'Hot hearth bread with clotted cream', literal: 'Hot pogaca and kajmak', cultural_note: 'The ultimate comfort starter in traditional kafanas, eaten by hand before the grilled meat arrives.', usage: 'Stiže vruća pogača i kajmak, prste da poližeš!', tag: 'trpeza' },
+            { id: 'gas3', slang: 'Karađorđeva šnicla', sr_cyr: 'Карађорђева шницла', meaning: 'Breaded pork/veal steak stuffed with kajmak', literal: 'Karadjordje\'s schnitzel', cultural_note: 'Invented by Tito\'s chef Milovan Stojanović in 1956. Playfully nicknamed "devojački san" (the maiden\'s dream).', usage: 'Karađorđeva šnicla sa tartar sosom i pečenim krompirom.', tag: 'trpeza' },
+            { id: 'gas4', slang: 'Prebranac sa kobasicom', sr_cyr: 'Пребранац са кобасицом', meaning: 'Slow-baked caramelized white beans with smoked sausage', literal: 'Prebranac with sausage', cultural_note: 'Clay pot baked beans, seasoned with sweet paprika and slow-cooked onions until golden.', usage: 'Za ručak danas imamo domaći prebranac sa kobasicom.', tag: 'trpeza' },
+            { id: 'gas5', slang: 'Pesma na uvce', sr_cyr: 'Песма на увце', meaning: 'A song played right by your ear by musicians', literal: 'A song on the ear', cultural_note: 'When kafana musicians play the violin or accordion right at your table while you tip them.', usage: 'Tamburaši nam sviraju starogradske pesme na uvce.', tag: 'trpeza' }
+        ],
+        'dijalekti': [
+            { id: 'dij1', slang: 'Ta nemoj kasti', sr_cyr: 'Та немој касти', meaning: 'You don\'t say! / Really?! (Vojvodina)', literal: 'So do not tell', cultural_note: 'Iconic slow, melodic Vojvodina reaction expressing gentle surprise or irony.', usage: 'Ta nemoj kasti da je već podne, kako vreme leti!', tag: 'dijalekt' },
+            { id: 'dij2', slang: 'Gari', sr_cyr: 'Гари', meaning: 'Dude / Buddy / Pal (Novi Sad slang)', literal: 'Garav / soot (coal miner/pal)', cultural_note: 'Unique to Novi Sad youth; works like Belgrade\'s "brate", but spoken with relaxed rhythm.', usage: 'Gde si gari, idemo na Kej u šetnju?', tag: 'dijalekt' },
+            { id: 'dij3', slang: 'Polako samo', sr_cyr: 'Полако само', meaning: 'Take it easy / No rush at all (Lala attitude)', literal: 'Slowly only', cultural_note: 'The philosophical mantra of Vojvodina and Panonian plains: zero stress, enjoy every minute.', usage: 'Nemoj da žuriš, polako samo, stići ćemo sve.', tag: 'dijalekt' },
+            { id: 'dij4', slang: 'Pomalo', sr_cyr: 'Помало', meaning: 'Bit by bit / Slow and steady (Coastal / Primorje)', literal: 'Little by little', cultural_note: 'The Mediterranean lifestyle greeting from the Montenegrin coast: work little, live gracefully.', usage: 'Kako posao? - Ma pomalo brate, pomalo.', tag: 'dijalekt' },
+            { id: 'dij5', slang: 'Gušt', sr_cyr: 'Гушт', meaning: 'Sensual refined pleasure / Pure relish', literal: 'Taste / gusto', cultural_note: 'Loanword from Italian "gusto", describing savoring coffee on a sunny stone terrace.', usage: 'Ovakva jutarnja kafa na suncu je pravi gušt.', tag: 'dijalekt' }
         ]
     },
 
@@ -93,10 +115,13 @@ const SlangEngine = {
 
         const categoryTitles = {
             'izreke': '👵 NARODNE IZREKE & KULTURNE FRAZE',
+            'bonton': '🥂 BALKANSKI BONTON & SLAVA',
+            'gastronomija': '🍖 KAFANSKA TRPEZA & GASTRONOMIJA',
             'beograd': '🏙️ BEOGRADSKI SLENG & ŽARGON',
             'neznost': '❤️ NEŽNOST & EMOTIVNI IZRAZI',
             'kafana': '🍷 KAFANA & BALKANSKI RITUALI',
-            'juzni': '🌶️ JUŽNI GOVOR (NIŠ & VRANJE)'
+            'juzni': '🌶️ JUŽNI GOVOR (NIŠ & VRANJE)',
+            'dijalekti': '🗺️ REGIONALNI DIJALEKTI (VOJVODINA & PRIMORJE)'
         };
 
         overlay.innerHTML = `
@@ -113,10 +138,13 @@ const SlangEngine = {
                 <!-- Category Tabs -->
                 <div class="flex p-3 gap-2 overflow-x-auto border-b border-slate-800 shrink-0 scrollbar-none">
                     <button onclick="SlangEngine.switchTab('izreke')" class="${tabClass('izreke')}">👵 Izreke</button>
+                    <button onclick="SlangEngine.switchTab('bonton')" class="${tabClass('bonton')}">🥂 Bonton</button>
+                    <button onclick="SlangEngine.switchTab('gastronomija')" class="${tabClass('gastronomija')}">🍖 Trpeza</button>
                     <button onclick="SlangEngine.switchTab('beograd')" class="${tabClass('beograd')}">🏙️ Beograd</button>
                     <button onclick="SlangEngine.switchTab('neznost')" class="${tabClass('neznost')}">❤️ Nežnost</button>
                     <button onclick="SlangEngine.switchTab('kafana')" class="${tabClass('kafana')}">🍷 Kafana</button>
                     <button onclick="SlangEngine.switchTab('juzni')" class="${tabClass('juzni')}">🌶️ Južni</button>
+                    <button onclick="SlangEngine.switchTab('dijalekti')" class="${tabClass('dijalekti')}">🗺️ Dijalekti</button>
                 </div>
 
                 <!-- Content Feed -->

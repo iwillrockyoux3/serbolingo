@@ -832,6 +832,9 @@
                             </div>
                         </button>
                         <div class="flex items-center gap-1 pl-1 border-l border-slate-200 dark:border-slate-800 ml-1">
+                            <button onclick="SrsEngine.shareDeckMessaging('${d.id}')" class="p-1 text-slate-400 hover:text-green-500 text-xs active:scale-90 transition-transform" title="Podeli špil (WhatsApp / Viber)">
+                                💬
+                            </button>
                             <button onclick="SrsEngine.exportDeckJson('${d.id}')" class="p-1 text-slate-400 hover:text-blue-500 text-xs active:scale-90 transition-transform" title="Izvezi špil kao JSON fajl">
                                 📤
                             </button>
@@ -906,6 +909,43 @@
             this.renderCustomDecks();
             if (window.app && window.app.showToast) {
                 window.app.showToast('Špil je uklonjen.', 'info');
+            }
+        },
+
+        shareDeckMessaging: async function (deckId) {
+            const decks = this.getCustomDecks();
+            const deck = decks.find(d => d.id === deckId);
+            if (!deck) return;
+            const count = (deck.wordIds || []).length;
+            const shareText = `📚 Vežbaj sa mnom špil "${deck.name}" (${count} reči) na SerboLingo!\nUvezi ovaj špil ili poseti SerboLingo! 🇷🇸`;
+
+            if (navigator.share) {
+                try {
+                    const jsonStr = JSON.stringify(deck, null, 2);
+                    const blob = new Blob([jsonStr], { type: 'application/json' });
+                    const file = new File([blob], `serbolingo-deck-${deck.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}.json`, { type: 'application/json' });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            title: `SerboLingo Špil: ${deck.name}`,
+                            text: shareText,
+                            files: [file]
+                        });
+                        if (window.app && window.app.showToast) window.app.showToast('💬 Špil uspešno podeljen!', 'success');
+                        return;
+                    }
+                    await navigator.share({
+                        title: `SerboLingo Špil: ${deck.name}`,
+                        text: shareText
+                    });
+                    if (window.app && window.app.showToast) window.app.showToast('💬 Špil uspešno podeljen!', 'success');
+                    return;
+                } catch (e) {
+                    /* user cancelled */
+                }
+            } else {
+                // WhatsApp Web fallback
+                const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+                window.open(waUrl, '_blank');
             }
         },
 
