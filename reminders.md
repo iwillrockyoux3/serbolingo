@@ -575,7 +575,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 </div>
 
 > [!NOTE] 🔄 **QA REVISIT**: Come back once we finish building everything to:
-> 1. Test all SerboReels features end-to-end on real devices (play/pause, subtitles, word inspector, XP awards) — verified all 12 clips updated with active 200 OK YouTube videos and direct YT link fallback.
+> 1. Test all SerboReels features end-to-end on real devices (play/pause, timed line-by-line subtitles, bidirectional SR ↔ EN learning direction, word inspector, XP awards) — verified all 12 clips updated with active 200 OK YouTube videos, timed sync, and direct YT link fallback.
 > 2. Fix any bugs or UI overflow issues found during testing.
 > 3. Upgrade SerboReels to work with **other languages** beyond Serbian ↔ English (multi-language clip support).
 
