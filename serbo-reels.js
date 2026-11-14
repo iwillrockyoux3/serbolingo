@@ -29,19 +29,19 @@
                 categoryLabel: '🎬 Kultni Film',
                 ytId: 'PDtjBtuqoQA', // Centar Film - Za Beograd / Ko to tamo peva
                 start: 0,
-                duration: 24,
+                duration: 22,
                 poster: 'https://img.youtube.com/vi/PDtjBtuqoQA/hqdefault.jpg',
                 author: 'Slobodan Šijan & Dušan Kovačević',
-                subSrLat: 'Za Beograd, firmom Krstić! I tata bi, sine! Pa naravno da bi, ko ne bi želeo ovakvu priliku?',
-                subSrCyr: 'За Београд, фирмом Крстић! И тата би, сине! Па наравно да би, ко не би желео овакву прилику?',
-                subEn: 'To Belgrade, with Krstić company! Daddy would too, son! Well of course he would, who wouldn’t want such an opportunity?',
-                culturalNote: 'Jedna od najcitiranijih replika u istoriji balkanske kinematografije. Koristi se u svakodnevnom govoru kao duhovita potvrda slaganja.',
+                subSrLat: 'Za Beograd, za Beograd, firmom Krstić! Upravo se narod sprema! Sve razloge za put ima, samo sreće valjda nema!',
+                subSrCyr: 'За Београд, за Београд, фирмом Крстић! Управо се народ спрема! Све разлоге за пут има, само среће ваљда нема!',
+                subEn: 'To Belgrade, to Belgrade, with Krstić company! The folk are just getting ready! All reasons for the journey they have, only luck is what they lack!',
+                culturalNote: 'Najpoznatija pesma jugoslovenskog filma. Dva romska muzikanta u autobusu pesmom predskazuju sudbinu putnika na putu ka Beogradu uoči 6. aprila 1941.',
                 lines: [
                     {
                         start: 0,
                         end: 8,
-                        subSrLat: 'Za Beograd, za Beograd, firmom Krstić!',
-                        subSrCyr: 'За Београд, за Београд, фирмом Крстић!',
+                        subSrLat: 'Za Beograd, za Beograd, firmom Krstić, firmom Krstić!',
+                        subSrCyr: 'За Београд, за Београд, фирмом Крстић, фирмом Крстић!',
                         subEn: 'To Belgrade, to Belgrade, with Krstić company!',
                         keyWords: [
                             { word: 'Beograd', root: 'Beograd', pos: 'imenica', caseTag: 'Akuzativ s predlogom ZA', trans: 'Belgrade (capital of Serbia)' },
@@ -52,36 +52,37 @@
                     {
                         start: 8,
                         end: 15,
-                        subSrLat: 'Svi bi hteli da vide taj beli grad!',
-                        subSrCyr: 'Сви би хтели да виде тај бели град!',
-                        subEn: 'Everyone would like to see that white city!',
+                        subSrLat: 'Upravo se narod sprema!',
+                        subSrCyr: 'Управо се народ спрема!',
+                        subEn: 'The folk are just getting ready to go!',
                         keyWords: [
-                            { word: 'svi', root: 'sav / svi', pos: 'zamenica', caseTag: 'Nominativ množine', trans: 'everyone / all' },
-                            { word: 'hteli', root: 'hteti', pos: 'glagol', caseTag: 'Potencijal (želja)', trans: 'would like / wanted' },
-                            { word: 'vide', root: 'videti', pos: 'glagol', caseTag: 'Prezent', trans: 'to see' },
-                            { word: 'beli', root: 'beo / beli', pos: 'pridev', caseTag: 'Akuzativ za neživo', trans: 'white' },
-                            { word: 'grad', root: 'grad', pos: 'imenica', caseTag: 'Akuzativ za neživo', trans: 'city / town' }
+                            { word: 'upravo', root: 'upravo', pos: 'prilog', caseTag: 'Vremenski prilog', trans: 'just now / currently' },
+                            { word: 'narod', root: 'narod', pos: 'imenica', caseTag: 'Nominativ jednine', trans: 'the people / folk' },
+                            { word: 'sprema', root: 'spremati se', pos: 'glagol', caseTag: 'Prezent (treće lice)', trans: 'is preparing / getting ready' }
                         ]
                     },
                     {
                         start: 15,
-                        end: 24,
-                        subSrLat: 'I tata bi, sine! Pa naravno da bi, ko ne bi želeo ovakvu priliku?',
-                        subSrCyr: 'И тата би, сине! Па наравно да би, ко не би желео овакву прилику?',
-                        subEn: 'Daddy would too, son! Well of course he would, who wouldn’t want such an opportunity?',
+                        end: 22,
+                        subSrLat: 'Sve razloge za put ima, samo sreće valjda nema, nema, joj!',
+                        subSrCyr: 'Све разлоге за пут има, само среће ваљда нема, нема, јој!',
+                        subEn: 'All reasons for the journey they have, only luck is what they lack, lack, oh my!',
                         keyWords: [
-                            { word: 'tata', root: 'otac / tata', pos: 'imenica', caseTag: 'Nominativ', trans: 'dad / father' },
-                            { word: 'sine', root: 'sin', pos: 'imenica', caseTag: 'Vokativ (obraćanje)', trans: 'son (in direct address)' },
-                            { word: 'želeo', root: 'želeti', pos: 'glagol', caseTag: 'Radni glagolski pridev', trans: 'wanted / wished' },
-                            { word: 'priliku', root: 'prilika', pos: 'imenica', caseTag: 'Akuzativ (objekat)', trans: 'opportunity / chance' }
+                            { word: 'razloge', root: 'razlog', pos: 'imenica', caseTag: 'Akuzativ množine', trans: 'reasons' },
+                            { word: 'put', root: 'put', pos: 'imenica', caseTag: 'Akuzativ za cilj', trans: 'journey / trip' },
+                            { word: 'sreće', root: 'sreća', pos: 'imenica', caseTag: 'Genitiv odricanja', trans: 'luck / good fortune' },
+                            { word: 'valjda', root: 'valjda', pos: 'rečca', caseTag: 'Modalna rečca', trans: 'probably / presumably' },
+                            { word: 'nema', root: 'nemati', pos: 'glagol', caseTag: 'Prezent (odrični oblik)', trans: 'there is none / lacks' }
                         ]
                     }
                 ],
                 keyWords: [
-                    { word: 'tata', root: 'otac / tata', pos: 'imenica', caseTag: 'Nominativ', trans: 'dad / father' },
-                    { word: 'sine', root: 'sin', pos: 'imenica', caseTag: 'Vokativ (obraćanje)', trans: 'son (in direct address)' },
-                    { word: 'želeo', root: 'želeti', pos: 'glagol', caseTag: 'Radni glagolski pridev (prošlo vreme)', trans: 'wanted / wished' },
-                    { word: 'priliku', root: 'prilika', pos: 'imenica', caseTag: 'Akuzativ (objekat)', trans: 'opportunity / chance' }
+                    { word: 'Beograd', root: 'Beograd', pos: 'imenica', caseTag: 'Akuzativ s predlogom ZA', trans: 'Belgrade' },
+                    { word: 'firmom', root: 'firma', pos: 'imenica', caseTag: 'Instrumental jednine', trans: 'with company / firm' },
+                    { word: 'Krstić', root: 'Krstić', pos: 'prezime', caseTag: 'Nominativ', trans: 'Krstić' },
+                    { word: 'narod', root: 'narod', pos: 'imenica', caseTag: 'Nominativ jednine', trans: 'people / folk' },
+                    { word: 'sprema', root: 'spremati se', pos: 'glagol', caseTag: 'Prezent', trans: 'getting ready' },
+                    { word: 'sreće', root: 'sreća', pos: 'imenica', caseTag: 'Genitiv odricanja', trans: 'luck' }
                 ]
             },
             {
@@ -721,9 +722,10 @@
         activeLineIndex: 0,
         currentPlayTime: 0,
         playbackTimer: null,
-        isPlaying: true,
+        isPlaying: false,
         playbackSpeed: 1.0,
         completedCount: 0,
+        _hasMessageListener: false,
 
         // --- Local Storage Management ---
         getReelsData: function () {
@@ -776,6 +778,65 @@
             btn.textContent = isEnglish ? '🇷🇸 ➡️ 🇬🇧' : '🇬🇧 ➡️ 🇷🇸';
             if (btn.parentElement) {
                 btn.parentElement.title = isEnglish ? 'Učiš: Engleski (Prebaci na učenje srpskog)' : 'Learning: Serbian (Switch to learning English)';
+            }
+        },
+
+        // --- YouTube Player postMessage Synchronization ---
+        initMessageListener: function () {
+            if (this._hasMessageListener) return;
+            this._hasMessageListener = true;
+
+            window.addEventListener('message', (event) => {
+                if (!event.data) return;
+                let data = event.data;
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch (e) { return; }
+                }
+                if (!data || typeof data !== 'object') return;
+
+                // 1. YouTube onStateChange (1=PLAYING, 2=PAUSED, 0=ENDED)
+                if (data.event === 'onStateChange') {
+                    if (data.info === 1) {
+                        this.isPlaying = true;
+                        const ind = document.getElementById('reels-play-indicator');
+                        if (ind) ind.classList.add('hidden');
+                        this.startSubtitleTimer();
+                    } else if (data.info === 2) {
+                        this.isPlaying = false;
+                        const ind = document.getElementById('reels-play-indicator');
+                        if (ind) ind.classList.remove('hidden');
+                        this.stopSubtitleTimer();
+                    } else if (data.info === 0) {
+                        this.activeLineIndex = 0;
+                        this.currentPlayTime = 0;
+                        this.renderSubtitles();
+                    }
+                }
+
+                // 2. YouTube infoDelivery (real currentTime updates from player)
+                if (data.event === 'infoDelivery' && data.info && typeof data.info.currentTime === 'number') {
+                    this.onPlayerTimeUpdate(data.info.currentTime);
+                }
+            });
+        },
+
+        onPlayerTimeUpdate: function (ytTime) {
+            const clips = this.getFilteredClips();
+            if (!clips || clips.length === 0) return;
+            const clip = clips[this.currentIndex];
+            if (!clip) return;
+
+            const lines = clip.lines || [];
+            if (lines.length <= 1) return;
+
+            const clipStart = clip.start || 0;
+            const elapsed = Math.max(0, ytTime - clipStart);
+            this.currentPlayTime = elapsed;
+
+            const activeIdx = lines.findIndex(l => elapsed >= l.start && elapsed < l.end);
+            if (activeIdx !== -1 && activeIdx !== this.activeLineIndex) {
+                this.activeLineIndex = activeIdx;
+                this.renderSubtitles();
             }
         },
 
@@ -834,10 +895,11 @@
             const iframe = document.getElementById('reels-yt-iframe');
             if (iframe && iframe.contentWindow) {
                 try {
+                    const seekTarget = (clip.start || 0) + clip.lines[idx].start;
                     iframe.contentWindow.postMessage(JSON.stringify({
                         event: 'command',
                         func: 'seekTo',
-                        args: [clip.lines[idx].start, true]
+                        args: [seekTarget, true]
                     }), '*');
                 } catch(e) {}
             }
@@ -860,12 +922,13 @@
             modal.classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
 
+            this.initMessageListener();
             this.activeDirection = this.getDirection();
             this.currentPlayTime = 0;
             this.activeLineIndex = 0;
+            this.isPlaying = false;
             this.updateDirectionButton();
             this.renderReel();
-            this.startSubtitleTimer();
 
             if (window.TouchHaptics) TouchHaptics.vibrate('tap');
         },
@@ -968,6 +1031,15 @@
                         <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl text-white">▶</div>
                     </div>
                 </div>`;
+
+                const iframe = document.getElementById('reels-yt-iframe');
+                if (iframe) {
+                    iframe.addEventListener('load', () => {
+                        try {
+                            iframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*');
+                        } catch (e) {}
+                    });
+                }
             }
 
             // 3. Subtitles with Clickable Grammar Words & Live Line Following
@@ -1088,8 +1160,9 @@
             this.currentIndex = (this.currentIndex + 1) % clips.length;
             this.activeLineIndex = 0;
             this.currentPlayTime = 0;
+            this.isPlaying = false;
+            this.stopSubtitleTimer();
             this.renderReel();
-            this.startSubtitleTimer();
             if (window.TouchHaptics) TouchHaptics.vibrate('tap');
         },
 
@@ -1099,8 +1172,9 @@
             this.currentIndex = (this.currentIndex - 1 + clips.length) % clips.length;
             this.activeLineIndex = 0;
             this.currentPlayTime = 0;
+            this.isPlaying = false;
+            this.stopSubtitleTimer();
             this.renderReel();
-            this.startSubtitleTimer();
             if (window.TouchHaptics) TouchHaptics.vibrate('tap');
         },
 
@@ -1116,6 +1190,7 @@
             const action = this.isPlaying ? 'playVideo' : 'pauseVideo';
             try {
                 iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: action, args: [] }), '*');
+                iframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*');
             } catch (e) {
                 console.log('IFrame message error:', e);
             }
