@@ -154,7 +154,11 @@
                 // Utility & API Keys
                 { id: 'api-key-modal', closeFn: () => typeof app !== 'undefined' && app.closeApiKeyModal ? app.closeApiKeyModal() : document.getElementById('api-key-modal')?.classList.add('hidden') },
                 { id: 'voice-recommendation-modal', closeFn: () => document.getElementById('voice-recommendation-modal')?.classList.add('hidden') },
-                { id: 'yt-key-modal', closeFn: () => document.getElementById('yt-key-modal')?.classList.add('hidden') }
+                { id: 'yt-key-modal', closeFn: () => document.getElementById('yt-key-modal')?.classList.add('hidden') },
+
+                // Social Profile Sharing & Spectator
+                { id: 'share-profile-modal', closeFn: () => typeof app !== 'undefined' && app.closeShareProfileModal ? app.closeShareProfileModal() : document.getElementById('share-profile-modal')?.classList.add('hidden') },
+                { id: 'spectator-profile-modal', closeFn: () => typeof app !== 'undefined' && app.closeSpectatorModal ? app.closeSpectatorModal() : document.getElementById('spectator-profile-modal')?.classList.add('hidden') }
             ];
 
             modals.forEach(m => {

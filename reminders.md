@@ -367,10 +367,14 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] **Diamond Shop Catalog Expansion (DONE)**: Added 7 new animated avatars (Lion of Kalemegdan, Balkan Bear, Golden Striker, Guča Trumpeter, Balkan Vampire, Cosmic Polyglot, Clever Fox) and 8 new profile titles (Kralj Sabora, Derbi Fanatik, Kafedžija, Balkanski Šef, Brzi Prsti, Hodajući Rečnik, Snajper za Padeže, SerboLingo Zvezda) to spend diamonds on.
 <div style="color:#888">
 
-- [x] <span style="color:#888">**"Podeli Profil" (Dedicated Profile Bragging Card & Native Share) (DONE)**:</span>
+- [x] <span style="color:#888">**"Podeli Profil" (Dedicated Profile Bragging Card & Native Share) (DONE & VERIFIED)**:</span>
   - <span style="color:#888">[x] Added prominent "📤 Podeli Profil" button on `#view-profile`.</span>
-  - <span style="color:#888">[x] Generates sleek high-resolution 1080x1080 canvas bragging card (Avatar, Level, League Tier badge, Day Streak flame, Total XP, and Top Medals).</span>
+  - <span style="color:#888">[x] Generates sleek high-resolution 1080x1350 canvas bragging card (Avatar, Level ⭐, League Tier badge 🛡️, Day Streak flame & VIP Society tier 🔥, Total XP ⚡, Top Medals/Trophies 🏆, Mastered Words, and Skill Tree Crown progress 👑).</span>
+  - <span style="color:#888">[x] **Quick-Share Social Grid Sheet (`#share-profile-modal`)**: 1-tap direct sharing to WhatsApp, Telegram, Instagram Stories, X (Twitter), Facebook, and native Web Share.</span>
+  - <span style="color:#888">[x] **1-Tap Universal Copy & Download**: "Kopiraj Link" (spectator URL + formatted post), "Kopiraj Sliku" (`ClipboardItem` raw PNG for instant Ctrl+V pasting), and direct HD download.</span>
+  - <span style="color:#888">[x] **Inbound Spectator Route Handler (`#spectator-profile-modal`)**: When visitors click a shared link (`?user=...`), opens a personalized learner card with instant call-to-action to join and start learning Serbian.</span>
   - <span style="color:#888">[x] 100% offline, zero-backend — triggers native `navigator.share` on mobile or downloads PNG on PC with +10 XP reward (`app.shareProfileCard`).</span>
+  - <span style="color:#888">[x] **Bug Fix & Polish (Nov 14 2026)**: Replaced broken `getUserTier()` with safe `getLeagueData()+TIERS` lookup. Added cross-browser `drawRoundRect` polyfill for older WebViews. Shows equipped title and dynamic stats on bragging card.</span>
 - [x] <span style="color:#888">**Variable Reward Triggers & Time Badges ("Dopamine Boosts") (DONE)**:</span>
   - <span style="color:#888">[x] **Contextual Badges**: Real-time evaluation in `app.checkTimeBadges()` awarding *"Noćna Ptica / Night Owl"* 🦉 (studying between 22:00-04:00), *"Rani Starosedelac"* 🌅 (studying 05:00-08:00), and *"Perfekcionista"* 🎯 (100% accuracy on lesson completion).</span>
   - <span style="color:#888">[x] **Unpredictable Mystery Chest Drops**: Variable chest rolls awarding +10 to +50 bonus XP and diamond drops.</span>

@@ -405,8 +405,27 @@ const app = {
                     }
                 }, 400);
             }
+
+            // Shared Profile Spectator Route Handler (?user=... or ?profile=...)
+            const sharedUser = urlParams.get('user') || urlParams.get('profile');
+            if (sharedUser) {
+                setTimeout(() => {
+                    if (app.openSpectatorModal) {
+                        app.openSpectatorModal({
+                            user: sharedUser,
+                            lvl: urlParams.get('lvl') || '1',
+                            streak: urlParams.get('streak') || '1',
+                            xp: urlParams.get('xp') || '0',
+                            tr: urlParams.get('tr') || '0',
+                            lg: urlParams.get('lg') || 'bronze',
+                            tt: urlParams.get('tt') || 'Kafanska Legenda',
+                            av: urlParams.get('av') || '👤'
+                        });
+                    }
+                }, 500);
+            }
         } catch (e) {
-            console.warn('[PWA Shortcuts] Route error:', e);
+            console.warn('[PWA Shortcuts / Spectator] Route error:', e);
         }
     },
     applyDarkMode: () => {
@@ -3662,14 +3681,98 @@ const app = {
         };
         reader.readAsText(file);
     },
+    // ─── SOCIAL PROFILE SHARING & BRAGGING CARD (PRIORITY 32.2 UPGRADE) ───
+    _shareCardBlob: null,
+    _shareCardDataUrl: null,
+
+    getProfileShareData: () => {
+        const username = (state.user && state.user.name && state.user.name !== 'GUEST_USER') ? state.user.name : 'Učenik';
+        const avatar = (state.user && state.user.avatar) || '👤';
+        const totalXp = (state.stats && state.stats.totalXp) || 0;
+        const level = Math.max(1, Math.floor(totalXp / 100) + 1);
+        const streak = (state.stats && state.stats.streak) || 1;
+        const mastered = state.mistakeLog ? Object.keys(state.mistakeLog).length : 0;
+        
+        let trophies = 0;
+        if (window.TrophyCabinet && window.TrophyCabinet.getState) {
+            try {
+                trophies = Object.keys(window.TrophyCabinet.getState().unlockedMedals || {}).length;
+            } catch (e) { trophies = 0; }
+        }
+
+        let tierId = 'bronze';
+        let tierName = 'Bronzana';
+        let tierIcon = '🥉';
+        if (window.LeagueEngine && window.LeagueEngine.getLeagueData && window.LeagueEngine.TIERS) {
+            try {
+                const lData = window.LeagueEngine.getLeagueData();
+                tierId = lData.tier || 'bronze';
+                const tierObj = window.LeagueEngine.TIERS[tierId] || window.LeagueEngine.TIERS.bronze;
+                tierName = tierObj.name || 'Bronzana';
+                tierIcon = tierObj.icon || '🥉';
+            } catch (e) {}
+        }
+
+        let societyName = '';
+        if (window.StreakEngine && window.StreakEngine.getSocietyTier) {
+            try {
+                const soc = window.StreakEngine.getSocietyTier(streak);
+                if (soc && soc.name) societyName = soc.name;
+            } catch (e) {}
+        }
+
+        const equippedTitle = state.equippedTitle || 'Kafanska Legenda';
+
+        let skillsCount = 0;
+        if (window.SkillTreeEngine && window.SkillTreeEngine.getProgress) {
+            try {
+                skillsCount = Object.keys(window.SkillTreeEngine.getProgress() || {}).length;
+            } catch (e) { skillsCount = 0; }
+        }
+
+        const baseUrl = window.location.origin + window.location.pathname;
+        const params = new URLSearchParams({
+            user: username,
+            lvl: level,
+            streak: streak,
+            xp: totalXp,
+            tr: trophies,
+            lg: tierId,
+            tt: equippedTitle,
+            av: avatar
+        });
+        const spectatorUrl = `${baseUrl}?${params.toString()}`;
+
+        const shareText = `🔥 Učim srpski na SerboLingo!\n👤 ${username} • Nivo ${level} • Niz: ${streak} dana\n⚡ ${totalXp} XP • 🏆 ${trophies} Trofeja • ${tierIcon} ${tierName} Liga\n🇷🇸 Pridruži se besplatno i izazovi me:\n${spectatorUrl}`;
+
+        return {
+            username,
+            avatar,
+            level,
+            streak,
+            totalXp,
+            mastered,
+            trophies,
+            tierId,
+            tierName,
+            tierIcon,
+            societyName,
+            equippedTitle,
+            skillsCount,
+            spectatorUrl,
+            shareText
+        };
+    },
+
     shareProfileCard: async () => {
         try {
+            const data = app.getProfileShareData();
             const canvas = document.createElement('canvas');
             canvas.width = 1080;
-            canvas.height = 1080;
+            canvas.height = 1350; // High-res 4:5 Instagram & social standard
             const ctx = canvas.getContext('2d');
 
-            // Cross-browser roundRect helper (fallback for older Chromium/Safari/WebViews)
+            // Cross-browser roundRect helper
             const drawRoundRect = (x, y, w, h, r) => {
                 ctx.beginPath();
                 if (ctx.roundRect) {
@@ -3688,161 +3791,400 @@ const app = {
                 }
             };
 
-            // Background Gradient (Balkan Royal Navy / Indigo)
-            const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);
-            bgGrad.addColorStop(0, '#0f172a');
-            bgGrad.addColorStop(0.5, '#1e1b4b');
-            bgGrad.addColorStop(1, '#0f172a');
+            // 1. Deep Midnight Background
+            const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1350);
+            bgGrad.addColorStop(0, '#090d16');
+            bgGrad.addColorStop(0.35, '#111827');
+            bgGrad.addColorStop(0.7, '#1e1b4b');
+            bgGrad.addColorStop(1, '#090d16');
             ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, 1080, 1080);
+            ctx.fillRect(0, 0, 1080, 1350);
 
-            // Subtle Serbian Flag Tricolor Accent on top edge
+            // Subtle Serbian Flag Tricolor on top edge
             ctx.fillStyle = '#C6363C'; // Red
-            ctx.fillRect(0, 0, 1080, 16);
+            ctx.fillRect(0, 0, 1080, 14);
             ctx.fillStyle = '#0C4076'; // Blue
-            ctx.fillRect(0, 16, 1080, 16);
+            ctx.fillRect(0, 14, 1080, 14);
             ctx.fillStyle = '#FFFFFF'; // White
-            ctx.fillRect(0, 32, 1080, 16);
+            ctx.fillRect(0, 28, 1080, 14);
 
-            // Card Container with Glassmorphism
+            // 2. Glassmorphic Main Frame Container
             ctx.save();
-            ctx.fillStyle = 'rgba(30, 41, 59, 0.85)';
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-            ctx.lineWidth = 4;
-            drawRoundRect(80, 100, 920, 880, 48);
+            ctx.fillStyle = 'rgba(17, 24, 39, 0.82)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.lineWidth = 3;
+            drawRoundRect(60, 65, 960, 1220, 44);
             ctx.fill();
             ctx.stroke();
             ctx.restore();
 
-            // App Brand Header
-            ctx.font = 'bold 44px Inter, system-ui, sans-serif';
+            // 3. App Header Brand
+            ctx.font = '900 46px Inter, system-ui, sans-serif';
             ctx.fillStyle = '#38bdf8';
             ctx.textAlign = 'center';
-            ctx.fillText('🇷🇸 SerboLingo', 540, 190);
+            ctx.fillText('🇷🇸 SerboLingo', 540, 140);
 
-            ctx.font = '600 24px Inter, system-ui, sans-serif';
+            ctx.font = '700 20px Inter, system-ui, sans-serif';
             ctx.fillStyle = '#94a3b8';
-            ctx.fillText('PASOŠ ZNANJA • LEARNER PASSPORT', 540, 235);
+            ctx.fillText('PASOŠ ZNANJA • LEARNER PASSPORT', 540, 178);
 
-            // Avatar Circle
-            const avatar = (state.user && state.user.avatar) || '👤';
+            // 4. Center Avatar Circle
+            const avatarCenterY = 285;
             ctx.save();
             ctx.beginPath();
-            ctx.arc(540, 360, 90, 0, Math.PI * 2);
-            ctx.fillStyle = '#334155';
+            ctx.arc(540, avatarCenterY, 82, 0, Math.PI * 2);
+            ctx.fillStyle = '#1e293b';
             ctx.strokeStyle = '#3b82f6';
-            ctx.lineWidth = 8;
+            ctx.lineWidth = 6;
             ctx.fill();
             ctx.stroke();
-            ctx.font = '85px system-ui';
+
+            // Avatar Emoji
+            ctx.font = '82px system-ui';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(avatar, 540, 365);
+            ctx.fillText(data.avatar, 540, avatarCenterY + 4);
             ctx.restore();
 
-            // User Name & Title
-            const username = (state.user && state.user.name) || 'Korisnik';
-            ctx.font = '900 48px Inter, system-ui, sans-serif';
+            // Level Pill floating at avatar base
+            const lvlPillY = avatarCenterY + 68;
+            ctx.save();
+            const pillGrad = ctx.createLinearGradient(440, lvlPillY, 640, lvlPillY);
+            pillGrad.addColorStop(0, '#f59e0b');
+            pillGrad.addColorStop(1, '#d97706');
+            ctx.fillStyle = pillGrad;
+            ctx.strokeStyle = '#fef3c7';
+            ctx.lineWidth = 2;
+            drawRoundRect(445, lvlPillY, 190, 36, 18);
+            ctx.fill();
+            ctx.stroke();
+            ctx.font = '900 18px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#0f172a';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`⭐ NIVO ${data.level}`, 540, lvlPillY + 18);
+            ctx.restore();
+
+            // 5. User Name & Equipped Title
+            ctx.font = '900 46px Inter, system-ui, sans-serif';
             ctx.fillStyle = '#ffffff';
             ctx.textAlign = 'center';
-            ctx.fillText(username, 540, 500);
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillText(data.username, 540, 440);
 
-            // Equipped Title or League Tier
-            let titleText = 'Bronzana Liga';
-            if (window.LeagueEngine && window.LeagueEngine.getLeagueData && window.LeagueEngine.TIERS) {
-                try {
-                    const lData = window.LeagueEngine.getLeagueData();
-                    const tierObj = window.LeagueEngine.TIERS[lData.tier] || window.LeagueEngine.TIERS.bronze;
-                    titleText = `${tierObj.icon || '🏆'} ${tierObj.name} Liga`;
-                } catch (e) {
-                    titleText = 'Bronzana Liga';
-                }
-            }
-            if (state.equippedTitle) {
-                titleText = state.equippedTitle + ' • ' + titleText;
-            }
-            ctx.font = '700 26px Inter, system-ui, sans-serif';
+            // Title & League Tier in one cohesive subtitle
+            const titleSubtitle = `${data.tierIcon} ${data.tierName} Liga • ✨ ${data.equippedTitle}`;
+            ctx.font = '700 24px Inter, system-ui, sans-serif';
             ctx.fillStyle = '#fbbf24';
-            ctx.fillText(titleText, 540, 545);
+            ctx.fillText(titleSubtitle, 540, 480);
 
-            // Stats Grid (3 boxes: Streak, XP, Mastered)
-            const stats = [
-                { label: 'DNEVNI NIZ', val: `🔥 ${state.stats ? state.stats.streak || 1 : 1}d`, color: '#f97316' },
-                { label: 'UKUPNO XP', val: `⚡ ${state.stats ? state.stats.totalXp || 0 : 0}`, color: '#eab308' },
-                { label: 'SAVLAĐANO', val: `⭐ ${state.mistakeLog ? Object.keys(state.mistakeLog).length : 0}`, color: '#10b981' }
+            // 6. 4-Box Stats Grid (2 rows x 2 cols)
+            const boxW = 420;
+            const boxH = 115;
+            const col1X = 100;
+            const col2X = 560;
+
+            const gridStats = [
+                // Row 1
+                { x: col1X, y: 520, label: 'DNEVNI NIZ', val: `🔥 ${data.streak} Dana`, sub: data.societyName ? `👑 ${data.societyName}` : 'Aktivni Učenik', color: '#f97316' },
+                { x: col2X, y: 520, label: 'UKUPNO ISKUSTVO', val: `⚡ ${data.totalXp}`, sub: 'XP Poena Znanja', color: '#eab308' },
+                // Row 2
+                { x: col1X, y: 655, label: 'TROFEJI & MEDALJE', val: `🏆 ${data.trophies}`, sub: 'Osvojenih Odlikovanja', color: '#a855f7' },
+                { x: col2X, y: 655, label: 'SAVLAĐANO REČI', val: `⭐ ${data.mastered}`, sub: 'U Rečniku & SRS-u', color: '#10b981' }
             ];
 
-            const boxWidth = 260;
-            const boxY = 600;
-            stats.forEach((st, i) => {
-                const boxX = 130 + i * (boxWidth + 35);
+            gridStats.forEach(st => {
                 ctx.save();
-                ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
                 ctx.lineWidth = 2;
-                drawRoundRect(boxX, boxY, boxWidth, 140, 24);
+                drawRoundRect(st.x, st.y, boxW, boxH, 22);
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.font = '900 36px Inter, system-ui, sans-serif';
+                // Value
+                ctx.font = '900 32px Inter, system-ui, sans-serif';
                 ctx.fillStyle = st.color;
                 ctx.textAlign = 'center';
-                ctx.fillText(st.val, boxX + boxWidth / 2, boxY + 65);
+                ctx.fillText(st.val, st.x + boxW / 2, st.y + 50);
 
-                ctx.font = '800 18px Inter, system-ui, sans-serif';
+                // Label
+                ctx.font = '800 15px Inter, system-ui, sans-serif';
                 ctx.fillStyle = '#94a3b8';
-                ctx.fillText(st.label, boxX + boxWidth / 2, boxY + 105);
+                ctx.fillText(st.label, st.x + boxW / 2, st.y + 78);
+
+                // Subtitle
+                ctx.font = '600 13px Inter, system-ui, sans-serif';
+                ctx.fillStyle = '#64748b';
+                ctx.fillText(st.sub, st.x + boxW / 2, st.y + 98);
                 ctx.restore();
             });
 
-            // Footer Call To Action
-            ctx.font = '800 26px Inter, system-ui, sans-serif';
+            // 7. Skills & Curriculum Progress Bar Banner
+            const skillBoxY = 795;
+            const skillBoxW = 880;
+            ctx.save();
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.72)';
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+            ctx.lineWidth = 2;
+            drawRoundRect(col1X, skillBoxY, skillBoxW, 125, 22);
+            ctx.fill();
+            ctx.stroke();
+
+            // Progress Header
+            ctx.font = '800 17px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.textAlign = 'left';
+            ctx.fillText('👑 NAPREDAK U STABLU ZNANJA', col1X + 30, skillBoxY + 40);
+
+            ctx.font = '900 24px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#38bdf8';
+            ctx.textAlign = 'right';
+            ctx.fillText(`${data.skillsCount} / 82 Celina`, col1X + skillBoxW - 30, skillBoxY + 40);
+
+            // Progress Bar Track
+            const barX = col1X + 30;
+            const barY = skillBoxY + 65;
+            const barW = skillBoxW - 60;
+            const barH = 16;
+            ctx.fillStyle = '#1e293b';
+            drawRoundRect(barX, barY, barW, barH, 8);
+            ctx.fill();
+
+            // Progress Bar Fill
+            const pct = Math.max(0.04, Math.min(1, data.skillsCount / 82));
+            const fillW = Math.round(barW * pct);
+            const fillGrad = ctx.createLinearGradient(barX, 0, barX + fillW, 0);
+            fillGrad.addColorStop(0, '#38bdf8');
+            fillGrad.addColorStop(1, '#3b82f6');
+            ctx.fillStyle = fillGrad;
+            drawRoundRect(barX, barY, fillW, barH, 8);
+            ctx.fill();
+
+            // Progress Subtitle
+            ctx.font = '600 13px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Završeno ${Math.round(pct * 100)}% celokupnog nastavnog programa`, barX, skillBoxY + 105);
+            ctx.restore();
+
+            // 8. Footer Call To Action & Learner Invitation
+            ctx.font = '900 30px Inter, system-ui, sans-serif';
             ctx.fillStyle = '#ffffff';
             ctx.textAlign = 'center';
-            ctx.fillText('Učim srpski na SerboLingo! 🇷🇸', 540, 830);
+            ctx.fillText('Učim srpski na SerboLingo! 🇷🇸', 540, 975);
 
-            ctx.font = '500 20px Inter, system-ui, sans-serif';
-            ctx.fillStyle = '#64748b';
-            ctx.fillText('100% Besplatna & Offline aplikacija za srpski jezik', 540, 870);
+            ctx.font = '600 21px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText('100% Besplatna & Offline Aplikacija za Jezik', 540, 1015);
 
-            // Export to Blob and Share / Download
-            canvas.toBlob(async (blob) => {
-                if (!blob) return;
-                const file = new File([blob], `serbolingo-profil-${username}.png`, { type: 'image/png' });
+            ctx.font = '800 20px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillText('Započni svoj niz • serbolingo.app', 540, 1055);
 
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            title: `SerboLingo Profil: ${username}`,
-                            text: `Učim srpski na SerboLingo! 🔥 Moj niz: ${state.stats ? state.stats.streak || 1 : 1} dana | ⚡ ${state.stats ? state.stats.totalXp || 0 : 0} XP!`,
-                            files: [file]
-                        });
-                        app.addXp(10);
-                        app.showToast('📤 Profil uspešno podeljen! (+10 XP)', 'success');
-                        return;
-                    } catch (e) {
-                        /* user cancelled or share closed */
-                    }
-                }
+            // Bottom subtle Tricolor Accent
+            ctx.fillStyle = '#C6363C';
+            ctx.fillRect(100, 1240, 293, 8);
+            ctx.fillStyle = '#0C4076';
+            ctx.fillRect(393, 1240, 293, 8);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(686, 1240, 294, 8);
 
-                // Desktop / Fallback download
-                const url = URL.createObjectURL(blob);
-                const dlAnchor = document.createElement('a');
-                dlAnchor.href = url;
-                dlAnchor.download = `serbolingo-profil-${username}.png`;
-                document.body.appendChild(dlAnchor);
-                dlAnchor.click();
-                document.body.removeChild(dlAnchor);
-                URL.revokeObjectURL(url);
-                app.addXp(10);
-                app.showToast('📸 Slika profila je preuzeta! (+10 XP)', 'success');
+            // Cache Blob & DataURL
+            app._shareCardDataUrl = canvas.toDataURL('image/png');
+            canvas.toBlob((blob) => {
+                app._shareCardBlob = blob;
             }, 'image/png');
+
+            // Open Share Sheet Modal
+            const previewImg = document.getElementById('share-profile-preview-img');
+            if (previewImg) previewImg.src = app._shareCardDataUrl;
+
+            const modal = document.getElementById('share-profile-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+            if (window.TouchHaptics) window.TouchHaptics.play('modal_pop');
 
         } catch (err) {
             console.error('Share profile failed:', err);
-            app.showToast('Greška prilikom deljenja profila.', 'error');
+            app.showToast('Greška prilikom pripreme profila.', 'error');
         }
     },
+
+    closeShareProfileModal: () => {
+        const modal = document.getElementById('share-profile-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    },
+
+    shareToSocial: async (platform) => {
+        const data = app.getProfileShareData();
+        const username = data.username;
+        const text = data.shareText;
+        const url = data.spectatorUrl;
+
+        // Ensure Blob exists
+        const blob = app._shareCardBlob;
+        const file = blob ? new File([blob], `serbolingo-profil-${username.toLowerCase().replace(/[^a-z0-9]/g, '_')}.png`, { type: 'image/png' }) : null;
+
+        if (platform === 'whatsapp') {
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+            app.addXp(10);
+            app.showToast('💬 WhatsApp deljenje pokrenuto! (+10 XP)', 'success');
+        } else if (platform === 'telegram') {
+            const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(`🔥 Moj profil na SerboLingo!\nNivo ${data.level} • Niz: ${data.streak}d • ⚡ ${data.totalXp} XP`)}`;
+            window.open(tgUrl, '_blank');
+            app.addXp(10);
+            app.showToast('✈️ Telegram deljenje pokrenuto! (+10 XP)', 'success');
+        } else if (platform === 'twitter') {
+            const tweetText = `Učim srpski na SerboLingo! 🔥 Moj niz: ${data.streak} dana | Nivo ${data.level} | ⚡ ${data.totalXp} XP! 🇷🇸 #SerboLingo #Serbian #LanguageLearning`;
+            const twUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(url)}`;
+            window.open(twUrl, '_blank');
+            app.addXp(10);
+            app.showToast('🐦 X (Twitter) deljenje pokrenuto! (+10 XP)', 'success');
+        } else if (platform === 'facebook') {
+            const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
+            window.open(fbUrl, '_blank');
+            app.addXp(10);
+            app.showToast('📘 Facebook deljenje pokrenuto! (+10 XP)', 'success');
+        } else if (platform === 'instagram') {
+            // Instagram Stories: Native file share on mobile, or clipboard copy on desktop
+            if (navigator.share && file && navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        title: `SerboLingo Profil: ${username}`,
+                        text: text,
+                        files: [file]
+                    });
+                    app.addXp(10);
+                    app.showToast('📱 Podeljeno na Instagram Stories! (+10 XP)', 'success');
+                    return;
+                } catch (e) {}
+            }
+            // Fallback: Copy image and open Instagram
+            await app.copyProfileCardImage();
+            window.open('https://www.instagram.com', '_blank');
+            app.showToast('📱 Slika je kopirana! Možeš je dodati u Instagram Story.', 'info');
+        } else {
+            // Generic 'more' / Web Share API
+            if (navigator.share) {
+                try {
+                    const sharePayload = {
+                        title: `SerboLingo Profil: ${username}`,
+                        text: text,
+                        url: url
+                    };
+                    if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+                        sharePayload.files = [file];
+                    }
+                    await navigator.share(sharePayload);
+                    app.addXp(10);
+                    app.showToast('✨ Profil uspešno podeljen! (+10 XP)', 'success');
+                    return;
+                } catch (e) {}
+            }
+            app.copyProfileShareLink();
+        }
+    },
+
+    copyProfileShareLink: async () => {
+        const data = app.getProfileShareData();
+        try {
+            await navigator.clipboard.writeText(data.shareText);
+            app.addXp(10);
+            app.showToast('🔗 Link profila sa porukom je kopiran! (+10 XP)', 'success');
+        } catch (e) {
+            // Fallback input copy
+            const temp = document.createElement('textarea');
+            temp.value = data.shareText;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            app.addXp(10);
+            app.showToast('🔗 Link profila je kopiran! (+10 XP)', 'success');
+        }
+    },
+
+    copyProfileCardImage: async () => {
+        try {
+            if (app._shareCardBlob && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+                await navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': app._shareCardBlob })
+                ]);
+                app.addXp(10);
+                app.showToast('🖼️ Slika profila je kopirana! Nalepi je (Ctrl+V) u čet. (+10 XP)', 'success');
+                return;
+            }
+        } catch (e) {
+            console.warn('Clipboard image write failed:', e);
+        }
+        // Fallback: download the image
+        app.downloadProfileCardImage();
+    },
+
+    downloadProfileCardImage: () => {
+        const data = app.getProfileShareData();
+        const username = data.username.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        const dlAnchor = document.createElement('a');
+        dlAnchor.href = app._shareCardDataUrl || '';
+        dlAnchor.download = `serbolingo-pasos-${username}.png`;
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        document.body.removeChild(dlAnchor);
+        app.addXp(10);
+        app.showToast('💾 HD Pasoš je preuzet! (+10 XP)', 'success');
+    },
+
+    openSpectatorModal: (spec) => {
+        const modal = document.getElementById('spectator-profile-modal');
+        if (!modal) return;
+
+        const nameEl = document.getElementById('spec-name');
+        const calloutEl = document.getElementById('spec-callout-name');
+        const avatarEl = document.getElementById('spec-avatar');
+        const lvlEl = document.getElementById('spec-level-badge');
+        const titleEl = document.getElementById('spec-title');
+        const leagueEl = document.getElementById('spec-league');
+        const streakEl = document.getElementById('spec-streak');
+        const xpEl = document.getElementById('spec-xp');
+        const trEl = document.getElementById('spec-trophies');
+
+        const userName = spec.user || 'Učenik';
+        if (nameEl) nameEl.textContent = userName;
+        if (calloutEl) calloutEl.textContent = userName;
+        if (avatarEl) avatarEl.textContent = spec.av || '👤';
+        if (lvlEl) lvlEl.textContent = `NIVO ${spec.lvl || 1}`;
+        if (titleEl) titleEl.textContent = `✨ ${spec.tt || 'Kafanska Legenda'} ✨`;
+
+        // League lookup
+        let lgText = '🥉 Bronzana Liga';
+        if (window.LeagueEngine && window.LeagueEngine.TIERS) {
+            const t = window.LeagueEngine.TIERS[spec.lg] || window.LeagueEngine.TIERS.bronze;
+            if (t) lgText = `${t.icon || '🏆'} ${t.name} Liga`;
+        }
+        if (leagueEl) leagueEl.textContent = lgText;
+        if (streakEl) streakEl.textContent = `🔥 ${spec.streak || 1}d`;
+        if (xpEl) xpEl.textContent = `⚡ ${spec.xp || 0}`;
+        if (trEl) trEl.textContent = `🏆 ${spec.tr || 0}`;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        if (window.TouchHaptics) window.TouchHaptics.play('modal_pop');
+    },
+
+    closeSpectatorModal: () => {
+        const modal = document.getElementById('spectator-profile-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    },,
     endLesson: () => { 
         if (typeof GrammarEngine !== 'undefined' && GrammarEngine.hideTooltip) {
             GrammarEngine.hideTooltip();

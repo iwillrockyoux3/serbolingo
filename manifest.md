@@ -14,8 +14,8 @@
 
 | File | Lines | Size | Description |
 |:-----|------:|-----:|:------------|
-| [`index.html`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/index.html) | 2,591 | 196 KB | Main SPA shell — all 12 views, modals, nav, SVG icons, CDN imports |
-| [`app.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/app.js) | 4,126 | 218 KB | Core controller — state management, auth, navigation, Omni-Bar search, daily reset, XP/streak/hearts, Chart.js stats, Canvas whiteboard, TTS pipeline, Gemini AI handlers, UI_STRINGS localization, Mistake Vault 2.0 with SM-2, PWA URL action shortcuts router (?action=streak, lens, flashcards, exchange) |
+| [`index.html`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/index.html) | 2,739 | 206 KB | Main SPA shell — all 12 views, modals, nav, SVG icons, CDN imports, Social Share & Spectator Profile modals |
+| [`app.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/app.js) | 4,696 | 248 KB | Core controller — state management, auth, navigation, Omni-Bar search, daily reset, XP/streak/hearts, Chart.js stats, Canvas whiteboard, TTS pipeline, Gemini AI handlers, UI_STRINGS localization, Mistake Vault 2.0 with SM-2, PWA URL action shortcuts router (?action=streak, lens, flashcards, exchange), Social Media Quick-Share & Spectator Inbound Link engine |
 | [`db.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/db.js) | 422 | 15 KB | IndexedDB engine & migration manager (`SerboLingoDB` v7) — non-destructive schema upgrades, versioned background upserts, 60 FPS chunked batches, dictionary search/indexing |
 | [`styles.css`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/styles.css) | 607 | 14 KB | Tailwind extensions — custom animations (confetti, arcade-fall/flip/pulse), 3D squishy buttons, progress ring, radar chart, dark mode theme |
 | [`sw.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/sw.js) | 164 | 6 KB | PWA Service Worker (v13) — Pre-caches app shell, stale-while-revalidate for CDN libraries, 100% offline fallback |
