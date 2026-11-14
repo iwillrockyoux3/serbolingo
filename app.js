@@ -3669,6 +3669,25 @@ const app = {
             canvas.height = 1080;
             const ctx = canvas.getContext('2d');
 
+            // Cross-browser roundRect helper (fallback for older Chromium/Safari/WebViews)
+            const drawRoundRect = (x, y, w, h, r) => {
+                ctx.beginPath();
+                if (ctx.roundRect) {
+                    ctx.roundRect(x, y, w, h, r);
+                } else {
+                    ctx.moveTo(x + r, y);
+                    ctx.lineTo(x + w - r, y);
+                    ctx.arcTo(x + w, y, x + w, y + r, r);
+                    ctx.lineTo(x + w, y + h - r);
+                    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+                    ctx.lineTo(x + r, y + h);
+                    ctx.arcTo(x, y + h, x, y + h - r, r);
+                    ctx.lineTo(x, y + r);
+                    ctx.arcTo(x, y, x + r, y, r);
+                    ctx.closePath();
+                }
+            };
+
             // Background Gradient (Balkan Royal Navy / Indigo)
             const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1080);
             bgGrad.addColorStop(0, '#0f172a');
@@ -3690,8 +3709,7 @@ const app = {
             ctx.fillStyle = 'rgba(30, 41, 59, 0.85)';
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
             ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.roundRect(80, 100, 920, 880, 48);
+            drawRoundRect(80, 100, 920, 880, 48);
             ctx.fill();
             ctx.stroke();
             ctx.restore();
@@ -3730,10 +3748,18 @@ const app = {
             ctx.fillText(username, 540, 500);
 
             // Equipped Title or League Tier
-            let titleText = 'Kafana Legenda';
-            if (window.LeagueEngine) {
-                const userTier = window.LeagueEngine.getUserTier();
-                titleText = userTier.name + ' Liga';
+            let titleText = 'Bronzana Liga';
+            if (window.LeagueEngine && window.LeagueEngine.getLeagueData && window.LeagueEngine.TIERS) {
+                try {
+                    const lData = window.LeagueEngine.getLeagueData();
+                    const tierObj = window.LeagueEngine.TIERS[lData.tier] || window.LeagueEngine.TIERS.bronze;
+                    titleText = `${tierObj.icon || '🏆'} ${tierObj.name} Liga`;
+                } catch (e) {
+                    titleText = 'Bronzana Liga';
+                }
+            }
+            if (state.equippedTitle) {
+                titleText = state.equippedTitle + ' • ' + titleText;
             }
             ctx.font = '700 26px Inter, system-ui, sans-serif';
             ctx.fillStyle = '#fbbf24';
@@ -3754,8 +3780,7 @@ const app = {
                 ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
                 ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
                 ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.roundRect(boxX, boxY, boxWidth, 140, 24);
+                drawRoundRect(boxX, boxY, boxWidth, 140, 24);
                 ctx.fill();
                 ctx.stroke();
 
