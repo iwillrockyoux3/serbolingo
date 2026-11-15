@@ -112,7 +112,7 @@
 | P32.1 | Ranked Leagues Table Polish & Diamond Shop Expansion | 🆕 New | `league-system.js`, `index.html` | ✅ DONE |
 | P34.1 | Hardcore Immersion Mode (100% Serbian UI) & Native Speaker Clips Hub | 🆕 New | `immersion-clips.js`, `app.js`, `index.html` | ✅ DONE |
 | P37.1 | Ultimate Streak Retention & Duolingo Addiction Engine | 🆕 New | `streak-retention.js`, `app.js`, `index.html` | ✅ DONE |
-| P45.1 | SerboReels — TikTok-Style Video Immersion (Continuous Streaming Subtitles, Interactive Bottom Scrubber & ⏪ -5s Rewind, Pure Latinica, Auto-Loop & Word Inspector) | 🆕 New | `serbo-reels.js`, `index.html` | ✅ DONE |
+| P45.1 | SerboReels — TikTok-Style Video Immersion (Continuous Streaming Subtitles, Real-Time Bilingual Karaoke Glow, 1-Tap Word Seek & Inspector, Profile Direction Sync, Bottom Scrubber & ⏪ -5s Rewind, Pure Latinica, Auto-Loop) | 🆕 New | `serbo-reels.js`, `index.html` | ✅ DONE |
 | P36.1 | Database Migration Engine (Versioned Non-Destructive IndexedDB Upsert) | 🆕 New | `db.js`, `seed-data.js` | ✅ DONE |
 | P6.1 | True SuperMemo-2 SRS Algorithm & Mistake Vault 2.0 | 🆕 New | `srs-engine.js`, `app.js`, `index.html` | ✅ DONE |
 | P38.1 | Smart Paced Story Mode (AI + Offline Procedural Weak Words Weaver) | 🆕 New | `smart-story.js`, `index.html`, `stories.js` | ✅ DONE |

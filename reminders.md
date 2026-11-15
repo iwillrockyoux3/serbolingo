@@ -569,13 +569,13 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 - [x] <span style="color:#888">⚫ **3. Deep Learning Engine & Flashcard Integration (DONE)**:</span>
   - <span style="color:#888">⚫ **Tap-to-Translate Subtitles**: Built directly on our interactive word inspector. Clicking any subtitle word in the video instantly pauses the clip, reveals the translation + case/grammar breakdown, root lemma, and audio pronunciation.</span>
   - <span style="color:#888">⚫ **Auto-Save to SRS Flashcards**: One tap on the star (★) immediately adds the word into the Tinder-style SRS Flashcard deck in `srs-engine.js` with +10 XP bonus.</span>
-  - <span style="color:#888">⚫ **Flowing Captions & Script**: Continuous streaming captions (Latinica only — Cyrillic toggle removed) with interactive tap-to-translate on every word.</span>
+  - <span style="color:#888">⚫ **Bilingual Karaoke Glow & Word Seek**: Real-time simultaneous word/phrase lighting matching the video audio rhythm across both languages, 1-tap word seek jumping playback directly to the spoken moment, profile direction sync, and interactive word inspector on all words.</span>
   - <span style="color:#888">⚫ **Habit Loop Gamification**: Watching 3 reels awards +15 XP and triggers fanfare/confetti celebration.</span>
 
 </div>
 
 > [!NOTE] 🔄 **QA REVISIT**: Come back once we finish building everything to:
-> 1. Test all SerboReels features end-to-end on real devices (play/pause, timed line-by-line subtitles, bidirectional SR ↔ EN learning direction, word inspector, XP awards) — verified all 12 clips updated with active 200 OK YouTube videos, 1-on-1 exact transcribed spoken dialogue on Clip 1, postMessage playback sync, direct YT link fallback, TikTok-style scrubber bar with ⏪ -5s rewind, auto-loop, and ЋИР Cyrillic toggle removed (Latinica only).
+> 1. Test all SerboReels features end-to-end on real devices (play/pause, timed line-by-line subtitles, word inspector, XP awards) — verified all 12 clips updated with active 200 OK YouTube videos, 1-on-1 exact transcribed spoken dialogue on Clip 1, real-time simultaneous bilingual karaoke word-pair glow, 1-tap word jump/seek to spoken timestamp, postMessage playback sync, direct YT link fallback, TikTok-style scrubber bar with ⏪ -5s rewind, auto-loop, clean header without swap button, and global profile direction sync.
 > 2. Fix any bugs or UI overflow issues found during testing.
 > 3. Upgrade SerboReels to work with **other languages** beyond Serbian ↔ English (multi-language clip support).
 

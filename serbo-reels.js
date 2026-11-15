@@ -43,6 +43,11 @@
                         subSrLat: 'Dobro je, samo kad izvukosmo živu glavu.',
                         subSrCyr: 'Добро је, само кад извукосмо живу главу.',
                         subEn: 'It’s good, as long as we made it out alive.',
+                        pairs: [
+                            { id: 'p1_1', sr: 'Dobro je,', en: 'It’s good,', start: 0, end: 1.6 },
+                            { id: 'p1_2', sr: 'samo kad', en: 'as long as', start: 1.6, end: 3.2 },
+                            { id: 'p1_3', sr: 'izvukosmo živu glavu.', en: 'we made it out alive.', start: 3.2, end: 5.6 }
+                        ],
                         keyWords: [
                             { word: 'izvukosmo', root: 'izvući', pos: 'glagol', caseTag: 'Aorist (prošlo vreme)', trans: 'we escaped / pulled out alive' },
                             { word: 'živu', root: 'živ', pos: 'pridev', caseTag: 'Akuzativ ženskog roda', trans: 'living / alive' },
@@ -53,8 +58,13 @@
                         start: 5.6,
                         end: 13.5,
                         subSrLat: 'I sad ćemo da se guramo i gazimo sve do Beograda, a ova strana slobodna!',
-                        subSrCyr: 'И сад ћемо да се гурамо и газимо све до Београда, а ова страна слободна!',
+                        subSrCyr: 'И сад ћемо да се гурамо и газимо све до Београда, а ова strana slobodna!',
                         subEn: 'And now we’re gonna push and trample each other all the way to Belgrade, while this side is free!',
+                        pairs: [
+                            { id: 'p2_1', sr: 'I sad ćemo da se guramo i gazimo', en: 'And now we’re gonna push and trample each other', start: 5.6, end: 9.6 },
+                            { id: 'p2_2', sr: 'sve do Beograda,', en: 'all the way to Belgrade,', start: 9.6, end: 11.5 },
+                            { id: 'p2_3', sr: 'a ova strana slobodna!', en: 'while this side is free!', start: 11.5, end: 13.5 }
+                        ],
                         keyWords: [
                             { word: 'guramo', root: 'gurati se', pos: 'glagol', caseTag: 'Prezent (prvo lice množine)', trans: 'push / shove' },
                             { word: 'gazimo', root: 'gaziti', pos: 'glagol', caseTag: 'Prezent', trans: 'trample / step on' },
@@ -69,6 +79,11 @@
                         subSrLat: 'Pa je l\' tebi bre ne vredi govoriti da je prednja guma slaba i da će eksplodirati!?',
                         subSrCyr: 'Па је л\' теби бре не вреди говорити да је предња гума слаба и да ће експлодирати!?',
                         subEn: 'Is it really no use telling you that the front tire is weak and will explode!?',
+                        pairs: [
+                            { id: 'p3_1', sr: 'Pa je l\' tebi bre ne vredi govoriti', en: 'Is it really no use telling you', start: 13.5, end: 17.0 },
+                            { id: 'p3_2', sr: 'da je prednja guma slaba', en: 'that the front tire is weak', start: 17.0, end: 19.8 },
+                            { id: 'p3_3', sr: 'i da će eksplodirati!?', en: 'and will explode!?', start: 19.8, end: 22.0 }
+                        ],
                         keyWords: [
                             { word: 'vredi', root: 'vredeti', pos: 'glagol', caseTag: 'Prezent', trans: 'worth / makes sense' },
                             { word: 'govoriti', root: 'govoriti', pos: 'glagol', caseTag: 'Infinitiv', trans: 'to speak / to tell' },
@@ -727,6 +742,7 @@
         isPlaying: false,
         playbackSpeed: 1.0,
         completedCount: 0,
+        activePairId: null,
         _hasMessageListener: false,
 
         // --- Local Storage Management ---
@@ -753,34 +769,24 @@
             }
         },
 
-        // --- Bidirectional Language Direction Handling ---
+        // --- Bidirectional Language Direction Handling (Profile Settings Driven) ---
         getDirection: function () {
-            if (this.activeDirection) return this.activeDirection;
-            const appDir = window.app?.state?.settings?.learningDirection;
-            return appDir || 'en_to_sr';
+            const appDir = window.state?.settings?.learningDirection || window.app?.state?.settings?.learningDirection;
+            return appDir || 'sr_to_en';
         },
 
         toggleDirection: function () {
             const cur = this.getDirection();
-            this.activeDirection = (cur === 'sr_to_en') ? 'en_to_sr' : 'sr_to_en';
-
+            const next = (cur === 'sr_to_en') ? 'en_to_sr' : 'sr_to_en';
             if (window.app && typeof window.app.setLearningDirection === 'function') {
-                window.app.setLearningDirection(this.activeDirection);
+                window.app.setLearningDirection(next);
             }
-
-            this.updateDirectionButton();
             this.renderSubtitles();
             if (window.TouchHaptics) TouchHaptics.vibrate('tap');
         },
 
         updateDirectionButton: function () {
-            const btn = document.getElementById('reels-dir-label');
-            if (!btn) return;
-            const isEnglish = (this.getDirection() === 'sr_to_en');
-            btn.textContent = isEnglish ? '🇷🇸 ➡️ 🇬🇧' : '🇬🇧 ➡️ 🇷🇸';
-            if (btn.parentElement) {
-                btn.parentElement.title = isEnglish ? 'Učiš: Engleski (Prebaci na učenje srpskog)' : 'Learning: Serbian (Switch to learning English)';
-            }
+            // No-op: Header button removed in favor of clean header & profile setting sync
         },
 
         // --- YouTube Player postMessage Synchronization ---
@@ -829,8 +835,6 @@
             if (!clip) return;
 
             const lines = clip.lines || [];
-            if (lines.length <= 1) return;
-
             const totalDur = clip.duration || 22;
             const clipStart = clip.start || 0;
             const elapsed = Math.max(0, ytTime - clipStart);
@@ -844,11 +848,16 @@
             this.currentPlayTime = elapsed;
             this.updateScrubber(elapsed, totalDur);
 
-            const activeIdx = lines.findIndex(l => elapsed >= l.start && elapsed < l.end);
-            if (activeIdx !== -1 && activeIdx !== this.activeLineIndex) {
-                this.activeLineIndex = activeIdx;
-                this.renderSubtitles();
+            if (lines.length > 0) {
+                const activeIdx = lines.findIndex(l => elapsed >= l.start && elapsed < l.end);
+                if (activeIdx !== -1 && activeIdx !== this.activeLineIndex) {
+                    this.activeLineIndex = activeIdx;
+                    this.renderSubtitles();
+                }
             }
+
+            // Real-time Karaoke glow tracking
+            this.updateKaraokeHighlight(elapsed);
         },
 
         // --- Timed Subtitle Live Follower Engine ---
@@ -863,8 +872,6 @@
                 if (!clip) return;
 
                 const lines = clip.lines || [];
-                if (lines.length <= 1) return;
-
                 this.currentPlayTime += 0.25;
                 const totalDur = clip.duration || 22;
 
@@ -875,12 +882,16 @@
 
                 this.updateScrubber(this.currentPlayTime, totalDur);
 
-                // Find active line matching current elapsed time
-                const activeIdx = lines.findIndex(l => this.currentPlayTime >= l.start && this.currentPlayTime < l.end);
-                if (activeIdx !== -1 && activeIdx !== this.activeLineIndex) {
-                    this.activeLineIndex = activeIdx;
-                    this.renderSubtitles();
+                if (lines.length > 0) {
+                    const activeIdx = lines.findIndex(l => this.currentPlayTime >= l.start && this.currentPlayTime < l.end);
+                    if (activeIdx !== -1 && activeIdx !== this.activeLineIndex) {
+                        this.activeLineIndex = activeIdx;
+                        this.renderSubtitles();
+                    }
                 }
+
+                // Real-time Karaoke glow tracking
+                this.updateKaraokeHighlight(this.currentPlayTime);
             }, 250);
         },
 
@@ -911,6 +922,7 @@
             }
             this.renderSubtitles();
             this.updateScrubber(clamped, totalDur);
+            this.updateKaraokeHighlight(clamped);
 
             const iframe = document.getElementById('reels-yt-iframe');
             if (iframe && iframe.contentWindow) {
@@ -997,6 +1009,7 @@
             this.activeDirection = this.getDirection();
             this.currentPlayTime = 0;
             this.activeLineIndex = 0;
+            this.activePairId = null;
             this.isPlaying = false;
             this.updateDirectionButton();
             this.renderReel();
@@ -1056,6 +1069,7 @@
             const clip = clips[this.currentIndex];
             const data = this.getReelsData();
             const isLiked = data.likedClipIds.includes(clip.id);
+            this.activePairId = null;
 
             // 1. Counter & Badge
             const counterEl = document.getElementById('reels-clip-counter');
@@ -1141,7 +1155,163 @@
             this.closeWordInspector();
         },
 
-        // --- Render Subtitle Card with Bidirectional Layout & Line Indicator ---
+        // --- Pair Alignment & Bilingual Highlighting Helper Methods ---
+        getLinePairs: function (line, totalDur) {
+            if (line && line.pairs && line.pairs.length > 0) return line.pairs;
+
+            // Robust dynamic fallback: chunk words into aligned pairs
+            const srText = (line && line.subSrLat) ? line.subSrLat : '';
+            const enText = (line && line.subEn) ? line.subEn : '';
+            const srWords = srText.trim().split(/\s+/).filter(Boolean);
+            const enWords = enText.trim().split(/\s+/).filter(Boolean);
+            if (srWords.length === 0 && enWords.length === 0) return [];
+
+            const lineStart = (line && typeof line.start === 'number') ? line.start : 0;
+            const lineEnd = (line && typeof line.end === 'number') ? line.end : (totalDur || 22);
+            const lineDur = Math.max(0.6, lineEnd - lineStart);
+
+            const maxCount = Math.max(srWords.length, enWords.length, 1);
+            const chunkSize = Math.max(1, Math.min(3, Math.ceil(maxCount / 4)));
+            const pairs = [];
+            let pIdx = 0;
+            let sIdx = 0;
+            let eIdx = 0;
+
+            while (sIdx < srWords.length || eIdx < enWords.length) {
+                const srChunk = srWords.slice(sIdx, sIdx + chunkSize).join(' ');
+                const enChunk = enWords.slice(eIdx, eIdx + chunkSize).join(' ');
+                const startRatio = (pIdx * chunkSize) / maxCount;
+                const endRatio = Math.min(1, ((pIdx + 1) * chunkSize) / maxCount);
+
+                pairs.push({
+                    id: `p_dyn_${Math.floor(lineStart)}_${pIdx}`,
+                    sr: srChunk || '',
+                    en: enChunk || '',
+                    start: Number((lineStart + startRatio * lineDur).toFixed(2)),
+                    end: Number((lineStart + endRatio * lineDur).toFixed(2))
+                });
+
+                sIdx += chunkSize;
+                eIdx += chunkSize;
+                pIdx++;
+            }
+            return pairs;
+        },
+
+        renderPairChunk: function (pair, lang) {
+            const text = (lang === 'sr') ? pair.sr : pair.en;
+            if (!text) return '';
+
+            const tokens = text.split(/\s+/).filter(Boolean);
+            const wordsHtml = tokens.map(token => {
+                const clean = token.replace(/^[.,?!":;()[\]{}«»„“"'\-*]+|[.,?!":;()[\]{}«»„“"'\-*]+$/g, '');
+                const escaped = clean.replace(/'/g, "\\'");
+                return `<span class="reels-word-token hover:underline" onclick="event.stopPropagation(); SerboReels.onWordClick(event, '${pair.id}', ${pair.start}, '${escaped}', '${lang}')">${token}</span>`;
+            }).join(' ');
+
+            const baseStyle = (lang === 'sr')
+                ? 'text-white/80 hover:text-white'
+                : 'text-yellow-300/80 hover:text-yellow-200';
+
+            return `<span class="reels-pair inline-block px-1.5 py-0.5 rounded-lg transition-all duration-150 cursor-pointer ${baseStyle} border border-transparent font-black"
+                         data-pair-id="${pair.id}"
+                         data-start="${pair.start}"
+                         data-end="${pair.end}"
+                         data-lang="${lang}"
+                         onmouseenter="SerboReels.highlightPair('${pair.id}', true)"
+                         onmouseleave="SerboReels.highlightPair('${pair.id}', false)"
+                         onclick="SerboReels.onPairClick('${pair.id}', ${pair.start}, '${lang}')">${wordsHtml}</span>`;
+        },
+
+        highlightPair: function (pairId, isEntering) {
+            if (!pairId) return;
+            const elements = document.querySelectorAll(`.reels-pair[data-pair-id="${pairId}"]`);
+            elements.forEach(el => {
+                if (isEntering) {
+                    el.classList.add('ring-1', 'ring-cyan-400', 'bg-cyan-400/20', 'shadow-md');
+                } else {
+                    el.classList.remove('ring-1', 'ring-cyan-400', 'bg-cyan-400/20', 'shadow-md');
+                }
+            });
+        },
+
+        onPairClick: function (pairId, startTimestamp, lang) {
+            if (typeof startTimestamp === 'number') {
+                this.seekToTime(startTimestamp);
+            }
+            if (this.isPlaying) {
+                this.togglePlayPause();
+            }
+            this.activePairId = pairId;
+            this.applyPairGlow(pairId);
+        },
+
+        onWordClick: function (event, pairId, startTimestamp, cleanWord, lang) {
+            if (event) event.stopPropagation();
+            if (typeof startTimestamp === 'number') {
+                this.seekToTime(startTimestamp);
+            }
+            if (this.isPlaying) {
+                this.togglePlayPause();
+            }
+            this.activePairId = pairId;
+            this.applyPairGlow(pairId);
+            this.inspectWord(cleanWord, lang);
+        },
+
+        updateKaraokeHighlight: function (time) {
+            const clips = this.getFilteredClips();
+            if (!clips || clips.length === 0) return;
+            const clip = clips[this.currentIndex];
+            if (!clip) return;
+
+            const lines = (clip.lines && clip.lines.length > 0) 
+                ? clip.lines 
+                : [{ start: 0, end: clip.duration || 20, subSrLat: clip.subSrLat, subSrCyr: clip.subSrCyr, subEn: clip.subEn, keyWords: clip.keyWords }];
+
+            const curLine = lines[this.activeLineIndex] || lines[0];
+            const pairs = this.getLinePairs(curLine, clip.duration || 22);
+            if (!pairs || pairs.length === 0) return;
+
+            const activePair = pairs.find(p => time >= p.start && time < p.end);
+            const newPairId = activePair ? activePair.id : null;
+
+            if (newPairId === this.activePairId) return;
+            this.activePairId = newPairId;
+            this.applyPairGlow(newPairId);
+        },
+
+        applyPairGlow: function (targetPairId) {
+            const allPairs = document.querySelectorAll('.reels-pair');
+            allPairs.forEach(el => {
+                const pId = el.getAttribute('data-pair-id');
+                const lang = el.getAttribute('data-lang');
+                const isActive = (pId === targetPairId);
+
+                if (isActive) {
+                    if (lang === 'sr') {
+                        el.classList.add('bg-pink-500/35', 'text-white', 'ring-1', 'ring-pink-400', 'shadow-[0_0_12px_rgba(244,63,94,0.4)]', 'scale-[1.03]');
+                        el.classList.remove('text-white/80');
+                    } else {
+                        el.classList.add('bg-yellow-400/30', 'text-yellow-100', 'ring-1', 'ring-yellow-400', 'shadow-[0_0_12px_rgba(250,204,21,0.4)]', 'scale-[1.03]');
+                        el.classList.remove('text-yellow-300/80');
+                    }
+                } else {
+                    el.classList.remove(
+                        'bg-pink-500/35', 'ring-pink-400', 'shadow-[0_0_12px_rgba(244,63,94,0.4)]',
+                        'bg-yellow-400/30', 'ring-yellow-400', 'shadow-[0_0_12px_rgba(250,204,21,0.4)]',
+                        'scale-[1.03]'
+                    );
+                    if (lang === 'sr') {
+                        el.classList.add('text-white/80');
+                    } else {
+                        el.classList.add('text-yellow-300/80');
+                    }
+                }
+            });
+        },
+
+        // --- Render Subtitle Card with Bidirectional Layout & Bilingual Highlighting ---
         renderSubtitles: function () {
             const subContainer = document.getElementById('reels-subtitles-box');
             if (!subContainer) return;
@@ -1158,56 +1328,38 @@
             if (this.activeLineIndex >= lines.length) this.activeLineIndex = 0;
             const curLine = lines[this.activeLineIndex];
             const direction = this.getDirection(); // 'sr_to_en' | 'en_to_sr'
-            const isLearningEnglish = (direction === 'sr_to_en');
+            const pairs = this.getLinePairs(curLine, clip.duration || 22);
 
-            // Interactive top text and supporting bottom text
-            let primaryHtml = '';
-            let secondaryHtml = '';
-            let dirBadge = '';
+            // Render top (spoken in video = Serbian) and bottom (translation = English)
+            const topSpans = pairs.map(p => this.renderPairChunk(p, 'sr')).join(' ');
+            const bottomSpans = pairs.map(p => this.renderPairChunk(p, 'en')).join(' ');
 
-            if (isLearningEnglish) {
-                // Serbian speaker learning English: English is PRIMARY (interactive)
-                primaryHtml = this.tokenizeSubtitle(curLine.subEn, 'en');
-                secondaryHtml = curLine.subSrLat;
-                dirBadge = `<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[9px] font-black uppercase tracking-wider">🇬🇧 Engleski</span>`;
-            } else {
-                // English speaker learning Serbian: Serbian is PRIMARY (interactive)
-                primaryHtml = this.tokenizeSubtitle(curLine.subSrLat, 'sr');
-                secondaryHtml = curLine.subEn;
-                dirBadge = `<span class="px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-300 text-[9px] font-black uppercase tracking-wider">🇷🇸 Srpski</span>`;
-            }
+            const dirBadge = (direction === 'sr_to_en')
+                ? `<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[9px] font-black uppercase tracking-wider">🇬🇧 Engleski Prevod</span>`
+                : `<span class="px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-300 text-[9px] font-black uppercase tracking-wider">🇷🇸 Izvorni Govor</span>`;
 
             subContainer.innerHTML = `
             <div class="space-y-1.5 p-3 rounded-2xl bg-slate-950/90 backdrop-blur-md border border-slate-700/60 shadow-xl max-w-sm mx-auto transition-all">
-                <!-- Target Language Interactive Subtitle -->
+                <!-- Status & Instruction Header -->
                 <div class="flex items-center justify-between pb-0.5 border-b border-slate-800/80">
                     ${dirBadge}
-                    <span class="text-[9px] text-slate-400">💡 Tapni reč za analizu</span>
+                    <span class="text-[9px] text-slate-400 flex items-center gap-1">
+                        <span>⚡</span> <span>Tapni reč za skok u videu</span>
+                    </span>
                 </div>
+                <!-- Spoken Dialogue (Top - Video Audio) -->
                 <div class="text-sm md:text-base font-black text-white leading-relaxed tracking-wide flex flex-wrap gap-1 items-center justify-center min-h-[2rem]">
-                    ${primaryHtml}
+                    ${topSpans}
                 </div>
-                <!-- Native Language Translation Subtitle -->
-                <div class="text-[11px] md:text-xs font-bold text-yellow-300/90 text-center border-t border-slate-800/80 pt-1.5 leading-snug">
-                    ${secondaryHtml}
+                <!-- Translation Subtitle (Bottom - Translation) -->
+                <div class="text-[11px] md:text-xs font-bold text-yellow-300/90 text-center border-t border-slate-800/80 pt-1 leading-snug flex flex-wrap gap-1 items-center justify-center">
+                    ${bottomSpans}
                 </div>
             </div>`;
-        },
 
-        // --- Subtitle Tokenizer: Wraps each word into an interactive tap target ---
-        tokenizeSubtitle: function (text, lang = 'sr') {
-            if (!text) return '';
-            return text.split(/\s+/).map(token => {
-                const cleanWord = token.replace(/^[.,?!":;()[\]{}«»„“"'\-*]+|[.,?!":;()[\]{}«»„“"'\-*]+$/g, '');
-                if (!cleanWord) return token;
-
-                const escapedClean = cleanWord.replace(/'/g, "\\'");
-                const hoverStyle = lang === 'en' 
-                    ? 'hover:bg-blue-500/30 active:bg-blue-500/50 hover:text-blue-300 hover:border-blue-400' 
-                    : 'hover:bg-pink-500/30 active:bg-pink-500/50 hover:text-pink-300 hover:border-pink-400';
-
-                return `<button onclick="SerboReels.inspectWord('${escapedClean}', '${lang}', this)" class="inline-block px-1 py-0.5 rounded-lg ${hoverStyle} transition-colors cursor-pointer border-b border-transparent font-black">${token}</button>`;
-            }).join(' ');
+            if (this.activePairId) {
+                this.applyPairGlow(this.activePairId);
+            }
         },
 
         // --- Next & Previous Navigation ---
