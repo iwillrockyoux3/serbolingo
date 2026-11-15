@@ -2313,10 +2313,6 @@
                         <button id="reels-dir-toggle-btn" onclick="SerboReels.toggleDirection()" title="Smer učenja (SR ↔ EN)" class="px-2 py-1 rounded-xl bg-indigo-900/80 hover:bg-indigo-800 text-indigo-200 border border-indigo-700/80 text-[10px] font-black active:scale-90 transition-transform flex items-center gap-0.5 shadow-sm">
                             <span id="reels-dir-label">🇬🇧 ➡️ 🇷🇸</span>
                         </button>
-                        <!-- Script Switcher (Latinica / Cyrillic) -->
-                        <button id="reels-script-toggle-btn" onclick="SerboReels.toggleScript()" title="Promeni pismo (Latinica/Ćirilica)" class="px-2.5 py-1 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-yellow-400 border border-slate-700/80 text-[10px] font-black active:scale-90 transition-transform">
-                            ЋИР
-                        </button>
                         <!-- Close Feed -->
                         <button onclick="SerboReels.closeFeed()" class="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-white flex items-center justify-center text-sm font-black active:scale-90 transition-transform border border-slate-700">
                             ✕
@@ -2389,6 +2385,22 @@
                         </div>
                         <h4 id="reels-clip-title" class="text-xs font-black text-white truncate mt-0.5"></h4>
                     </div>
+                </div>
+
+                <!-- Interactive Scrubber & Quick Rewind Bar (TikTok style) -->
+                <div class="w-full max-w-sm mx-auto px-1 flex items-center gap-2">
+                    <button onclick="SerboReels.rewind5s()" class="px-2 py-1 rounded-lg bg-slate-900/90 hover:bg-slate-800 text-slate-200 text-xs font-black border border-slate-700/70 active:scale-95 transition-all flex items-center gap-1 shadow-md shrink-0" title="Premotaj 5 sekundi unazad">
+                        <span>⏪</span> <span class="text-[10px] font-mono font-bold">-5s</span>
+                    </button>
+                    <!-- Scrubber bar container -->
+                    <div id="reels-scrubber-track" onclick="SerboReels.onScrubberClick(event)" class="relative flex-1 h-3 flex items-center cursor-pointer group select-none">
+                        <div class="w-full h-1.5 bg-slate-800/90 rounded-full overflow-hidden border border-slate-700/60 shadow-inner">
+                            <div id="reels-scrubber-progress" class="h-full bg-gradient-to-r from-pink-500 via-rose-500 to-pink-400 rounded-full transition-all duration-75" style="width: 0%;"></div>
+                        </div>
+                        <!-- Scrubber thumb knob -->
+                        <div id="reels-scrubber-thumb" class="absolute w-3.5 h-3.5 bg-white rounded-full shadow-lg border border-pink-400 pointer-events-none -ml-1.5 opacity-90 group-hover:opacity-100 transition-opacity" style="left: 0%;"></div>
+                    </div>
+                    <span id="reels-time-display" class="text-[10px] font-mono font-bold text-slate-300 shrink-0 min-w-[55px] text-right">0:00 / 0:22</span>
                 </div>
 
                 <!-- Subtitles Box (Tappable Words) -->

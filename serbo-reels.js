@@ -39,7 +39,7 @@
                 lines: [
                     {
                         start: 0,
-                        end: 6,
+                        end: 5.6,
                         subSrLat: 'Dobro je, samo kad izvukosmo živu glavu.',
                         subSrCyr: 'Добро је, само кад извукосмо живу главу.',
                         subEn: 'It’s good, as long as we made it out alive.',
@@ -50,8 +50,8 @@
                         ]
                     },
                     {
-                        start: 6,
-                        end: 14,
+                        start: 5.6,
+                        end: 13.5,
                         subSrLat: 'I sad ćemo da se guramo i gazimo sve do Beograda, a ova strana slobodna!',
                         subSrCyr: 'И сад ћемо да се гурамо и газимо све до Београда, а ова страна слободна!',
                         subEn: 'And now we’re gonna push and trample each other all the way to Belgrade, while this side is free!',
@@ -64,7 +64,7 @@
                         ]
                     },
                     {
-                        start: 14,
+                        start: 13.5,
                         end: 22,
                         subSrLat: 'Pa je l\' tebi bre ne vredi govoriti da je prednja guma slaba i da će eksplodirati!?',
                         subSrCyr: 'Па је л\' теби бре не вреди говорити да је предња гума слаба и да ће експлодирати!?',
@@ -831,9 +831,18 @@
             const lines = clip.lines || [];
             if (lines.length <= 1) return;
 
+            const totalDur = clip.duration || 22;
             const clipStart = clip.start || 0;
             const elapsed = Math.max(0, ytTime - clipStart);
+
+            // Auto-loop when scene reaches end of duration
+            if (elapsed >= totalDur) {
+                this.seekToTime(0);
+                return;
+            }
+
             this.currentPlayTime = elapsed;
+            this.updateScrubber(elapsed, totalDur);
 
             const activeIdx = lines.findIndex(l => elapsed >= l.start && elapsed < l.end);
             if (activeIdx !== -1 && activeIdx !== this.activeLineIndex) {
@@ -857,16 +866,14 @@
                 if (lines.length <= 1) return;
 
                 this.currentPlayTime += 0.25;
-                const totalDur = clip.duration || 20;
+                const totalDur = clip.duration || 22;
 
                 if (this.currentPlayTime >= totalDur) {
-                    this.currentPlayTime = 0;
-                    if (this.activeLineIndex !== 0) {
-                        this.activeLineIndex = 0;
-                        this.renderSubtitles();
-                    }
+                    this.seekToTime(0);
                     return;
                 }
+
+                this.updateScrubber(this.currentPlayTime, totalDur);
 
                 // Find active line matching current elapsed time
                 const activeIdx = lines.findIndex(l => this.currentPlayTime >= l.start && this.currentPlayTime < l.end);
@@ -884,27 +891,89 @@
             }
         },
 
-        seekLine: function (idx) {
+        // --- Interactive Scrubber & Playback Controls ---
+        seekToTime: function (targetSeconds) {
             const clips = this.getFilteredClips();
+            if (!clips || clips.length === 0) return;
             const clip = clips[this.currentIndex];
-            if (!clip || !clip.lines || !clip.lines[idx]) return;
+            if (!clip) return;
 
-            this.activeLineIndex = idx;
-            this.currentPlayTime = clip.lines[idx].start;
+            const totalDur = clip.duration || 22;
+            const clamped = Math.max(0, Math.min(targetSeconds, totalDur));
+            this.currentPlayTime = clamped;
+
+            const lines = clip.lines || [];
+            const activeIdx = lines.findIndex(l => clamped >= l.start && clamped < l.end);
+            if (activeIdx !== -1) {
+                this.activeLineIndex = activeIdx;
+            } else if (clamped === 0) {
+                this.activeLineIndex = 0;
+            }
             this.renderSubtitles();
+            this.updateScrubber(clamped, totalDur);
 
-            // Seek YouTube iframe to timestamp if supported
             const iframe = document.getElementById('reels-yt-iframe');
             if (iframe && iframe.contentWindow) {
                 try {
-                    const seekTarget = (clip.start || 0) + clip.lines[idx].start;
+                    const seekTarget = (clip.start || 0) + clamped;
                     iframe.contentWindow.postMessage(JSON.stringify({
                         event: 'command',
                         func: 'seekTo',
                         args: [seekTarget, true]
                     }), '*');
-                } catch(e) {}
+                } catch (e) {}
             }
+        },
+
+        rewind5s: function () {
+            this.seekToTime(this.currentPlayTime - 5);
+            if (window.TouchHaptics) TouchHaptics.vibrate('tap');
+        },
+
+        onScrubberClick: function (e) {
+            const track = document.getElementById('reels-scrubber-track');
+            if (!track) return;
+            const rect = track.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+
+            const clips = this.getFilteredClips();
+            if (!clips || clips.length === 0) return;
+            const clip = clips[this.currentIndex];
+            if (!clip) return;
+
+            const totalDur = clip.duration || 22;
+            const targetTime = ratio * totalDur;
+            this.seekToTime(targetTime);
+            if (window.TouchHaptics) TouchHaptics.vibrate('tap');
+        },
+
+        updateScrubber: function (current, total) {
+            const progressEl = document.getElementById('reels-scrubber-progress');
+            const thumbEl = document.getElementById('reels-scrubber-thumb');
+            const timeEl = document.getElementById('reels-time-display');
+
+            const pct = total > 0 ? Math.min(100, Math.max(0, (current / total) * 100)) : 0;
+
+            if (progressEl) progressEl.style.width = `${pct}%`;
+            if (thumbEl) thumbEl.style.left = `${pct}%`;
+
+            if (timeEl) {
+                const formatTime = (s) => {
+                    const sec = Math.floor(s || 0);
+                    const m = Math.floor(sec / 60);
+                    const remSec = sec % 60;
+                    return `${m}:${remSec < 10 ? '0' : ''}${remSec}`;
+                };
+                timeEl.textContent = `${formatTime(current)} / ${formatTime(total)}`;
+            }
+        },
+
+        seekLine: function (idx) {
+            const clips = this.getFilteredClips();
+            const clip = clips[this.currentIndex];
+            if (!clip || !clip.lines || !clip.lines[idx]) return;
+            this.seekToTime(clip.lines[idx].start);
             if (window.TouchHaptics) TouchHaptics.vibrate('tap');
         },
 
@@ -1046,6 +1115,7 @@
 
             // 3. Subtitles with Clickable Grammar Words & Live Line Following
             this.renderSubtitles();
+            this.updateScrubber(0, clip.duration || 22);
 
             // 4. Like Button State
             const likeBtn = document.getElementById('reels-like-btn');
@@ -1098,32 +1168,17 @@
             if (isLearningEnglish) {
                 // Serbian speaker learning English: English is PRIMARY (interactive)
                 primaryHtml = this.tokenizeSubtitle(curLine.subEn, 'en');
-                const srText = this.activeScript === 'sr_cyr' ? curLine.subSrCyr : curLine.subSrLat;
-                secondaryHtml = srText;
-                dirBadge = `<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[9px] font-black uppercase tracking-wider">🇬🇧 Engleski (Cilj)</span>`;
+                secondaryHtml = curLine.subSrLat;
+                dirBadge = `<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[9px] font-black uppercase tracking-wider">🇬🇧 Engleski</span>`;
             } else {
                 // English speaker learning Serbian: Serbian is PRIMARY (interactive)
-                const srText = this.activeScript === 'sr_cyr' ? curLine.subSrCyr : curLine.subSrLat;
-                primaryHtml = this.tokenizeSubtitle(srText, 'sr');
+                primaryHtml = this.tokenizeSubtitle(curLine.subSrLat, 'sr');
                 secondaryHtml = curLine.subEn;
-                dirBadge = `<span class="px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-300 text-[9px] font-black uppercase tracking-wider">🇷🇸 Srpski (${this.activeScript === 'sr_cyr' ? 'Ћирилица' : 'Latinica'})</span>`;
-            }
-
-            // Line indicator dots (e.g. • 1 • 2 • 3)
-            let lineDotsHtml = '';
-            if (lines.length > 1) {
-                lineDotsHtml = `
-                <div class="flex items-center justify-center gap-1.5 pb-1">
-                    ${lines.map((l, idx) => `
-                        <button onclick="SerboReels.seekLine(${idx})" class="h-1.5 rounded-full transition-all ${idx === this.activeLineIndex ? 'w-6 bg-pink-500 shadow-sm' : 'w-2 bg-slate-700 hover:bg-slate-500'}" title="Prebaci na stih ${idx + 1} (${l.start}s - ${l.end}s)"></button>
-                    `).join('')}
-                    <span class="text-[9px] font-bold text-slate-400 ml-1.5">${this.activeLineIndex + 1}/${lines.length}</span>
-                </div>`;
+                dirBadge = `<span class="px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-300 text-[9px] font-black uppercase tracking-wider">🇷🇸 Srpski</span>`;
             }
 
             subContainer.innerHTML = `
             <div class="space-y-1.5 p-3 rounded-2xl bg-slate-950/90 backdrop-blur-md border border-slate-700/60 shadow-xl max-w-sm mx-auto transition-all">
-                ${lineDotsHtml}
                 <!-- Target Language Interactive Subtitle -->
                 <div class="flex items-center justify-between pb-0.5 border-b border-slate-800/80">
                     ${dirBadge}
@@ -1211,16 +1266,8 @@
 
         // --- Script Toggle (Latinica ↔ Ćirilica) ---
         toggleScript: function () {
-            this.activeScript = this.activeScript === 'sr_lat' ? 'sr_cyr' : 'sr_lat';
-            const btn = document.getElementById('reels-script-toggle-btn');
-            if (btn) {
-                btn.textContent = this.activeScript === 'sr_lat' ? 'ЋИР' : 'LAT';
-                btn.title = this.activeScript === 'sr_lat' ? 'Prebaci na ćirilicu' : 'Prebaci na latinicu';
-            }
-
-            // Re-render subtitle without reloading video
+            this.activeScript = 'sr_lat';
             this.renderSubtitles();
-            if (window.TouchHaptics) TouchHaptics.vibrate('tap');
         },
 
         // --- 1-Tap Word Inspector Drawer (Tap-to-Translate) ---
