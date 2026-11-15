@@ -32,57 +32,59 @@
                 duration: 22,
                 poster: 'https://img.youtube.com/vi/PDtjBtuqoQA/hqdefault.jpg',
                 author: 'Slobodan Šijan & Dušan Kovačević',
-                subSrLat: 'Za Beograd, za Beograd, firmom Krstić! Upravo se narod sprema! Sve razloge za put ima, samo sreće valjda nema!',
-                subSrCyr: 'За Београд, за Београд, фирмом Крстић! Управо се народ спрема! Све разлоге за пут има, само среће ваљда нема!',
-                subEn: 'To Belgrade, to Belgrade, with Krstić company! The folk are just getting ready! All reasons for the journey they have, only luck is what they lack!',
-                culturalNote: 'Najpoznatija pesma jugoslovenskog filma. Dva romska muzikanta u autobusu pesmom predskazuju sudbinu putnika na putu ka Beogradu uoči 6. aprila 1941.',
+                subSrLat: 'Dobro je, samo kad izvukosmo živu glavu! I sad ćemo da se guramo sve do Beograda, a ova strana slobodna! Prednja guma je slaba!',
+                subSrCyr: 'Добро је, само кад извукосмо живу главу! И сад ћемо да се гурамо све до Београда, а ова страна слободна! Предња гума је слаба!',
+                subEn: 'It’s good, as long as we made it out alive! And now we’ll push each other all the way to Belgrade, while this side is empty! The front tire is weak!',
+                culturalNote: 'Legendarna rasprava putnika u raspadnutom autobusu Krstić i sin. Izraz "izvući živu glavu" je čest balkanski idiom koji znači jedva preživeti veliku opasnost.',
                 lines: [
                     {
                         start: 0,
-                        end: 8,
-                        subSrLat: 'Za Beograd, za Beograd, firmom Krstić, firmom Krstić!',
-                        subSrCyr: 'За Београд, за Београд, фирмом Крстић, фирмом Крстић!',
-                        subEn: 'To Belgrade, to Belgrade, with Krstić company!',
+                        end: 6,
+                        subSrLat: 'Dobro je, samo kad izvukosmo živu glavu.',
+                        subSrCyr: 'Добро је, само кад извукосмо живу главу.',
+                        subEn: 'It’s good, as long as we made it out alive.',
                         keyWords: [
-                            { word: 'Beograd', root: 'Beograd', pos: 'imenica', caseTag: 'Akuzativ s predlogom ZA', trans: 'Belgrade (capital of Serbia)' },
-                            { word: 'firmom', root: 'firma', pos: 'imenica', caseTag: 'Instrumental jednine', trans: 'with company / firm' },
-                            { word: 'Krstić', root: 'Krstić', pos: 'prezime', caseTag: 'Nominativ', trans: 'Krstić (family business name)' }
+                            { word: 'izvukosmo', root: 'izvući', pos: 'glagol', caseTag: 'Aorist (prošlo vreme)', trans: 'we escaped / pulled out alive' },
+                            { word: 'živu', root: 'živ', pos: 'pridev', caseTag: 'Akuzativ ženskog roda', trans: 'living / alive' },
+                            { word: 'glavu', root: 'glava', pos: 'imenica', caseTag: 'Akuzativ jednine', trans: 'head (idiom: life)' }
                         ]
                     },
                     {
-                        start: 8,
-                        end: 15,
-                        subSrLat: 'Upravo se narod sprema!',
-                        subSrCyr: 'Управо се народ спрема!',
-                        subEn: 'The folk are just getting ready to go!',
+                        start: 6,
+                        end: 14,
+                        subSrLat: 'I sad ćemo da se guramo i gazimo sve do Beograda, a ova strana slobodna!',
+                        subSrCyr: 'И сад ћемо да се гурамо и газимо све до Београда, а ова страна слободна!',
+                        subEn: 'And now we’re gonna push and trample each other all the way to Belgrade, while this side is free!',
                         keyWords: [
-                            { word: 'upravo', root: 'upravo', pos: 'prilog', caseTag: 'Vremenski prilog', trans: 'just now / currently' },
-                            { word: 'narod', root: 'narod', pos: 'imenica', caseTag: 'Nominativ jednine', trans: 'the people / folk' },
-                            { word: 'sprema', root: 'spremati se', pos: 'glagol', caseTag: 'Prezent (treće lice)', trans: 'is preparing / getting ready' }
+                            { word: 'guramo', root: 'gurati se', pos: 'glagol', caseTag: 'Prezent (prvo lice množine)', trans: 'push / shove' },
+                            { word: 'gazimo', root: 'gaziti', pos: 'glagol', caseTag: 'Prezent', trans: 'trample / step on' },
+                            { word: 'Beograda', root: 'Beograd', pos: 'imenica', caseTag: 'Genitiv s predlogom DO', trans: 'Belgrade' },
+                            { word: 'strana', root: 'strana', pos: 'imenica', caseTag: 'Nominativ', trans: 'side' },
+                            { word: 'slobodna', root: 'slobodan', pos: 'pridev', caseTag: 'Nominativ ženskog roda', trans: 'free / empty' }
                         ]
                     },
                     {
-                        start: 15,
+                        start: 14,
                         end: 22,
-                        subSrLat: 'Sve razloge za put ima, samo sreće valjda nema, nema, joj!',
-                        subSrCyr: 'Све разлоге за пут има, само среће ваљда нема, нема, јој!',
-                        subEn: 'All reasons for the journey they have, only luck is what they lack, lack, oh my!',
+                        subSrLat: 'Pa je l\' tebi bre ne vredi govoriti da je prednja guma slaba i da će eksplodirati!?',
+                        subSrCyr: 'Па је л\' теби бре не вреди говорити да је предња гума слаба и да ће експлодирати!?',
+                        subEn: 'Is it really no use telling you that the front tire is weak and will explode!?',
                         keyWords: [
-                            { word: 'razloge', root: 'razlog', pos: 'imenica', caseTag: 'Akuzativ množine', trans: 'reasons' },
-                            { word: 'put', root: 'put', pos: 'imenica', caseTag: 'Akuzativ za cilj', trans: 'journey / trip' },
-                            { word: 'sreće', root: 'sreća', pos: 'imenica', caseTag: 'Genitiv odricanja', trans: 'luck / good fortune' },
-                            { word: 'valjda', root: 'valjda', pos: 'rečca', caseTag: 'Modalna rečca', trans: 'probably / presumably' },
-                            { word: 'nema', root: 'nemati', pos: 'glagol', caseTag: 'Prezent (odrični oblik)', trans: 'there is none / lacks' }
+                            { word: 'vredi', root: 'vredeti', pos: 'glagol', caseTag: 'Prezent', trans: 'worth / makes sense' },
+                            { word: 'govoriti', root: 'govoriti', pos: 'glagol', caseTag: 'Infinitiv', trans: 'to speak / to tell' },
+                            { word: 'prednja', root: 'prednji', pos: 'pridev', caseTag: 'Nominativ ženskog roda', trans: 'front' },
+                            { word: 'guma', root: 'guma', pos: 'imenica', caseTag: 'Nominativ jednine', trans: 'tire' },
+                            { word: 'slaba', root: 'slab', pos: 'pridev', caseTag: 'Nominativ', trans: 'weak' },
+                            { word: 'eksplodirati', root: 'eksplodirati', pos: 'glagol', caseTag: 'Futur I sa glagolom HTETI', trans: 'to explode' }
                         ]
                     }
                 ],
                 keyWords: [
-                    { word: 'Beograd', root: 'Beograd', pos: 'imenica', caseTag: 'Akuzativ s predlogom ZA', trans: 'Belgrade' },
-                    { word: 'firmom', root: 'firma', pos: 'imenica', caseTag: 'Instrumental jednine', trans: 'with company / firm' },
-                    { word: 'Krstić', root: 'Krstić', pos: 'prezime', caseTag: 'Nominativ', trans: 'Krstić' },
-                    { word: 'narod', root: 'narod', pos: 'imenica', caseTag: 'Nominativ jednine', trans: 'people / folk' },
-                    { word: 'sprema', root: 'spremati se', pos: 'glagol', caseTag: 'Prezent', trans: 'getting ready' },
-                    { word: 'sreće', root: 'sreća', pos: 'imenica', caseTag: 'Genitiv odricanja', trans: 'luck' }
+                    { word: 'izvukosmo', root: 'izvući', pos: 'glagol', caseTag: 'Aorist', trans: 'escaped alive' },
+                    { word: 'glavu', root: 'glava', pos: 'imenica', caseTag: 'Akuzativ jednine', trans: 'head / life' },
+                    { word: 'guramo', root: 'gurati se', pos: 'glagol', caseTag: 'Prezent', trans: 'pushing / shoving' },
+                    { word: 'guma', root: 'guma', pos: 'imenica', caseTag: 'Nominativ jednine', trans: 'tire' },
+                    { word: 'slaba', root: 'slab', pos: 'pridev', caseTag: 'Nominativ ženskog roda', trans: 'weak' }
                 ]
             },
             {
