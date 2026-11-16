@@ -116,6 +116,29 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 > - **Active Practice**: Features fill-in-the-blank lyric games, sentence rebuilding, and spoken pronunciation exercises.
 > - **Progress Tracking**: Earn XP, level up, collect badges, maintain daily streaks, and save useful vocabulary into a personal phrasebook.
 > *Takeaway for SerboLingo*: Our `rhythm.js` and `karaoke.js` engines already implement line-by-line synced lyrics, interactive word tapping, and sing-along scoring. Revisit this benchmark when polishing rhythm mini-lessons and when expanding into Spanish and French under Priority 48 ("Svet Jezika").
+> 
+> ---
+> 
+> 🎬 **SerboReels Bilingual Karaoke Timing & Full Dialogue Waveform Alignment (Future Polish & 100+ Videos Scaling)**:
+> If SerboReels is going to be the flagship immersion feature of SerboLingo, **accuracy must be uncompromising**. Guessing or approximating timestamps on classic cinema dialogue will never feel right because the comedic genius is in the timing, the pauses, and the delivery.
+> 
+> **Option 1: Audio Waveform Extraction & Precision Timing Blueprint:**
+> 1. **Extract Audio & Map Exact Milliseconds with Python:**
+>    - Use Python right on your machine to pull the first 45 seconds of the video's audio.
+>    - Map the exact millisecond start and end of every vocal burst, every word, and every dramatic pause (including the cough, the *"Pa da..."*, the bus silence, and the shouting).
+> 2. **Complete the Full Scene Dialogue (0s – ~38s):**
+>    - **Line 1:** *"Dobro je, samo kad izvukosmo živu glavu."*
+>    - **Pause & Cough:** Accurately held without ghost lighting.
+>    - **Line 2:** *"Pa da..."* followed by the dramatic glare pause.
+>    - **Line 3:** *"I sad ćemo da se guramo i gazimo sve do Beograda, a ova strana slobodna!"*
+>    - **Line 4:** *"Pa je l' tebi bre ne vredi govoriti da je prednja **leva** guma slaba i da će eksplodirati!?"*
+>    - **Line 5:** *"A rezerve više nemamo!"*
+>    - **Line 6:** *"E, to je vaš problem! Ja sam platio da sedim, izvolite nađite mi mesto!"*
+> 3. **1:1 Word & Phrase Alignment:**
+>    - Every Serbian phrase and its English translation will light up in exact lockstep with the actors' voices.
+>    - All lines and translations will fit cleanly into the subtitle card with zero clipping and zero layout jumps.
+> 
+> *Context & Roadmap*: Paused so we can build the rest of the application without wasting time right now, as this feature is a big process that will eventually scale to 100+ swipable videos. Revisit and execute Option 1 once the remaining app features are completed.
 
 ## ✅ Priority 11: Interactive Stories Mode ("Serbian Stories / Priče")
 - [x] Voiced Cultural Mini-Stories: Immersive dialogues and cultural tales (e.g., "A Night Out in Skadarlija", "Buying at Kalenić Pijaca", "The Lost Passport"). Native TTS audio narration with animated character bubbles. Interactive mid-story comprehension checkpoints (tap to continue, choose what happens next).

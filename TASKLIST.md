@@ -5,7 +5,7 @@
 > For the full 22-priority roadmap, see [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md).  
 > For the categorized file index, see [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md).
 
-**Last Updated**: November 14, 2026
+**Last Updated**: November 17, 2026
 
 ---
 
