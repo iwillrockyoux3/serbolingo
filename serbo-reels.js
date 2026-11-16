@@ -29,7 +29,7 @@
                 categoryLabel: '🎬 Kultni Film',
                 ytId: 'PDtjBtuqoQA', // Centar Film - Za Beograd / Ko to tamo peva
                 start: 0,
-                duration: 22,
+                duration: 23,
                 poster: 'https://img.youtube.com/vi/PDtjBtuqoQA/hqdefault.jpg',
                 author: 'Slobodan Šijan & Dušan Kovačević',
                 subSrLat: 'Dobro je, samo kad izvukosmo živu glavu! I sad ćemo da se guramo sve do Beograda, a ova strana slobodna! Prednja guma je slaba!',
@@ -39,14 +39,14 @@
                 lines: [
                     {
                         start: 0,
-                        end: 5.2,
+                        end: 5.6,
                         subSrLat: 'Dobro je, samo kad izvukosmo živu glavu.',
                         subSrCyr: 'Добро је, само кад извукосмо живу главу.',
                         subEn: 'It’s good, as long as we made it out alive.',
                         pairs: [
-                            { id: 'p1_1', sr: 'Dobro je,', en: 'It’s good,', start: 0, end: 1.2 },
-                            { id: 'p1_2', sr: 'samo kad', en: 'as long as', start: 1.2, end: 2.5 },
-                            { id: 'p1_3', sr: 'izvukosmo živu glavu.', en: 'we made it out alive.', start: 2.5, end: 5.2 }
+                            { id: 'p1_1', sr: 'Dobro je,', en: 'It’s good,', start: 0, end: 1.6 },
+                            { id: 'p1_2', sr: 'samo kad', en: 'as long as', start: 1.6, end: 3.2 },
+                            { id: 'p1_3', sr: 'izvukosmo živu glavu.', en: 'we made it out alive.', start: 3.2, end: 5.6 }
                         ],
                         keyWords: [
                             { word: 'izvukosmo', root: 'izvući', pos: 'glagol', caseTag: 'Aorist (prošlo vreme)', trans: 'we escaped / pulled out alive' },
@@ -55,15 +55,15 @@
                         ]
                     },
                     {
-                        start: 5.2,
-                        end: 13.0,
+                        start: 5.6,
+                        end: 14.5,
                         subSrLat: 'I sad ćemo da se guramo i gazimo sve do Beograda, a ova strana slobodna!',
                         subSrCyr: 'И сад ћемо да се гурамо и газимо све до Београда, а ова strana slobodna!',
                         subEn: 'And now we’re gonna push and trample each other all the way to Belgrade, while this side is free!',
                         pairs: [
-                            { id: 'p2_1', sr: 'I sad ćemo da se guramo i gazimo', en: 'And now we’re gonna push and trample each other', start: 5.2, end: 8.8 },
-                            { id: 'p2_2', sr: 'sve do Beograda,', en: 'all the way to Belgrade,', start: 8.8, end: 10.8 },
-                            { id: 'p2_3', sr: 'a ova strana slobodna!', en: 'while this side is free!', start: 10.8, end: 13.0 }
+                            { id: 'p2_1', sr: 'I sad ćemo da se guramo i gazimo', en: 'And now we’re gonna push and trample each other', start: 7.3, end: 10.6 },
+                            { id: 'p2_2', sr: 'sve do Beograda,', en: 'all the way to Belgrade,', start: 10.6, end: 12.5 },
+                            { id: 'p2_3', sr: 'a ova strana slobodna!', en: 'while this side is free!', start: 12.5, end: 14.5 }
                         ],
                         keyWords: [
                             { word: 'guramo', root: 'gurati se', pos: 'glagol', caseTag: 'Prezent (prvo lice množine)', trans: 'push / shove' },
@@ -74,15 +74,15 @@
                         ]
                     },
                     {
-                        start: 13.0,
-                        end: 22,
+                        start: 14.5,
+                        end: 23.0,
                         subSrLat: 'Pa je l\' tebi bre ne vredi govoriti da je prednja guma slaba i da će eksplodirati!?',
                         subSrCyr: 'Па је л\' теби бре не вреди говорити да је предња гума слаба и да ће експлодирати!?',
                         subEn: 'Is it really no use telling you that the front tire is weak and will explode!?',
                         pairs: [
-                            { id: 'p3_1', sr: 'Pa je l\' tebi bre ne vredi govoriti', en: 'Is it really no use telling you', start: 13.0, end: 16.5 },
-                            { id: 'p3_2', sr: 'da je prednja guma slaba', en: 'that the front tire is weak', start: 16.5, end: 19.2 },
-                            { id: 'p3_3', sr: 'i da će eksplodirati!?', en: 'and will explode!?', start: 19.2, end: 22.0 }
+                            { id: 'p3_1', sr: 'Pa je l\' tebi bre ne vredi govoriti', en: 'Is it really no use telling you', start: 14.5, end: 17.5 },
+                            { id: 'p3_2', sr: 'da je prednja guma slaba', en: 'that the front tire is weak', start: 17.5, end: 20.2 },
+                            { id: 'p3_3', sr: 'i da će eksplodirati!?', en: 'and will explode!?', start: 20.2, end: 23.0 }
                         ],
                         keyWords: [
                             { word: 'vredi', root: 'vredeti', pos: 'glagol', caseTag: 'Prezent', trans: 'worth / makes sense' },
@@ -110,7 +110,7 @@
                 categoryLabel: '🎬 Kultni Film',
                 ytId: '1x6bDQ0A-F4', // Centar Film - Ostali samo dugmici / Maratonci
                 start: 0,
-                duration: 22,
+                duration: 23,
                 poster: 'https://img.youtube.com/vi/1x6bDQ0A-F4/hqdefault.jpg',
                 author: 'Dušan Kovačević',
                 subSrLat: 'Ala ga je opravio, svaka mu čast! Ostali samo dugmići.',
@@ -507,7 +507,7 @@
                 categoryLabel: '🚕 Ulica & Sleng',
                 ytId: 'rq7gtbA2Thg', // Unlock your Serbian - Real Life Dialogue
                 start: 0,
-                duration: 22,
+                duration: 23,
                 poster: 'https://img.youtube.com/vi/rq7gtbA2Thg/hqdefault.jpg',
                 author: 'Unlock Your Serbian',
                 subSrLat: 'Gde ćemo, šefe? Danas je neviđena gužva preko mosta Gazela!',
@@ -621,7 +621,7 @@
                 categoryLabel: '🎺 Kultura & Slavlje',
                 ytId: 'EMAr98ozug0', // Dragacevski sabor u Guci - RTS Koncerti
                 start: 0,
-                duration: 22,
+                duration: 23,
                 poster: 'https://img.youtube.com/vi/EMAr98ozug0/hqdefault.jpg',
                 author: 'RTS Koncerti',
                 subSrLat: 'Kad truba zasvira u Guči, celo selo zaigra u kolu do zore!',
@@ -1273,9 +1273,7 @@
             const pairs = this.getLinePairs(curLine, clip.duration || 22);
             if (!pairs || pairs.length === 0) return;
 
-            // +0.35s anticipation lead so glow triggers in exact lockstep with actor's speech
-            const syncTime = time + 0.35;
-            const activePair = pairs.find(p => syncTime >= p.start && syncTime < p.end);
+            const activePair = pairs.find(p => time >= p.start && time < p.end);
             const newPairId = activePair ? activePair.id : null;
 
             if (newPairId === this.activePairId) return;
@@ -1341,7 +1339,7 @@
                 : `<span class="px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-300 text-[9px] font-black uppercase tracking-wider">🇷🇸 Izvorni Govor</span>`;
 
             subContainer.innerHTML = `
-            <div class="h-[148px] max-w-sm mx-auto p-3 rounded-2xl bg-slate-950/90 backdrop-blur-md border border-slate-700/60 shadow-xl flex flex-col justify-between transition-all select-none">
+            <div class="min-h-[178px] max-w-sm mx-auto p-3 rounded-2xl bg-slate-950/90 backdrop-blur-md border border-slate-700/60 shadow-xl flex flex-col justify-between transition-all select-none">
                 <!-- Status & Instruction Header -->
                 <div class="flex items-center justify-between pb-1 border-b border-slate-800/80 shrink-0">
                     ${dirBadge}
@@ -1349,12 +1347,12 @@
                         <span>⚡</span> <span>Tapni reč za skok u videu</span>
                     </span>
                 </div>
-                <!-- Spoken Dialogue (Top - Video Audio - Locked Height) -->
-                <div class="h-[54px] text-xs sm:text-sm font-black text-white leading-tight flex flex-wrap gap-1 items-center justify-center content-center overflow-y-auto no-scrollbar">
+                <!-- Spoken Dialogue (Top - Video Audio - Zero Clipping) -->
+                <div class="min-h-[64px] text-xs sm:text-[13px] font-black text-white leading-snug flex flex-wrap gap-1 items-center justify-center content-center py-1">
                     ${topSpans}
                 </div>
-                <!-- Translation Subtitle (Bottom - Translation - Locked Height) -->
-                <div class="h-[40px] text-[11px] sm:text-xs font-bold text-yellow-300/90 text-center border-t border-slate-800/80 pt-1 leading-tight flex flex-wrap gap-1 items-center justify-center content-center overflow-y-auto no-scrollbar">
+                <!-- Translation Subtitle (Bottom - Translation - Zero Clipping) -->
+                <div class="min-h-[48px] text-[11px] sm:text-xs font-bold text-yellow-300/90 text-center border-t border-slate-800/80 pt-1.5 leading-snug flex flex-wrap gap-1 items-center justify-center content-center">
                     ${bottomSpans}
                 </div>
             </div>`;
