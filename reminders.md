@@ -575,7 +575,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 </div>
 
 > [!NOTE] 🔄 **QA REVISIT**: Come back once we finish building everything to:
-> 1. Test all SerboReels features end-to-end on real devices (play/pause, timed line-by-line subtitles, word inspector, XP awards) — verified all 12 clips updated with active 200 OK YouTube videos, 1-on-1 exact transcribed spoken dialogue on Clip 1, real-time simultaneous bilingual karaoke word-pair glow, 1-tap word jump/seek to spoken timestamp, postMessage playback sync, direct YT link fallback, TikTok-style scrubber bar with ⏪ -5s rewind, auto-loop, clean header without swap button, and global profile direction sync.
+> 1. Test all SerboReels features end-to-end on real devices (play/pause, timed line-by-line subtitles, word inspector, XP awards) — verified all 12 clips updated with active 200 OK YouTube videos, 1-on-1 exact transcribed spoken dialogue on Clip 1, locked 148px subtitle card with non-shifting dimensions, snappy karaoke sync with +0.35s audio lead and tightened timestamps, middle-centered right action rail (no overlap), 1-tap word jump/seek to spoken timestamp, postMessage playback sync, direct YT link fallback, TikTok scrubber bar with ⏪ -5s rewind, auto-loop, clean header without swap button, and global profile direction sync.
 > 2. Fix any bugs or UI overflow issues found during testing.
 > 3. Upgrade SerboReels to work with **other languages** beyond Serbian ↔ English (multi-language clip support).
 
