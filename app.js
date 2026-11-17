@@ -4568,8 +4568,13 @@ CRITICAL CONSTRAINTS:
         app.updatePwaInstallUi();
     },
 
+    isNativeApp: () => {
+        return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+    },
+
     isPwaStandalone: () => {
-        return window.matchMedia('(display-mode: standalone)').matches ||
+        return app.isNativeApp() ||
+               window.matchMedia('(display-mode: standalone)').matches ||
                window.navigator.standalone === true ||
                (typeof document !== 'undefined' && document.referrer && document.referrer.includes('android-app://'));
     },
@@ -4603,7 +4608,7 @@ CRITICAL CONSTRAINTS:
         // Fallback for browsers / environments without deferred prompt
         if (app.isPwaStandalone()) {
             if (window.app && window.app.showToast) {
-                app.showToast('✅ SerboLingo je već instaliran i pokrenut kao aplikacija!', 'info');
+                app.showToast('✅ SerboLingo je već pokrenut kao instalirana aplikacija!', 'info');
             }
         } else {
             if (window.app && window.app.showToast) {
@@ -4612,10 +4617,21 @@ CRITICAL CONSTRAINTS:
         }
     },
 
-    dismissPwaBanner: () => {
+    dismissPwaBanner: (isAuto = false) => {
         const floatingBanner = document.getElementById('pwa-floating-banner');
-        if (floatingBanner) floatingBanner.classList.add('hidden');
+        if (floatingBanner) {
+            floatingBanner.classList.add('opacity-0');
+            setTimeout(() => {
+                floatingBanner.classList.add('hidden');
+                floatingBanner.classList.remove('opacity-0');
+            }, 500);
+        }
+        if (app._pwaBannerTimer) {
+            clearTimeout(app._pwaBannerTimer);
+            app._pwaBannerTimer = null;
+        }
         try {
+            // Dismiss for 7 days so it never bugs the user
             localStorage.setItem('serbolingo_pwa_dismissed', Date.now().toString());
         } catch (e) {}
     },
@@ -4623,11 +4639,16 @@ CRITICAL CONSTRAINTS:
     updatePwaInstallUi: () => {
         const installContainer = document.getElementById('pwa-install-container');
         const installedBadge = document.getElementById('pwa-installed-badge');
+        const nativeBadge = document.getElementById('native-installed-badge');
+        const playstoreCard = document.getElementById('playstore-option-card');
+        const pwaCard = document.getElementById('pwa-option-card');
         const iosInstructions = document.getElementById('pwa-ios-instructions');
         const floatingBanner = document.getElementById('pwa-floating-banner');
+        const bannerTitle = document.getElementById('pwa-banner-title');
         const bannerText = document.getElementById('pwa-banner-text');
         const bannerBtnText = document.getElementById('pwa-banner-btn-text');
 
+        const isNative = app.isNativeApp();
         const isStandalone = app.isPwaStandalone();
         const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
 
@@ -4637,52 +4658,80 @@ CRITICAL CONSTRAINTS:
         const isCyrillic = state.settings && (state.settings.script === 'cyrillic' || state.settings.appLanguage === 'sr_cyr');
 
         // Dynamic Bilingual Strings
-        let msg = "Instaliraj SerboLingo na početni ekran za 100% offline učenje!";
-        let btnMsg = "Instaliraj odmah";
+        let titleStr = "Preuzmi SerboLingo";
+        let msg = "100% offline učenje na tvom telefonu!";
+        let btnMsg = "Na Ekran";
 
         if (isEnToSr && !isHardcore) {
-            msg = "Install SerboLingo to your home screen for 100% offline learning!";
-            btnMsg = "Install Now";
+            titleStr = "Get SerboLingo";
+            msg = "100% offline learning on your device!";
+            btnMsg = "Home Screen";
         } else if (isCyrillic || (isHardcore && isCyrillic)) {
-            msg = "Инсталирај SerboLingo на почетни екран за 100% рад без интернета!";
-            btnMsg = "Инсталирај одмах";
+            titleStr = "Преузми SerboLingo";
+            msg = "100% рад без интернета на твом уређају!";
+            btnMsg = "На Екран";
         }
 
+        if (bannerTitle) bannerTitle.innerText = titleStr;
         if (bannerText) bannerText.innerText = msg;
         if (bannerBtnText) bannerBtnText.innerText = btnMsg;
 
         // In Profile View:
-        if (installContainer && installedBadge) {
-            if (isStandalone) {
-                installContainer.classList.add('hidden');
-                installedBadge.classList.remove('hidden');
-                if (iosInstructions) iosInstructions.classList.add('hidden');
-            } else {
-                installedBadge.classList.add('hidden');
-                installContainer.classList.remove('hidden');
-                if (isIos && iosInstructions) {
-                    iosInstructions.classList.remove('hidden');
-                }
+        if (isNative) {
+            // If running inside Capacitor APK, hide install cards & show native badge
+            if (playstoreCard) playstoreCard.classList.add('hidden');
+            if (pwaCard) pwaCard.classList.add('hidden');
+            if (installedBadge) installedBadge.classList.add('hidden');
+            if (nativeBadge) nativeBadge.classList.remove('hidden');
+            if (iosInstructions) iosInstructions.classList.add('hidden');
+        } else if (isStandalone) {
+            // If running in PWA standalone display mode
+            if (nativeBadge) nativeBadge.classList.add('hidden');
+            if (installedBadge) installedBadge.classList.remove('hidden');
+            if (installContainer) installContainer.classList.add('hidden');
+            if (iosInstructions) iosInstructions.classList.add('hidden');
+        } else {
+            // Regular Web Browser
+            if (nativeBadge) nativeBadge.classList.add('hidden');
+            if (installedBadge) installedBadge.classList.add('hidden');
+            if (installContainer) installContainer.classList.remove('hidden');
+            if (isIos && iosInstructions) {
+                iosInstructions.classList.remove('hidden');
             }
         }
 
         // Automatic Floating Banner:
         if (floatingBanner) {
+            // Never show floating banner if already running native or standalone
+            if (isNative || isStandalone) {
+                floatingBanner.classList.add('hidden');
+                if (app._pwaBannerTimer) {
+                    clearTimeout(app._pwaBannerTimer);
+                    app._pwaBannerTimer = null;
+                }
+                return;
+            }
+
             let isDismissed = false;
             try {
                 const dismissedAt = localStorage.getItem('serbolingo_pwa_dismissed');
                 if (dismissedAt) {
                     const elapsed = Date.now() - parseInt(dismissedAt);
-                    // Dismiss for 3 days before reminding again
-                    if (elapsed < (3 * 24 * 60 * 60 * 1000)) {
+                    // Dismiss for 7 days before softly suggesting again
+                    if (elapsed < (7 * 24 * 60 * 60 * 1000)) {
                         isDismissed = true;
                     }
                 }
             } catch (e) {}
 
-            const isLoggedIn = !!state.user;
-            if (isLoggedIn && !isStandalone && !isDismissed) {
+            if (!isDismissed) {
                 floatingBanner.classList.remove('hidden');
+                // Auto-dismiss smoothly after 9 seconds if not already set
+                if (!app._pwaBannerTimer) {
+                    app._pwaBannerTimer = setTimeout(() => {
+                        app.dismissPwaBanner(true);
+                    }, 9000);
+                }
             } else {
                 floatingBanner.classList.add('hidden');
             }

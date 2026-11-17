@@ -1296,29 +1296,55 @@
                 </div>
             </div>
 
-            <!-- PWA Installation & Offline App Mode (Priority 19) -->
+            <!-- App Installation & Mobile Apps (Priority 19 & 20) -->
             <div id="pwa-install-section" class="space-y-3">
-                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1">Instalacija & Offline Aplikacija</h3>
+                <h3 class="font-black text-slate-400 uppercase text-[10px] tracking-wider ml-1">Preuzmi Aplikaciju (Google Play & Web)</h3>
                 <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-2 flex items-center justify-center text-2xl shadow-md text-white font-black shrink-0">
-                            📱
+                    
+                    <!-- Google Play Store Option -->
+                    <div id="playstore-option-card" class="p-3 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white shrink-0 shadow-sm">
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.792 12 3.61 22.186a1.996 1.996 0 0 1-1.61-.318c-.377-.291-.599-.742-.6-1.222V3.354c0-.48.222-.931.599-1.222.44-.34 1.04-.383 1.61-.318zm11.597 11.599L6.59 22.029l10.963-6.265-2.347-2.351zm0-2.826l2.347-2.351L6.59 1.971l8.616 8.616zm1.414 1.413l3.663 2.093c1.077.616 1.077 1.619 0 2.235l-3.663 2.093-2.07-2.07 2.07-2.351z"/></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-black text-slate-800 dark:text-white">Google Play Store</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500">Zvanična Android aplikacija sa automatskim ažuriranjima.</p>
+                            </div>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-xs font-black text-slate-800 dark:text-white">SerboLingo na Početnom Ekranu</h4>
-                            <p class="text-[10px] text-slate-400 dark:text-slate-500 leading-tight">Instaliraj kao samostalnu mobilnu/desktop aplikaciju za 100% offline učenje bez browser trake.</p>
+                        <a href="https://play.google.com/store/apps/details?id=com.serbolingo.app" target="_blank" rel="noopener noreferrer" class="py-2.5 px-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 shrink-0">
+                            <span>📲 Preuzmi sa Google Play</span>
+                        </a>
+                    </div>
+
+                    <!-- PWA / Home Screen Option -->
+                    <div id="pwa-option-card" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-xl text-white shrink-0 shadow-sm">
+                                ⚡
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-black text-slate-800 dark:text-white">Dodaj na Početni Ekran (PWA)</h4>
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500">100% offline učenje direktno preko browsera bez instalacije iz prodavnice.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Dynamic Install Button or Installed Status Pill -->
+                        <div id="pwa-install-container" class="shrink-0">
+                            <button id="pwa-install-btn" onclick="app.installPwa()" class="w-full sm:w-auto py-2.5 px-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                                <span>📲</span> <span>Dodaj na Ekran</span>
+                            </button>
                         </div>
                     </div>
                     
-                    <!-- Dynamic Install Button or Installed Status Pill -->
-                    <div id="pwa-install-container">
-                        <button id="pwa-install-btn" onclick="app.installPwa()" class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-black text-xs rounded-xl shadow-md shadow-blue-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-                            <span>📲</span> <span>Instaliraj SerboLingo (PWA)</span>
-                        </button>
-                    </div>
-                    
+                    <!-- Installed as PWA Badge -->
                     <div id="pwa-installed-badge" class="hidden w-full py-2.5 px-3 bg-emerald-50 dark:bg-emerald-900/30 border-2 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 rounded-xl text-xs font-black text-center flex items-center justify-center gap-2">
-                        <span>✅</span> <span>Aplikacija je instalirana (100% Offline Spremno)</span>
+                        <span>✅</span> <span>Aplikacija je dodata na početni ekran (100% Offline Spremno)</span>
+                    </div>
+
+                    <!-- Installed as Native Google Play App Badge -->
+                    <div id="native-installed-badge" class="hidden w-full py-2.5 px-3 bg-emerald-500/10 border-2 border-emerald-500/40 text-emerald-600 dark:text-emerald-400 rounded-xl text-xs font-black text-center flex items-center justify-center gap-2">
+                        <span>🌟</span> <span>Pokrenuto preko zvanične Android aplikacije (v1.0)</span>
                     </div>
 
                     <p id="pwa-ios-instructions" class="hidden text-[10px] text-slate-400 dark:text-slate-500 italic bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
@@ -1475,21 +1501,26 @@
         </div>
     </main>
 
-    <!-- PWA Install Floating Banner (Bilingual & Automatic) -->
-    <div id="pwa-floating-banner" class="hidden fixed bottom-20 left-4 right-4 z-40 max-w-md mx-auto bg-slate-900/95 dark:bg-slate-800/95 text-white p-3.5 rounded-2xl shadow-2xl border-2 border-blue-500/60 backdrop-blur-md flex items-center justify-between gap-3 transition-all duration-300">
+    <!-- PWA & App Install Floating Welcome Banner (Bilingual, Auto-Dismiss & Fade) -->
+    <div id="pwa-floating-banner" class="hidden fixed bottom-20 left-4 right-4 z-40 max-w-lg mx-auto bg-slate-900/95 dark:bg-slate-800/95 text-white p-3.5 rounded-2xl shadow-2xl border-2 border-blue-500/60 backdrop-blur-md flex items-center justify-between gap-3 transition-opacity duration-500 opacity-100">
         <div class="flex items-center gap-2.5 flex-1 min-w-0">
-            <span class="text-2xl shrink-0">📱</span>
+            <span class="text-2xl shrink-0">📲</span>
             <div class="min-w-0">
-                <p id="pwa-banner-text" class="text-xs font-bold text-slate-100 leading-snug">
-                    Instaliraj SerboLingo na početni ekran za 100% offline učenje!
+                <p id="pwa-banner-title" class="text-xs font-black text-white leading-tight">Preuzmi SerboLingo</p>
+                <p id="pwa-banner-text" class="text-[10px] font-medium text-slate-300 leading-tight truncate">
+                    100% offline učenje na tvom telefonu!
                 </p>
             </div>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
-            <button id="pwa-banner-install-btn" onclick="app.installPwa()" class="py-2 px-3 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-transform flex items-center gap-1 whitespace-nowrap">
-                <span id="pwa-banner-btn-text">Instaliraj odmah</span>
+            <a id="pwa-banner-playstore-btn" href="https://play.google.com/store/apps/details?id=com.serbolingo.app" target="_blank" rel="noopener noreferrer" class="py-1.5 px-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white font-black text-[11px] rounded-xl shadow-md transition-all flex items-center gap-1 whitespace-nowrap">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.792 12 3.61 22.186a1.996 1.996 0 0 1-1.61-.318c-.377-.291-.599-.742-.6-1.222V3.354c0-.48.222-.931.599-1.222.44-.34 1.04-.383 1.61-.318zm11.597 11.599L6.59 22.029l10.963-6.265-2.347-2.351zm0-2.826l2.347-2.351L6.59 1.971l8.616 8.616zm1.414 1.413l3.663 2.093c1.077.616 1.077 1.619 0 2.235l-3.663 2.093-2.07-2.07 2.07-2.351z"/></svg>
+                <span>Google Play</span>
+            </a>
+            <button id="pwa-banner-install-btn" onclick="app.installPwa()" class="py-1.5 px-2.5 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-[11px] rounded-xl shadow-md transition-transform flex items-center gap-1 whitespace-nowrap">
+                <span>⚡</span> <span id="pwa-banner-btn-text">Na Ekran</span>
             </button>
-            <button onclick="app.dismissPwaBanner()" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors text-xs font-black" title="Zatvori">
+            <button onclick="app.dismissPwaBanner()" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors text-xs font-black shrink-0" title="Zatvori">
                 ✕
             </button>
         </div>

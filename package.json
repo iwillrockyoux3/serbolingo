@@ -1,0 +1,19 @@
+{
+  "name": "serbolingo",
+  "version": "1.0.0",
+  "description": "SerboLingo - Learn Serbian & English with 100% Offline Immersion",
+  "private": true,
+  "scripts": {
+    "sync": "py sync_android.py",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android",
+    "cap:build": "npx cap build android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/core": "^8.6.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.2"
+  }
+}

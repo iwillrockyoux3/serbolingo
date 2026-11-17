@@ -211,21 +211,21 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 </div>
 
-## 🚀 Priority 20: Google Play Store & App Store Packaging (Capacitor)
-- [ ] **Native Mobile Hardware Wrappers (Priority 20)**:
-  - **What it is**: Wrapping your pure Vanilla JavaScript SPA code using Capacitor (by Ionic) for Android and iOS. This transforms your web app into a true native .apk / .aab file, letting you integrate native Google Play Billing (for diamond/streak purchases) and true native device camera/microphone permissions without depending on mobile browser wrappers.
-- [ ] **Capacitor Integration**:
-  - Initialize Capacitor: `com.serbolingo.app`
-  - Add Android platform: `npx cap add android`
-  - Sync web assets: `npx cap sync`
+## ✅🚀 Priority 20: Google Play Store & App Store Packaging (Capacitor Native Android) (PART 1 DONE)
+- [x] **Native Mobile Hardware Wrappers & Capacitor Android Project (DONE)**:
+  - [x] **Capacitor Integration**: Initialized Capacitor (`com.serbolingo.app`), configured `capacitor.config.json` with splash screen and Android schemes.
+  - [x] **Native Android Platform**: Generated complete native Android Gradle project in `android/` with `MainActivity.java`, Gradle wrappers, and asset pipelines.
+  - [x] **Automated Asset Sync Pipeline**: Built `sync_android.py` (and `npm run sync`) to automatically synchronize all 46+ web assets into `www/` and `android/app/src/main/assets/public/` in under 200ms.
+  - [x] **Android Hardware Permissions**: Configured `AndroidManifest.xml` with `INTERNET`, `CAMERA` (Visual Lens), `RECORD_AUDIO` (Accent pitch & Karaoke), `MODIFY_AUDIO_SETTINGS`, and `VIBRATE` (Haptics).
+  - [x] **Platform Auto-Detection (`Capacitor.isNativePlatform()`)**: `app.isNativeApp()` automatically detects when running inside the native APK — cleanly hides install banners and shows official native app status pill (`#native-installed-badge`).
+  - [x] **Polite Welcome Banner & Profile Download Hub**: Floating welcome banner with direct Google Play Store link + PWA install button, auto-fading after 9 seconds with 7-day memory. Added permanent dual-option download card in Profile Settings.
+- [ ] **Google Play Store Release & Store Assets ($25 one-time account fee)**:
+  - Generate signed release Android App Bundle (AAB): `./gradlew bundleRelease`.
+  - Create store listing, screenshots, feature graphics, and privacy policy.
+  - Submit to Google Play Console.
 - [ ] **Native Google Sign-In Plugin**:
   - Google Cloud Console OAuth setup.
   - Capacitor Google Auth plugin for 1-tap Google login on physical phones.
-- [ ] **Google Play Store Release ($25 one-time account fee)**:
-  - Generate signed release Android App Bundle (AAB).
-  - Create store listing, screenshots, feature graphics, and privacy policy.
-  - Submit to Google Play Console.
-  - Wrap the pure Vanilla HTML/JS codebase using a tool like Capacitor (by Ionic) to compile into native `.apk` / `.aab` (Android) and `.ipa` (iOS) files for wider reach.
 - [ ] **Dual-Platform Monetization & In-App Purchases (RevenueCat Architecture)**:
   - **Google Play App (In-App Purchases / IAP)**: Google strictly requires Google Play Billing for digital goods (diamonds, gems, streak revivals) inside the Play Store APK. Google takes a 15% fee and pays monthly directly to developer bank account (IBAN/SWIFT).
   - **Web / Cloudflare Browser Version**: Free from Google restrictions. Uses Stripe / PayPal Checkout on PC and mobile browsers (Chrome/Safari) with standard ~2.9% fee deposited directly to developer account.

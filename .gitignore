@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+package-lock.json
+www/
+
+# Native Android Build Artifacts
+android/app/build/
+android/.gradle/
+android/build/
+android/captures/
+android/.idea/
+android/*.iml
+
+# OS and temporary files
+.DS_Store
+Thumbs.db
+*.log

@@ -101,8 +101,8 @@
 | P19.1 | Create `manifest.json` (PWA) | 🆕 New | `manifest.json` | ✅ DONE |
 | P19.2 | Create `sw.js` (Service Worker) | 🆕 New | `sw.js` | ✅ DONE |
 | P19.3 | Enable "Add to Home Screen" & In-App Install Prompt | 🆕 New | `index.html`, `app.js` | ✅ DONE |
-| P20.1 | Capacitor init + Android platform | 🆕 New | New config | ⬜ TODO |
-| P20.2 | Google Play Store submission | 🆕 New | — | ⬜ TODO |
+| P20.1 | Capacitor Android Packaging & Polite Google Play / PWA Download Hub | 🆕 New | `capacitor.config.json`, `sync_android.py`, `android/`, `app.js`, `index.html` | ✅ DONE |
+| P20.2 | Google Play Store submission (AAB generation & store listing) | 🆕 New | — | ⬜ TODO |
 | P24.1 | Local Save Data Export & Import (JSON) | 🆕 New | `app.js`, `index.html` | ✅ DONE |
 | P28.1 | Adaptive 3-Minute Placement Test & Skill Tree Unlocks | 🆕 New | `placement-test.js`, `index.html` | ✅ DONE |
 | P44.1 | Smart Grammar Tooltips & Word Inspector in Lessons | 🆕 New | `grammar-tooltips.js`, `app.js`, `index.html` | ✅ DONE |
@@ -165,9 +165,9 @@
 | Gamification & Stats | 7/7 | 0 |
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
-| Deployment (P18-P20, P39, P40) | 2/8 | 6 |
+| Deployment (P18-P20, P39, P40) | 3/8 | 5 |
 | Moonshots (P21-P22, P24.2, P43.3, P48-P51) | 9/20 | 11 |
-| **TOTAL** | **45/75** | **30** |
+| **TOTAL** | **46/75** | **29** |
 
 ---
 

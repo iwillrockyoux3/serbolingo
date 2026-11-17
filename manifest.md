@@ -21,6 +21,9 @@
 | [`sw.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/sw.js) | 164 | 6 KB | PWA Service Worker (v13) — Pre-caches app shell, stale-while-revalidate for CDN libraries, 100% offline fallback |
 | [`manifest.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.json) | 80 | 2.1 KB | Web App Manifest — Standalone display mode, theme colors, responsive app icons, PWA quick action shortcuts array |
 | [`icon.svg`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/icon.svg) | 57 | 3 KB | SerboLingo master vector brand icon — Serbian flag tricolor squircle, SL monogram & gold XP lightning badge |
+| [`capacitor.config.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/capacitor.config.json) | 16 | 0.4 KB | Capacitor mobile runtime config (`com.serbolingo.app`, splash screen, Android scheme & webDir: www) |
+| [`sync_android.py`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/sync_android.py) | 42 | 1.5 KB | Fast automated web-to-Android synchronization utility — copies assets into www/ and executes Capacitor sync in <200ms |
+| [`package.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/package.json) | 18 | 0.5 KB | Capacitor tooling manifest & build scripts (`sync`, `cap:sync`, `cap:open`, `cap:build`) |
 
 ## [02_VOCAB_SRS] — Vocabulary Database & Spaced Repetition
 
