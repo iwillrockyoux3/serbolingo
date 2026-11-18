@@ -5,7 +5,7 @@
 > For the full 22-priority roadmap, see [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md).  
 > For the categorized file index, see [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md).
 
-**Last Updated**: November 17, 2026
+**Last Updated**: November 19, 2026
 
 ---
 
@@ -140,7 +140,7 @@
 | P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
 | P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ✅ DONE |
 | P50.1 | Authentic Serbian Customs, Cultural Etiquette & Gastronomy | 🆕 New | ✅ DONE |
-| P12.2 | "Monty Winner" Celebration Studio & Multimedia Victory Flex | 🆕 New | ⬜ FUTURE |
+| P12.2 | "Monty Winner" Celebration Studio & Multimedia Victory Flex | 🆕 New | `monty-winner.js`, `trophy-cabinet.js`, `league-system.js`, `index.html` | ✅ DONE |
 | P20.3 | Mobile Analytics & Attribution Stack (Firebase + RevenueCat) | 🆕 New | ⬜ FUTURE |
 | P20.4 | Pricing Architecture & Churn Recovery (Pause vs Cancel + 50% Win-Backs) | 🆕 New | ⬜ FUTURE |
 | P21.3 | Self-Evolving Community Dictionary (Reddit-Style Voting Pipeline) | 🆕 New | ⬜ FUTURE |
@@ -166,8 +166,8 @@
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
 | New Features (P3-P7, P17) | 0/7 | 7 |
 | Deployment (P18-P20, P39, P40) | 3/8 | 5 |
-| Moonshots (P21-P22, P24.2, P43.3, P48-P51) | 9/20 | 11 |
-| **TOTAL** | **46/75** | **29** |
+| Moonshots (P12.2, P21-P22, P24.2, P43.3, P48-P51) | 10/20 | 10 |
+| **TOTAL** | **47/75** | **28** |
 
 ---
 

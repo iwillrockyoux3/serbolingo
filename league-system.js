@@ -1117,6 +1117,7 @@
                             <div class="text-xs font-black ${isUser ? 'text-blue-400' : 'text-white'} truncate flex items-center gap-1.5">
                                 <span>${player.name}</span>
                                 ${isUser ? '<span class="text-[9px] bg-blue-500 text-white px-1.5 py-0.2 rounded font-bold uppercase">Ti</span>' : ''}
+                                ${rank === 1 ? '<button onclick="MontyWinner.triggerCelebration()" class="text-[9px] bg-gradient-to-r from-yellow-400 to-amber-500 text-yellow-950 font-black px-1.5 py-0.5 rounded-full cursor-pointer hover:scale-105 transition-transform flex items-center gap-0.5 shadow-sm" title="Pogledaj Monty Winner Studio"><span>👑</span><span>MONTY</span></button>' : ''}
                             </div>
                             ${titleHtml}
                         </div>
@@ -1231,6 +1232,16 @@
             if (summary.outcome === 'promoted' || summary.outcome === 'champion') {
                 if (window.app && window.app.fireConfetti) window.app.fireConfetti();
                 if (window.TouchHaptics) TouchHaptics.vibrate('celebrate');
+                if (summary.userRank === 1 && typeof MontyWinner !== 'undefined') {
+                    setTimeout(() => {
+                        MontyWinner.triggerCelebration({
+                            title: 'POBEDNIK LIGE! 🥇',
+                            subtitle: `Osvojio si 1. mesto i postao zvanični Monty Winner!`,
+                            gems: 100,
+                            xp: 250
+                        });
+                    }, 800);
+                }
             }
         },
 

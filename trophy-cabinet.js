@@ -402,6 +402,20 @@ const TrophyEngine = {
             if (typeof confetti === 'function') {
                 confetti({ particleCount: 50, spread: 60, origin: { y: 0.5 } });
             }
+
+            // Priority 12.2: Trigger Monty Winner celebration on major Gold / Diamond unlocks
+            if (newlyUnlocked.some(m => m.tier === 'diamond' || m.tier === 'gold')) {
+                setTimeout(() => {
+                    if (typeof MontyWinner !== 'undefined') {
+                        MontyWinner.triggerCelebration({
+                            title: 'NOVI VELIKI TROFEJ! 🌟',
+                            subtitle: 'Čestitamo! Otključao si elitni trofej u Vitrini!',
+                            gems: 100,
+                            xp: 250
+                        });
+                    }
+                }, 800);
+            }
         }
 
         return newlyUnlocked;
@@ -479,6 +493,19 @@ const TrophyEngine = {
                             <span class="block text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Max Niz</span>
                             <span class="text-lg font-black text-slate-800 dark:text-white">⭐ ${maxBotStreak}</span>
                         </div>
+                    </div>
+
+                    <!-- Monty Winner Studio Launcher -->
+                    <div class="px-4 py-2.5 bg-gradient-to-r from-yellow-500/15 via-amber-500/20 to-orange-500/15 border-b border-yellow-500/30 flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl animate-bounce">👑</span>
+                            <div class="text-[11px] font-black text-slate-800 dark:text-yellow-200 leading-tight">
+                                Monty Winner Studio & Brag Card
+                            </div>
+                        </div>
+                        <button onclick="MontyWinner.triggerCelebration()" class="py-1 px-3 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-yellow-950 font-black text-[11px] rounded-xl shadow-sm active:scale-95 transition-transform flex items-center gap-1 shrink-0">
+                            <span>🏆</span> <span>Otvori Studio</span>
+                        </button>
                     </div>
 
                     <!-- Filter Chips -->

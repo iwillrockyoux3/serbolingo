@@ -528,8 +528,8 @@
                     </button>
                 </div>
 
-                <!-- Trophy Cabinet Launcher (Priority 12: Vitrina sa Trofejima) -->
-                <div class="bg-gradient-to-r from-amber-600/90 via-orange-600/90 to-yellow-600/90 border-2 border-yellow-400/50 rounded-2xl p-4 mb-6 shadow-lg shadow-orange-950/20 flex items-center justify-between">
+                <!-- Trophy Cabinet & Monty Winner Launcher (Priority 12 & 12.2) -->
+                <div class="bg-gradient-to-r from-amber-600/90 via-orange-600/90 to-yellow-600/90 border-2 border-yellow-400/50 rounded-2xl p-4 mb-6 shadow-lg shadow-orange-950/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-xl bg-yellow-400/20 border border-yellow-300/40 flex items-center justify-center text-2xl shrink-0 shadow-inner">
                             🏆
@@ -539,12 +539,17 @@
                                 <h3 class="text-white font-black text-base leading-tight">Vitrina sa Trofejima</h3>
                                 <span class="bg-black/25 text-yellow-200 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">20 Trofeja</span>
                             </div>
-                            <p class="text-yellow-100 text-xs font-medium">Rekordi igrica, medalje i niz pobeda protiv botova</p>
+                            <p class="text-yellow-100 text-xs font-medium">Rekordi igrica, medalje i Monty Winner studio</p>
                         </div>
                     </div>
-                    <button onclick="TrophyEngine.openCabinetModal()" class="py-2.5 px-4 bg-yellow-400 hover:bg-yellow-300 text-yellow-950 font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-1.5 shrink-0">
-                        <span>🎖️</span> <span>Vidi Vitrinu</span>
-                    </button>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="MontyWinner.triggerCelebration()" class="py-2.5 px-3 bg-gradient-to-r from-yellow-300 to-amber-400 hover:from-yellow-200 hover:to-amber-300 text-yellow-950 font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-1.5" title="Otvori Monty Winner Studio">
+                            <span>👑</span> <span>Monty Studio</span>
+                        </button>
+                        <button onclick="TrophyEngine.openCabinetModal()" class="py-2.5 px-3 bg-slate-900/60 hover:bg-slate-900/80 text-yellow-200 font-black text-xs rounded-xl border border-yellow-400/40 shadow-md active:scale-95 transition-transform flex items-center gap-1.5">
+                            <span>🎖️</span> <span>Vidi Vitrinu</span>
+                        </button>
+                    </div>
                 </div>
 
 
@@ -1063,11 +1068,14 @@
                     <span id="profile-joined">--</span></p>
                 <div id="profile-equipped-title" class="hidden text-xs font-black text-amber-500 dark:text-amber-400 mt-2 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full"></div>
                 <div class="flex flex-wrap justify-center gap-2 mt-3">
-                    <button onclick="LeagueEngine.openLockerModal()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-2">
-                        <span>🎭</span> <span>Garderoba & Titule</span> <span class="bg-black/20 px-1.5 py-0.5 rounded text-[10px]">💎</span>
+                    <button onclick="LeagueEngine.openLockerModal()" class="px-3.5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-1.5">
+                        <span>🎭</span> <span>Garderoba</span> <span class="bg-black/20 px-1.5 py-0.5 rounded text-[10px]">💎</span>
                     </button>
-                    <button onclick="app.shareProfileCard()" id="btn-share-profile" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-1.5">
-                        <span>📤</span> <span>Podeli Profil</span>
+                    <button onclick="MontyWinner.triggerCelebration()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-yellow-950 font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-1.5" title="Monty Winner Studio">
+                        <span>🏆</span> <span>Monty Studio</span>
+                    </button>
+                    <button onclick="app.shareProfileCard()" id="btn-share-profile" class="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-transform flex items-center gap-1.5">
+                        <span>📤</span> <span>Podeli</span>
                     </button>
                 </div>
             </div>
@@ -2763,6 +2771,7 @@
     <script src="ghost-arena.js?v=13" charset="UTF-8"></script>
     <script src="arcade.js?v=13" charset="UTF-8"></script>
     <script src="trophy-cabinet.js?v=13" charset="UTF-8"></script>
+    <script src="monty-winner.js?v=13" charset="UTF-8"></script>
     <script src="visual-lens.js?v=13" charset="UTF-8"></script>
     <script src="commute.js?v=13" charset="UTF-8"></script>
     <script src="shop-engine.js?v=13" charset="UTF-8"></script>
