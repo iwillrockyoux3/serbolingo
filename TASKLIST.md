@@ -90,7 +90,7 @@
 | P6.1 | Smart error review with SuperMemo-2 SRS prioritization | 🔧 Enhance | `srs-engine.js`, `app.js`, `question-engine.js`, `index.html` | ✅ DONE |
 | P7.1 | Streak Freeze (Štit za Niz) purchase/earn | 🆕 New | `shop-engine.js`, `app.js` | ✅ DONE |
 | P7.2 | Daily Quests shop & Mystery Chests | 🆕 New | `shop-engine.js`, `index.html` | ✅ DONE |
-| P17.1 | Hands-free commute audio mode (Pimsleur-style) | 🆕 New | New file | ⬜ TODO |
+| P17.1 | Hands-free commute audio mode (Pimsleur-style) | 🆕 New | `commute.js`, `index.html` | ✅ DONE |
 | P30.1 | Authentic Cultural Idioms & Slang ("Untranslatable" Cultural Notes, Skill Tree "Ulični srpski" & Arcade Quiz + SRS Sync) | 🔧 Content/Enhance | `seed-data.js`, `slang.js`, `skill-tree.js`, `db.js`, `index.html` | ✅ DONE |
 | P31.1 | Gentle Typo Warning for Bald Latin & Minor Typos | 🆕 New | `app.js` | ✅ DONE |
 
@@ -164,10 +164,10 @@
 | AI & Audio | 4/4 | 0 |
 | Gamification & Stats | 7/7 | 0 |
 | Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
-| New Features (P3-P7, P17) | 0/7 | 7 |
-| Deployment (P18-P20, P39, P40) | 3/8 | 5 |
+| New Features (P3-P7, P17) | 7/7 | 0 |
+| Deployment (P18-P20, P39, P40) | 5/8 | 3 |
 | Moonshots (P12.2, P21-P22, P24.2, P43.3, P48-P51) | 10/20 | 10 |
-| **TOTAL** | **47/75** | **28** |
+| **TOTAL** | **48/75** | **27** |
 
 ---
 
