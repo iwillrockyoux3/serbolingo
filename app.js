@@ -427,6 +427,17 @@ const app = {
         } catch (e) {
             console.warn('[PWA Shortcuts / Spectator] Route error:', e);
         }
+
+        // Priority 12.2: 7-Day Frequency-Capped Monty Winner Community Spotlight evaluation
+        try {
+            if (typeof MontyWinner !== 'undefined' && typeof MontyWinner.checkCommunityPopup === 'function') {
+                setTimeout(() => {
+                    MontyWinner.checkCommunityPopup();
+                }, 1200);
+            }
+        } catch (e) {
+            console.warn('[MontyWinner] Spotlight popup check failed:', e);
+        }
     },
     applyDarkMode: () => {
         const html = document.documentElement;

@@ -153,12 +153,15 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] **20 Tiered Achievement Medals**: Bronze 🥉, Silver 🥈, Gold 🥇, and Diamond 💎 trophies awarding +15 to +200 bonus XP upon unlock.
   - [x] **Enhanced Game Over Screen**: Instant high score badges (`🌟 NOVI LIČNI REKORD!`), trophy unlock celebration banners, bot streak counters, and 1-tap "Vitrina sa Trofejima" launcher.
   - [x] **3D Showcase Shelf Modal**: Glassmorphism room with 4 tier filter tabs, live progress bars on locked achievements, and real-time trophy counter banner in `#view-arcade`.
-- [x] **"Monty Winner" Victory Celebration Studio & Multimedia Flex (DONE)**:
+- [x] **"Monty Winner" Complete Victory Celebration Studio & Multimedia Flex (DONE)**:
   - [x] **Dynamic Pop-Up**: High-energy full-screen celebration modal (`#monty-winner-modal`) triggering on major Gold/Diamond trophy unlocks, League #1 podium wins, or manual studio launch ("ČESTITAMO! TI SI POBEDNIK! 🏆").
-  - [x] **Multimedia Creator Studio**: Allows the winner to personalize their victory post with custom victory quotes/preset chips, celebratory audio lines (Guča trumpets, stadium cheers, TTS speech, or 4-second live microphone voice recording), and opt-in community sizzle reel checkbox (`monty-winner.js`).
-  - [x] **Instant Gratification**: Immediate in-app loot drop (+100 💎 Dijamanata and +250 ⚡ XP) with celebratory Web Audio fanfare and falling confetti.
-  - [x] **Social Flex & HD Canvas Card**: Client-side high-resolution 1080x1350 canvas bragging card generation with 1-click HD PNG download and native Web Share.
-  - [x] **Multi-Touchpoint Access & Leaderboard Spotlight**: Direct launcher buttons in Arcade view (`#view-arcade`), Trophy Cabinet modal, Profile view (`#view-profile`), and glowing crown badge on League #1 player cards.
+  - [x] **Multimedia Creator Studio**: Allows the winner to personalize their victory post with 4 media options (Mascot Avatar, 5-Second Selfie Video Loop with circular golden frame, Camera Selfie snapshot, or File Upload with 90° rotation and gold/retro/bw filters).
+  - [x] **Audio Flex & Fanfares**: Web Audio celebratory brass trumpet fanfare, stadium cheers, TTS speech, or live microphone voice recording with instant playback.
+  - [x] **Bilingual Safety Shield & Profanity Blacklist**: Real-time validation against Serbian and English profanity and hate slurs with inline UI warning, plus mandatory 18+ Community Safety Pledge before unlocking live camera/photo tools.
+  - [x] **Expanded Quick-Share Social Grid Sheet**: 1-click sharing to WhatsApp, Viber, Telegram, X (Twitter), system share sheet (`navigator.share`), clipboard link copy, and 1080x1350 canvas bragging card export for Instagram Stories.
+  - [x] **Month-Long Leaderboard #1 Spotlight**: Pinned #1 spot on the leaderboard for the monthly champion with an interactive `👑 MONTY #1` crown button.
+  - [x] **7-Day Frequency-Capped Community Pop-Up**: Other learners see the champion's greeting once upon opening the app; closing it suppresses the pop-up for 7 days (`serbolingo_monty_popup_dismissed`), with 1-click `🚩 Prijavi` local report protection.
+  - [x] **Anonymous Mode ("Anonimni Šampion 🎭")**: Optional privacy toggle masking user identity, name, avatar, and media for privacy-conscious learners.
 
 ## ✅ Priority 13: Cloze Mastery (Fill-in-the-Blank Context Engine)
 - [x] Busuu / Clozemaster Context Trainer: 5,000+ real conversational Serbian sentences with 1 key missing word. Rapid-fire contextual fill-in-the-blank practice to build natural language instincts.
