@@ -2457,15 +2457,27 @@ const app = {
             let isC = false;
 
             const normalize = (s) => {
-                let str = s.toLowerCase();
-                // Normalize Serbian specific letters for flexible typing
-                // đ -> dj, dž -> dz
-                str = str.replace(/đ/g, "dj");
-                str = str.replace(/dž/g, "dz");
-                // Remove diacritics
+                if (!s || typeof s !== 'string') return "";
+                if (typeof app !== 'undefined' && typeof app._phoneticNormalize === 'function') {
+                    return app._phoneticNormalize(s);
+                }
+                let str = s.toLowerCase().trim();
+                str = str.replace(/y/g, "j").replace(/w/g, "v");
+                str = str.replace(/đ/g, "dj").replace(/dž/g, "dz");
                 str = str.replace(/č/g, "c").replace(/ć/g, "c").replace(/š/g, "s").replace(/ž/g, "z");
-                // Strip punctuation
                 return str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+            };
+
+            const isTypoMatch = (userStr, targetStr) => {
+                if (!userStr || !targetStr) return false;
+                const uNorm = normalize(userStr);
+                const tNorm = normalize(targetStr);
+                if (uNorm === tNorm) return true;
+                // Flexible 1-character typo tolerance for words of 4+ characters (e.g. yabuka -> jabuka)
+                if (tNorm.length >= 4 && typeof app !== 'undefined' && typeof app._levenshtein === 'function') {
+                    if (app._levenshtein(uNorm, tNorm) <= 1) return true;
+                }
+                return false;
             };
 
             if (l.type.startsWith('alphabet_')) {
@@ -2494,18 +2506,18 @@ const app = {
                     // Phase 2: Grading complete
                     isC = !!state.userSelection;
                 }
-            } else if (l.type === 'speaking') {
+            } else if (l.type === 'speaking' || l.type === 'fill_blank') {
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';
                 const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
-                isC = normalize(state.userSelection || "") === normalize(correctText);
+                isC = isTypoMatch(state.userSelection || "", correctText || "");
                 
                 const inputElement = document.getElementById('fill-blank-input');
                 if (inputElement) {
                     inputElement.disabled = true;
                     if (isC) {
-                        inputElement.classList.add('bg-green-100', 'border-green-500', 'text-green-700');
+                        inputElement.classList.add('bg-green-100', 'border-green-500', 'text-green-700', 'dark:bg-green-900/60', 'dark:text-green-300');
                     } else {
-                        inputElement.classList.add('bg-red-100', 'border-red-500', 'text-red-700');
+                        inputElement.classList.add('bg-red-100', 'border-red-500', 'text-red-700', 'dark:bg-red-900/60', 'dark:text-red-300');
                     }
                 }
             } else if (l.type === 'word_order') {
@@ -2603,12 +2615,13 @@ const app = {
             } else {
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';
                 const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
-                isC = state.userSelection === correctText;
+                isC = isTypoMatch(state.userSelection || "", correctText || "");
                 // Lock answers for multiple choice
                 document.querySelectorAll('.option-btn').forEach(btn => {
                     btn.disabled = true;
                     btn.classList.add('opacity-50', 'cursor-not-allowed');
-                    if (btn.innerText === correctText) { // Fixed: compare to correctText to support reverse direction correctly
+                    const btnText = btn.innerText.replace(/^💬\s*/, '').trim();
+                    if (isTypoMatch(btnText, correctText)) { // Fixed: compare with typo tolerance & case-insensitivity
                         btn.classList.add('bg-green-100', 'border-green-500', 'text-green-700', 'dark:bg-green-900', 'dark:border-green-500', 'dark:text-green-300');
                     } else if (btn.classList.contains('selected') && !isC) {
                         btn.classList.add('bg-red-100', 'border-red-500', 'text-red-700', 'dark:bg-red-900', 'dark:border-red-500', 'dark:text-red-300');
@@ -3513,14 +3526,14 @@ const app = {
         if (isFuzzy && suggestion) {
             const safeSuggestion = suggestion.replace(/'/g, "\\'");
             suggestionHtml = `
-            <div class="bg-amber-50 dark:bg-amber-900/30 border-2 border-amber-300 dark:border-amber-700/60 rounded-2xl p-3.5 mb-3 flex items-center justify-between shadow-sm">
+            <div class="bg-amber-100 dark:bg-amber-950 border-2 border-amber-400 dark:border-amber-500 rounded-2xl p-3.5 mb-3 flex items-center justify-between shadow-md">
                 <div class="flex items-center gap-2.5">
                     <span class="text-xl">💡</span>
                     <div>
-                        <p class="text-xs font-bold text-amber-900 dark:text-amber-200">
-                            Da li ste mislili: <button onclick="app.setSearchQuery('${safeSuggestion}')" class="font-black underline text-amber-600 dark:text-amber-400 hover:text-amber-500">${suggestion}</button>?
+                        <p class="text-xs font-black text-amber-950 dark:text-amber-100">
+                            Da li ste mislili: <button onclick="app.setSearchQuery('${safeSuggestion}')" class="font-black underline text-amber-700 dark:text-amber-300 hover:text-amber-600 dark:hover:text-amber-200">${suggestion}</button>?
                         </p>
-                        <p class="text-[10px] text-amber-700 dark:text-amber-400">
+                        <p class="text-[10px] font-medium text-amber-800 dark:text-amber-300/90">
                             Prikazujemo rezultate za slične reči (ispravljeno sa "${query}").
                         </p>
                     </div>

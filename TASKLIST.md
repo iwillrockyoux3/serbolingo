@@ -73,7 +73,7 @@
 | P1.1 | Expand vocabulary to 5,000+ words | 🔧 Content | `seed-data.js` | ⬜ TODO |
 | P1.2 | Add phonetic helpers + gender flags to all entries | 🔧 Content | `seed-data.js` | ⬜ TODO |
 | P1.3 | Add bilingual example sentences to all entries | 🔧 Content | `seed-data.js` | ⬜ TODO |
-| P1.4 | Omni-Bar Levenshtein Fuzzy Search & Did You Mean | 🆕 New | `app.js` | ✅ DONE |
+| P1.4 | Omni-Bar Levenshtein Fuzzy Search & Did You Mean (Solid Banner & Unified Lesson Typo Tolerance) | 🆕 New | `app.js` | ✅ DONE |
 | P2.1 | Expand skill tree to 60+ nodes | 🔧 Content | `skill-tree.js` | ⬜ TODO |
 | P2.2 | Add Travel, Business, Dating, Tenses, Cases branches | 🔧 Content | `skill-tree.js` | ⬜ TODO |
 | P5.1 | Add "Cheat Sheet" grammar guides to each skill node | 🔧 Content | `skill-tree.js` | ⬜ TODO |
@@ -92,7 +92,7 @@
 | P7.2 | Daily Quests shop & Mystery Chests | 🆕 New | `shop-engine.js`, `index.html` | ✅ DONE |
 | P17.1 | Hands-free commute audio mode (Pimsleur-style) | 🆕 New | `commute.js`, `index.html` | ✅ DONE |
 | P30.1 | Authentic Cultural Idioms & Slang ("Untranslatable" Cultural Notes, Skill Tree "Ulični srpski" & Arcade Quiz + SRS Sync) | 🔧 Content/Enhance | `seed-data.js`, `slang.js`, `skill-tree.js`, `db.js`, `index.html` | ✅ DONE |
-| P31.1 | Gentle Typo Warning for Bald Latin & Minor Typos | 🆕 New | `app.js` | ✅ DONE |
+| P31.1 | Gentle Typo Warning for Bald Latin, Phonetic Typos & Mobile Auto-Caps | 🆕 New | `app.js` | ✅ DONE |
 
 ### 🟢 Lower Priority — Advanced & Deployment
 | # | Task | Type | Target File(s) | Status |

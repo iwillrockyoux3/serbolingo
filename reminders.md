@@ -60,8 +60,8 @@
 - [x] Comprehensive parts of speech: Nouns, Verbs, Adjectives, Adverbs, Common Phrases & Idioms. (DONE - seed-data.js has all POS)
 - [x] Include phonetic pronunciation helpers, grammatical gender flags, and usage examples. (DONE - every entry has phonetic, pos, example_en, example_sr)
 - [x] **Omni-Bar "Fuzzy Search" & Typo Tolerance (DONE)**:
-  - Space-optimized Levenshtein Distance and phonetic normalization (y <-> j, w <-> v, bald Latin, diacritics).
-  - Renders a prominent "💡 Da li ste mislili / Did you mean: [Predlog]?" interactive suggestion banner when typing errors are made (e.g. typing "yabuka" auto-matches and suggests "jabuka").
+  - [x] **Space-optimized Levenshtein Distance & Phonetic Normalization (DONE)**: Unified phonetic matching (y <-> j, w <-> v, bald Latin, diacritics) and 1-character typo tolerance across Omni-Bar search and lesson questions/fill-in-the-blank with gentle "Tačno sa greškom!" guidance.
+  - [x] **Solid High-Contrast Suggestion Banner (DONE)**: Solid, non-transparent "💡 Da li ste mislili / Did you mean: [Predlog]?" interactive suggestion banner when typing errors are made (e.g. typing "yabuka" auto-matches and suggests "jabuka").
 
 ## ✅ Priority 2: Giant Skill Tree Expansion
 - [x] Sprawling Tree Structure (skill-tree.js): Expanded to 82 multi-unit nodes covering Beginner to Advanced mastery, including Travel, Business, Dating, Tenses, and all 7 Cases.
