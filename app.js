@@ -3494,8 +3494,12 @@ const app = {
         if (clearBtn) clearBtn.classList.toggle('hidden', !query);
 
         clearTimeout(_searchDebounceTimer);
+        const container = document.getElementById('search-results');
         if (!query || query.trim().length < 1) {
-            document.getElementById('search-results').innerHTML = '';
+            if (container) {
+                container.innerHTML = '';
+                container.classList.add('hidden');
+            }
             return;
         }
         // 300ms debounce — UI Freeze Prevention (Section 1)
@@ -3513,9 +3517,11 @@ const app = {
     },
     renderSearchResults: (results, query, suggestion, isFuzzy) => {
         const container = document.getElementById('search-results');
+        if (!container) return;
+        container.classList.remove('hidden');
         if (!results.length) {
             container.innerHTML = `
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-5 text-center shadow-lg">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-5 text-center shadow-sm">
                     <span class="text-3xl block mb-2">🤷</span>
                     <p class="font-bold text-slate-500 dark:text-slate-400 text-xs">${t('omni_no_results')} "${query}"</p>
                 </div>`;
@@ -3526,7 +3532,7 @@ const app = {
         if (isFuzzy && suggestion) {
             const safeSuggestion = suggestion.replace(/'/g, "\\'");
             suggestionHtml = `
-            <div class="bg-amber-100 dark:bg-amber-950 border-2 border-amber-400 dark:border-amber-500 rounded-2xl p-3.5 mb-3 flex items-center justify-between shadow-md">
+            <div class="bg-amber-100 dark:bg-amber-950 border-2 border-amber-400 dark:border-amber-500 rounded-2xl p-3.5 mb-1 flex items-center justify-between shadow-sm">
                 <div class="flex items-center gap-2.5">
                     <span class="text-xl">💡</span>
                     <div>
@@ -3558,7 +3564,7 @@ const app = {
             const subText2 = secondarySr;
 
             return `
-            <div class="bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-4 shadow-lg hover:border-blue-400 dark:hover:border-blue-500 transition-all cursor-pointer active:scale-[0.98] mb-2" onclick="app.playSound('correct')">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-4 shadow-sm hover:border-blue-400 dark:hover:border-blue-500 transition-all cursor-pointer active:scale-[0.98]" onclick="app.playSound('correct')">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">${entry.emoji}</span>
                     <div class="flex-1 min-w-0">
@@ -3579,7 +3585,11 @@ const app = {
     },
     clearSearch: () => {
         document.getElementById('omni-search').value = '';
-        document.getElementById('search-results').innerHTML = '';
+        const container = document.getElementById('search-results');
+        if (container) {
+            container.innerHTML = '';
+            container.classList.add('hidden');
+        }
         document.getElementById('omni-clear').classList.add('hidden');
     },
     toggleFlashcard: (id) => {
