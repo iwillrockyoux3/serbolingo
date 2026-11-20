@@ -29,8 +29,8 @@
 
 | File | Lines | Size | Description |
 |:-----|------:|-----:|:------------|
-| [`seed-data.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/seed-data.js) | 3,532 | 700 KB | Master offline dictionary (v2.0) — ~3,500 entries with EN/SR translations, gender, part of speech, phonetics, difficulty tiers, bilingual example sentences, SEED_DATA_VERSION governance |
-| [`seed-data.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/seed-data.json) | — | — | Backup/alternate JSON format of the dictionary |
+| [`seed-data.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/seed-data.js) | 5,040 | 1.5 MB | Master offline dictionary (v4.0 — Milestone 2) — 5,031 entries with 100% Cyrillic & Latin script parity, gender flags, part of speech, phonetics, difficulty tiers (A1-B2), bilingual example sentences across 20+ specialized topics, SEED_DATA_VERSION 4 governance |
+| [`seed-data.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/seed-data.json) | — | 1.7 MB | Backup/alternate JSON format of the 5,031-entry dictionary |
 
 > **SRS Logic Lives In**: `app.js` (mistake tracking via `state.mistakeLog`, star/favorites system, review lesson generation)
 

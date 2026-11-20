@@ -70,9 +70,9 @@
 
 | # | Task | Type | Target File(s) | Status |
 |:--|:-----|:-----|:----------------|:-------|
-| P1.1 | Expand vocabulary to 5,000+ words | 🔧 Content | `seed-data.js` | ⬜ TODO |
-| P1.2 | Add phonetic helpers + gender flags to all entries | 🔧 Content | `seed-data.js` | ⬜ TODO |
-| P1.3 | Add bilingual example sentences to all entries | 🔧 Content | `seed-data.js` | ⬜ TODO |
+| P1.1 | Expand vocabulary to 5,000+ words (Milestone 2: 5,031 words reached) | 🔧 Content | `seed-data.js` | ✅ DONE |
+| P1.2 | Add phonetic helpers + gender flags to all entries | 🔧 Content | `seed-data.js` | ✅ DONE |
+| P1.3 | Add bilingual example sentences to all entries | 🔧 Content | `seed-data.js` | ✅ DONE |
 | P1.4 | Omni-Bar Levenshtein Fuzzy Search & Did You Mean (Solid Banner & Unified Lesson Typo Tolerance) | 🆕 New | `app.js` | ✅ DONE |
 | P2.1 | Expand skill tree to 60+ nodes | 🔧 Content | `skill-tree.js` | ⬜ TODO |
 | P2.2 | Add Travel, Business, Dating, Tenses, Cases branches | 🔧 Content | `skill-tree.js` | ⬜ TODO |
