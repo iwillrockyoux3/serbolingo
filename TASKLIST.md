@@ -77,7 +77,7 @@
 | P2.1 | Expand skill tree to 60+ nodes | 🔧 Content | `skill-tree.js` | ⬜ TODO |
 | P2.2 | Add Travel, Business, Dating, Tenses, Cases branches | 🔧 Content | `skill-tree.js` | ⬜ TODO |
 | P5.1 | Add "Cheat Sheet" grammar guides to each skill node | 🔧 Content | `skill-tree.js` | ⬜ TODO |
-| P13.1 | Expand cloze sentences to 5,000+ | 🔧 Content | `cloze.js` | ⬜ TODO |
+| P13.1 | Expand cloze sentences to 4,400+ dynamic sentences (14 thematic channels, Latinica/Ćirilica script parity, SR ↔ EN direction toggle, stem matching, typo tolerance & endless mode) | 🔧 Content/Enhance | `cloze.js`, `question-engine.js`, `app.js` | ✅ DONE |
 | P14.1 | Add dozens more AI roleplay scenarios | 🔧 Content | `roleplay.js` | ⬜ TODO |
 
 ### 🟡 Medium Priority — New Features
@@ -163,11 +163,11 @@
 | Entertainment & Media | 5/5 | 0 |
 | AI & Audio | 4/4 | 0 |
 | Gamification & Stats | 7/7 | 0 |
-| Content Expansion (P1-P5, P13-P14) | 0/8 | 8 |
+| Content Expansion (P1-P5, P13-P14) | 1/8 | 7 |
 | New Features (P3-P7, P17) | 7/7 | 0 |
 | Deployment (P18-P20, P39, P40) | 5/8 | 3 |
 | Moonshots (P12.2, P21-P22, P24.2, P43.3, P48-P51) | 10/20 | 10 |
-| **TOTAL** | **48/75** | **27** |
+| **TOTAL** | **49/75** | **26** |
 
 ---
 

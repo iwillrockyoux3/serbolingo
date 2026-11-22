@@ -160,14 +160,63 @@ const QuestionEngine = {
             return null; // Fallback to multiple choice if no sentence exists
         }
 
+        const cleanStr = (s) => (s || '').replace(/\([^)]*\)/g, '').replace(/^[^\wčćžšđČĆŽŠĐ]+|[^\wčćžšđČĆŽŠĐ]+$/g, '').trim();
+        const esc = (s) => s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+
+        // Extract Serbian blank token & sentence (stem-aware for inflected cases)
+        let srBlankSentence = null;
+        let srAnswer = word.sr_lat;
+        const cleanSr = cleanStr(word.sr_lat);
+        if (cleanSr) {
+            const exactM = word.example_sr.match(new RegExp('\\b' + esc(cleanSr) + '\\b', 'i'));
+            if (exactM) {
+                srAnswer = exactM[0];
+                srBlankSentence = word.example_sr.slice(0, exactM.index) + '____' + word.example_sr.slice(exactM.index + exactM[0].length);
+            } else if (cleanSr.length >= 3) {
+                const first = cleanSr.split(/\s+/)[0];
+                const stem = first.length >= 5 ? first.slice(0, 4) : first.slice(0, 3);
+                const stemM = word.example_sr.match(new RegExp('\\b' + esc(stem) + '[a-zA-ZčćžšđČĆŽŠĐ]*\\b', 'i'));
+                if (stemM) {
+                    srAnswer = stemM[0];
+                    srBlankSentence = word.example_sr.slice(0, stemM.index) + '____' + word.example_sr.slice(stemM.index + stemM[0].length);
+                }
+            }
+        }
+        if (!srBlankSentence) {
+            srBlankSentence = word.example_sr.replace(new RegExp('\\b' + esc(word.sr_lat) + '\\b', 'i'), '____');
+        }
+
+        // Extract English blank token & sentence
+        let enBlankSentence = null;
+        let enAnswer = word.en;
+        const cleanEn = cleanStr(word.en);
+        if (cleanEn) {
+            const exactM = word.example_en.match(new RegExp('\\b' + esc(cleanEn) + '\\b', 'i'));
+            if (exactM) {
+                enAnswer = exactM[0];
+                enBlankSentence = word.example_en.slice(0, exactM.index) + '____' + word.example_en.slice(exactM.index + exactM[0].length);
+            } else if (cleanEn.length >= 3) {
+                const first = cleanEn.split(/\s+/)[0];
+                const stem = first.length >= 5 ? first.slice(0, 4) : first.slice(0, 3);
+                const stemM = word.example_en.match(new RegExp('\\b' + esc(stem) + '[a-zA-Z]*\\b', 'i'));
+                if (stemM) {
+                    enAnswer = stemM[0];
+                    enBlankSentence = word.example_en.slice(0, stemM.index) + '____' + word.example_en.slice(stemM.index + stemM[0].length);
+                }
+            }
+        }
+        if (!enBlankSentence) {
+            enBlankSentence = word.example_en.replace(new RegExp('\\b' + esc(word.en) + '\\b', 'i'), '____');
+        }
+
         // EN to SR: Show English sentence, show Serbian sentence with target word blanked out
         // E.g., "I have one car" -> "Imam ____ auto", user types "jedan"
-        let q_enToSr = `Translate: "${word.example_en}"\n\n${word.example_sr.replace(new RegExp(`\\b${word.sr_lat}\\b`, 'i'), '____')}`;
-        let correct_enToSr = word.sr_lat;
+        let q_enToSr = `Translate: "${word.example_en}"\n\n${srBlankSentence}`;
+        let correct_enToSr = srAnswer;
 
         // SR to EN: Show Serbian sentence, show English sentence with target word blanked out
-        let q_srToEn = `Prevedi: "${word.example_sr}"\n\n${word.example_en.replace(new RegExp(`\\b${word.en}\\b`, 'i'), '____')}`;
-        let correct_srToEn = word.en;
+        let q_srToEn = `Prevedi: "${word.example_sr}"\n\n${enBlankSentence}`;
+        let correct_srToEn = enAnswer;
 
         return {
             type: 'fill_blank',
@@ -175,6 +224,8 @@ const QuestionEngine = {
             q_rev: q_srToEn,
             correct: correct_enToSr,
             correct_rev: correct_srToEn,
+            alt_correct: word.sr_lat,
+            alt_correct_rev: word.en,
             explanation: `💡 The missing word was "${correct_enToSr}" (${word.en}).`,
             explanation_rev: `💡 The missing word was "${correct_srToEn}" (${word.sr_lat}).`
         };

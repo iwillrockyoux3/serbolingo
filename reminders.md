@@ -163,9 +163,16 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [x] **7-Day Frequency-Capped Community Pop-Up**: Other learners see the champion's greeting once upon opening the app; closing it suppresses the pop-up for 7 days (`serbolingo_monty_popup_dismissed`), with 1-click `🚩 Prijavi` local report protection.
   - [x] **Anonymous Mode ("Anonimni Šampion 🎭")**: Optional privacy toggle masking user identity, name, avatar, and media for privacy-conscious learners.
 
-## ✅ Priority 13: Cloze Mastery (Fill-in-the-Blank Context Engine)
-- [x] Busuu / Clozemaster Context Trainer: 5,000+ real conversational Serbian sentences with 1 key missing word. Rapid-fire contextual fill-in-the-blank practice to build natural language instincts.
-- [x] **UI Wired**: cloze.js script tag added to index.html. Launch tile added in Arcade grid ("Popuni Prazninu").
+## ✅ Priority 13: Cloze Mastery (Fill-in-the-Blank Context Engine) (DONE)
+- [x] **Busuu / Clozemaster Context Trainer**: Expanded from 40 static items to 4,400+ dynamic conversational sentences directly extracted from `window.SEED_DATA` (5,031 words) with sub-millisecond memoized caching.
+- [x] **14 Thematic Channels**: Dedicated study channels for Health & Medical, Business & Finance, Law & Justice, Tech, Travel & Transport, Food & Dining, Romance, Arts & Culture, Street Slang, Cases in Context, Verbs & Tenses, Nature & Science, Daily Life, and All Topics.
+- [x] **100% Dual-Script Parity (Latinica & Ćirilica)**: Full Vuk Karadžić 1:1 transliteration engine with on-the-fly script toggling (`Lat / Ћир`) and cross-script answer acceptance.
+- [x] **Bidirectional Learning (SR ↔ EN)**: Seamless toggle between Serbian fill-in-the-blank (`sr_to_en`) and English fill-in-the-blank (`en_to_sr`).
+- [x] **Typo Tolerance & Grammatical Inflection Handling**: Stem matching recognizes case inflections (e.g. `jabuku`), accepting both inflected and base forms (`jabuka`), bald Latin, phonetic variants (`y<->j`, `w<->v`), and 1-char Levenshtein typos.
+- [x] **Multi-Tier Audio TTS & Mobile Diacritic Keyboard**: 🔊 Native audio playback on demand, plus mobile diacritic touch bar (`č`, `ć`, `ž`, `š`, `đ`, `dž`, `lj`, `nj`) for easy typing on any smartphone.
+- [x] **Gamification, SRS & Endless Practice**: 10, 25, 50 question sessions and Infinite Endless Mode, streak tracking with bonus XP, automatic Mistake Vault logging (`state.mistakeLog`), and 1-tap Flashcard bookmarking (★).
+- [x] **Question Engine Integration**: Enhanced `generateFillBlank(word)` in `question-engine.js` so standard Skill Tree lessons automatically benefit from stem-aware blanking and inflection acceptance.
+- [x] **UI Wired**: `cloze.js` script tag in `index.html`. Launch tile in Arcade grid ("Popuni Prazninu").
 
 ## ✅ Priority 14: Extended Roleplay & AI Chat Scenarios
 - [x] Deep Scenario Library (roleplay.js): Dozens of specialized AI scenario prompts — 🏨 Hotel Check-in & Room Service · ✈️ Airport Security & Customs · 🩺 Doctor's Office & Pharmacy · 🏢 Job Interview in Belgrade · 🍽️ Ordering at a Traditional Kafana with wine pairings · 🚨 Emergency / Lost Passport Assistance

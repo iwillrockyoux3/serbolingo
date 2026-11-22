@@ -39,7 +39,7 @@
 | File | Lines | Size | Description |
 |:-----|------:|-----:|:------------|
 | [`skill-tree.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/skill-tree.js) | 675 | 68 KB | 15-tier curriculum (Foundation → C1/C2 Nuances), 5-crown progression (3 lessons/crown), prerequisite logic, bilingual grammar guides per node |
-| [`question-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/question-engine.js) | 662 | 28 KB | 12+ question type generator — MCQ, speech recognition, picture/emoji, listening, fill-blank, scrambled word order, canvas whiteboard, hangman, matching pairs, letter-by-letter spelling, drag-drop punctuation, SM-2 prioritized mistake review lessons |
+| [`question-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/question-engine.js) | 713 | 31 KB | 12+ question type generator — MCQ, speech recognition, picture/emoji, listening, stem-aware fill-blank with inflection & base-form acceptance, scrambled word order, canvas whiteboard, hangman, matching pairs, letter-by-letter spelling, drag-drop punctuation, SM-2 prioritized mistake review lessons |
 | [`alphabet-data.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/alphabet-data.js) | 73 | 7 KB | Complete 30-letter Serbian alphabet matrix — Latin + Cyrillic with anchor words, emojis, phonetics |
 | [`grammar-tooltips.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/grammar-tooltips.js) | 1,280 | 70 KB | Smart Grammar Tooltips & Interactive Word Inspector — Deep linguistic engine (SR_CORE_GRAMMAR, EN_CORE_GRAMMAR, SEED_DATA indexing), gender/tense/case badges, collocations, syntax notes, bilingual audio & examples |
 | [`grammar-sandbox.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/grammar-sandbox.js) | 570 | 28 KB | Interactive Grammar Sandbox & 2-in-1 Sentence Hub (Priority 41) — Word-by-word sentence trainer (50+ curated sentences) + Color-coded Lego SVO grammar blocks (blue/red/green/purple) |
@@ -80,7 +80,7 @@
 
 | [`karaoke.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/karaoke.js) | 572 | 28 KB | Bilingual speech-recognition reader — levels A1-B2, live word tracking, word translations, TTS replay |
 | [`rhythm.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/rhythm.js) | 567 | 26 KB | Music lyrics synchronizer — YouTube IFrame API playback + SpeechRecognition singing/recitation scoring |
-| [`cloze.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/cloze.js) | 224 | 15 KB | Fill-in-the-blank context trainer — sentence bank, scoring, streaks |
+| [`cloze.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/cloze.js) | 552 | 26 KB | Fill-in-the-blank context trainer (Priority 13 Upgrade) — 4,400+ dynamic sentences from seed-data.js, 14 thematic study channels, 100% Cyrillic/Latin script parity, SR ↔ EN direction toggle, stem-aware blank extraction, typo tolerance (bald Latin, phonetics, Levenshtein), mobile diacritic bar, TTS audio & infinite mode |
 | [`slang.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/slang.js) | 350 | 22 KB | Authentic Cultural Idioms & Slang (Priority 30) — Belgrade/Izreke/Nežnost/Kafana/Južni database, cultural context notes, quiz engine, mistakeLog & SRS Flashcards sync |
 | [`stories.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/stories.js) | 352 | 18 KB | Branching RPG-style interactive dialogue stories — multiple conversation paths |
 

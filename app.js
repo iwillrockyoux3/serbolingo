@@ -2509,7 +2509,8 @@ const app = {
             } else if (l.type === 'speaking' || l.type === 'fill_blank') {
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';
                 const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
-                isC = isTypoMatch(state.userSelection || "", correctText || "");
+                const altText = (isSrToEn && l.alt_correct_rev) ? l.alt_correct_rev : l.alt_correct;
+                isC = isTypoMatch(state.userSelection || "", correctText || "") || (altText ? isTypoMatch(state.userSelection || "", altText) : false);
                 
                 const inputElement = document.getElementById('fill-blank-input');
                 if (inputElement) {
