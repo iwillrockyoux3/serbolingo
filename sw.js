@@ -1,7 +1,7 @@
 // [SHIELD_DAEMON: VALIDATED]
-// SerboLingo Service Worker (v17) — Offline-First PWA Engine
+// SerboLingo Service Worker (v18) — Offline-First PWA Engine
 
-const CACHE_NAME = 'serbolingo-app-v17';
+const CACHE_NAME = 'serbolingo-app-v18';
 
 // Core static assets required for 100% offline app operation
 const PRECACHE_ASSETS = [
@@ -14,47 +14,48 @@ const PRECACHE_ASSETS = [
     './icon-512.png',
     './icon-192-maskable.png',
     './icon-512-maskable.png',
-    './seed-data.js?v=17',
-    './db.js?v=17',
-    './alphabet-data.js?v=17',
-    './explore-hub.js?v=17',
-    './karaoke.js?v=17',
-    './question-engine.js?v=17',
-    './skill-tree.js?v=17',
-    './roleplay.js?v=17',
-    './stories.js?v=17',
-    './cloze.js?v=17',
-    './slang.js?v=17',
-    './pitch-accent.js?v=17',
-    './rhythm.js?v=17',
-    './ghost-arena.js?v=17',
-    './arcade.js?v=17',
-    './trophy-cabinet.js?v=17',
-    './monty-winner.js?v=17',
-    './visual-lens.js?v=17',
-    './commute.js?v=17',
-    './shop-engine.js?v=17',
-    './placement-test.js?v=17',
-    './league-system.js?v=17',
-    './srs-engine.js?v=17',
-    './touch-haptics.js?v=17',
-    './grammar-tooltips.js?v=17',
-    './grammar-sandbox.js?v=17',
-    './immersion-clips.js?v=17',
-    './streak-retention.js?v=17',
-    './serbo-reels.js?v=17',
-    './smart-story.js?v=17',
-    './language-exchange.js?v=17',
-    './community-forum.js?v=17',
-    './bug-report.js?v=17',
-    './app.js?v=17'
+    './seed-data.js?v=18',
+    './db.js?v=18',
+    './alphabet-data.js?v=18',
+    './explore-hub.js?v=18',
+    './karaoke.js?v=18',
+    './question-engine.js?v=18',
+    './skill-tree.js?v=18',
+    './roleplay.js?v=18',
+    './stories.js?v=18',
+    './cloze.js?v=18',
+    './slang.js?v=18',
+    './pitch-accent.js?v=18',
+    './rhythm.js?v=18',
+    './ghost-arena.js?v=18',
+    './arcade.js?v=18',
+    './trophy-cabinet.js?v=18',
+    './monty-winner.js?v=18',
+    './visual-lens.js?v=18',
+    './commute.js?v=18',
+    './shop-engine.js?v=18',
+    './placement-test.js?v=18',
+    './league-system.js?v=18',
+    './srs-engine.js?v=18',
+    './touch-haptics.js?v=18',
+    './grammar-tooltips.js?v=18',
+    './grammar-sandbox.js?v=18',
+    './immersion-clips.js?v=18',
+    './streak-retention.js?v=18',
+    './serbo-reels.js?v=18',
+    './smart-story.js?v=18',
+    './language-exchange.js?v=18',
+    './community-forum.js?v=18',
+    './bug-report.js?v=18',
+    './app.js?v=18'
 ];
 
-// 1. INSTALL EVENT — Pre-cache local app shell
+// 1. INSTALL EVENT — Pre-cache local app shell with instant skipWaiting
 self.addEventListener('install', (event) => {
+    self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('[SW] Pre-caching SerboLingo App Shell...');
+            console.log('[SW] Pre-caching SerboLingo App Shell (v18)...');
             // Atomic caching with resilient error catch per asset
             return Promise.allSettled(
                 PRECACHE_ASSETS.map((url) =>
@@ -63,8 +64,15 @@ self.addEventListener('install', (event) => {
                     })
                 )
             );
-        }).then(() => self.skipWaiting())
+        })
     );
+});
+
+// Message listener for explicit SKIP_WAITING signals from app.js
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
 
 // 2. ACTIVATE EVENT — Clean up outdated caches & claim clients immediately
@@ -91,8 +99,9 @@ self.addEventListener('fetch', (event) => {
     // Bypass non-GET requests
     if (req.method !== 'GET') return;
 
-    // Bypass live APIs & real-time streaming services (TTS, Gemini, YouTube)
+    // Bypass live APIs & real-time streaming services (TTS, Lingva, Gemini, YouTube)
     if (
+        url.hostname.includes('lingva') ||
         url.hostname.includes('translate.google') ||
         url.hostname.includes('translate.googleapis.com') ||
         url.hostname.includes('generativelanguage.googleapis.com') ||

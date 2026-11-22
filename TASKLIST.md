@@ -59,7 +59,7 @@
 - [x] Enhanced `_phoneticNormalize` with Cyrillic-to-Latin transliteration and `dž` digraph support (`app.js`)
 - [x] Disabled auto-capitalization on fill-blank mobile input (`app.js`)
 - [x] CORS Audio Blob Stream & Native Fallback Fix: Integrated `lingva.ml` CORS-enabled proxy with in-memory MP3 `Blob` playback to bypass mobile browser Referer hotlink blocks on GitHub Pages; eliminated premature `speechSynthesis` silence trap (`app.js`)
-- [x] Service Worker cache bump to v17 and script tag version sync (`sw.js`, `index.html`)
+- [x] PWA Instant Auto-Update & Cache Purge (v18): Added `self.skipWaiting()` + `clients.claim()` + `reg.update()` and `controllerchange` auto-reload so regular tabs immediately update and purge stale cache without requiring Incognito mode or manual cache clears (`sw.js`, `app.js`, `index.html`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system

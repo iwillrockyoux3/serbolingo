@@ -4945,17 +4945,38 @@ CRITICAL CONSTRAINTS:
 
     // ======== PWA (PROGRESSIVE WEB APP) CONTROLLER (Priority 19) ========
     initPwa: () => {
-        // 1. Safe Service Worker Registration
+        // 1. Safe Service Worker Registration with Instant Auto-Update
         // Guard against file:/// protocol which blocks service workers with SecurityError
         if ('serviceWorker' in navigator && (location.protocol === 'http:' || location.protocol === 'https:' || location.hostname === 'localhost')) {
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    console.log('[PWA] Novi Service Worker je preuzeo kontrolu — osvežavam za najnovije fajlove...');
+                    window.location.reload();
+                }
+            });
+
             navigator.serviceWorker.register('./sw.js').then((reg) => {
                 console.log('[PWA] Service Worker registered with scope:', reg.scope);
+
+                // Proactively check for new version from server on every load
+                reg.update().catch(() => {});
+
+                // If a worker is already waiting, tell it to take over immediately
+                if (reg.waiting && reg.waiting.postMessage) {
+                    reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                }
+
                 reg.onupdatefound = () => {
                     const installingWorker = reg.installing;
                     if (installingWorker) {
                         installingWorker.onstatechange = () => {
                             if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                console.log('[PWA] Nova verzija SerboLingo aplikacije je spremna!');
+                                console.log('[PWA] Nova verzija SerboLingo aplikacije je spremna — aktiviram odmah...');
+                                if (installingWorker.postMessage) {
+                                    installingWorker.postMessage({ type: 'SKIP_WAITING' });
+                                }
                             }
                         };
                     }

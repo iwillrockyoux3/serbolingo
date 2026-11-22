@@ -735,6 +735,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Service Worker Bump to v16**: Updated `sw.js` and all 34 script tags in `index.html` to `v16`.
   - **CORS Audio Blob Streaming & Mobile Speaker Fix (v17)**: Resolved mobile GitHub Pages audio silence. Rewrote Serbian TTS pipeline to stream audio bytes via `lingva.ml` CORS-enabled proxy into an in-memory `Blob` and `URL.createObjectURL()`, completely bypassing mobile browser `Referer` hotlink blocks. Removed premature `speechSynthesis` silence trap so native voice is only used when explicitly requested or offline, with cascade to direct `tw-ob` HTML5 audio stream.
   - **Service Worker Bump to v17**: Updated `sw.js` cache to `serbolingo-app-v17` and all 34 script tags in `index.html` to `v17`.
+  - **PWA Instant Auto-Update & Lingva Bypass (v18)**: Configured `sw.js` with immediate `self.skipWaiting()` on install and message event, explicit `clients.claim()` on activate, and bypassed Service Worker caching for `lingva` audio requests. Configured `app.js` with `reg.update()`, `waiting.postMessage('SKIP_WAITING')`, and `controllerchange` auto-refresh so normal mobile browser tabs instantly switch to newest code without requiring Incognito mode or manual cache resets.
+  - **Service Worker Bump to v18**: Updated `sw.js` cache to `serbolingo-app-v18` and all 34 script tags in `index.html` to `v18`.
 
 
 
