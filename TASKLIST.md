@@ -50,11 +50,14 @@
 
 ### Mobile Hardening & Lesson Engine Fixes
 - [x] Text-level distractor deduplication across MCQ, picture choice, listening, and matching pairs (`question-engine.js`)
-- [x] Resilient mobile audio fallback: Google TTS failure automatically falls back to native device `SpeechSynthesis` (`app.js`)
+- [x] Resilient mobile audio stream: switched to unauthenticated `tw-ob` client and set `no-referrer` meta policy in `index.html` to eliminate GitHub hotlink blocks
 - [x] Pre-cached `window._cachedVoices` on load to fix async empty-voice list on mobile browsers (`app.js`)
+- [x] Multi-mode lesson architecture: Standard lessons are 100% text-safe & quiet-friendly (no surprise microphone or audio-only questions) (`question-engine.js`)
+- [x] Dedicated companion workout buttons per Skill Tree tier: 🎧 Slušanje (Listening Lab) & 🎙️ Govor (Speaking Lab) (`app.js`)
+- [x] Quiet Mode safety valves: "Ne mogu sada da pričam (Preskoči)" / "Ne mogu da slušam (Prikaži tekst)" buttons during active lessons (`app.js`)
 - [x] Enhanced `_phoneticNormalize` with Cyrillic-to-Latin transliteration and `dž` digraph support (`app.js`)
 - [x] Disabled auto-capitalization on fill-blank mobile input (`app.js`)
-- [x] Service Worker cache bump to v14 and script tag version sync (`sw.js`, `index.html`)
+- [x] Service Worker cache bump to v15 and script tag version sync (`sw.js`, `index.html`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system

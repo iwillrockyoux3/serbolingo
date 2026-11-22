@@ -480,8 +480,11 @@ const QuestionEngine = {
         };
     },
 
-    // Generates a set of questions for a category, mixing all types
-    async generateLesson(categoryName, dbInstance, count = 10) {
+    // Generates a set of questions for a category, mixing types based on mode:
+    // mode = 'standard' (Default: 100% text-friendly, quiet-safe, zero surprise audio/mic requirements)
+    // mode = 'listening' (Dedicated Ear Training Lab: 100% audio recognition & comprehension)
+    // mode = 'speaking' (Dedicated Speaking Lab: 100% microphone pronunciation)
+    async generateLesson(categoryName, dbInstance, count = 10, mode = 'standard') {
         const allWords = await dbInstance.getWordsByCategory(categoryName);
         if (!allWords || allWords.length < 4) {
             console.error(`Not enough words in category ${categoryName} to generate a full lesson.`);
@@ -496,8 +499,10 @@ const QuestionEngine = {
         // SPECIALIZED TRAINING MECHANICS
         if (categoryName === 'spelling') {
             return selectedWords.map((word, i) => {
-                if (i % 2 === 0) return this.generateHangman(word); // typing
-                else return this.generateSpellingVoice(word); // voice
+                if (mode === 'speaking') {
+                    return this.generateSpellingVoice(word);
+                }
+                return this.generateHangman(word); // Standard text spelling
             }).filter(q => q !== null).map(q => { q.wordId = q.wordId || selectedWords.find(w=>w.sr_lat === q.correct || w.en === q.correct_rev)?.id; return q; });
         }
         
@@ -512,51 +517,59 @@ const QuestionEngine = {
         if (categoryName === 'comparatives') {
             return selectedWords.map((word, i) => {
                 let q;
-                if (i % 3 === 0 && word.example_en && word.example_sr) {
-                    q = this.generateFillBlank(word);
-                } else if (i % 3 === 1 && word.example_en && word.example_sr) {
-                    q = this.generateWordOrder(word);
-                } else if (i % 3 === 2 && word.example_en && word.example_sr) {
+                if (mode === 'speaking' && word.example_en && word.example_sr) {
                     q = this.generateSpeakingSentence(word);
+                } else if (i % 2 === 0 && word.example_en && word.example_sr) {
+                    q = this.generateFillBlank(word);
+                } else if (word.example_en && word.example_sr) {
+                    q = this.generateWordOrder(word);
                 }
                 
-                // Fallbacks if example sentences are missing or random assignment failed
+                // Fallbacks if example sentences are missing
                 if (!q) {
-                    q = this.generateWordOrder(word) || this.generateMultipleChoice(word, allWords);
+                    q = (mode === 'speaking') ? this.generateSpeaking(word) : (this.generateWordOrder(word) || this.generateMultipleChoice(word, allWords));
                 }
-                q.wordId = word.id;
+                if (q) q.wordId = word.id;
                 return q;
             });
         }
 
-        // Sometimes inject a matching pairs question (takes 4 words)
-        const injectMatching = Math.random() < 0.4;
-        // Sometimes inject a dialogue question
-        const injectDialogue = Math.random() < 0.35;
+        // Matching pairs only in standard or listening modes
+        const injectMatching = (mode !== 'speaking') && (Math.random() < 0.4);
+        // Dialogue only in standard or listening modes
+        const injectDialogue = (mode !== 'speaking') && (Math.random() < 0.35);
         let matchingIncluded = false;
         
         const lessonQuestions = selectedWords.map((word, index) => {
             if (injectMatching && !matchingIncluded && index >= selectedWords.length - 4) {
-                // Ignore the individual word mapping if we are in the last 4 and want matching
                 return null;
             }
 
             const rand = Math.random();
             let q = null;
             
-            // If the word has examples, randomly choose sentence game type
-            if (word.example_en && word.example_sr) {
-                if (rand < 0.15) q = this.generateFillBlank(word);
-                else if (rand < 0.30) q = this.generateWordOrder(word);
-            }
-            
-            if (!q) {
-                // Distribute across all game types
-                if (rand > 0.90) q = this.generateHangman(word);
-                else if (rand > 0.78) q = this.generateSpeaking(word);
-                else if (rand > 0.65 && word.emoji) q = this.generatePictureChoice(word, allWords);
-                else if (rand > 0.50) q = this.generateListening(word, allWords);
-                else q = this.generateMultipleChoice(word, allWords);
+            if (mode === 'speaking') {
+                // Dedicated Speaking Lab
+                if (word.example_en && word.example_sr && rand < 0.45) {
+                    q = this.generateSpeakingSentence(word);
+                } else {
+                    q = this.generateSpeaking(word);
+                }
+            } else if (mode === 'listening') {
+                // Dedicated Ear Training Lab
+                q = this.generateListening(word, allWords);
+            } else {
+                // Standard Quiet/Text-Friendly Mode (No mandatory mic or surprise audio questions)
+                if (word.example_en && word.example_sr) {
+                    if (rand < 0.22) q = this.generateFillBlank(word);
+                    else if (rand < 0.45) q = this.generateWordOrder(word);
+                }
+                
+                if (!q) {
+                    if (rand > 0.85) q = this.generateHangman(word);
+                    else if (rand > 0.60 && word.emoji) q = this.generatePictureChoice(word, allWords);
+                    else q = this.generateMultipleChoice(word, allWords);
+                }
             }
             
             if (q) q.wordId = word.id;
@@ -584,6 +597,16 @@ const QuestionEngine = {
         
         // Trim to exactly 'count' questions if extras were added
         return lessonQuestions.slice(0, count);
+    },
+
+    // Dedicated Ear Training Lab Generator
+    async generateListeningLesson(categoryName, dbInstance, count = 10) {
+        return this.generateLesson(categoryName, dbInstance, count, 'listening');
+    },
+
+    // Dedicated Pronunciation / Speaking Lab Generator
+    async generateSpeakingLesson(categoryName, dbInstance, count = 10) {
+        return this.generateLesson(categoryName, dbInstance, count, 'speaking');
     },
 
     // Phase 4: Smart Practice (Spaced Repetition)

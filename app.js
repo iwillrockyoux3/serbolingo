@@ -15,7 +15,10 @@ const state = {
     unlockedTitles: [],
     equippedTitle: null,
     earlyBirdClaimAvailable: false,
-    earlyBirdEarnedDate: null
+    earlyBirdEarnedDate: null,
+    cantSpeak: false,
+    cantListen: false,
+    lessonMode: 'standard'
 };
 let apiKey = "";
 
@@ -966,12 +969,34 @@ const app = {
                 }
             }
 
+            // Dedicated Companion Audio & Speaking Workouts for this Tier
+            const firstUnlockedSkill = tierSkills.find(s => !s.locked) || tierSkills[0];
+            const workoutDisabled = !anyUnlocked ? 'opacity-40 pointer-events-none' : '';
+            const tierTargetId = firstUnlockedSkill ? firstUnlockedSkill.id : tier.ids[0];
+
+            html += `
+                <div class="flex items-center gap-2 mt-3 pt-2.5 border-t border-dashed border-slate-200 dark:border-slate-700/60 ${workoutDisabled}">
+                    <button onclick="app.startSkillLesson('${tierTargetId}', 'listening')" 
+                            class="flex-1 py-2 px-2 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/60 text-purple-700 dark:text-purple-300 font-black text-[11px] flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer" 
+                            title="${isSrToEn ? 'Vežbaj samo slušanje u ovom nivou' : 'Practice listening for this tier'}">
+                        <span>🎧</span>
+                        <span class="truncate">${isSrToEn ? 'Slušanje' : 'Listening'}</span>
+                    </button>
+                    <button onclick="app.startSkillLesson('${tierTargetId}', 'speaking')" 
+                            class="flex-1 py-2 px-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 font-black text-[11px] flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer" 
+                            title="${isSrToEn ? 'Vežbaj samo govor u ovom nivou' : 'Practice speaking for this tier'}">
+                        <span>🎙️</span>
+                        <span class="truncate">${isSrToEn ? 'Govor' : 'Speaking'}</span>
+                    </button>
+                </div>
+            `;
+
             html += `</div>`; // Close tier wrapper
         });
 
         container.innerHTML = html;
     },
-    startSkillLesson: async (skillId) => {
+    startSkillLesson: async (skillId, mode = 'standard') => {
         if (skillId === 'alphabet') {
             app.showAlphabetModal();
             return;
@@ -979,7 +1004,7 @@ const app = {
         const skill = SKILL_TREE.find(s => s.id === skillId);
         if (!skill) return;
         if (!SkillTreeEngine.isUnlocked(skillId)) {
-            app.showToast('\u{1F512} ZavrÅ¡i prethodne lekcije prvo!', 'error');
+            app.showToast('🔒 Završi prethodne lekcije prvo!', 'error');
             return;
         }
         const guestAllowed = ['basics', 'alphabet', 'numbers', 'colors', 'phrases'];
@@ -988,7 +1013,10 @@ const app = {
             return;
         }
         try {
-            ACTIVE_LESSON = await window.QuestionEngine.generateLesson(skill.category, window.appDb, 10);
+            state.cantSpeak = false;
+            state.cantListen = false;
+            state.lessonMode = mode;
+            ACTIVE_LESSON = await window.QuestionEngine.generateLesson(skill.category, window.appDb, 10, mode);
             if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
                 app.showToast('Nema dovoljno reÄi u bazi za ovu lekciju.', 'error');
                 return;
@@ -1348,6 +1376,13 @@ const app = {
 
         state.userSelection = null;
 
+        if (state.cantSpeak && (l.type === 'speaking' || l.type === 'spelling_voice')) {
+            const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+            state.userSelection = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
+            setTimeout(() => app.checkAnswer(), 50);
+            return;
+        }
+
         if (l.type === 'speaking') {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             // Note: The UI shows the source word to the user, and they must speak the TARGET translation.
@@ -1366,8 +1401,8 @@ const app = {
                     <h2 class="text-lg font-bold text-slate-500 dark:text-slate-400 mb-2">${qHeader}</h2>
                     <div class="text-2xl font-black text-slate-800 dark:text-white mb-6">${app.formatQuestionText(qWord)}</div>
                     
-                    <div class="flex flex-col items-center gap-6">
-                        <button id="mic-btn" onclick="app.startMicRecognition('${targetLang}')" class="w-24 h-24 rounded-full bg-blue-100 dark:bg-blue-900 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-4xl shadow-md transition-all active:scale-95">
+                    <div class="flex flex-col items-center gap-4">
+                        <button id="mic-btn" onclick="app.startMicRecognition('${targetLang}')" class="w-24 h-24 rounded-full bg-blue-100 dark:bg-blue-900 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-4xl shadow-md transition-all active:scale-95 cursor-pointer">
                             🎙️
                         </button>
                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${qSub}</p>
@@ -1376,6 +1411,10 @@ const app = {
                             <p class="text-xs font-bold text-slate-400 uppercase mb-1 hidden" id="transcription-label">Rekli ste:</p>
                             <p id="transcription-text" class="text-lg font-black text-slate-700 dark:text-white">...</p>
                         </div>
+
+                        <button type="button" onclick="app.skipSpeakingForSession()" class="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline flex items-center justify-center gap-1 mx-auto cursor-pointer">
+                            <span>🔇</span> ${isSrToEn ? 'Ne mogu sada da pričam (Preskoči)' : "Can't speak now (Skip)"}
+                        </button>
                     </div>
                 </div>
             `;
@@ -1649,9 +1688,17 @@ const app = {
                 <div class="text-center w-full max-w-sm">
                     <p class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">What do you hear?</p>
                     <button id="listening-speaker-btn" onclick="app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}')" 
-                        class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-90 hover:bg-blue-200 dark:hover:bg-blue-800 mb-8 cursor-pointer select-none">
+                        class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-90 hover:bg-blue-200 dark:hover:bg-blue-800 mb-4 cursor-pointer select-none">
                         🔊
                     </button>
+
+                    <div class="flex items-center justify-center gap-2 mb-4">
+                        <button type="button" onclick="app.revealListeningText()" class="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline flex items-center justify-center gap-1 cursor-pointer">
+                            <span>🔇</span> ${isSrToEn ? 'Ne mogu da slušam (Prikaži tekst)' : "Can't listen now (Show text)"}
+                        </button>
+                    </div>
+                    <div id="listening-revealed-text" class="hidden text-sm font-black text-blue-600 dark:text-blue-400 mb-4 p-2.5 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-200 dark:border-blue-800"></div>
+
                     <div class="grid w-full gap-3">
                         ${optionsArray.map(o => `<button onclick="app.selectOption(this, '${o.replace(/'/g, "\\'")}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`).join('')}
                     </div>
@@ -1856,6 +1903,29 @@ const app = {
                 document.getElementById('check-btn').disabled = false;
                 app.checkAnswer(); // Trigger grade (will fail)
             }
+        }
+    },
+    // --- ACCESSIBILITY & QUIET-MODE SAFETY VALVES ---
+    skipSpeakingForSession: () => {
+        state.cantSpeak = true;
+        const isSr = state.settings.learningDirection === 'sr_to_en';
+        app.showToast(isSr ? 'Govorne vežbe isključene za ovu sesiju.' : 'Speaking exercises skipped for this session.', 'info');
+        const l = ACTIVE_LESSON[state.currentLessonIndex];
+        if (l) {
+            state.userSelection = (isSr && l.correct_rev) ? l.correct_rev : l.correct;
+            app.checkAnswer();
+        }
+    },
+    revealListeningText: () => {
+        state.cantListen = true;
+        const l = ACTIVE_LESSON[state.currentLessonIndex];
+        if (!l) return;
+        const isSr = state.settings.learningDirection === 'sr_to_en';
+        const audioWord = (isSr && l.q_audio_rev) ? l.q_audio_rev : l.q_audio;
+        const box = document.getElementById('listening-revealed-text');
+        if (box) {
+            box.innerHTML = `<span>💡 ${isSr ? 'Reč koju čujete:' : 'Word you hear:'} <b class="underline">"${audioWord}"</b></span>`;
+            box.classList.remove('hidden');
         }
     },
     // --- PUNCTUATION DRAG & DROP HELPERS ---
@@ -2263,10 +2333,10 @@ const app = {
                 // Stream authentic native Serbian via cookie-isolated Google API CDN (works in normal browser mode)
                 const textForGoogle = (app.toCyrillic) ? app.toCyrillic(cleanSrText) : cleanSrText;
                 const encoded = encodeURIComponent(textForGoogle);
-                // Primary endpoint: translate.googleapis.com (no user account cookies attached -> 100% reliable)
-                const primaryUrl = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=sr&q=${encoded}&_t=${Date.now()}`;
+                // Primary endpoint: translate.google.com with tw-ob client (unauthenticated mobile-safe audio stream)
+                const primaryUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encoded}&_t=${Date.now()}`;
                 // Secondary backup endpoint
-                const secondaryUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=dict-chrome-ex&tl=sr&q=${encoded}&_t=${Date.now()}`;
+                const secondaryUrl = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=sr&q=${encoded}&_t=${Date.now()}`;
 
                 const audio = new Audio();
                 audio.referrerPolicy = "no-referrer";

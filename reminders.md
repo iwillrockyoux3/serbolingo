@@ -724,6 +724,10 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Resilient Mobile Audio TTS**: Upgraded `app.js` Serbian audio cascade with immediate native device `SpeechSynthesis` fallback on Google TTS network error/403 block. Added `window._cachedVoices` pre-caching via `speechSynthesis.onvoiceschanged` to avoid empty voice lists on mobile browsers.
   - **Digraph & Cross-Script Acceptance**: Enhanced `_phoneticNormalize` with Cyrillic-to-Latin transliteration mapping and `dž` digraph normalization.
   - **Service Worker & Asset Bump**: Incremented Service Worker cache to `v14` and synchronized all 33 script tag queries in `index.html`.
+  - **Speaker Stream Unblock & Referrer Policy**: Switched `index.html` to `<meta name="referrer" content="no-referrer">` and migrated audio endpoints to `client=tw-ob`, bypassing Google's GitHub hotlink block on mobile browsers.
+  - **Skill Tree Audio/Mic Separation**: Standard lessons are now 100% quiet/text-safe. Added dedicated 🎧 Slušanje and 🎙️ Govor companion workout buttons to every tier in the Skill Tree.
+  - **In-Lesson Safety Valves**: Added "Ne mogu sada da pričam (Preskoči)" / "Ne mogu da slušam (Prikaži tekst)" buttons during active lessons so users never fail a lesson when unable to speak or listen.
+  - **Service Worker Bump to v15**: Updated `sw.js` and `index.html` asset tags to `v15`.
 
 
 
