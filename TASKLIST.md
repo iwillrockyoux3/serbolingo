@@ -58,7 +58,8 @@
 - [x] Hangman Punctuation Stripping Fix: Stripped punctuation marks (`?`, `!`, `.`, `,`) from target words so only valid spellable letters get blank slots, preventing impossible question-mark fails (`question-engine.js`, `app.js`)
 - [x] Enhanced `_phoneticNormalize` with Cyrillic-to-Latin transliteration and `dž` digraph support (`app.js`)
 - [x] Disabled auto-capitalization on fill-blank mobile input (`app.js`)
-- [x] Service Worker cache bump to v16 and script tag version sync (`sw.js`, `index.html`)
+- [x] CORS Audio Blob Stream & Native Fallback Fix: Integrated `lingva.ml` CORS-enabled proxy with in-memory MP3 `Blob` playback to bypass mobile browser Referer hotlink blocks on GitHub Pages; eliminated premature `speechSynthesis` silence trap (`app.js`)
+- [x] Service Worker cache bump to v17 and script tag version sync (`sw.js`, `index.html`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system

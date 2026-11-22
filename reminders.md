@@ -733,6 +733,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Fresh 10 Pagination & Batching System**: Added completion screen pagination controls (`⬅️ Prethodnih 10 lekcija`, `➡️ Sledećih 10 lekcija`, `🔁 Ponovi ovih 10`, `🏠 Završi i vrati se na stablo`) with progress bars and persistent state memory.
   - **Hangman Punctuation Stripping**: Stripped non-letter punctuation marks (`?`, `!`, `.`, `,`) from target phrases in both `question-engine.js` and `app.js` so only valid spellable letters get blank slots, eliminating impossible question-mark fails.
   - **Service Worker Bump to v16**: Updated `sw.js` and all 34 script tags in `index.html` to `v16`.
+  - **CORS Audio Blob Streaming & Mobile Speaker Fix (v17)**: Resolved mobile GitHub Pages audio silence. Rewrote Serbian TTS pipeline to stream audio bytes via `lingva.ml` CORS-enabled proxy into an in-memory `Blob` and `URL.createObjectURL()`, completely bypassing mobile browser `Referer` hotlink blocks. Removed premature `speechSynthesis` silence trap so native voice is only used when explicitly requested or offline, with cascade to direct `tw-ob` HTML5 audio stream.
+  - **Service Worker Bump to v17**: Updated `sw.js` cache to `serbolingo-app-v17` and all 34 script tags in `index.html` to `v17`.
 
 
 

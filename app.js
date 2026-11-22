@@ -1922,8 +1922,8 @@ const app = {
             `;
         } else if (l.type === 'listening') {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
-            const audioWord = (isSrToEn && l.q_audio_rev) ? l.q_audio_rev : l.q_audio;
-            const audioLang = (isSrToEn && l.audioLang_rev) ? l.audioLang_rev : l.audioLang;
+            const audioWord = (isSrToEn && l.q_audio_rev) ? l.q_audio_rev : (l.q_audio || l.correct || '');
+            const audioLang = (isSrToEn && l.audioLang_rev) ? l.audioLang_rev : (l.audioLang || 'sr-RS');
             const optionsArray = (isSrToEn && l.options_rev) ? l.options_rev : l.options;
 
             const workoutBadge = state.tierWorkout ? `
@@ -2538,7 +2538,7 @@ const app = {
             const isSerbian = lang.startsWith('sr');
             const provider = state.settings.ttsProvider || 'none';
 
-            // 1. SERBIAN AUDIO -> Smart Auto / Gemini / Google Natural Serbian Engine
+            // 1. SERBIAN AUDIO -> CORS Audio Blob Stream FIRST, fallback to Direct Stream, then Native Voice
             if (isSerbian) {
                 // Ensure terminal punctuation so TTS synthesizer renders full vowel form instead of clipped clitic (e.g. "ne" -> "Не.")
                 let cleanSrText = text.trim();
@@ -2546,7 +2546,7 @@ const app = {
                     cleanSrText += '.';
                 }
 
-                // Check if device OS has an authentic native Serbian voice installed (e.g. Android with Google Serbian TTS)
+                // Check if device OS has an authentic native Serbian voice installed
                 const voices = (window._cachedVoices && window._cachedVoices.length)
                     ? window._cachedVoices
                     : ((window.speechSynthesis && typeof window.speechSynthesis.getVoices === 'function')
@@ -2586,77 +2586,80 @@ const app = {
                     }
                 };
 
-                // If setting is 'none' AND device has a genuine Serbian/Croatian voice installed, use device voice offline
-                if (provider === 'none' && nativeSrVoice) {
+                // If user explicitly chose 'native' in Settings OR device is offline, use native device voice
+                if (provider === 'native' || (!navigator.onLine && nativeSrVoice)) {
                     speakNativeDevice();
                     return;
                 }
 
-                // For Windows / PC (no native Serbian voice) or when Gemini / Google Voice is selected:
-                // Stream authentic native Serbian via cookie-isolated Google API CDN (works in normal browser mode)
-                const textForGoogle = (app.toCyrillic) ? app.toCyrillic(cleanSrText) : cleanSrText;
-                const encoded = encodeURIComponent(textForGoogle);
-                // Primary endpoint: translate.google.com with tw-ob client (unauthenticated mobile-safe audio stream)
-                const primaryUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encoded}&_t=${Date.now()}`;
-                // Secondary backup endpoint
-                const secondaryUrl = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=sr&q=${encoded}&_t=${Date.now()}`;
-
-                const audio = new Audio();
-                audio.referrerPolicy = "no-referrer";
-                audio.preload = "auto";
-                audio.volume = ttsVol;
-
-                if (text.length > 25) {
-                    audio.onloadedmetadata = () => { audio.playbackRate = 0.85; };
-                }
-
-                audio.onended = () => {
-                    resetVisual();
-                    if (state.currentAudio === audio) state.currentAudio = null;
-                };
-
-                const tryGtxFallback = () => {
+                // Fallback direct HTML5 Audio Stream (tw-ob)
+                const tryDirectGoogleTts = () => {
                     try {
-                        const retryAudio = new Audio();
-                        retryAudio.referrerPolicy = "no-referrer";
-                        retryAudio.preload = "auto";
-                        retryAudio.volume = ttsVol;
-                        retryAudio.onended = () => {
+                        const textForGoogle = (app.toCyrillic) ? app.toCyrillic(cleanSrText) : cleanSrText;
+                        const encoded = encodeURIComponent(textForGoogle);
+                        const primaryUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=sr&q=${encoded}`;
+                        const audio = new Audio();
+                        audio.referrerPolicy = "no-referrer";
+                        audio.volume = ttsVol;
+                        audio.onended = () => {
                             resetVisual();
-                            if (state.currentAudio === retryAudio) state.currentAudio = null;
+                            if (state.currentAudio === audio) state.currentAudio = null;
                         };
-                        retryAudio.onerror = (e) => {
-                            console.warn("Google TTS web stream blocked, auto-cascading to native device speech:", e);
+                        audio.onerror = () => {
+                            console.warn("Direct Google TTS error, falling back to device native voice");
                             speakNativeDevice();
                         };
-                        retryAudio.src = secondaryUrl;
-                        state.currentAudio = retryAudio;
-                        const p2 = retryAudio.play();
-                        if (p2 && p2.catch) {
-                            p2.catch(err2 => {
-                                console.warn("Google TTS play rejected, cascading to native device speech:", err2);
+                        state.currentAudio = audio;
+                        const p = audio.play();
+                        if (p && p.catch) {
+                            p.catch(e => {
+                                console.warn("Direct Google TTS play rejected, falling back to device voice:", e);
                                 speakNativeDevice();
                             });
                         }
-                    } catch (e2) {
+                    } catch (e) {
                         speakNativeDevice();
                     }
                 };
 
-                audio.onerror = (err) => {
-                    console.warn("Primary Google TTS error, retrying with secondary...", err);
-                    tryGtxFallback();
-                };
-
-                audio.src = primaryUrl;
-                state.currentAudio = audio;
-                const p = audio.play();
-                if (p && p.catch) {
-                    p.catch(e => {
-                        console.warn("Primary Google TTS play rejected, retrying with secondary:", e);
-                        tryGtxFallback();
+                // Tier 1: Fetch via CORS-enabled Google TTS proxy (lingva.ml) -> In-Memory Blob URL
+                // Completely immune to GitHub Pages hotlink / referer blocks on mobile browsers
+                const textParam = encodeURIComponent(cleanSrText);
+                fetch(`https://lingva.ml/api/v1/audio/sr/${textParam}`)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data && data.audio && Array.isArray(data.audio) && data.audio.length > 0) {
+                            const blob = new Blob([new Uint8Array(data.audio)], { type: 'audio/mpeg' });
+                            const blobUrl = URL.createObjectURL(blob);
+                            const blobAudio = new Audio(blobUrl);
+                            blobAudio.volume = ttsVol;
+                            blobAudio.onended = () => {
+                                resetVisual();
+                                URL.revokeObjectURL(blobUrl);
+                                if (state.currentAudio === blobAudio) state.currentAudio = null;
+                            };
+                            blobAudio.onerror = () => {
+                                resetVisual();
+                                URL.revokeObjectURL(blobUrl);
+                                tryDirectGoogleTts();
+                            };
+                            state.currentAudio = blobAudio;
+                            const playPromise = blobAudio.play();
+                            if (playPromise && playPromise.catch) {
+                                playPromise.catch(() => tryDirectGoogleTts());
+                            }
+                        } else {
+                            tryDirectGoogleTts();
+                        }
+                    })
+                    .catch(err => {
+                        console.warn("CORS audio fetch failed, falling back to direct stream:", err);
+                        tryDirectGoogleTts();
                     });
-                }
+
                 return;
             }
 
