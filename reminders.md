@@ -728,6 +728,11 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Skill Tree Audio/Mic Separation**: Standard lessons are now 100% quiet/text-safe. Added dedicated 🎧 Slušanje and 🎙️ Govor companion workout buttons to every tier in the Skill Tree.
   - **In-Lesson Safety Valves**: Added "Ne mogu sada da pričam (Preskoči)" / "Ne mogu da slušam (Prikaži tekst)" buttons during active lessons so users never fail a lesson when unable to speak or listen.
   - **Service Worker Bump to v15**: Updated `sw.js` and `index.html` asset tags to `v15`.
+  - **Option B Rich Variety Curriculum**: Standard lessons restored to full rich variety (sentence fill-in-the-blank, word ordering, listening, speaking, hangman, picture choice, MCQ) paired with 1-tap "Ne mogu sada da pričam" / "Ne mogu da slušam" safety skip valves.
+  - **Section Companion Workout Pooling & Bypassed Alphabet Modal**: 🎧 Slušanje & 🎙️ Govor companion workout buttons now pool vocabulary across all categories in each tier (130 to 400+ words per tier) without triggering the alphabet modal.
+  - **Fresh 10 Pagination & Batching System**: Added completion screen pagination controls (`⬅️ Prethodnih 10 lekcija`, `➡️ Sledećih 10 lekcija`, `🔁 Ponovi ovih 10`, `🏠 Završi i vrati se na stablo`) with progress bars and persistent state memory.
+  - **Hangman Punctuation Stripping**: Stripped non-letter punctuation marks (`?`, `!`, `.`, `,`) from target phrases in both `question-engine.js` and `app.js` so only valid spellable letters get blank slots, eliminating impossible question-mark fails.
+  - **Service Worker Bump to v16**: Updated `sw.js` and all 34 script tags in `index.html` to `v16`.
 
 
 

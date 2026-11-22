@@ -245,6 +245,15 @@ const generateDailyQuests = () => {
     }));
 };
 
+const TIER_DEFINITIONS = [
+    { label: 'Foundation', labelEn: 'Foundation', ids: ['alphabet', 'numbers', 'colors', 'basics', 'phrases', 'verbs', 'pronouns', 'adjectives', 'gender'] },
+    { label: 'Daily Life', labelEn: 'Daily Life', ids: ['food', 'cases_intro', 'family', 'household', 'time', 'days', 'months'] },
+    { label: 'Survival & Self', labelEn: 'Survival & Self', ids: ['directions', 'prepositions', 'weather', 'body', 'health', 'emotions', 'conjunctions'] },
+    { label: 'The World', labelEn: 'The World', ids: ['travel', 'adverbs', 'clothing', 'comparatives', 'animals', 'nature', 'sports', 'past_tense'] },
+    { label: 'Modern Life', labelEn: 'Modern Life', ids: ['education', 'technology', 'business', 'advanced_adj', 'punctuation', 'future_tense'] },
+    { label: 'Advanced', labelEn: 'Advanced', ids: ['dating', 'slang', 'particles', 'spelling'] }
+];
+
 const app = {
     init: async () => {
         // Unlock Web Audio / HTMLAudio on first user gesture (Chrome / iOS compliance)
@@ -910,14 +919,7 @@ const app = {
             return `<div class="${widthClass} cursor-pointer group" onclick="app.startSkillLesson('${skill.id}')">${guideBtn}<div class="flex items-center gap-3 bg-white dark:bg-slate-800 p-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm group-hover:border-blue-400 dark:group-hover:border-blue-500 active:scale-[0.97] transition-all h-full"><div class="w-12 h-12 flex-shrink-0 ${colors.bg} rounded-2xl flex items-center justify-center text-xl ${colors.text} ${colors.shadow} transition-colors">${skill.emoji}</div><div class="flex-1 min-w-0"><div class="flex items-center gap-1"><p class="font-black text-slate-800 dark:text-slate-100 text-[13px] truncate">${displayName}</p></div><div class="flex items-center gap-1 mt-0.5">${optionalBadge} <span class="text-[9px] tracking-tighter">${crownLabel}</span></div><div class="mt-1.5 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden w-full"><div class="h-full ${skill.crown >= 5 ? 'bg-yellow-400' : 'bg-green-400'} rounded-full transition-all" style="width: ${skill.crown >= 5 ? 100 : (skill.lessonsInCrown / SkillTreeEngine.getLessonsPerCrown()) * 100}%"></div></div></div></div></div>`;
         };
 
-        const tiers = [
-            { label: 'Foundation', labelEn: 'Foundation', ids: ['alphabet', 'numbers', 'colors', 'basics', 'phrases', 'verbs', 'pronouns', 'adjectives', 'gender'] },
-            { label: 'Daily Life', labelEn: 'Daily Life', ids: ['food', 'cases_intro', 'family', 'household', 'time', 'days', 'months'] },
-            { label: 'Survival & Self', labelEn: 'Survival & Self', ids: ['directions', 'prepositions', 'weather', 'body', 'health', 'emotions', 'conjunctions'] },
-            { label: 'The World', labelEn: 'The World', ids: ['travel', 'adverbs', 'clothing', 'comparatives', 'animals', 'nature', 'sports', 'past_tense'] },
-            { label: 'Modern Life', labelEn: 'Modern Life', ids: ['education', 'technology', 'business', 'advanced_adj', 'punctuation', 'future_tense'] },
-            { label: 'Advanced', labelEn: 'Advanced', ids: ['dating', 'slang', 'particles', 'spelling'] }
-        ];
+        const tiers = TIER_DEFINITIONS;
 
         let html = '';
 
@@ -970,19 +972,17 @@ const app = {
             }
 
             // Dedicated Companion Audio & Speaking Workouts for this Tier
-            const firstUnlockedSkill = tierSkills.find(s => !s.locked) || tierSkills[0];
             const workoutDisabled = !anyUnlocked ? 'opacity-40 pointer-events-none' : '';
-            const tierTargetId = firstUnlockedSkill ? firstUnlockedSkill.id : tier.ids[0];
 
             html += `
                 <div class="flex items-center gap-2 mt-3 pt-2.5 border-t border-dashed border-slate-200 dark:border-slate-700/60 ${workoutDisabled}">
-                    <button onclick="app.startSkillLesson('${tierTargetId}', 'listening')" 
+                    <button onclick="app.startTierWorkout(${tierIndex}, 'listening')" 
                             class="flex-1 py-2 px-2 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/60 text-purple-700 dark:text-purple-300 font-black text-[11px] flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer" 
                             title="${isSrToEn ? 'Vežbaj samo slušanje u ovom nivou' : 'Practice listening for this tier'}">
                         <span>🎧</span>
                         <span class="truncate">${isSrToEn ? 'Slušanje' : 'Listening'}</span>
                     </button>
-                    <button onclick="app.startSkillLesson('${tierTargetId}', 'speaking')" 
+                    <button onclick="app.startTierWorkout(${tierIndex}, 'speaking')" 
                             class="flex-1 py-2 px-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 font-black text-[11px] flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer" 
                             title="${isSrToEn ? 'Vežbaj samo govor u ovom nivou' : 'Practice speaking for this tier'}">
                         <span>🎙️</span>
@@ -1058,6 +1058,237 @@ const app = {
             console.error('Error starting skill lesson:', e);
             app.navigate('home');
         }
+    },
+    startTierWorkout: async (tierIndex, mode = 'listening', requestedPage = null) => {
+        const tier = TIER_DEFINITIONS[tierIndex];
+        if (!tier) return;
+
+        // Check if any skill in tier is unlocked
+        const skills = SkillTreeEngine.getSkillsWithStatus();
+        const tierSkills = tier.ids.map(id => skills.find(s => s.id === id)).filter(Boolean);
+        const anyUnlocked = tierSkills.some(s => !s.locked);
+        if (!anyUnlocked) {
+            app.showToast('🔒 Završi prethodne lekcije prvo!', 'error');
+            return;
+        }
+
+        const guestAllowedTiers = [0]; // Tier 0 allowed for guest
+        if (state.user && state.user.isGuest && !guestAllowedTiers.includes(tierIndex)) {
+            app.showToast(t('toast_guest_level'), 'error');
+            return;
+        }
+
+        try {
+            // Collect categories for this tier (skipping alphabet letter charts)
+            const categories = tierSkills
+                .map(s => s.category)
+                .filter(c => c && c !== 'alphabet');
+
+            let allWords = [];
+            if (window.appDb && window.appDb.getWordsByCategory) {
+                const wordsNested = await Promise.all(categories.map(c => window.appDb.getWordsByCategory(c)));
+                allWords = wordsNested.flat();
+            }
+            if (!allWords || allWords.length === 0) {
+                allWords = (window.SEED_DATA || []).filter(w => categories.includes(w.category));
+            }
+
+            // Deduplicate words by id or text
+            const seen = new Set();
+            const pool = [];
+            for (const w of allWords) {
+                if (!w || (!w.sr_lat && !w.en)) continue;
+                const key = (w.id || w.sr_lat).toLowerCase().trim();
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    pool.push(w);
+                }
+            }
+
+            if (pool.length === 0) {
+                app.showToast('Nema reči za ovaj nivo.', 'error');
+                return;
+            }
+
+            // Preserve current shuffled pool if re-running or paging through same tier & mode
+            let masterPool;
+            if (state.tierWorkout && 
+                state.tierWorkout.tierIndex === tierIndex && 
+                state.tierWorkout.mode === mode && 
+                state.tierWorkout.pool && 
+                state.tierWorkout.pool.length === pool.length) {
+                masterPool = state.tierWorkout.pool;
+            } else {
+                masterPool = [...pool].sort(() => 0.5 - Math.random());
+            }
+
+            const batchSize = 10;
+            const totalPages = Math.ceil(masterPool.length / batchSize);
+
+            // Determine page
+            let page = 0;
+            if (requestedPage !== null && requestedPage !== undefined) {
+                page = Number(requestedPage);
+            } else if (state.tierWorkoutProgress && state.tierWorkoutProgress[`${tierIndex}_${mode}`] !== undefined) {
+                page = Number(state.tierWorkoutProgress[`${tierIndex}_${mode}`]);
+            }
+
+            if (page >= totalPages) page = 0;
+            if (page < 0) page = 0;
+
+            // Save progress persistently
+            state.tierWorkoutProgress = state.tierWorkoutProgress || {};
+            state.tierWorkoutProgress[`${tierIndex}_${mode}`] = page;
+
+            const startIdx = page * batchSize;
+            const currentBatch = masterPool.slice(startIdx, startIdx + batchSize);
+
+            ACTIVE_LESSON = window.QuestionEngine.generateQuestionsFromWords(currentBatch, mode, masterPool);
+
+            if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
+                app.showToast('Nije moguće generisati pitanja.', 'error');
+                return;
+            }
+
+            state.tierWorkout = {
+                tierIndex: tierIndex,
+                tierLabel: tier.label,
+                tierLabelEn: tier.labelEn,
+                mode: mode,
+                pool: masterPool,
+                page: page,
+                batchSize: batchSize,
+                totalPages: totalPages,
+                totalWords: masterPool.length,
+                currentBatchCount: currentBatch.length
+            };
+
+            state.cantSpeak = false;
+            state.cantListen = false;
+            state.lessonMode = mode;
+            state.currentLevelKey = `tier_workout_${tierIndex}_${mode}`;
+            state.currentSkillId = null;
+            state.currentLessonIndex = 0;
+            state.lastLessonMistakes = 0;
+            state.currentLessonXpEarned = 0;
+
+            app.saveStats();
+            app.navigate('lesson');
+            app.renderQuestion();
+        } catch (err) {
+            console.error("Error starting tier workout:", err);
+            app.showToast('Greška pri pokretanju vežbe.', 'error');
+        }
+    },
+    tierWorkoutNext: () => {
+        if (!state.tierWorkout) return;
+        const tw = state.tierWorkout;
+        const nextPage = tw.page + 1;
+        if (nextPage < tw.totalPages) {
+            app.startTierWorkout(tw.tierIndex, tw.mode, nextPage);
+        } else {
+            app.startTierWorkout(tw.tierIndex, tw.mode, 0);
+        }
+    },
+    tierWorkoutPrev: () => {
+        if (!state.tierWorkout) return;
+        const tw = state.tierWorkout;
+        const prevPage = Math.max(0, tw.page - 1);
+        app.startTierWorkout(tw.tierIndex, tw.mode, prevPage);
+    },
+    endTierWorkout: () => {
+        state.tierWorkout = null;
+        app.navigate('home');
+    },
+    renderTierWorkoutCompletion: () => {
+        const tw = state.tierWorkout;
+        if (!tw) {
+            app.navigate('home');
+            return;
+        }
+
+        const area = document.getElementById('lesson-content-area');
+        if (!area) return;
+
+        const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+        const isListening = tw.mode === 'listening';
+        const modeLabel = isListening ? (isSrToEn ? 'Slušanje' : 'Listening') : (isSrToEn ? 'Govor' : 'Speaking');
+        const modeEmoji = isListening ? '🎧' : '🎙️';
+        const tierName = isSrToEn ? tw.tierLabel : tw.tierLabelEn;
+
+        const startWord = (tw.page * tw.batchSize) + 1;
+        const endWord = Math.min((tw.page + 1) * tw.batchSize, tw.totalWords);
+        const hasNext = (tw.page + 1) < tw.totalPages;
+        const hasPrev = tw.page > 0;
+
+        setTimeout(() => app.fireConfetti(), 200);
+
+        // Hide lesson footer during completion screen
+        const footer = document.getElementById('lesson-footer');
+        if (footer) footer.classList.add('hidden');
+
+        const bar = document.getElementById('lesson-progress-bar');
+        if (bar) bar.style.width = '100%';
+
+        area.innerHTML = `
+            <div class="w-full max-w-sm flex flex-col items-center gap-5 text-center fade-in py-4">
+                <div class="w-20 h-20 rounded-3xl ${isListening ? 'bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300' : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300'} flex items-center justify-center text-4xl shadow-md border-2 ${isListening ? 'border-purple-200 dark:border-purple-800' : 'border-emerald-200 dark:border-emerald-800'} animate-bounce">
+                    ${modeEmoji}
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-black text-slate-800 dark:text-white">
+                        ${isSrToEn ? 'Odlično odrađeno!' : 'Great Job!'}
+                    </h2>
+                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 mt-1">
+                        ${tierName} • ${modeLabel}
+                    </p>
+                </div>
+
+                <div class="w-full bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border-2 border-slate-200/80 dark:border-slate-700/60 shadow-sm">
+                    <div class="flex justify-between items-center text-xs font-black text-slate-600 dark:text-slate-300 mb-2">
+                        <span>${isSrToEn ? `Deo ${tw.page + 1} od ${tw.totalPages}` : `Part ${tw.page + 1} of ${tw.totalPages}`}</span>
+                        <span class="text-blue-600 dark:text-blue-400 font-bold">${isSrToEn ? `Reči ${startWord}–${endWord} od ${tw.totalWords}` : `Words ${startWord}–${endWord} of ${tw.totalWords}`}</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500" style="width: ${((tw.page + 1) / tw.totalPages) * 100}%"></div>
+                    </div>
+                </div>
+
+                <div class="w-full flex flex-col gap-2.5 mt-2">
+                    <!-- SLEDEĆIH 10 -->
+                    ${hasNext ? `
+                        <button onclick="app.tierWorkoutNext()" class="w-full py-3.5 px-4 rounded-xl bg-green-500 hover:bg-green-600 text-white font-black text-sm uppercase tracking-wide shadow-[0_4px_0_rgb(21,128,61)] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2">
+                            <span>➡️</span>
+                            <span>${isSrToEn ? 'Sledećih 10 lekcija' : 'Next 10 Lessons'}</span>
+                        </button>
+                    ` : `
+                        <button onclick="app.tierWorkoutNext()" class="w-full py-3.5 px-4 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-black text-sm uppercase tracking-wide shadow-[0_4px_0_rgb(29,78,216)] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2">
+                            <span>🔄</span>
+                            <span>${isSrToEn ? 'Ponovi ispočetka (Deo 1)' : 'Restart from Beginning'}</span>
+                        </button>
+                    `}
+
+                    <!-- PRETHODNIH 10 -->
+                    <button onclick="app.tierWorkoutPrev()" ${!hasPrev ? 'disabled' : ''} class="w-full py-3 px-4 rounded-xl ${hasPrev ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 cursor-pointer shadow-sm active:translate-y-0.5' : 'bg-slate-50 dark:bg-slate-800/40 text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-50'} border border-slate-200 dark:border-slate-700 font-black text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-2">
+                        <span>⬅️</span>
+                        <span>${isSrToEn ? 'Prethodnih 10 lekcija' : 'Previous 10 Lessons'}</span>
+                    </button>
+
+                    <!-- REPLAY CURRENT 10 -->
+                    <button onclick="app.startTierWorkout(${tw.tierIndex}, '${tw.mode}', ${tw.page})" class="w-full py-2.5 px-4 rounded-xl bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 font-black text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>🔁</span>
+                        <span>${isSrToEn ? 'Ponovi ovih 10 ponovo' : 'Replay these 10'}</span>
+                    </button>
+
+                    <!-- ZAVRŠI -->
+                    <button onclick="app.endTierWorkout()" class="w-full mt-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-black text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-sm">
+                        <span>🏠</span>
+                        <span>${isSrToEn ? 'Završi i vrati se na stablo' : 'Finish & Return to Tree'}</span>
+                    </button>
+                </div>
+            </div>
+        `;
     },
     startPractice: async () => {
         const unlockedSkills = SKILL_TREE.filter(s => SkillTreeEngine.isUnlocked(s.id) && SkillTreeEngine.getCrownLevel(s.id) >= 1);
@@ -1365,6 +1596,8 @@ const app = {
         document.getElementById('lesson-progress-bar').style.width = `${(state.currentLessonIndex / ACTIVE_LESSON.length) * 100}%`;
 
         // Reset UI state for new question
+        const footer = document.getElementById('lesson-footer');
+        if (footer) footer.classList.remove('hidden');
         document.getElementById('check-btn').classList.remove('hidden');
         document.getElementById('next-btn').classList.add('hidden');
         document.getElementById('feedback-area').classList.add('hidden');
@@ -1396,8 +1629,15 @@ const app = {
             const qWord = qParts[1] || '';
             const qSub = qParts[2] || '';
             
+            const workoutBadge = state.tierWorkout ? `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-[10px] font-black text-emerald-700 dark:text-emerald-300 uppercase tracking-widest mb-3">
+                    <span>🎙️</span> <span>${isSrToEn ? state.tierWorkout.tierLabel : state.tierWorkout.tierLabelEn} • ${isSrToEn ? `Deo ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}` : `Part ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}`}</span>
+                </div>
+            ` : '';
+
             area.innerHTML = `
                 <div class="text-center w-full max-w-xs">
+                    ${workoutBadge}
                     <h2 class="text-lg font-bold text-slate-500 dark:text-slate-400 mb-2">${qHeader}</h2>
                     <div class="text-2xl font-black text-slate-800 dark:text-white mb-6">${app.formatQuestionText(qWord)}</div>
                     
@@ -1610,9 +1850,11 @@ const app = {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
             const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
+            // Clean non-letter characters (strip punctuation like ? ! . , so only spellable letters get blank slots)
+            const cleanTarget = (correctText || '').replace(/[^a-zA-ZčćžšđČĆŽŠĐ\s]/g, '').replace(/\s+/g, ' ').trim();
             
             state.hangmanState = {
-                target: correctText.toUpperCase(),
+                target: cleanTarget.toUpperCase(),
                 guesses: [],
                 mistakes: 0
             };
@@ -1684,9 +1926,16 @@ const app = {
             const audioLang = (isSrToEn && l.audioLang_rev) ? l.audioLang_rev : l.audioLang;
             const optionsArray = (isSrToEn && l.options_rev) ? l.options_rev : l.options;
 
+            const workoutBadge = state.tierWorkout ? `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-800 text-[10px] font-black text-purple-700 dark:text-purple-300 uppercase tracking-widest mb-3">
+                    <span>🎧</span> <span>${isSrToEn ? state.tierWorkout.tierLabel : state.tierWorkout.tierLabelEn} • ${isSrToEn ? `Deo ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}` : `Part ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}`}</span>
+                </div>
+            ` : '';
+
             area.innerHTML = `
                 <div class="text-center w-full max-w-sm">
-                    <p class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">What do you hear?</p>
+                    ${workoutBadge}
+                    <p class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">${isSrToEn ? 'Šta čuješ?' : 'What do you hear?'}</p>
                     <button id="listening-speaker-btn" onclick="app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}')" 
                         class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-90 hover:bg-blue-200 dark:hover:bg-blue-800 mb-4 cursor-pointer select-none">
                         🔊
@@ -1704,6 +1953,13 @@ const app = {
                     </div>
                 </div>
             `;
+
+            // Auto-trigger audio on question load
+            setTimeout(() => {
+                try {
+                    app.speakPhrase(audioWord, audioLang);
+                } catch(e) {}
+            }, 300);
         } else if (l.type === 'dialogue') {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             const npcMsg = (isSrToEn && l.npcMessage_rev) ? l.npcMessage_rev : l.npcMessage;
@@ -1749,8 +2005,15 @@ const app = {
             const letters = correctText.split('');
             const letterDisplay = letters.map((ch, i) => `<span class="inline-block w-8 h-10 mx-0.5 border-b-4 border-slate-300 dark:border-slate-600 text-center text-xl font-black text-transparent spelling-letter" data-idx="${i}">${ch}</span>`).join('');
 
+            const workoutBadge = state.tierWorkout ? `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-[10px] font-black text-emerald-700 dark:text-emerald-300 uppercase tracking-widest mb-3">
+                    <span>🎙️</span> <span>${isSrToEn ? state.tierWorkout.tierLabel : state.tierWorkout.tierLabelEn} • ${isSrToEn ? `Deo ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}` : `Part ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}`}</span>
+                </div>
+            ` : '';
+
             area.innerHTML = `
                 <div class="text-center w-full max-w-xs">
+                    ${workoutBadge}
                     <h2 class="text-lg font-bold text-slate-500 dark:text-slate-400 mb-2">${qHeader}</h2>
                     <div class="text-2xl font-black text-slate-800 dark:text-white mb-4">${qWord}</div>
                     
@@ -1868,7 +2131,7 @@ const app = {
             let isComplete = true;
             let idx = 0;
             for(let i = 0; i < target.length; i++) {
-                if (target[i] === ' ') continue;
+                if (target[i] === ' ' || !/[A-ZČĆŽŠĐ]/.test(target[i])) continue;
                 if (state.hangmanState.guesses.includes(target[i])) {
                     spans[idx].innerText = target[i];
                     spans[idx].classList.remove('border-b-4');
@@ -2981,6 +3244,11 @@ const app = {
         // Priority 32.3: Time-Based & Dopamine Badges (Noćna Ptica, Rani Starosedelac, Perfekcionista)
         app.checkTimeBadges();
         
+        if (state.tierWorkout) {
+            app.renderTierWorkoutCompletion();
+            return;
+        }
+
         if (state.currentSkillId === 'mistakes') {
             app.navigate('mistakes');
         } else {
@@ -4335,7 +4603,10 @@ const app = {
         if (typeof GrammarEngine !== 'undefined' && GrammarEngine.hideTooltip) {
             GrammarEngine.hideTooltip();
         }
-        if (confirm(t('lesson_quit'))) app.navigate(state.currentSkillId === 'mistakes' ? 'mistakes' : 'home'); 
+        if (confirm(t('lesson_quit'))) {
+            state.tierWorkout = null;
+            app.navigate(state.currentSkillId === 'mistakes' ? 'mistakes' : 'home');
+        }
     },
     // ─── LOCALIZATION ENGINE ───
     applyLanguage: () => {

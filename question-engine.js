@@ -369,12 +369,16 @@ const QuestionEngine = {
 
     // Generates a Hangman question object
     generateHangman(word) {
+        const cleanSr = (word.sr_lat || '').replace(/[^a-zA-ZčćžšđČĆŽŠĐ\s]/g, '').replace(/\s+/g, ' ').trim();
+        const cleanEn = (word.en || '').replace(/[^a-zA-Z\s]/g, '').replace(/\s+/g, ' ').trim();
+        if (!cleanSr || !cleanEn) return null;
+
         return {
             type: 'hangman',
             q: `Spell: "${word.en}"`,
             q_rev: `Napiši: "${word.sr_lat}"`,
-            correct: word.sr_lat,
-            correct_rev: word.en,
+            correct: cleanSr,
+            correct_rev: cleanEn,
             explanation: `💡 The correct spelling is "${word.sr_lat}".`,
             explanation_rev: `💡 The correct spelling is "${word.en}".`
         };
@@ -559,15 +563,18 @@ const QuestionEngine = {
                 // Dedicated Ear Training Lab
                 q = this.generateListening(word, allWords);
             } else {
-                // Standard Quiet/Text-Friendly Mode (No mandatory mic or surprise audio questions)
+                // Standard Option B: Rich variety with Sentence, Hangman, Speaking, Listening, Picture, and MCQ
+                // Paired with 1-tap "Can't speak now" / "Can't listen now" safety bypass buttons
                 if (word.example_en && word.example_sr) {
-                    if (rand < 0.22) q = this.generateFillBlank(word);
-                    else if (rand < 0.45) q = this.generateWordOrder(word);
+                    if (rand < 0.20) q = this.generateFillBlank(word);
+                    else if (rand < 0.40) q = this.generateWordOrder(word);
                 }
                 
                 if (!q) {
-                    if (rand > 0.85) q = this.generateHangman(word);
+                    if (rand > 0.88) q = this.generateHangman(word);
+                    else if (rand > 0.74) q = this.generateSpeaking(word);
                     else if (rand > 0.60 && word.emoji) q = this.generatePictureChoice(word, allWords);
+                    else if (rand > 0.46) q = this.generateListening(word, allWords);
                     else q = this.generateMultipleChoice(word, allWords);
                 }
             }
@@ -607,6 +614,27 @@ const QuestionEngine = {
     // Dedicated Pronunciation / Speaking Lab Generator
     async generateSpeakingLesson(categoryName, dbInstance, count = 10) {
         return this.generateLesson(categoryName, dbInstance, count, 'speaking');
+    },
+
+    // Generates a dedicated batch of questions from a provided list of words and distractor pool
+    generateQuestionsFromWords(words, mode = 'listening', pool = []) {
+        if (!words || !words.length) return [];
+        const fullPool = (pool && pool.length >= 4) ? pool : words;
+        return words.map(word => {
+            let q = null;
+            if (mode === 'speaking') {
+                if (word.example_en && word.example_sr && Math.random() < 0.45) {
+                    q = this.generateSpeakingSentence(word);
+                } else {
+                    q = this.generateSpeaking(word);
+                }
+            } else {
+                // Listening mode
+                q = this.generateListening(word, fullPool);
+            }
+            if (q) q.wordId = word.id;
+            return q;
+        }).filter(q => q !== null);
     },
 
     // Phase 4: Smart Practice (Spaced Repetition)

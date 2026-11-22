@@ -52,12 +52,13 @@
 - [x] Text-level distractor deduplication across MCQ, picture choice, listening, and matching pairs (`question-engine.js`)
 - [x] Resilient mobile audio stream: switched to unauthenticated `tw-ob` client and set `no-referrer` meta policy in `index.html` to eliminate GitHub hotlink blocks
 - [x] Pre-cached `window._cachedVoices` on load to fix async empty-voice list on mobile browsers (`app.js`)
-- [x] Multi-mode lesson architecture: Standard lessons are 100% text-safe & quiet-friendly (no surprise microphone or audio-only questions) (`question-engine.js`)
-- [x] Dedicated companion workout buttons per Skill Tree tier: 🎧 Slušanje (Listening Lab) & 🎙️ Govor (Speaking Lab) (`app.js`)
-- [x] Quiet Mode safety valves: "Ne mogu sada da pričam (Preskoči)" / "Ne mogu da slušam (Prikaži tekst)" buttons during active lessons (`app.js`)
+- [x] Option B Rich Variety Curriculum: Standard lessons feature balanced distribution (20% fill-blank, 20% word-order, 14% speaking, 14% listening, 14% picture-choice, 12% hangman, MCQ) with 1-tap "Ne mogu sada da pričam (Preskoči)" / "Ne mogu da slušam (Prikaži tekst)" Quiet Mode safety valves (`question-engine.js`, `app.js`)
+- [x] Dedicated Section Companion Workouts & Full-Tier Vocabulary Pooling: 🎧 Slušanje & 🎙️ Govor companion workout buttons per Skill Tree tier, pooling all 130–400+ words across each tier without alphabet modal collision (`app.js`)
+- [x] Fresh 10 Batching & Pagination System: `⬅️ Prethodnih 10 lekcija`, `➡️ Sledećih 10 lekcija`, `🔁 Ponovi ovih 10`, and `🏠 Završi i vrati se na stablo` with live progress bars (`Deo X od Y • Reči A–B od N`) and persistent progress memory (`app.js`)
+- [x] Hangman Punctuation Stripping Fix: Stripped punctuation marks (`?`, `!`, `.`, `,`) from target words so only valid spellable letters get blank slots, preventing impossible question-mark fails (`question-engine.js`, `app.js`)
 - [x] Enhanced `_phoneticNormalize` with Cyrillic-to-Latin transliteration and `dž` digraph support (`app.js`)
 - [x] Disabled auto-capitalization on fill-blank mobile input (`app.js`)
-- [x] Service Worker cache bump to v15 and script tag version sync (`sw.js`, `index.html`)
+- [x] Service Worker cache bump to v16 and script tag version sync (`sw.js`, `index.html`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system
