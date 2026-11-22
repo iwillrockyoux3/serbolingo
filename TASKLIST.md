@@ -44,9 +44,17 @@
 
 ### AI & Audio
 - [x] Gemini API integration — model cascading (2.5-flash → 1.5-flash)
-- [x] Multi-tier TTS cascade (Cloud AI → Native → Google Translate)
+- [x] Multi-tier TTS cascade (Cloud AI → Native → Google Translate) with resilient mobile native voice fallback
 - [x] Speech recognition (pronunciation, karaoke, spelling)
 - [x] Graceful degradation when offline / no API keys
+
+### Mobile Hardening & Lesson Engine Fixes
+- [x] Text-level distractor deduplication across MCQ, picture choice, listening, and matching pairs (`question-engine.js`)
+- [x] Resilient mobile audio fallback: Google TTS failure automatically falls back to native device `SpeechSynthesis` (`app.js`)
+- [x] Pre-cached `window._cachedVoices` on load to fix async empty-voice list on mobile browsers (`app.js`)
+- [x] Enhanced `_phoneticNormalize` with Cyrillic-to-Latin transliteration and `dž` digraph support (`app.js`)
+- [x] Disabled auto-capitalization on fill-blank mobile input (`app.js`)
+- [x] Service Worker cache bump to v14 and script tag version sync (`sw.js`, `index.html`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system

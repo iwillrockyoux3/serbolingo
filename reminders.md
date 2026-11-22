@@ -716,5 +716,15 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - [ ] **Phase 2 (Indie Developer Story Public Launch)**: Share the authentic creator journey (*"I built a fast, 100% offline Serbian learning app to fix X"*).
   - [ ] **Phase 3 (Consistent Content Rhythm)**: Publish 2–3 short videos or community guides weekly to maintain compounding organic installs.
 
+---
+
+## 🛠️ Mobile Hardening & QA Audit Log
+- **2026-11-22**:
+  - **Duplicate Options Elimination**: Implemented text-level distractor deduplication in `question-engine.js` across multiple choice, picture choice, listening, and matching pairs. Prevents duplicate options (e.g., double "please" or double "molim") caused by duplicate dictionary entries across categories.
+  - **Resilient Mobile Audio TTS**: Upgraded `app.js` Serbian audio cascade with immediate native device `SpeechSynthesis` fallback on Google TTS network error/403 block. Added `window._cachedVoices` pre-caching via `speechSynthesis.onvoiceschanged` to avoid empty voice lists on mobile browsers.
+  - **Digraph & Cross-Script Acceptance**: Enhanced `_phoneticNormalize` with Cyrillic-to-Latin transliteration mapping and `dž` digraph normalization.
+  - **Service Worker & Asset Bump**: Incremented Service Worker cache to `v14` and synchronized all 33 script tag queries in `index.html`.
+
+
 
 

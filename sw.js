@@ -1,7 +1,7 @@
 // [SHIELD_DAEMON: VALIDATED]
-// SerboLingo Service Worker (v13) — Offline-First PWA Engine
+// SerboLingo Service Worker (v14) — Offline-First PWA Engine
 
-const CACHE_NAME = 'serbolingo-app-v13';
+const CACHE_NAME = 'serbolingo-app-v14';
 
 // Core static assets required for 100% offline app operation
 const PRECACHE_ASSETS = [
@@ -14,39 +14,40 @@ const PRECACHE_ASSETS = [
     './icon-512.png',
     './icon-192-maskable.png',
     './icon-512-maskable.png',
-    './seed-data.js?v=13',
-    './db.js?v=13',
-    './alphabet-data.js?v=13',
-    './explore-hub.js?v=13',
-    './karaoke.js?v=13',
-    './question-engine.js?v=13',
-    './skill-tree.js?v=13',
-    './roleplay.js?v=13',
-    './stories.js?v=13',
-    './cloze.js?v=13',
-    './slang.js?v=13',
-    './pitch-accent.js?v=13',
-    './rhythm.js?v=13',
-    './ghost-arena.js?v=13',
-    './arcade.js?v=13',
-    './trophy-cabinet.js?v=13',
-    './visual-lens.js?v=13',
-    './commute.js?v=13',
-    './shop-engine.js?v=13',
-    './placement-test.js?v=13',
-    './league-system.js?v=13',
-    './srs-engine.js?v=13',
-    './touch-haptics.js?v=13',
-    './grammar-tooltips.js?v=13',
-    './grammar-sandbox.js?v=13',
-    './immersion-clips.js?v=13',
-    './streak-retention.js?v=13',
-    './serbo-reels.js?v=13',
-    './smart-story.js?v=13',
-    './language-exchange.js?v=13',
-    './community-forum.js?v=13',
-    './bug-report.js?v=13',
-    './app.js?v=13'
+    './seed-data.js?v=14',
+    './db.js?v=14',
+    './alphabet-data.js?v=14',
+    './explore-hub.js?v=14',
+    './karaoke.js?v=14',
+    './question-engine.js?v=14',
+    './skill-tree.js?v=14',
+    './roleplay.js?v=14',
+    './stories.js?v=14',
+    './cloze.js?v=14',
+    './slang.js?v=14',
+    './pitch-accent.js?v=14',
+    './rhythm.js?v=14',
+    './ghost-arena.js?v=14',
+    './arcade.js?v=14',
+    './trophy-cabinet.js?v=14',
+    './monty-winner.js?v=14',
+    './visual-lens.js?v=14',
+    './commute.js?v=14',
+    './shop-engine.js?v=14',
+    './placement-test.js?v=14',
+    './league-system.js?v=14',
+    './srs-engine.js?v=14',
+    './touch-haptics.js?v=14',
+    './grammar-tooltips.js?v=14',
+    './grammar-sandbox.js?v=14',
+    './immersion-clips.js?v=14',
+    './streak-retention.js?v=14',
+    './serbo-reels.js?v=14',
+    './smart-story.js?v=14',
+    './language-exchange.js?v=14',
+    './community-forum.js?v=14',
+    './bug-report.js?v=14',
+    './app.js?v=14'
 ];
 
 // 1. INSTALL EVENT — Pre-cache local app shell

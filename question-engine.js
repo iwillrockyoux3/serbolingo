@@ -9,16 +9,63 @@ const QuestionEngine = {
         return arr;
     },
 
-    // Get N random elements from array excluding target
-    getRandomDistractors(array, targetId, count) {
-        const filtered = array.filter(w => w.id !== targetId);
-        const shuffled = this.shuffle(filtered);
-        return shuffled.slice(0, count);
+    // Get N random elements from array excluding target and avoiding duplicate meanings
+    getRandomDistractors(array, target, count) {
+        const targetId = typeof target === 'object' && target ? target.id : target;
+        const targetWord = typeof target === 'object' && target ? target : (array || []).find(w => w.id === targetId);
+
+        const targetEn = targetWord && targetWord.en ? targetWord.en.trim().toLowerCase() : '';
+        const targetSr = targetWord && targetWord.sr_lat ? targetWord.sr_lat.trim().toLowerCase() : '';
+
+        const seenEn = new Set(targetEn ? [targetEn] : []);
+        const seenSr = new Set(targetSr ? [targetSr] : []);
+        const distractors = [];
+
+        // 1. Pass 1: Gather distinct distractors from the current category array
+        const shuffled = this.shuffle(array || []);
+        for (const w of shuffled) {
+            if (!w || w.id === targetId) continue;
+            const wEn = (w.en || '').trim().toLowerCase();
+            const wSr = (w.sr_lat || '').trim().toLowerCase();
+            if (!wEn || !wSr) continue;
+            if (seenEn.has(wEn) || seenSr.has(wSr)) continue;
+
+            seenEn.add(wEn);
+            seenSr.add(wSr);
+            distractors.push(w);
+            if (distractors.length >= count) break;
+        }
+
+        // 2. Pass 2 (Fallback): If category array has fewer unique words, borrow unique distractors from global dictionary
+        if (distractors.length < count) {
+            const globalPool = (typeof window !== 'undefined' && window.SEED_DATA && Array.isArray(window.SEED_DATA))
+                ? window.SEED_DATA
+                : (typeof DICTIONARY !== 'undefined' && Array.isArray(DICTIONARY) ? DICTIONARY : []);
+
+            if (globalPool.length > 0) {
+                const globalShuffled = this.shuffle(globalPool);
+                for (const w of globalShuffled) {
+                    if (!w || w.id === targetId) continue;
+                    const wEn = (w.en || '').trim().toLowerCase();
+                    const wSr = (w.sr_lat || '').trim().toLowerCase();
+                    if (!wEn || !wSr) continue;
+                    if (seenEn.has(wEn) || seenSr.has(wSr)) continue;
+
+                    seenEn.add(wEn);
+                    seenSr.add(wSr);
+                    distractors.push(w);
+                    if (distractors.length >= count) break;
+                }
+            }
+        }
+
+        return distractors;
     },
 
     // Generates a single Multiple Choice question object that matches the legacy CURRICULUM format
     generateMultipleChoice(word, allWordsInCategory) {
-        const distractors = this.getRandomDistractors(allWordsInCategory, word.id, 2);
+        const distractors = this.getRandomDistractors(allWordsInCategory, word, 2);
+        if (!distractors || distractors.length < 2) return null;
         
         // English to Serbian direction (Default)
         const q_enToSr = `Translate: "${word.en}"`;
@@ -103,11 +150,26 @@ const QuestionEngine = {
 
     // Generates a Picture Choice question (Emoji Choice)
     generatePictureChoice(word, allWords) {
-        // Needs 3 distractors with emojis
-        let pool = allWords.filter(w => w.id !== word.id && w.emoji);
-        let distractors = this.shuffle(pool).slice(0, 3);
+        // Needs 3 distractors with emojis, strictly deduplicated by text
+        const targetEn = (word.en || '').trim().toLowerCase();
+        const targetSr = (word.sr_lat || '').trim().toLowerCase();
+        const seenEn = new Set([targetEn]);
+        const seenSr = new Set([targetSr]);
+        const distractors = [];
+
+        const pool = (allWords || []).filter(w => w.id !== word.id && w.emoji);
+        const shuffled = this.shuffle(pool);
+        for (const w of shuffled) {
+            const wEn = (w.en || '').trim().toLowerCase();
+            const wSr = (w.sr_lat || '').trim().toLowerCase();
+            if (!wEn || !wSr || seenEn.has(wEn) || seenSr.has(wSr)) continue;
+            seenEn.add(wEn);
+            seenSr.add(wSr);
+            distractors.push(w);
+            if (distractors.length >= 3) break;
+        }
         
-        // If we don't have enough distractors with emojis, just fallback to standard multiple choice structure
+        // If we don't have enough distinct distractors with emojis, fallback to standard multiple choice structure
         if (distractors.length < 3) {
             return this.generateMultipleChoice(word, allWords);
         }
@@ -128,8 +190,11 @@ const QuestionEngine = {
 
     // Generates a Listening question (Audio -> Translate/Select)
     generateListening(word, allWords) {
-        let pool = allWords.filter(w => w.id !== word.id);
-        let distractors = this.shuffle(pool).slice(0, 3);
+        // Must have 3 strictly deduplicated distractors so options have NO duplicates
+        const distractors = this.getRandomDistractors(allWords, word, 3);
+        if (!distractors || distractors.length < 3) {
+            return this.generateMultipleChoice(word, allWords);
+        }
         
         // For listening:
         // When learning Serbian (en_to_sr): Audio is Serbian (word.sr_lat), options are English meanings (word.en)
@@ -316,12 +381,26 @@ const QuestionEngine = {
     },
 
     // Generates a Matching Pairs question object
-    // Takes an array of up to 4 words
+    // Takes an array of words and selects up to 4 strictly unique pairs (no duplicate text)
     generateMatchingPairs(words) {
         if (!words || words.length < 2) return null;
         
-        // Take up to 4 words
-        const pairWords = words.slice(0, 4);
+        const seenEn = new Set();
+        const seenSr = new Set();
+        const pairWords = [];
+
+        const shuffled = this.shuffle(words);
+        for (const w of shuffled) {
+            const wEn = (w.en || '').trim().toLowerCase();
+            const wSr = (w.sr_lat || '').trim().toLowerCase();
+            if (!wEn || !wSr || seenEn.has(wEn) || seenSr.has(wSr)) continue;
+            seenEn.add(wEn);
+            seenSr.add(wSr);
+            pairWords.push(w);
+            if (pairWords.length >= 4) break;
+        }
+
+        if (pairWords.length < 2) return null;
         
         const leftCol = this.shuffle(pairWords.map(w => ({ id: w.id, text: w.en, type: 'en', sr_lat: w.sr_lat })));
         const rightCol = this.shuffle(pairWords.map(w => ({ id: w.id, text: w.sr_lat, type: 'sr', en: w.en })));
@@ -371,9 +450,17 @@ const QuestionEngine = {
         const pool = dialogues[category] || dialogues['basics'];
         const scene = pool[Math.floor(Math.random() * pool.length)];
 
-        // Build wrong replies from other categories
+        // Build wrong replies from other categories with distinct replies
         const allDialogues = Object.values(dialogues).flat();
-        const wrongReplies = this.shuffle(allDialogues.filter(d => d.reply !== scene.reply)).slice(0, 2);
+        const seenReplies = new Set([scene.reply.toLowerCase()]);
+        const wrongReplies = [];
+        for (const d of this.shuffle(allDialogues)) {
+            const rL = (d.reply || '').toLowerCase();
+            if (seenReplies.has(rL)) continue;
+            seenReplies.add(rL);
+            wrongReplies.push(d);
+            if (wrongReplies.length >= 2) break;
+        }
 
         // EN->SR: NPC speaks English, user picks Serbian reply
         const options_enToSr = this.shuffle([scene.reply, ...wrongReplies.map(w => w.reply)]);

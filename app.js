@@ -1393,6 +1393,7 @@ const app = {
                 <div class="text-lg font-bold text-slate-500 mb-8">${app.formatQuestionText(blankText)}</div>
                 <div class="w-full max-w-xs">
                     <input type="text" id="fill-blank-input" placeholder="Type the missing word..." 
+                           autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
                            class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-center font-bold text-lg focus:outline-none focus:border-blue-500 transition-colors"
                            oninput="state.userSelection = this.value.trim(); if(this.value.trim().length > 0) app.enableCheckBtn(); else document.getElementById('check-btn').disabled = true;" />
                 </div>
@@ -2213,22 +2214,48 @@ const app = {
                 }
 
                 // Check if device OS has an authentic native Serbian voice installed (e.g. Android with Google Serbian TTS)
-                const voices = (window.speechSynthesis && typeof window.speechSynthesis.getVoices === 'function')
-                    ? window.speechSynthesis.getVoices()
-                    : [];
-                const nativeSrVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('sr'));
+                const voices = (window._cachedVoices && window._cachedVoices.length)
+                    ? window._cachedVoices
+                    : ((window.speechSynthesis && typeof window.speechSynthesis.getVoices === 'function')
+                        ? window.speechSynthesis.getVoices()
+                        : []);
+                const nativeSrVoice = voices.find(v => v.lang && (v.lang.toLowerCase().startsWith('sr') || v.lang.toLowerCase().startsWith('hr')));
 
-                // If setting is 'none' AND device has a genuine Serbian voice installed, use device voice offline
+                const speakNativeDevice = () => {
+                    try {
+                        if (!window.speechSynthesis) {
+                            resetVisual();
+                            return;
+                        }
+                        window.speechSynthesis.cancel();
+                        const u = new SpeechSynthesisUtterance(cleanSrText);
+                        u.lang = 'sr-RS';
+                        u.volume = ttsVol;
+                        u.rate = 0.85;
+
+                        const allVoices = (window._cachedVoices && window._cachedVoices.length)
+                            ? window._cachedVoices
+                            : (window.speechSynthesis.getVoices() || []);
+                        
+                        const bestVoice = allVoices.find(v => v.lang && (v.lang.toLowerCase().startsWith('sr') || v.lang.toLowerCase().startsWith('hr') || v.lang.toLowerCase().startsWith('bs')))
+                            || allVoices.find(v => v.name && (v.name.toLowerCase().includes('serbian') || v.name.toLowerCase().includes('croatian')));
+                        
+                        if (bestVoice) {
+                            u.voice = bestVoice;
+                        }
+                        u.onend = resetVisual;
+                        u.onerror = resetVisual;
+                        window.speechSynthesisUtteranceStorage = u;
+                        window.speechSynthesis.speak(u);
+                    } catch (errNative) {
+                        resetVisual();
+                        console.warn("Native speech synthesis fallback note:", errNative);
+                    }
+                };
+
+                // If setting is 'none' AND device has a genuine Serbian/Croatian voice installed, use device voice offline
                 if (provider === 'none' && nativeSrVoice) {
-                    const u = new SpeechSynthesisUtterance(cleanSrText);
-                    u.lang = 'sr-RS';
-                    u.voice = nativeSrVoice;
-                    u.volume = ttsVol;
-                    u.rate = 0.85;
-                    u.onend = resetVisual;
-                    u.onerror = resetVisual;
-                    window.speechSynthesisUtteranceStorage = u;
-                    window.speechSynthesis.speak(u);
+                    speakNativeDevice();
                     return;
                 }
 
@@ -2266,23 +2293,20 @@ const app = {
                             if (state.currentAudio === retryAudio) state.currentAudio = null;
                         };
                         retryAudio.onerror = (e) => {
-                            resetVisual();
-                            console.warn("Secondary Google TTS error:", e);
-                            if (window.app && window.app.showToast) {
-                                app.showToast('⚠️ Greška pri reprodukciji zvuka. Proverite internet.', 'error');
-                            }
+                            console.warn("Google TTS web stream blocked, auto-cascading to native device speech:", e);
+                            speakNativeDevice();
                         };
                         retryAudio.src = secondaryUrl;
                         state.currentAudio = retryAudio;
                         const p2 = retryAudio.play();
                         if (p2 && p2.catch) {
                             p2.catch(err2 => {
-                                console.warn("Secondary Google TTS play rejected:", err2);
-                                resetVisual();
+                                console.warn("Google TTS play rejected, cascading to native device speech:", err2);
+                                speakNativeDevice();
                             });
                         }
                     } catch (e2) {
-                        resetVisual();
+                        speakNativeDevice();
                     }
                 };
 
@@ -3399,14 +3423,30 @@ const app = {
     },
 
     _phoneticNormalize: (str) => {
-        if (!str) return "";
-        let s = str.toLowerCase();
+        if (!str || typeof str !== 'string') return "";
+        let s = str.toLowerCase().trim();
+
+        // 1. Cyrillic to Latin transliteration for universal cross-script parity
+        const cyrToLat = {
+            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'ђ': 'dj', 'е': 'e',
+            'ж': 'z', 'з': 'z', 'и': 'i', 'ј': 'j', 'к': 'k', 'л': 'l', 'љ': 'lj',
+            'м': 'm', 'н': 'n', 'њ': 'nj', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's',
+            'т': 't', 'ћ': 'c', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'c',
+            'џ': 'dz', 'ш': 's'
+        };
+        s = s.split('').map(ch => cyrToLat[ch] || ch).join('');
+
+        // 2. Phonetic sound substitutions
         s = s.replace(/y/g, 'j');
         s = s.replace(/w/g, 'v');
         s = s.replace(/x/g, 'ks');
         s = s.replace(/q/g, 'k');
-        s = s.replace(/sh/g, 's').replace(/ch/g, 'c').replace(/zh/g, 'z').replace(/dj/g, 'dj');
-        s = s.replace(/č/g, 'c').replace(/ć/g, 'c').replace(/š/g, 's').replace(/ž/g, 'z').replace(/đ/g, 'dj');
+
+        // 3. Multi-letter digraphs & bald Latin
+        s = s.replace(/sh/g, 's').replace(/ch/g, 'c').replace(/zh/g, 'z').replace(/dž/g, 'dz');
+        s = s.replace(/č/g, 'c').replace(/ć/g, 'c').replace(/š/g, 's').replace(/ž/g, 'z');
+        s = s.replace(/đ/g, 'dj');
+
         return s.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
     },
 
@@ -4775,6 +4815,22 @@ CRITICAL CONSTRAINTS:
     // ======== END PWA CONTROLLER ========
 
 };
+
+// Pre-populate and bind speech synthesis voices for instant offline mobile TTS
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    const _initVoices = () => {
+        try {
+            window._cachedVoices = window.speechSynthesis.getVoices();
+        } catch (e) {}
+    };
+    _initVoices();
+    if (typeof window.speechSynthesis.addEventListener === 'function') {
+        window.speechSynthesis.addEventListener('voiceschanged', _initVoices);
+    } else {
+        window.speechSynthesis.onvoiceschanged = _initVoices;
+    }
+}
+
 window.app = app;
 window.appState = state;
 window.onload = app.init;
