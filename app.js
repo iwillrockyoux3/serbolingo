@@ -1936,10 +1936,13 @@ const app = {
                 <div class="text-center w-full max-w-sm">
                     ${workoutBadge}
                     <p class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">${isSrToEn ? 'Šta čuješ?' : 'What do you hear?'}</p>
-                    <button id="listening-speaker-btn" onclick="app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}')" 
-                        class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-90 hover:bg-blue-200 dark:hover:bg-blue-800 mb-4 cursor-pointer select-none">
+                    <button id="listening-speaker-btn" onclick="app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}'); if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');" 
+                        class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-90 hover:scale-105 hover:bg-blue-200 dark:hover:bg-blue-800 mb-2 cursor-pointer select-none">
                         🔊
                     </button>
+                    <p id="listening-tap-hint" class="text-xs font-bold text-slate-400 dark:text-slate-500 mb-4 transition-all">
+                        ${isSrToEn ? '👆 Dodirni zvučnik da čuješ' : '👆 Tap speaker to listen'}
+                    </p>
 
                     <div class="flex items-center justify-center gap-2 mb-4">
                         <button type="button" onclick="app.revealListeningText()" class="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline flex items-center justify-center gap-1 cursor-pointer">
@@ -2184,7 +2187,7 @@ const app = {
         const l = ACTIVE_LESSON[state.currentLessonIndex];
         if (!l) return;
         const isSr = state.settings.learningDirection === 'sr_to_en';
-        const audioWord = (isSr && l.q_audio_rev) ? l.q_audio_rev : l.q_audio;
+        const audioWord = (isSr && l.q_audio_rev) ? l.q_audio_rev : (l.q_audio || l.correct || '');
         const box = document.getElementById('listening-revealed-text');
         if (box) {
             box.innerHTML = `<span>💡 ${isSr ? 'Reč koju čujete:' : 'Word you hear:'} <b class="underline">"${audioWord}"</b></span>`;
@@ -2521,13 +2524,41 @@ const app = {
                 state.currentAudio = null;
             }
 
+            const isSrToEn = (state && state.settings && state.settings.learningDirection === 'sr_to_en');
             const speakerBtn = document.getElementById('listening-speaker-btn');
+            const tapHint = document.getElementById('listening-tap-hint');
+
             if (speakerBtn) {
+                speakerBtn.classList.remove('ring-amber-400');
                 speakerBtn.classList.add('ring-4', 'ring-blue-400', 'animate-pulse');
             }
+            if (tapHint) {
+                tapHint.innerHTML = '<span>🔊</span> ' + (isSrToEn ? 'Reprodukovanje...' : 'Playing...');
+                tapHint.className = 'text-xs font-bold text-blue-500 dark:text-blue-400 mb-4 transition-all';
+            }
+
             const resetVisual = () => {
                 if (speakerBtn) {
-                    speakerBtn.classList.remove('ring-4', 'ring-blue-400', 'animate-pulse');
+                    speakerBtn.classList.remove('ring-4', 'ring-blue-400', 'animate-pulse', 'ring-amber-400');
+                }
+                if (tapHint) {
+                    tapHint.innerHTML = '<span>🔄</span> ' + (isSrToEn ? 'Dodirni za ponovno slušanje' : 'Tap to replay');
+                    tapHint.className = 'text-xs font-bold text-slate-400 dark:text-slate-500 mb-4 transition-all';
+                }
+            };
+
+            const handleAutoplayBlocked = (err) => {
+                console.info('[Audio] Autoplay blocked by browser policy; user gesture fallback active:', err);
+                if (speakerBtn) {
+                    speakerBtn.classList.remove('ring-blue-400');
+                    speakerBtn.classList.add('ring-4', 'ring-amber-400', 'animate-pulse');
+                    setTimeout(() => {
+                        if (speakerBtn) speakerBtn.classList.remove('ring-4', 'ring-amber-400', 'animate-pulse');
+                    }, 3500);
+                }
+                if (tapHint) {
+                    tapHint.innerHTML = '<span>👆</span> ' + (isSrToEn ? 'Dodirni zvučnik da čuješ' : 'Tap speaker to listen');
+                    tapHint.className = 'text-xs font-bold text-amber-600 dark:text-amber-400 mb-4 transition-all';
                 }
             };
 
@@ -2577,7 +2608,13 @@ const app = {
                             u.voice = bestVoice;
                         }
                         u.onend = resetVisual;
-                        u.onerror = resetVisual;
+                        u.onerror = (e) => {
+                            if (e && (e.error === 'not-allowed' || e.name === 'NotAllowedError')) {
+                                handleAutoplayBlocked(e);
+                            } else {
+                                resetVisual();
+                            }
+                        };
                         window.speechSynthesisUtteranceStorage = u;
                         window.speechSynthesis.speak(u);
                     } catch (errNative) {
@@ -2613,6 +2650,10 @@ const app = {
                         const p = audio.play();
                         if (p && p.catch) {
                             p.catch(e => {
+                                if (e && e.name === 'NotAllowedError') {
+                                    handleAutoplayBlocked(e);
+                                    return;
+                                }
                                 console.warn("Direct Google TTS play rejected, falling back to device voice:", e);
                                 speakNativeDevice();
                             });
@@ -2649,7 +2690,13 @@ const app = {
                             state.currentAudio = blobAudio;
                             const playPromise = blobAudio.play();
                             if (playPromise && playPromise.catch) {
-                                playPromise.catch(() => tryDirectGoogleTts());
+                                playPromise.catch((err) => {
+                                    if (err && err.name === 'NotAllowedError') {
+                                        handleAutoplayBlocked(err);
+                                        return;
+                                    }
+                                    tryDirectGoogleTts();
+                                });
                             }
                         } else {
                             tryDirectGoogleTts();
@@ -2677,7 +2724,16 @@ const app = {
                     cloudAudio.volume = ttsVol;
                     cloudAudio.onended = () => { resetVisual(); URL.revokeObjectURL(audioUrl); };
                     cloudAudio.onerror = () => { resetVisual(); URL.revokeObjectURL(audioUrl); };
-                    cloudAudio.play().catch(() => resetVisual());
+                    const playPromise = cloudAudio.play();
+                    if (playPromise && playPromise.catch) {
+                        playPromise.catch(err => {
+                            if (err && err.name === 'NotAllowedError') {
+                                handleAutoplayBlocked(err);
+                            } else {
+                                resetVisual();
+                            }
+                        });
+                    }
                     state.currentAudio = cloudAudio;
                 }).catch(() => resetVisual());
                 return;
@@ -2693,7 +2749,13 @@ const app = {
             if (enVoice) u.voice = enVoice;
             u.volume = ttsVol;
             u.onend = resetVisual;
-            u.onerror = resetVisual;
+            u.onerror = (e) => {
+                if (e && (e.error === 'not-allowed' || e.name === 'NotAllowedError')) {
+                    handleAutoplayBlocked(e);
+                } else {
+                    resetVisual();
+                }
+            };
             window.speechSynthesisUtteranceStorage = u;
             window.speechSynthesis.speak(u);
 

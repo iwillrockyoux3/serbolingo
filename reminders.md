@@ -737,6 +737,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Service Worker Bump to v17**: Updated `sw.js` cache to `serbolingo-app-v17` and all 34 script tags in `index.html` to `v17`.
   - **PWA Instant Auto-Update & Lingva Bypass (v18)**: Configured `sw.js` with immediate `self.skipWaiting()` on install and message event, explicit `clients.claim()` on activate, and bypassed Service Worker caching for `lingva` audio requests. Configured `app.js` with `reg.update()`, `waiting.postMessage('SKIP_WAITING')`, and `controllerchange` auto-refresh so normal mobile browser tabs instantly switch to newest code without requiring Incognito mode or manual cache resets.
   - **Service Worker Bump to v18**: Updated `sw.js` cache to `serbolingo-app-v18` and all 34 script tags in `index.html` to `v18`.
+  - **Option 2 Dual-Action Audio Architecture (v19)**: Implemented resilient automatic audio playback on listening questions backed by a graceful `NotAllowedError` catch and animated tactile 🔊 speaker button with dynamic state hints (`👆 Dodirni zvučnik da čuješ` / `🔊 Reprodukovanje...` / `🔄 Dodirni za ponovno slušanje`), ensuring flawless playback regardless of strict browser autoplay policies or mobile platform restrictions.
+  - **Service Worker Bump to v19**: Updated `sw.js` cache to `serbolingo-app-v19` and all 34 script tags in `index.html` to `v19`.
 
 
 
