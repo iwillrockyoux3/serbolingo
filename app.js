@@ -5070,6 +5070,28 @@ CRITICAL CONSTRAINTS:
         app.updatePwaInstallUi();
     },
 
+    purgeCodeCacheAndReload: async () => {
+        try {
+            if (window.app && window.app.showToast) {
+                app.showToast('Učitavanje najnovije verzije koda...', 'info');
+            }
+            if ('caches' in window) {
+                const keys = await caches.keys();
+                await Promise.all(keys.map(k => caches.delete(k)));
+            }
+            if ('serviceWorker' in navigator) {
+                const regs = await navigator.serviceWorker.getRegistrations();
+                for (const r of regs) {
+                    await r.unregister();
+                }
+            }
+            localStorage.setItem('serbolingo_app_version', '20');
+            window.location.reload(true);
+        } catch (e) {
+            window.location.reload(true);
+        }
+    },
+
     isNativeApp: () => {
         return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
     },
