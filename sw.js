@@ -1,7 +1,7 @@
 // [SHIELD_DAEMON: VALIDATED]
-// SerboLingo Service Worker (v21) — Offline-First PWA Engine
+// SerboLingo Service Worker (v22) — Offline-First PWA Engine
 
-const CACHE_NAME = 'serbolingo-app-v21';
+const CACHE_NAME = 'serbolingo-app-v22';
 
 // Core static assets required for 100% offline app operation
 const PRECACHE_ASSETS = [
@@ -14,40 +14,40 @@ const PRECACHE_ASSETS = [
     './icon-512.png',
     './icon-192-maskable.png',
     './icon-512-maskable.png',
-    './seed-data.js?v=21',
-    './db.js?v=21',
-    './alphabet-data.js?v=21',
-    './explore-hub.js?v=21',
-    './karaoke.js?v=21',
-    './question-engine.js?v=21',
-    './skill-tree.js?v=21',
-    './roleplay.js?v=21',
-    './stories.js?v=21',
-    './cloze.js?v=21',
-    './slang.js?v=21',
-    './pitch-accent.js?v=21',
-    './rhythm.js?v=21',
-    './ghost-arena.js?v=21',
-    './arcade.js?v=21',
-    './trophy-cabinet.js?v=21',
-    './monty-winner.js?v=21',
-    './visual-lens.js?v=21',
-    './commute.js?v=21',
-    './shop-engine.js?v=21',
-    './placement-test.js?v=21',
-    './league-system.js?v=21',
-    './srs-engine.js?v=21',
-    './touch-haptics.js?v=21',
-    './grammar-tooltips.js?v=21',
-    './grammar-sandbox.js?v=21',
-    './immersion-clips.js?v=21',
-    './streak-retention.js?v=21',
-    './serbo-reels.js?v=21',
-    './smart-story.js?v=21',
-    './language-exchange.js?v=21',
-    './community-forum.js?v=21',
-    './bug-report.js?v=21',
-    './app.js?v=21'
+    './seed-data.js?v=22',
+    './db.js?v=22',
+    './alphabet-data.js?v=22',
+    './explore-hub.js?v=22',
+    './karaoke.js?v=22',
+    './question-engine.js?v=22',
+    './skill-tree.js?v=22',
+    './roleplay.js?v=22',
+    './stories.js?v=22',
+    './cloze.js?v=22',
+    './slang.js?v=22',
+    './pitch-accent.js?v=22',
+    './rhythm.js?v=22',
+    './ghost-arena.js?v=22',
+    './arcade.js?v=22',
+    './trophy-cabinet.js?v=22',
+    './monty-winner.js?v=22',
+    './visual-lens.js?v=22',
+    './commute.js?v=22',
+    './shop-engine.js?v=22',
+    './placement-test.js?v=22',
+    './league-system.js?v=22',
+    './srs-engine.js?v=22',
+    './touch-haptics.js?v=22',
+    './grammar-tooltips.js?v=22',
+    './grammar-sandbox.js?v=22',
+    './immersion-clips.js?v=22',
+    './streak-retention.js?v=22',
+    './serbo-reels.js?v=22',
+    './smart-story.js?v=22',
+    './language-exchange.js?v=22',
+    './community-forum.js?v=22',
+    './bug-report.js?v=22',
+    './app.js?v=22'
 ];
 
 // 1. INSTALL EVENT — Pre-cache local app shell with instant skipWaiting
@@ -55,7 +55,7 @@ self.addEventListener('install', (event) => {
     self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('[SW] Pre-caching SerboLingo App Shell (v21)...');
+            console.log('[SW] Pre-caching SerboLingo App Shell (v22)...');
             // Atomic caching with resilient error catch per asset
             return Promise.allSettled(
                 PRECACHE_ASSETS.map((url) =>

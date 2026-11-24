@@ -18,24 +18,43 @@
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="alternate icon" href="icon-192.png">
     <script>
-        // Version-Gated Code Cache Purge (Safe: Never touches user progress, XP, or streaks)
+        // Version-Gated Code Cache Purge & Auto-Updater (Safe: Never touches user progress, XP, or streaks)
         (function() {
-            const CURRENT_APP_VERSION = '21';
+            const CURRENT_APP_VERSION = '22';
             try {
                 const storedVersion = localStorage.getItem('serbolingo_app_version');
                 if (storedVersion && storedVersion !== CURRENT_APP_VERSION) {
                     console.log('[Cache Purge] Version upgrade detected: v' + storedVersion + ' -> v' + CURRENT_APP_VERSION + '. Purging stale code caches...');
+                    localStorage.setItem('serbolingo_app_version', CURRENT_APP_VERSION);
+
+                    const cleanupPromises = [];
                     if ('caches' in window) {
-                        caches.keys().then(function(keys) {
+                        cleanupPromises.push(caches.keys().then(function(keys) {
                             return Promise.all(keys.map(function(key) {
                                 if (key !== 'serbolingo-app-v' + CURRENT_APP_VERSION) {
                                     return caches.delete(key);
                                 }
                             }));
-                        }).catch(function(e) { console.warn('Cache purge note:', e); });
+                        }));
                     }
+                    if ('serviceWorker' in navigator) {
+                        cleanupPromises.push(navigator.serviceWorker.getRegistrations().then(function(regs) {
+                            return Promise.all(regs.map(function(r) { return r.unregister(); }));
+                        }));
+                    }
+
+                    Promise.allSettled(cleanupPromises).then(function() {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        if (urlParams.get('_v') !== CURRENT_APP_VERSION) {
+                            urlParams.set('_v', CURRENT_APP_VERSION);
+                            window.location.replace(window.location.pathname + '?' + urlParams.toString());
+                        }
+                    });
+                    return;
                 }
-                localStorage.setItem('serbolingo_app_version', CURRENT_APP_VERSION);
+                if (!storedVersion) {
+                    localStorage.setItem('serbolingo_app_version', CURRENT_APP_VERSION);
+                }
             } catch(e) {
                 console.warn('Version gate note:', e);
             }
@@ -1438,12 +1457,12 @@
                     </div>
                     <div>
                         <h4 class="text-xs font-black text-slate-800 dark:text-white">Ažuriranje & Čišćenje Keša Koda</h4>
-                        <p class="text-[10px] text-slate-400 dark:text-slate-500 leading-tight">Osvežava aplikaciju na najnoviju verziju koda (v21). Tvoj napredak i XP ostaju 100% sačuvani.</p>
+                        <p class="text-[10px] text-slate-400 dark:text-slate-500 leading-tight">Osvežava aplikaciju na najnoviju verziju koda (v22). Tvoj napredak i XP ostaju 100% sačuvani.</p>
                     </div>
                 </div>
                 <button onclick="app.purgeCodeCacheAndReload()"
                     class="w-full py-2.5 px-3 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-xl font-bold text-xs border border-blue-200 dark:border-blue-800 flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer">
-                    <span>⚡</span> <span>Očisti Keš Koda & Učitaj Najnoviju Verziju (v21)</span>
+                    <span>⚡</span> <span>Očisti Keš Koda & Učitaj Najnoviju Verziju (v22)</span>
                 </button>
             </div>
 
@@ -2795,40 +2814,40 @@
             </div>
         </div>
     </div>
-    <script src="seed-data.js?v=21" charset="UTF-8"></script>
-    <script src="db.js?v=21" charset="UTF-8"></script>
-    <script src="alphabet-data.js?v=21" charset="UTF-8"></script>
-    <script src="explore-hub.js?v=21" charset="UTF-8"></script>
-    <script src="karaoke.js?v=21" charset="UTF-8"></script>
-    <script src="question-engine.js?v=21" charset="UTF-8"></script>
-    <script src="skill-tree.js?v=21" charset="UTF-8"></script>
-    <script src="roleplay.js?v=21" charset="UTF-8"></script>
-    <script src="stories.js?v=21" charset="UTF-8"></script>
-    <script src="cloze.js?v=21" charset="UTF-8"></script>
-    <script src="slang.js?v=21" charset="UTF-8"></script>
-    <script src="pitch-accent.js?v=21" charset="UTF-8"></script>
-    <script src="rhythm.js?v=21" charset="UTF-8"></script>
-    <script src="ghost-arena.js?v=21" charset="UTF-8"></script>
-    <script src="arcade.js?v=21" charset="UTF-8"></script>
-    <script src="trophy-cabinet.js?v=21" charset="UTF-8"></script>
-    <script src="monty-winner.js?v=21" charset="UTF-8"></script>
-    <script src="visual-lens.js?v=21" charset="UTF-8"></script>
-    <script src="commute.js?v=21" charset="UTF-8"></script>
-    <script src="shop-engine.js?v=21" charset="UTF-8"></script>
-    <script src="placement-test.js?v=21" charset="UTF-8"></script>
-    <script src="league-system.js?v=21" charset="UTF-8"></script>
-    <script src="srs-engine.js?v=21" charset="UTF-8"></script>
-    <script src="touch-haptics.js?v=21" charset="UTF-8"></script>
-    <script src="grammar-tooltips.js?v=21" charset="UTF-8"></script>
-    <script src="grammar-sandbox.js?v=21" charset="UTF-8"></script>
-    <script src="immersion-clips.js?v=21" charset="UTF-8"></script>
-    <script src="streak-retention.js?v=21" charset="UTF-8"></script>
-    <script src="serbo-reels.js?v=21" charset="UTF-8"></script>
-    <script src="smart-story.js?v=21" charset="UTF-8"></script>
-    <script src="language-exchange.js?v=21" charset="UTF-8"></script>
-    <script src="community-forum.js?v=21" charset="UTF-8"></script>
-    <script src="bug-report.js?v=21" charset="UTF-8"></script>
-    <script src="app.js?v=21" charset="UTF-8"></script>
+    <script src="seed-data.js?v=22" charset="UTF-8"></script>
+    <script src="db.js?v=22" charset="UTF-8"></script>
+    <script src="alphabet-data.js?v=22" charset="UTF-8"></script>
+    <script src="explore-hub.js?v=22" charset="UTF-8"></script>
+    <script src="karaoke.js?v=22" charset="UTF-8"></script>
+    <script src="question-engine.js?v=22" charset="UTF-8"></script>
+    <script src="skill-tree.js?v=22" charset="UTF-8"></script>
+    <script src="roleplay.js?v=22" charset="UTF-8"></script>
+    <script src="stories.js?v=22" charset="UTF-8"></script>
+    <script src="cloze.js?v=22" charset="UTF-8"></script>
+    <script src="slang.js?v=22" charset="UTF-8"></script>
+    <script src="pitch-accent.js?v=22" charset="UTF-8"></script>
+    <script src="rhythm.js?v=22" charset="UTF-8"></script>
+    <script src="ghost-arena.js?v=22" charset="UTF-8"></script>
+    <script src="arcade.js?v=22" charset="UTF-8"></script>
+    <script src="trophy-cabinet.js?v=22" charset="UTF-8"></script>
+    <script src="monty-winner.js?v=22" charset="UTF-8"></script>
+    <script src="visual-lens.js?v=22" charset="UTF-8"></script>
+    <script src="commute.js?v=22" charset="UTF-8"></script>
+    <script src="shop-engine.js?v=22" charset="UTF-8"></script>
+    <script src="placement-test.js?v=22" charset="UTF-8"></script>
+    <script src="league-system.js?v=22" charset="UTF-8"></script>
+    <script src="srs-engine.js?v=22" charset="UTF-8"></script>
+    <script src="touch-haptics.js?v=22" charset="UTF-8"></script>
+    <script src="grammar-tooltips.js?v=22" charset="UTF-8"></script>
+    <script src="grammar-sandbox.js?v=22" charset="UTF-8"></script>
+    <script src="immersion-clips.js?v=22" charset="UTF-8"></script>
+    <script src="streak-retention.js?v=22" charset="UTF-8"></script>
+    <script src="serbo-reels.js?v=22" charset="UTF-8"></script>
+    <script src="smart-story.js?v=22" charset="UTF-8"></script>
+    <script src="language-exchange.js?v=22" charset="UTF-8"></script>
+    <script src="community-forum.js?v=22" charset="UTF-8"></script>
+    <script src="bug-report.js?v=22" charset="UTF-8"></script>
+    <script src="app.js?v=22" charset="UTF-8"></script>
 </body>
 
 </html>

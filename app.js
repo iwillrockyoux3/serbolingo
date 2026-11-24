@@ -5176,10 +5176,15 @@ CRITICAL CONSTRAINTS:
                     await r.unregister();
                 }
             }
-            localStorage.setItem('serbolingo_app_version', '21');
-            window.location.reload(true);
+            if (window.sessionStorage) {
+                try { sessionStorage.clear(); } catch(e){}
+            }
+            localStorage.setItem('serbolingo_app_version', '22');
+            // Force bypass of Chrome mobile HTTP disk cache via timestamped redirect
+            const freshUrl = window.location.origin + window.location.pathname + '?_hard=' + Date.now();
+            window.location.replace(freshUrl);
         } catch (e) {
-            window.location.reload(true);
+            window.location.replace(window.location.origin + window.location.pathname + '?_hard=' + Date.now());
         }
     },
 
