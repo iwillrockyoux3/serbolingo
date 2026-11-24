@@ -166,6 +166,11 @@
 | P32.3 | Time-Based Variable Dopamine Badges ("Night Owl" & "Accuracy Bonus") | 🆕 New | ✅ DONE |
 | P40.2 | 1-Tap Messaging App Deck Sharing (WhatsApp/Viber) | 🆕 New | ✅ DONE |
 | P51.1 | Zero-Dollar Organic Marketing, ASO & Community Launch Playbook | 🆕 New | ⬜ FUTURE |
+| P52.1 | Tactical Diamond Hint Engine (Scaffolded Lifelines & Word Discovery) | 🆕 New | `question-engine.js`, `shop-engine.js`, `app.js` | ⬜ TODO |
+| P53.1 | 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (150+ Core Words) | 🆕 New | `seed-data.js`, `question-engine.js`, `app.js` | ⬜ TODO |
+| P54.1 | "Učionica" Virtual School Syllabus & Homeroom Academy (Standalone Mode) | 🆕 New | `index.html`, `app.js`, `classroom.js` | ⬜ TODO |
+| P55.1 | Spoken Voice-to-Voice AI Language Tutor (Native Walkie-Talkie Loop) | 🆕 New | `app.js`, `voice-tutor.js`, `index.html` | ⬜ TODO |
+| P56.1 | 3-Day Streak ➔ 30-Minute VIP "God Mode" All-Access Pass | 🆕 New | `app.js`, `index.html`, `streak-retention.js` | ⬜ TODO |
 
 ---
 
@@ -179,11 +184,11 @@
 | Entertainment & Media | 5/5 | 0 |
 | AI & Audio | 4/4 | 0 |
 | Gamification & Stats | 7/7 | 0 |
-| Content Expansion (P1-P5, P13-P14) | 1/8 | 7 |
-| New Features (P3-P7, P17) | 7/7 | 0 |
+| Content Expansion (P1-P5, P13-P14, P53) | 1/9 | 8 |
+| New Features (P3-P7, P17, P52, P54-P56) | 7/11 | 4 |
 | Deployment (P18-P20, P39, P40) | 5/8 | 3 |
 | Moonshots (P12.2, P21-P22, P24.2, P43.3, P48-P51) | 10/20 | 10 |
-| **TOTAL** | **49/75** | **26** |
+| **TOTAL** | **49/80** | **31** |
 
 ---
 

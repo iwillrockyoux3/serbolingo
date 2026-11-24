@@ -718,6 +718,105 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 ---
 
+## 💎 Priority 52: Tactical Diamond Hint Engine (Scaffolded Lifelines & Word Discovery)
+> **Status**: Planned (In-Lesson Assistance & Gem Sink)  
+> **Concept**: A non-punitive assistance mechanism allowing learners to spend consumable Diamonds/Gems (never XP) to overcome recall blocks ("tip-of-the-tongue" phenomenon) through first-letter hints or 50/50 option elimination.
+
+- [ ] **1. Consumable Gem Economy & Safe Pricing**:
+  - [ ] Deducts 5 💎 atomically from `state.diamonds` / `state.gems` upon hint activation.
+  - [ ] Keeps user XP, leaderboard rank, hearts, and streak 100% protected (zero penalty).
+  - [ ] Integrated debounce & confirmation safeguard to prevent accidental double-tap gem deductions.
+- [ ] **2. Scaffolded First-Letter Retrieval (Typing & Fill-in-the-Blank)**:
+  - [ ] For cloze, spelling, and translation typing inputs, reveals the first letter and underscores for remaining letters (e.g., `P _ _ _ _`).
+  - [ ] Full script parity: respects Serbian Latin diacritics (č, ć, ž, š, đ) and Cyrillic script.
+- [ ] **3. 50/50 Multiple-Choice Distractor Elimination**:
+  - [ ] For multiple choice, listening options, and picture choice questions, greys out / strikes through 2 incorrect options.
+  - [ ] Leaves 1 correct answer and 1 plausible distractor to preserve active learner evaluation.
+- [ ] **4. Tactile UI & Feedback**:
+  - [ ] `💡 Pomoć (-5 💎)` button positioned unobtrusively in the active question action footer.
+  - [ ] Subtle gold glow, micro-haptic pulse (`TouchHaptics.vibrate('tap')`), and remaining diamond balance badge.
+
+---
+
+## 🪜 Priority 53: 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (150+ Core Words)
+> **Status**: Planned (Curriculum Progression & Anti-Boredom Architecture)  
+> **Concept**: Overhaul the introductory learning loop to eliminate repetitive 10-word cycling by expanding the beginner lexicon to 150+ high-frequency words structured in an intra-lesson 3-stage progressive difficulty ladder (Recognition ➔ Assembly ➔ Production).
+
+- [ ] **1. Expanded 150+ Beginner Lexicon Pool**:
+  - [ ] Broadens the introductory tier beyond greetings to cover high-utility categories: Everyday Survival, Food & Drink, Basic Verbs, Family, Numbers, Questions, and Polite Connectors.
+  - [ ] Seeded into `seed-data.js` and indexed in `SerboLingoDB` with dual-script and audio parity.
+- [ ] **2. 3-Stage Intra-Lesson Ladder (Micro-Progression Curve)**:
+  - [ ] **Stage 1 (Recognition - Low Cognitive Load)**: Single words, native audio pronunciation, clear image/English meaning pairs (e.g., *Pas = Dog*).
+  - [ ] **Stage 2 (Assembly - Medium Cognitive Load)**: Combining learned words into 2-to-3 word blocks and short natural phrases (e.g., *Dobar dan*, *Moj pas*, *Želim vodu*).
+  - [ ] **Stage 3 (Production - Challenge & Active Recall)**: Cloze typing, listening recall without text, or unscrambling a full mini-sentence.
+- [ ] **3. Anti-Repetition Smart Pooling**:
+  - [ ] Dynamic shuffling algorithm ensuring students never get back-to-back duplicate questions in the same session.
+  - [ ] Seamless integration with the Fresh 10 pagination system.
+
+---
+
+## 🏫 Priority 54: "Učionica" Virtual School Syllabus & Homeroom Academy (Standalone Mode)
+> **Status**: Planned (Structured Academic Track alongside Skill Tree)  
+> **Concept**: A dedicated, standalone school classroom experience alongside the casual Skill Tree. Mimics a real academic semester with daily 15–20 minute structured periods (Warm-up, Whiteboard lecture, Guided practice, Pop quiz, Homework), weekly Friday exams, and A/B/C report cards.
+
+- [ ] **1. Dual-Track Mode Switcher (Skill Tree vs. Učionica)**:
+  - [ ] Top-level switcher on the home screen: 🌳 *Stablo Veština* (Casual, gamified) vs. 🏫 *Učionica* (Structured, academic).
+  - [ ] 100% synchronized state: XP, Diamonds, streaks, and learned vocabulary sync between both modes.
+- [ ] **2. Academic Syllabus Architecture (Semesters & Weeks)**:
+  - [ ] Structured into Semesters (e.g., *Semestar 1: Osnovna Škola*), 4-week thematic blocks, and 5 daily periods per week.
+  - [ ] Week 1: Sounds & Cyrillic/Latin Alphabet; Week 2: Numbers & Politeness; Week 3: Essential Nouns; Week 4: Sentences & Verb "To Be".
+- [ ] **3. The 5-Part Daily Period (15–20 Mins)**:
+  - [ ] **1. Roll Call & Warm-Up (2 min)**: Teacher greets student by name, recalls yesterday's core concept.
+  - [ ] **2. The Whiteboard / Lecture (4 min)**: Interactive blackboard with visual cards, grammar callouts, and audio explanations.
+  - [ ] **3. Guided Practice (5 min)**: Interactive step-by-step exercises with gentle teacher coaching.
+  - [ ] **4. Pop Quiz (5 min)**: Independent verification of the day's lesson without hints.
+  - [ ] **5. Homework & Dismissal (2 min)**: Quick 3-card review pack unlocked for later evening reinforcement.
+- [ ] **4. Friday Exams, Report Cards & Office Hours (Dopunska Nastava)**:
+  - [ ] **Friday Cumulative Exam**: Comprehensive test of the week's material.
+  - [ ] **Dnevnik & Svedočanstvo (Report Cards)**: Letter grades (**A, B, C / 5, 4, 3**) evaluating Pronunciation, Vocabulary, and Grammar.
+  - [ ] **Office Hours (Dopunska Nastava)**: Friendly 5-minute remedial lesson triggered automatically if a Friday exam is failed before unlocking Monday.
+
+---
+
+## 🎙️ Priority 55: Spoken Voice-to-Voice AI Language Tutor (Native Walkie-Talkie Loop)
+> **Status**: Planned (Zero-Anxiety Conversational AI)  
+> **Concept**: A real-time spoken audio conversation partner that speaks and listens natively, overcoming speech anxiety through low-pressure, interactive voice dialogue without typing.
+
+- [ ] **1. Hands-Free Walkie-Talkie Voice Loop**:
+  - [ ] No keyboard required. Continuous back-and-forth speech flow.
+  - [ ] AI speaks Serbian audio via Web Audio API TTS ➔ Screen displays pulsing audio waveform and unlocks listening mic ➔ User speaks ➔ Web Speech recognition transcribes utterance ➔ LLM generates conversational response in under 1 second.
+- [ ] **2. Live Floating Transcript & Real-Time Feedback Card**:
+  - [ ] Shows spoken Serbian transcript, English translation, and non-intrusive grammar coaching tips (e.g., *"💡 Mala ispravka: 'Želim kafu' instead of 'Želim kafa'"*).
+  - [ ] Pronunciation feedback with waveform or phonetic guidance.
+- [ ] **3. Scenario-Based Guided Conversations**:
+  - [ ] Contextual roleplay missions: *Naručivanje na kiosku (Belgrade Grill)*, *U kafiću (Coffee order)*, *Vožnja taksijem (Taxi navigation)*, *Upoznavanje prijatelja (Meeting friends)*.
+  - [ ] Optional clickable "Hint Ideas" for users who freeze and don't know what to say.
+- [ ] **4. Teacher Personas**:
+  - [ ] Choose your instructor: *Profesorka Ana* (warm, encouraging, patient) or *Profesor Milan* (structured, detail-oriented).
+
+---
+
+## ⚡ Priority 56: 3-Day Streak ➔ 30-Minute VIP "God Mode" All-Access Pass
+> **Status**: Planned (Retention Gamification & Freemium Conversion)  
+> **Concept**: A high-dopamine milestone reward granting 30 minutes of unrestricted VIP access upon achieving a 3-day continuous streak, allowing users to experience full premium features before hitting a paywall.
+
+- [ ] **1. Milestone Detection & Celebration Modal**:
+  - [ ] Automatically awarded when streak counter reaches exactly 3 days (and recurring at key streak milestones).
+  - [ ] Explosive confetti + celebration modal: *"🎉 Čestitamo! Otključao si 30 Minuta Neograničenog VIP Pristupa!"*.
+- [ ] **2. Unrestricted VIP Feature Unlocking**:
+  - [ ] Spoken Voice AI Tutor unlocked.
+  - [ ] Unlimited hearts (no timeout penalties).
+  - [ ] Full audio immersion lessons & premium Učionica classroom archives.
+  - [ ] All Arcade and Ghost Arena modes unlocked.
+- [ ] **3. Floating Header Countdown Timer**:
+  - [ ] Sleek gold glowing banner in top app header showing remaining time (e.g., `⏳ VIP: 28:45`).
+  - [ ] State saved in `localStorage` with timestamp so timer persists across page refreshes.
+- [ ] **4. Graceful Expiration & Soft-Sell Upgrade Hook**:
+  - [ ] When timer reaches 00:00, gently returns user to standard tier with zero data or progress loss.
+  - [ ] Displays a summary of achievements during the VIP session (*"During your VIP session you earned 120 XP and learned 18 words!"*) with an optional upgrade prompt.
+
+---
+
 ## 🛠️ Mobile Hardening & QA Audit Log
 - **2026-11-22**:
   - **Duplicate Options Elimination**: Implemented text-level distractor deduplication in `question-engine.js` across multiple choice, picture choice, listening, and matching pairs. Prevents duplicate options (e.g., double "please" or double "molim") caused by duplicate dictionary entries across categories.
