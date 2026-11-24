@@ -154,7 +154,7 @@
 | P22.2 | AR object tagging | 🆕 New | ⬜ FUTURE |
 | P22.3 | Home screen widgets & PWA Mobile App Shortcuts | 🆕 New | ✅ DONE |
 | P24.2 | Cross-Device Cloud Save Sync (Account link) | 🆕 New | ⬜ FUTURE |
-| P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika") | 🆕 New | ⬜ FUTURE |
+| P48.1 | The Global Polyglot Ecosystem — Multi-Language Engine ("Svet Jezika" & The 15 MB Audio Rule) | 🆕 New | ⬜ FUTURE |
 | P49.1 | AI Accent Coach & Waveform Pitch Matcher | 🆕 New | ✅ DONE |
 | P50.1 | Authentic Serbian Customs, Cultural Etiquette & Gastronomy | 🆕 New | ✅ DONE |
 | P12.2 | "Monty Winner" Complete Victory Studio & Multimedia Flex (5s Video, Photo Editor, Bilingual Safety Shield, 7-Day Frequency Cap & Social Share Grid) | 🆕 New | `monty-winner.js`, `app.js`, `league-system.js`, `trophy-cabinet.js`, `index.html` | ✅ DONE |

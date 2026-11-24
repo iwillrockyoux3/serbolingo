@@ -103,9 +103,9 @@
 | File | Lines | Description |
 |:-----|------:|:------------|
 | [`GEMINI.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/GEMINI.md) | 159 | Technical Constitution v3.0 — Shield Daemon Protocol, 11 governance sections |
-| [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md) | 713 | Master roadmap — 56 priorities, competitor benchmarks, CEFR goals |
+| [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md) | 724 | Master roadmap — 56 priorities, competitor benchmarks, CEFR goals |
 | [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md) | 121 | This file — categorized source index |
-| [`TASKLIST.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/TASKLIST.md) | 172 | Active work tracker |
+| [`TASKLIST.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/TASKLIST.md) | 173 | Active work tracker |
 | [`.antigravity/README.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/.antigravity/README.md) | — | Infrastructure directory readme |
 
 ---

@@ -631,17 +631,27 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 > [!NOTE] 🌐 **Multi-Language Scaling**: Forum category tags (`langPair`) auto-expand per language (e.g. Spanish Grammar, German Culture, Japanese Exchange) when new language packs are unlocked in Priority 48.
 ## 🌍 Priority 48: The Global Polyglot Ecosystem ("Svet Jezika")
-- [ ] **Master Concept ID Schema**: Transition the database to a universal concept-based architecture where each entry (e.g., Concept #0001 = "water") contains translations for English, Serbian, Spanish, German, French, Japanese, etc.
-- [ ] **Language Pack Scaling**:
-  - [ ] 3,000 words per pack for A1-B1 foundations.
+> **Core Mandate**: Scale SerboLingo into a multi-language empire while keeping the initial Google Play app download size **ultra-lightweight (<15 MB)** across all languages.
+
+- [ ] **1. Master Concept ID Schema & Universal Language Decoupling**:
+  - [ ] Transition the database to a universal concept-based architecture where each entry (e.g., Concept #0001 = "water") contains translations for English, Serbian, Spanish, German, French, Japanese, etc.
+  - [ ] Zero engine rewrites: Core algorithms (SuperMemo-2 SRS, Mistake Vault, Arcade, Reels, Stories, Trophy Cabinet, Leagues) inherit all language packs dynamically.
+- [ ] **2. Language Pack Scaling**:
+  - [ ] 3,000 words per pack for A1–B1 foundations.
   - [ ] 5,000 words per pack for B2 working fluency.
   - [ ] 15,000 words per pack for C2 native mastery.
-- [ ] **Target Languages**: Spanish (ES), German (DE), French (FR), Japanese (JP), and English for native Serbian speakers (RS to EN).
-- [ ] **Modular Voice Packs**: Downloadable offline audio packs per language (~150MB each) with fallback to native device TTS.
-- [ ] **Full Engine Inheritance**: Every language pack automatically inherits all existing systems — SuperMemo-2 SRS, Mistake Vault, Tinder Swipe Reviews, Arcade with 40 minigames, Grammar Sandbox, SerboReels, Smart Stories, Trophy Cabinet, Streak Society, Leagues, and Hardcore Immersion Mode.
-- [ ] **Dynamic Language Switcher**: Profile setting to swap active language pair without losing progress. All XP, streaks, and SRS data tracked independently per language.
+  - [ ] Initial Target Languages: Spanish (ES), German (DE), French (FR), Japanese (JP), and English for native Serbian speakers (RS to EN).
+- [ ] **3. The 15 MB Polyglot Audio & Dictionary Architecture (No Pre-bundled Bloat)**:
+  - [ ] **Pure Text Storage (~2–3 MB Total)**: All 15,000 words, grammar rules, cases, and example sentences per language are stored strictly as compressed JSON text in IndexedDB. Text takes up virtually zero space.
+  - [ ] **On-Demand Streaming (Duolingo Pattern)**: Never bundle hundreds of megabytes of pre-recorded MP3 files into the app download. Audio is fetched dynamically over HTTPS only when the user opens that specific lesson.
+  - [ ] **Smart In-Memory Rolling Cache (~5 MB Cap)**: The app keeps a rolling memory cache (`window._serbolingoAudioCache`) capped at 100 items for instant 0ms replays and offline practice during active sessions, automatically evicting old clips to prevent mobile RAM or storage bloat.
+  - [ ] **Zero-Byte Native Device TTS on Android & iOS (0 MB Footprint)**: Prioritize the phone's native built-in speech engine (Google Speech Services / iOS SpeechSynthesis). The app passes the text string to the OS hardware, which speaks it aloud natively with **zero audio bytes stored on the device**.
+- [ ] **4. Full Engine & Gamification Inheritance**:
+  - [ ] Every language pack automatically inherits all existing systems — SuperMemo-2 SRS, Mistake Vault, Tinder Swipe Reviews, Arcade with 40 minigames, Grammar Sandbox, SerboReels, Smart Stories, Trophy Cabinet, Streak Society, Leagues, and Hardcore Immersion Mode.
+- [ ] **5. Dynamic Language Switcher**:
+  - [ ] Profile setting to swap active language pair without losing progress. All XP, streaks, and SRS data tracked independently per language.
 
-> [!NOTE] Key Architectural Insight: The core engines (SM-2, IndexedDB chunking, Arcade, Reels, Stories, Sandbox, Trophy Cabinet) are already fully decoupled from language strings. Expansion requires only new concept datasets and audio packs — zero engine rewrites.
+> [!NOTE] 🎯 **The 15 MB Rule**: By streaming audio on demand, caching temporarily in rolling memory, and leveraging native OS speech synthesizers, the initial app download on the Play Store will always remain between 10–15 MB, regardless of whether SerboLingo has 1 language or 10 languages.
 
 ## ✅🎯 Priority 49: AI Accent Coach & Waveform Pitch Matcher (DONE)
 
