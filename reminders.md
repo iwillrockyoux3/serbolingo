@@ -741,6 +741,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Service Worker Bump to v19**: Updated `sw.js` cache to `serbolingo-app-v19` and all 34 script tags in `index.html` to `v19`.
   - **Version-Gated Code Cache Purge & Settings Refresh Button (v20)**: Implemented an automated pre-flight CacheStorage purge protocol in `index.html` that wipes only legacy code caches upon version bump while keeping 100% of user progress, streak, XP, and login state safe; added 1-click `app.purgeCodeCacheAndReload()` rescue button in Settings UI.
   - **Service Worker Bump to v20**: Updated `sw.js` cache to `serbolingo-app-v20` and all 34 script tags in `index.html` to `v20`.
+  - **Web Audio API AudioContext Decoder & In-Memory Rolling Cache (v21)**: Solved mobile browser user gesture expiry issues across asynchronous `fetch()` operations. When tapping the speaker button or first touching the screen, `AudioContext` is pre-unlocked synchronously. When the CORS audio byte stream arrives from `lingva.ml`, the raw MP3 array buffer is fed directly into `AudioContext.decodeAudioData()` and played through a `BufferSourceNode`, rendering audio playback immune to mobile browser gesture token expiration. Added a 100-item in-memory LRU audio cache (`window._serbolingoAudioCache`) that provides instant 0ms replays without network re-fetching.
+  - **Service Worker Bump to v21**: Updated `sw.js` cache to `serbolingo-app-v21` and all 34 script tags in `index.html` to `v21`.
 
 
 

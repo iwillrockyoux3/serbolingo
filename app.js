@@ -395,6 +395,15 @@ const app = {
 
         app.initPwa();
 
+        // Mobile Web Audio unlock on first human touch (iOS Safari & Android Chrome compliance)
+        const unlockOnFirstTouch = () => {
+            if (app.unlockAudioContext) app.unlockAudioContext();
+            document.removeEventListener('touchstart', unlockOnFirstTouch);
+            document.removeEventListener('click', unlockOnFirstTouch);
+        };
+        document.addEventListener('touchstart', unlockOnFirstTouch, { passive: true });
+        document.addEventListener('click', unlockOnFirstTouch, { passive: true });
+
         if (state.user) {
             app.showMainApp();
         }
@@ -1936,7 +1945,7 @@ const app = {
                 <div class="text-center w-full max-w-sm">
                     ${workoutBadge}
                     <p class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">${isSrToEn ? 'Šta čuješ?' : 'What do you hear?'}</p>
-                    <button id="listening-speaker-btn" onclick="app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}'); if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');" 
+                    <button id="listening-speaker-btn" onclick="if (app.unlockAudioContext) app.unlockAudioContext(); app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}'); if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');" 
                         class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-90 hover:scale-105 hover:bg-blue-200 dark:hover:bg-blue-800 mb-2 cursor-pointer select-none">
                         🔊
                     </button>
@@ -2490,13 +2499,12 @@ const app = {
     },
 
     unlockAudioContext: () => {
-        if (window._serbolingoAudioUnlocked) return;
         try {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (AudioCtx) {
                 if (!window._serbolingoAudioCtx) window._serbolingoAudioCtx = new AudioCtx();
                 if (window._serbolingoAudioCtx.state === 'suspended') {
-                    window._serbolingoAudioCtx.resume();
+                    window._serbolingoAudioCtx.resume().catch(() => {});
                 }
             }
             window._serbolingoAudioUnlocked = true;
@@ -2516,6 +2524,10 @@ const app = {
         try {
             if (window.speechSynthesis) {
                 window.speechSynthesis.cancel();
+            }
+            if (state.currentAudioSource) {
+                try { state.currentAudioSource.stop(); } catch(e){}
+                state.currentAudioSource = null;
             }
             if (state.currentAudio) {
                 state.currentAudio.onerror = null;
@@ -2663,8 +2675,100 @@ const app = {
                     }
                 };
 
-                // Tier 1: Fetch via CORS-enabled Google TTS proxy (lingva.ml) -> In-Memory Blob URL
-                // Completely immune to GitHub Pages hotlink / referer blocks on mobile browsers
+                // Helper: Play raw audio bytes via Web Audio API (immune to mobile gesture expiration)
+                const playWithWebAudio = (uint8Array) => {
+                    try {
+                        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                        if (!AudioCtx) return false;
+                        if (!window._serbolingoAudioCtx) window._serbolingoAudioCtx = new AudioCtx();
+                        const ctx = window._serbolingoAudioCtx;
+                        if (ctx.state === 'suspended') {
+                            ctx.resume().catch(() => {});
+                        }
+
+                        const arrayBuffer = uint8Array.buffer.slice(uint8Array.byteOffset, uint8Array.byteOffset + uint8Array.byteLength);
+
+                        ctx.decodeAudioData(arrayBuffer, (decodedBuffer) => {
+                            try {
+                                if (state.currentAudioSource) {
+                                    try { state.currentAudioSource.stop(); } catch(e){}
+                                    state.currentAudioSource = null;
+                                }
+                                const source = ctx.createBufferSource();
+                                source.buffer = decodedBuffer;
+                                const gainNode = ctx.createGain();
+                                gainNode.gain.value = ttsVol;
+                                source.connect(gainNode);
+                                gainNode.connect(ctx.destination);
+
+                                source.onended = () => {
+                                    resetVisual();
+                                    if (state.currentAudioSource === source) state.currentAudioSource = null;
+                                };
+
+                                state.currentAudioSource = source;
+                                source.start(0);
+                            } catch (errStart) {
+                                console.warn("Web Audio start error, falling back to Blob audio:", errStart);
+                                playWithBlobAudio(uint8Array);
+                            }
+                        }, (errDecode) => {
+                            console.warn("Web Audio decode error, falling back to Blob audio:", errDecode);
+                            playWithBlobAudio(uint8Array);
+                        });
+                        return true;
+                    } catch (e) {
+                        console.warn("Web Audio initialization error, falling back to Blob audio:", e);
+                        return false;
+                    }
+                };
+
+                // Helper: Fallback HTML5 Blob Audio (desktop / older engines)
+                const playWithBlobAudio = (uint8Array) => {
+                    try {
+                        const blob = new Blob([uint8Array], { type: 'audio/mpeg' });
+                        const blobUrl = URL.createObjectURL(blob);
+                        const blobAudio = new Audio(blobUrl);
+                        blobAudio.volume = ttsVol;
+                        blobAudio.onended = () => {
+                            resetVisual();
+                            URL.revokeObjectURL(blobUrl);
+                            if (state.currentAudio === blobAudio) state.currentAudio = null;
+                        };
+                        blobAudio.onerror = () => {
+                            resetVisual();
+                            URL.revokeObjectURL(blobUrl);
+                            tryDirectGoogleTts();
+                        };
+                        state.currentAudio = blobAudio;
+                        const playPromise = blobAudio.play();
+                        if (playPromise && playPromise.catch) {
+                            playPromise.catch((err) => {
+                                if (err && err.name === 'NotAllowedError') {
+                                    handleAutoplayBlocked(err);
+                                    return;
+                                }
+                                tryDirectGoogleTts();
+                            });
+                        }
+                    } catch (e) {
+                        tryDirectGoogleTts();
+                    }
+                };
+
+                // In-Memory Rolling Audio Cache (0ms latency & offline replay during active session)
+                window._serbolingoAudioCache = window._serbolingoAudioCache || {};
+                const cacheKey = cleanSrText.toLowerCase().trim();
+
+                if (window._serbolingoAudioCache[cacheKey]) {
+                    const cachedBytes = window._serbolingoAudioCache[cacheKey];
+                    if (!playWithWebAudio(cachedBytes)) {
+                        playWithBlobAudio(cachedBytes);
+                    }
+                    return;
+                }
+
+                // Tier 1: Fetch via CORS-enabled Google TTS proxy (lingva.ml) -> Decode via Web Audio
                 const textParam = encodeURIComponent(cleanSrText);
                 fetch(`https://lingva.ml/api/v1/audio/sr/${textParam}`)
                     .then(res => {
@@ -2673,30 +2777,17 @@ const app = {
                     })
                     .then(data => {
                         if (data && data.audio && Array.isArray(data.audio) && data.audio.length > 0) {
-                            const blob = new Blob([new Uint8Array(data.audio)], { type: 'audio/mpeg' });
-                            const blobUrl = URL.createObjectURL(blob);
-                            const blobAudio = new Audio(blobUrl);
-                            blobAudio.volume = ttsVol;
-                            blobAudio.onended = () => {
-                                resetVisual();
-                                URL.revokeObjectURL(blobUrl);
-                                if (state.currentAudio === blobAudio) state.currentAudio = null;
-                            };
-                            blobAudio.onerror = () => {
-                                resetVisual();
-                                URL.revokeObjectURL(blobUrl);
-                                tryDirectGoogleTts();
-                            };
-                            state.currentAudio = blobAudio;
-                            const playPromise = blobAudio.play();
-                            if (playPromise && playPromise.catch) {
-                                playPromise.catch((err) => {
-                                    if (err && err.name === 'NotAllowedError') {
-                                        handleAutoplayBlocked(err);
-                                        return;
-                                    }
-                                    tryDirectGoogleTts();
-                                });
+                            const uint8 = new Uint8Array(data.audio);
+                            // Store in rolling memory cache (capped at 100 items to protect low-end mobile RAM)
+                            const cacheKeys = Object.keys(window._serbolingoAudioCache);
+                            if (cacheKeys.length > 100) {
+                                delete window._serbolingoAudioCache[cacheKeys[0]];
+                            }
+                            window._serbolingoAudioCache[cacheKey] = uint8;
+
+                            // Decode and play via Web Audio API first (immune to mobile gesture timeout)
+                            if (!playWithWebAudio(uint8)) {
+                                playWithBlobAudio(uint8);
                             }
                         } else {
                             tryDirectGoogleTts();
@@ -5085,7 +5176,7 @@ CRITICAL CONSTRAINTS:
                     await r.unregister();
                 }
             }
-            localStorage.setItem('serbolingo_app_version', '20');
+            localStorage.setItem('serbolingo_app_version', '21');
             window.location.reload(true);
         } catch (e) {
             window.location.reload(true);

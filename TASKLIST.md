@@ -62,6 +62,7 @@
 - [x] PWA Instant Auto-Update & Cache Purge (v18): Added `self.skipWaiting()` + `clients.claim()` + `reg.update()` and `controllerchange` auto-reload so regular tabs immediately update and purge stale cache without requiring Incognito mode or manual cache clears (`sw.js`, `app.js`, `index.html`)
 - [x] Option 2 Dual-Action Audio Architecture (v19): Implemented automatic question audio playback paired with graceful `NotAllowedError` catch and animated tactile 🔊 speaker button fallback (`👆 Dodirni zvučnik da čuješ` / `🔊 Reprodukovanje...` / `🔄 Dodirni za ponovno slušanje`), ensuring 100% audio reliability on restricted PC/mobile browsers and offline Android APK (`app.js`, `sw.js`, `index.html`)
 - [x] Version-Gated Code Cache Purge & Settings Refresh Button (v20): Added pre-flight automated CacheStorage purger in `index.html` that wipes only legacy code caches upon version bump while keeping 100% of user XP, streaks, and progress safe; added 1-click `app.purgeCodeCacheAndReload()` rescue button in Settings UI (`index.html`, `sw.js`, `app.js`)
+- [x] Web Audio API AudioContext Decoder & In-Memory Rolling Cache (v21): Eliminated mobile browser user gesture expiry issues across async CORS fetch boundaries by pre-unlocking AudioContext on first touch/speaker tap and decoding raw MP3 byte buffers directly via `AudioContext.decodeAudioData()`; added 100-item in-memory LRU audio cache for instant 0ms replays (`app.js`, `sw.js`, `index.html`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system
