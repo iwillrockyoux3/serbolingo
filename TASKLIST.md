@@ -5,7 +5,7 @@
 > For the full 22-priority roadmap, see [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md).  
 > For the categorized file index, see [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md).
 
-**Last Updated**: November 19, 2026
+**Last Updated**: November 25, 2026
 
 ---
 
@@ -64,6 +64,7 @@
 - [x] Version-Gated Code Cache Purge & Settings Refresh Button (v20): Added pre-flight automated CacheStorage purger in `index.html` that wipes only legacy code caches upon version bump while keeping 100% of user XP, streaks, and progress safe; added 1-click `app.purgeCodeCacheAndReload()` rescue button in Settings UI (`index.html`, `sw.js`, `app.js`)
 - [x] Web Audio API AudioContext Decoder & In-Memory Rolling Cache (v21): Eliminated mobile browser user gesture expiry issues across async CORS fetch boundaries by pre-unlocking AudioContext on first touch/speaker tap and decoding raw MP3 byte buffers directly via `AudioContext.decodeAudioData()`; added 100-item in-memory LRU audio cache for instant 0ms replays (`app.js`, `sw.js`, `index.html`)
 - [x] Automated Pre-Flight URL Cache-Buster & Hard Timestamped Rescue Reloader (v22): Completely bypassed aggressive Mobile Chrome V8 bytecode and HTTP disk cache locking. Pre-flight in `index.html` automatically detects version upgrades, purges stale caches, unregisters old SW, and executes a clean `?_v=22` URL replacement. Upgraded `app.purgeCodeCacheAndReload()` in Settings with `sessionStorage` wipe and `?_hard=` timestamped redirect that guarantees fresh code without manual browser menu navigation, while keeping 100% of user XP, streaks, and progress safe (`index.html`, `app.js`, `sw.js`)
+- [x] 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (Priority 53.1 — v23): Created 250-item master dataset across 25 levels × 10 items per level with 1-to-1 spotlight mapping (250 Core Words ➔ 250 Spotlight Phrases ➔ 250 Spotlight Sentences). Built 3-in-1 Stage Hub bottom sheet modal (`#basics-hub-modal`) inside the Osnove bubble with live level and item counters, dedicated `QuestionEngine.generateBasicsLesson` generator for Recognition, Assembly, and Production stages, and Fresh 10 completion screen navigation (`basics-data.js`, `index.html`, `question-engine.js`, `app.js`, `touch-haptics.js`, `sw.js`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system
@@ -168,7 +169,7 @@
 | P40.2 | 1-Tap Messaging App Deck Sharing (WhatsApp/Viber) | 🆕 New | ✅ DONE |
 | P51.1 | Zero-Dollar Organic Marketing, ASO & Community Launch Playbook | 🆕 New | ⬜ FUTURE |
 | P52.1 | Tactical Diamond Hint Engine (Scaffolded Lifelines & Word Discovery) | 🆕 New | `question-engine.js`, `shop-engine.js`, `app.js` | ⬜ TODO |
-| P53.1 | 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (150+ Core Words) | 🆕 New | `seed-data.js`, `question-engine.js`, `app.js` | ⬜ TODO |
+| P53.1 | 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (250 Core Words, Phrases & Sentences Hub) | 🆕 New | `basics-data.js`, `index.html`, `question-engine.js`, `app.js` | ✅ DONE |
 | P54.1 | "Učionica" Virtual School Syllabus & Homeroom Academy (Standalone Mode) | 🆕 New | `index.html`, `app.js`, `classroom.js` | ⬜ TODO |
 | P55.1 | Spoken Voice-to-Voice AI Language Tutor (Native Walkie-Talkie Loop) | 🆕 New | `app.js`, `voice-tutor.js`, `index.html` | ⬜ TODO |
 | P56.1 | 3-Day Streak ➔ 30-Minute VIP "God Mode" All-Access Pass | 🆕 New | `app.js`, `index.html`, `streak-retention.js` | ⬜ TODO |
@@ -185,11 +186,11 @@
 | Entertainment & Media | 5/5 | 0 |
 | AI & Audio | 4/4 | 0 |
 | Gamification & Stats | 7/7 | 0 |
-| Content Expansion (P1-P5, P13-P14, P53) | 1/9 | 8 |
+| Content Expansion (P1-P5, P13-P14, P53) | 2/9 | 7 |
 | New Features (P3-P7, P17, P52, P54-P56) | 7/11 | 4 |
 | Deployment (P18-P20, P39, P40) | 5/8 | 3 |
 | Moonshots (P12.2, P21-P22, P24.2, P43.3, P48-P51) | 10/20 | 10 |
-| **TOTAL** | **49/80** | **31** |
+| **TOTAL** | **50/80** | **30** |
 
 ---
 

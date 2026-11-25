@@ -139,6 +139,7 @@
                 // Guides & Alphabets
                 { id: 'guide-modal', closeFn: () => typeof app !== 'undefined' && app.closeGuide ? app.closeGuide() : document.getElementById('guide-modal')?.classList.add('hidden') },
                 { id: 'alphabet-selection-modal', closeFn: () => typeof app !== 'undefined' && app.closeAlphabetModal ? app.closeAlphabetModal() : document.getElementById('alphabet-selection-modal')?.classList.add('hidden') },
+                { id: 'basics-hub-modal', closeFn: () => typeof app !== 'undefined' && app.closeBasicsHub ? app.closeBasicsHub() : document.getElementById('basics-hub-modal')?.classList.add('hidden') },
                 { id: 'goal-modal', closeFn: () => typeof app !== 'undefined' && app.closeGoalModal ? app.closeGoalModal() : document.getElementById('goal-modal')?.classList.add('hidden') },
 
                 // Immersion & SerboReels

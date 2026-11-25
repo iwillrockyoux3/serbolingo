@@ -748,20 +748,25 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 ---
 
-## 🪜 Priority 53: 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (150+ Core Words)
-> **Status**: Planned (Curriculum Progression & Anti-Boredom Architecture)  
-> **Concept**: Overhaul the introductory learning loop to eliminate repetitive 10-word cycling by expanding the beginner lexicon to 150+ high-frequency words structured in an intra-lesson 3-stage progressive difficulty ladder (Recognition ➔ Assembly ➔ Production).
+## ✅ 🪜 Priority 53: 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (250 Core Words, Phrases & Sentences Hub) (DONE)
+> **Status**: Completed (Curriculum Progression & Anti-Boredom Architecture — v23)  
+> **Concept**: Overhaul the introductory learning loop to eliminate repetitive 10-word cycling by expanding the beginner lexicon to 250 high-frequency words structured in an intra-lesson 3-stage progressive difficulty ladder (Recognition ➔ Assembly ➔ Production).
 
-- [ ] **1. Expanded 150+ Beginner Lexicon Pool**:
-  - [ ] Broadens the introductory tier beyond greetings to cover high-utility categories: Everyday Survival, Food & Drink, Basic Verbs, Family, Numbers, Questions, and Polite Connectors.
-  - [ ] Seeded into `seed-data.js` and indexed in `SerboLingoDB` with dual-script and audio parity.
-- [ ] **2. 3-Stage Intra-Lesson Ladder (Micro-Progression Curve)**:
-  - [ ] **Stage 1 (Recognition - Low Cognitive Load)**: Single words, native audio pronunciation, clear image/English meaning pairs (e.g., *Pas = Dog*).
-  - [ ] **Stage 2 (Assembly - Medium Cognitive Load)**: Combining learned words into 2-to-3 word blocks and short natural phrases (e.g., *Dobar dan*, *Moj pas*, *Želim vodu*).
-  - [ ] **Stage 3 (Production - Challenge & Active Recall)**: Cloze typing, listening recall without text, or unscrambling a full mini-sentence.
-- [ ] **3. Anti-Repetition Smart Pooling**:
-  - [ ] Dynamic shuffling algorithm ensuring students never get back-to-back duplicate questions in the same session.
-  - [ ] Seamless integration with the Fresh 10 pagination system.
+- [x] **1. Expanded 250 Beginner Lexicon Pool (basics-data.js)**:
+  - [x] Broadens the introductory tier to 250 high-frequency words across 25 levels × 10 items per level covering Greetings, Pronouns, Verbs, Food, Home, City, Nature, Emotions, and Socializing with 100% Cyrillic/Latin script parity and phonetics (`window.BASICS_CATALOG`).
+- [x] **2. 1-to-1 Spotlight System for Phrases & Sentences**:
+  - [x] Every single word has exactly 1 dedicated phrase (250 Spotlight Phrases) and 1 dedicated sentence (250 Spotlight Sentences) built from that exact vocabulary word.
+- [x] **3. 3-in-1 Stage Hub Bottom Sheet Modal (#basics-hub-modal)**:
+  - [x] Intercepts taps on the "Osnove (Basics)" bubble in the Skill Tree.
+  - [x] Allows learners to freely choose between:
+    - 🔤 **Faza 1: Reči (Core Words)**: Word recognition with MCQ, picture choice, and native audio.
+    - 💬 **Faza 2: Fraze (Phrase Assembly)**: Assembling learned words into 2-3 word blocks with word ordering, phrase MCQ, and listening.
+    - 📝 **Faza 3: Rečenice (Full Sentences)**: Producing complete thoughts with fill-in-the-blank (anchor word missing), sentence unscramble, and listening.
+  - [x] Live progress tracking per stage (`Nivo X/25 • Y/250 naučeno`) with animated gradient progress bars.
+- [x] **4. Fresh 10 Pagination & Lesson Flow**:
+  - [x] Dedicated `QuestionEngine.generateBasicsLesson` engine generating 10 balanced questions per level.
+  - [x] Seamless Fresh 10 completion screen (`➡️ Sledećih 10 lekcija`, `⬅️ Prethodnih 10`, `🔁 Ponovi ovih 10`, `🏠 Završi i vrati se na stablo`).
+  - [x] Integrated with Skill Tree crown progression, XP rewards, haptics, and swipe-to-dismiss physics.
 
 ---
 
@@ -854,6 +859,8 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Service Worker Bump to v21**: Updated `sw.js` cache to `serbolingo-app-v21` and all 34 script tags in `index.html` to `v21`.
   - **Automated Pre-Flight URL Cache-Buster & Hard Timestamped Rescue Reloader (v22)**: Completely resolved aggressive Mobile Chrome V8 bytecode and HTTP disk cache locking. Upgraded pre-flight script in `<head>` of `index.html` to automatically wipe stale caches, unregister outdated service workers, and trigger a clean `?_v=22` URL navigation on version bump, guaranteeing mobile users pull fresh HTML and JS without manual browser settings manipulation. Upgraded `app.purgeCodeCacheAndReload()` in Settings with `sessionStorage` clearance and a `?_hard=` timestamped redirect while keeping 100% of user XP, streaks, and progress safe.
   - **Service Worker Bump to v22**: Updated `sw.js` cache to `serbolingo-app-v22` and all 34 script tags in `index.html` to `v22`.
+  - **3-Stage Basics Hub & 250 Core Lexicon (v23)**: Implemented Priority 53 with 250 Core Words, 250 Spotlight Phrases, and 250 Spotlight Sentences mapped 1-to-1 (`basics-data.js`). Added 3-in-1 Stage Hub modal (`#basics-hub-modal`) inside the Osnove skill tree bubble, dedicated `QuestionEngine.generateBasicsLesson` for Recognition (words), Assembly (phrases), and Production (sentences) stages, Fresh 10 pagination controls, unified question workout badges, and bump to v23 across PWA Service Worker, pre-flight cache buster, and Android Capacitor sync.
+  - **Service Worker Bump to v23**: Updated `sw.js` cache to `serbolingo-app-v23` and all 36 script tags in `index.html` to `v23`.
 
 
 

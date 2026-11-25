@@ -18,7 +18,13 @@ const state = {
     earlyBirdEarnedDate: null,
     cantSpeak: false,
     cantListen: false,
-    lessonMode: 'standard'
+    lessonMode: 'standard',
+    basicsProgress: {
+        words: { page: 0, completed: 0 },
+        phrases: { page: 0, completed: 0 },
+        sentences: { page: 0, completed: 0 }
+    },
+    basicsWorkout: null
 };
 let apiKey = "";
 
@@ -302,6 +308,14 @@ const app = {
             const currentUser = state.user; // preserve auth user
             Object.assign(state, parsed);
             if (currentUser) state.user = currentUser; // restore auth user
+
+            if (!state.basicsProgress) {
+                state.basicsProgress = {
+                    words: { page: 0, completed: 0 },
+                    phrases: { page: 0, completed: 0 },
+                    sentences: { page: 0, completed: 0 }
+                };
+            }
 
             // Migrate legacy state or ensure settings exist
             if (!state.settings) state.settings = { darkMode: true, volume: { sfx: 1.0, tts: 1.0 } };
@@ -1010,6 +1024,10 @@ const app = {
             app.showAlphabetModal();
             return;
         }
+        if (skillId === 'basics') {
+            app.showBasicsHub();
+            return;
+        }
         const skill = SKILL_TREE.find(s => s.id === skillId);
         if (!skill) return;
         if (!SkillTreeEngine.isUnlocked(skillId)) {
@@ -1292,6 +1310,219 @@ const app = {
 
                     <!-- ZAVRŠI -->
                     <button onclick="app.endTierWorkout()" class="w-full mt-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-black text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-sm">
+                        <span>🏠</span>
+                        <span>${isSrToEn ? 'Završi i vrati se na stablo' : 'Finish & Return to Tree'}</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    },
+    getWorkoutBadgeHtml: (isSrToEn) => {
+        if (state.tierWorkout) {
+            const isListening = state.tierWorkout.mode === 'listening';
+            return `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${isListening ? 'bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300' : 'bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'} text-[10px] font-black uppercase tracking-widest mb-3">
+                    <span>${isListening ? '🎧' : '🎙️'}</span> <span>${isSrToEn ? state.tierWorkout.tierLabel : state.tierWorkout.tierLabelEn} • ${isSrToEn ? `Deo ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}` : `Part ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}`}</span>
+                </div>
+            `;
+        }
+        if (state.basicsWorkout) {
+            const stageLabels = {
+                words: { sr: '🔤 Reči (Words)', en: '🔤 Words' },
+                phrases: { sr: '💬 Fraze (Phrases)', en: '💬 Phrases' },
+                sentences: { sr: '📝 Rečenice (Sentences)', en: '📝 Sentences' }
+            };
+            const label = stageLabels[state.basicsWorkout.stage] || stageLabels.words;
+            const stageText = isSrToEn ? label.sr : label.en;
+            return `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-[10px] font-black text-emerald-700 dark:text-emerald-300 uppercase tracking-widest mb-3">
+                    <span>🌱</span>
+                    <span>Osnove • ${stageText} • ${isSrToEn ? `Nivo ${state.basicsWorkout.page + 1}/${state.basicsWorkout.totalPages}` : `Level ${state.basicsWorkout.page + 1}/${state.basicsWorkout.totalPages}`}</span>
+                </div>
+            `;
+        }
+        return '';
+    },
+    startBasicsLesson: async (stage = 'words', requestedPage = null) => {
+        try {
+            app.closeBasicsHub();
+
+            if (!window.BASICS_CATALOG || !window.BASICS_CATALOG.length) {
+                app.showToast('Katalog osnova se učitava...', 'error');
+                return;
+            }
+
+            state.basicsProgress = state.basicsProgress || {
+                words: { page: 0, completed: 0 },
+                phrases: { page: 0, completed: 0 },
+                sentences: { page: 0, completed: 0 }
+            };
+            if (!state.basicsProgress[stage]) {
+                state.basicsProgress[stage] = { page: 0, completed: 0 };
+            }
+
+            const totalPages = 25;
+            let page = 0;
+            if (requestedPage !== null && requestedPage !== undefined) {
+                page = Number(requestedPage);
+            } else if (state.basicsProgress[stage].page !== undefined) {
+                page = Number(state.basicsProgress[stage].page);
+            }
+            if (page >= totalPages) page = 0;
+            if (page < 0) page = 0;
+
+            ACTIVE_LESSON = window.QuestionEngine.generateBasicsLesson(stage, page);
+            if (!ACTIVE_LESSON || !ACTIVE_LESSON.length) {
+                app.showToast('Nije moguće generisati lekciju za osnove.', 'error');
+                return;
+            }
+
+            state.basicsWorkout = {
+                stage: stage,
+                page: page,
+                totalPages: totalPages,
+                batchSize: 10,
+                totalItems: 250,
+                currentBatchCount: ACTIVE_LESSON.length
+            };
+
+            state.cantSpeak = false;
+            state.cantListen = false;
+            state.lessonMode = 'standard';
+            state.currentLevelKey = `basics_${stage}_${page}`;
+            state.currentSkillId = 'basics';
+            state.currentLessonIndex = 0;
+            state.lastLessonMistakes = 0;
+            state.currentLessonXpEarned = 0;
+
+            app.saveStats();
+            app.navigate('lesson');
+            app.renderQuestion();
+        } catch (err) {
+            console.error("Error starting basics lesson:", err);
+            app.showToast('Greška pri pokretanju lekcije osnova.', 'error');
+        }
+    },
+    basicsWorkoutNext: () => {
+        if (!state.basicsWorkout) return;
+        const bw = state.basicsWorkout;
+        const nextPage = bw.page + 1;
+        if (nextPage < bw.totalPages) {
+            app.startBasicsLesson(bw.stage, nextPage);
+        } else {
+            app.startBasicsLesson(bw.stage, 0);
+        }
+    },
+    basicsWorkoutPrev: () => {
+        if (!state.basicsWorkout) return;
+        const bw = state.basicsWorkout;
+        const prevPage = Math.max(0, bw.page - 1);
+        app.startBasicsLesson(bw.stage, prevPage);
+    },
+    endBasicsWorkout: () => {
+        state.basicsWorkout = null;
+        app.navigate('home');
+        if (typeof SkillTreeEngine !== 'undefined' && SkillTreeEngine.render) {
+            SkillTreeEngine.render('skill-tree-container');
+        }
+    },
+    renderBasicsWorkoutCompletion: () => {
+        const bw = state.basicsWorkout;
+        if (!bw) {
+            app.navigate('home');
+            return;
+        }
+
+        const area = document.getElementById('lesson-content-area');
+        if (!area) return;
+
+        const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+        const stageLabels = {
+            words: { sr: '🔤 Reči (Words)', en: '🔤 Words' },
+            phrases: { sr: '💬 Fraze (Phrases)', en: '💬 Phrases' },
+            sentences: { sr: '📝 Rečenice (Sentences)', en: '📝 Sentences' }
+        };
+        const stageInfo = stageLabels[bw.stage] || stageLabels.words;
+        const stageTitle = isSrToEn ? stageInfo.sr : stageInfo.en;
+
+        const startItem = (bw.page * bw.batchSize) + 1;
+        const endItem = Math.min((bw.page + 1) * bw.batchSize, bw.totalItems);
+        const hasNext = (bw.page + 1) < bw.totalPages;
+        const hasPrev = bw.page > 0;
+
+        // Update progress in state
+        if (!state.basicsProgress) state.basicsProgress = {};
+        if (!state.basicsProgress[bw.stage]) state.basicsProgress[bw.stage] = { page: 0, completed: 0 };
+        state.basicsProgress[bw.stage].completed = Math.max(state.basicsProgress[bw.stage].completed, endItem);
+        if (hasNext) {
+            state.basicsProgress[bw.stage].page = bw.page + 1;
+        }
+        app.saveStats();
+
+        // Also advance crown progress on the skill tree so mastering basics earns crowns & badges
+        if (typeof SkillTreeEngine !== 'undefined' && SkillTreeEngine.recordLessonComplete) {
+            try {
+                SkillTreeEngine.recordLessonComplete('basics', state.lastLessonPerfect);
+            } catch(e) {}
+        }
+
+        setTimeout(() => app.fireConfetti(), 200);
+
+        const footer = document.getElementById('lesson-footer');
+        if (footer) footer.classList.add('hidden');
+
+        const bar = document.getElementById('lesson-progress-bar');
+        if (bar) bar.style.width = '100%';
+
+        area.innerHTML = `
+            <div class="w-full max-w-sm flex flex-col items-center gap-5 text-center fade-in py-4">
+                <div class="w-20 h-20 rounded-3xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-4xl shadow-md border-2 border-emerald-200 dark:border-emerald-800 animate-bounce">
+                    🌱
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-black text-slate-800 dark:text-white">
+                        ${isSrToEn ? 'Odlično odrađeno!' : 'Great Job!'}
+                    </h2>
+                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 mt-1">
+                        Osnove • ${stageTitle}
+                    </p>
+                </div>
+
+                <div class="w-full bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border-2 border-slate-200/80 dark:border-slate-700/60 shadow-sm">
+                    <div class="flex justify-between items-center text-xs font-black text-slate-600 dark:text-slate-300 mb-2">
+                        <span>${isSrToEn ? `Nivo ${bw.page + 1} od ${bw.totalPages}` : `Level ${bw.page + 1} of ${bw.totalPages}`}</span>
+                        <span class="text-emerald-600 dark:text-emerald-400 font-bold">${isSrToEn ? `Stavke ${startItem}–${endItem} od ${bw.totalItems}` : `Items ${startItem}–${endItem} of ${bw.totalItems}`}</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500" style="width: ${((bw.page + 1) / bw.totalPages) * 100}%"></div>
+                    </div>
+                </div>
+
+                <div class="w-full flex flex-col gap-2.5 mt-2">
+                    ${hasNext ? `
+                        <button onclick="app.basicsWorkoutNext()" class="w-full py-3.5 px-4 rounded-xl bg-green-500 hover:bg-green-600 text-white font-black text-sm uppercase tracking-wide shadow-[0_4px_0_rgb(21,128,61)] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2">
+                            <span>➡️</span>
+                            <span>${isSrToEn ? `Sledećih 10 lekcija (Nivo ${bw.page + 2})` : `Next 10 Lessons (Level ${bw.page + 2})`}</span>
+                        </button>
+                    ` : `
+                        <button onclick="app.basicsWorkoutNext()" class="w-full py-3.5 px-4 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-black text-sm uppercase tracking-wide shadow-[0_4px_0_rgb(29,78,216)] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2">
+                            <span>🔄</span>
+                            <span>${isSrToEn ? 'Ponovi ispočetka (Nivo 1)' : 'Restart from Beginning'}</span>
+                        </button>
+                    `}
+
+                    <button onclick="app.basicsWorkoutPrev()" ${!hasPrev ? 'disabled' : ''} class="w-full py-3 px-4 rounded-xl ${hasPrev ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 cursor-pointer shadow-sm active:translate-y-0.5' : 'bg-slate-50 dark:bg-slate-800/40 text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-50'} border border-slate-200 dark:border-slate-700 font-black text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-2">
+                        <span>⬅️</span>
+                        <span>${isSrToEn ? 'Prethodnih 10 lekcija' : 'Previous 10 Lessons'}</span>
+                    </button>
+
+                    <button onclick="app.startBasicsLesson('${bw.stage}', ${bw.page})" class="w-full py-2.5 px-4 rounded-xl bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 font-black text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>🔁</span>
+                        <span>${isSrToEn ? 'Ponovi ovih 10 ponovo' : 'Replay these 10'}</span>
+                    </button>
+
+                    <button onclick="app.endBasicsWorkout()" class="w-full mt-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-black text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-sm">
                         <span>🏠</span>
                         <span>${isSrToEn ? 'Završi i vrati se na stablo' : 'Finish & Return to Tree'}</span>
                     </button>
@@ -1638,11 +1869,7 @@ const app = {
             const qWord = qParts[1] || '';
             const qSub = qParts[2] || '';
             
-            const workoutBadge = state.tierWorkout ? `
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-[10px] font-black text-emerald-700 dark:text-emerald-300 uppercase tracking-widest mb-3">
-                    <span>🎙️</span> <span>${isSrToEn ? state.tierWorkout.tierLabel : state.tierWorkout.tierLabelEn} • ${isSrToEn ? `Deo ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}` : `Part ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}`}</span>
-                </div>
-            ` : '';
+            const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
 
             area.innerHTML = `
                 <div class="text-center w-full max-w-xs">
@@ -1670,6 +1897,7 @@ const app = {
         } else if (l.type === 'fill_blank') {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
+            const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
             
             // Format the question: Split by \n\n to show the translation on top, and the blanked sentence below
             const parts = questionText.split('\n\n');
@@ -1677,6 +1905,7 @@ const app = {
             const blankText = parts[1] || "";
             
             area.innerHTML = `
+                ${workoutBadge}
                 <h2 class="text-xl font-black mb-2 text-slate-700 dark:text-slate-100">${app.formatQuestionText(mainText)}</h2>
                 <div class="text-lg font-bold text-slate-500 mb-8">${app.formatQuestionText(blankText)}</div>
                 <div class="w-full max-w-xs">
@@ -1692,10 +1921,12 @@ const app = {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
             const scrambled = (isSrToEn && l.scrambled_rev) ? l.scrambled_rev : l.scrambled;
+            const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
             
             // We need a drop zone and a word bank
             state.userSelection = []; // it will be an array of words
             area.innerHTML = `
+                ${workoutBadge}
                 <h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2>
                 <div class="w-full max-w-md flex flex-col gap-6">
                     <div id="word-order-answer" class="min-h-[60px] p-4 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 flex flex-wrap gap-2 items-center justify-center">
@@ -1935,11 +2166,7 @@ const app = {
             const audioLang = (isSrToEn && l.audioLang_rev) ? l.audioLang_rev : (l.audioLang || 'sr-RS');
             const optionsArray = (isSrToEn && l.options_rev) ? l.options_rev : l.options;
 
-            const workoutBadge = state.tierWorkout ? `
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-800 text-[10px] font-black text-purple-700 dark:text-purple-300 uppercase tracking-widest mb-3">
-                    <span>🎧</span> <span>${isSrToEn ? state.tierWorkout.tierLabel : state.tierWorkout.tierLabelEn} • ${isSrToEn ? `Deo ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}` : `Part ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}`}</span>
-                </div>
-            ` : '';
+            const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
 
             area.innerHTML = `
                 <div class="text-center w-full max-w-sm">
@@ -2017,11 +2244,7 @@ const app = {
             const letters = correctText.split('');
             const letterDisplay = letters.map((ch, i) => `<span class="inline-block w-8 h-10 mx-0.5 border-b-4 border-slate-300 dark:border-slate-600 text-center text-xl font-black text-transparent spelling-letter" data-idx="${i}">${ch}</span>`).join('');
 
-            const workoutBadge = state.tierWorkout ? `
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-[10px] font-black text-emerald-700 dark:text-emerald-300 uppercase tracking-widest mb-3">
-                    <span>🎙️</span> <span>${isSrToEn ? state.tierWorkout.tierLabel : state.tierWorkout.tierLabelEn} • ${isSrToEn ? `Deo ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}` : `Part ${state.tierWorkout.page + 1}/${state.tierWorkout.totalPages}`}</span>
-                </div>
-            ` : '';
+            const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
 
             area.innerHTML = `
                 <div class="text-center w-full max-w-xs">
@@ -2094,8 +2317,9 @@ const app = {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
             const optionsArray = (isSrToEn && l.options_rev) ? l.options_rev : l.options;
+            const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
 
-            area.innerHTML = `<h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2><div class="grid w-full max-w-xs gap-3">` +
+            area.innerHTML = `${workoutBadge}<h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2><div class="grid w-full max-w-xs gap-3">` +
                 optionsArray.map(o => `<button onclick="app.selectOption(this, '${o}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`).join('') + `</div>`;
         }
     },
@@ -3405,6 +3629,11 @@ const app = {
             return;
         }
 
+        if (state.basicsWorkout) {
+            app.renderBasicsWorkoutCompletion();
+            return;
+        }
+
         if (state.currentSkillId === 'mistakes') {
             app.navigate('mistakes');
         } else {
@@ -3480,6 +3709,52 @@ const app = {
     closeAlphabetModal: () => {
         const modal = document.getElementById('alphabet-selection-modal');
         const content = document.getElementById('alphabet-modal-content');
+        
+        modal.classList.add('opacity-0');
+        content.classList.add('translate-y-full');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    },
+    showBasicsHub: () => {
+        const modal = document.getElementById('basics-hub-modal');
+        const content = document.getElementById('basics-modal-content');
+        if (!modal || !content) return;
+
+        state.basicsProgress = state.basicsProgress || {
+            words: { page: 0, completed: 0 },
+            phrases: { page: 0, completed: 0 },
+            sentences: { page: 0, completed: 0 }
+        };
+
+        const updateStageUI = (stage, elPrefix) => {
+            const p = state.basicsProgress[stage] || { page: 0, completed: 0 };
+            const pageEl = document.getElementById(`${elPrefix}-level`);
+            const countEl = document.getElementById(`${elPrefix}-count`);
+            const barEl = document.getElementById(`${elPrefix}-bar`);
+            if (pageEl) pageEl.textContent = `Nivo ${p.page + 1}/25`;
+            if (countEl) countEl.textContent = `${p.completed}/250 naučeno`;
+            if (barEl) barEl.style.width = `${Math.min(100, (p.completed / 250) * 100)}%`;
+        };
+
+        updateStageUI('words', 'basics-words');
+        updateStageUI('phrases', 'basics-phrases');
+        updateStageUI('sentences', 'basics-sentences');
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        requestAnimationFrame(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('translate-y-full');
+        });
+    },
+    closeBasicsHub: () => {
+        const modal = document.getElementById('basics-hub-modal');
+        const content = document.getElementById('basics-modal-content');
+        if (!modal || !content) return;
         
         modal.classList.add('opacity-0');
         content.classList.add('translate-y-full');
@@ -4761,6 +5036,7 @@ const app = {
         }
         if (confirm(t('lesson_quit'))) {
             state.tierWorkout = null;
+            state.basicsWorkout = null;
             app.navigate(state.currentSkillId === 'mistakes' ? 'mistakes' : 'home');
         }
     },
@@ -5179,7 +5455,7 @@ CRITICAL CONSTRAINTS:
             if (window.sessionStorage) {
                 try { sessionStorage.clear(); } catch(e){}
             }
-            localStorage.setItem('serbolingo_app_version', '22');
+            localStorage.setItem('serbolingo_app_version', '23');
             // Force bypass of Chrome mobile HTTP disk cache via timestamped redirect
             const freshUrl = window.location.origin + window.location.pathname + '?_hard=' + Date.now();
             window.location.replace(freshUrl);

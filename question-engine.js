@@ -489,6 +489,12 @@ const QuestionEngine = {
     // mode = 'listening' (Dedicated Ear Training Lab: 100% audio recognition & comprehension)
     // mode = 'speaking' (Dedicated Speaking Lab: 100% microphone pronunciation)
     async generateLesson(categoryName, dbInstance, count = 10, mode = 'standard') {
+        if (categoryName === 'basics' || categoryName === 'basics_words' || categoryName === 'basics_phrases' || categoryName === 'basics_sentences') {
+            const stage = categoryName === 'basics_phrases' ? 'phrases' : (categoryName === 'basics_sentences' ? 'sentences' : 'words');
+            const page = (typeof state !== 'undefined' && state.basicsProgress && state.basicsProgress[stage]) ? state.basicsProgress[stage].page : 0;
+            return this.generateBasicsLesson(stage, page, count);
+        }
+
         const allWords = await dbInstance.getWordsByCategory(categoryName);
         if (!allWords || allWords.length < 4) {
             console.error(`Not enough words in category ${categoryName} to generate a full lesson.`);
@@ -844,6 +850,168 @@ const QuestionEngine = {
             questions.push(q);
         });
         
+        return questions;
+    },
+
+    // Priority 53: Dedicated 3-Stage Basics Lesson Generator
+    // 250 Core Words ➔ 250 Spotlight Phrases ➔ 250 Spotlight Sentences (1-to-1 Mapping)
+    generateBasicsLesson: function (stage = 'words', page = 0, count = 10) {
+        const catalog = (typeof window !== 'undefined' && Array.isArray(window.BASICS_CATALOG))
+            ? window.BASICS_CATALOG
+            : [];
+        if (!catalog.length) return [];
+
+        const level = (page !== null && page !== undefined) ? (Number(page) + 1) : 1;
+        let batch = catalog.filter(item => item.level === level);
+        if (!batch.length) {
+            const start = Math.max(0, page * 10);
+            batch = catalog.slice(start, start + 10);
+        }
+        if (!batch.length) {
+            batch = catalog.slice(0, 10);
+        }
+
+        const questions = [];
+
+        if (stage === 'words') {
+            // STAGE 1: RECOGNITION (Word by word: Multiple Choice, Picture Choice, Listening)
+            batch.forEach((item, idx) => {
+                const r = idx % 4;
+                let q = null;
+                if (r === 0 || r === 2) {
+                    q = this.generateMultipleChoice(item, catalog);
+                } else if (r === 1) {
+                    // Picture / Visual Recognition
+                    const distractors = this.getRandomDistractors(catalog, item, 2);
+                    q = {
+                        type: 'picture_choice',
+                        q: `What is "${item.en}"?`,
+                        q_rev: `Šta je "${item.sr_lat}"?`,
+                        options: this.shuffle([
+                            { text: item.sr_lat, emoji: item.emoji || '✨' },
+                            ...distractors.map(d => ({ text: d.sr_lat, emoji: d.emoji || '📦' }))
+                        ]),
+                        options_rev: this.shuffle([
+                            { text: item.en, emoji: item.emoji || '✨' },
+                            ...distractors.map(d => ({ text: d.en, emoji: d.emoji || '📦' }))
+                        ]),
+                        correct: item.sr_lat,
+                        correct_rev: item.en,
+                        explanation: `💡 <b>${item.sr_lat}</b> means <b>${item.en}</b>.`,
+                        explanation_rev: `💡 <b>${item.en}</b> znači <b>${item.sr_lat}</b>.`
+                    };
+                } else {
+                    q = this.generateListening(item, catalog);
+                }
+                if (!q) {
+                    q = this.generateMultipleChoice(item, catalog);
+                }
+                if (q) {
+                    q.wordId = item.id;
+                    questions.push(q);
+                }
+            });
+        } else if (stage === 'phrases') {
+            // STAGE 2: PHRASE ASSEMBLY (Combining words: Word Order, Phrase MCQ, Listening)
+            batch.forEach((item, idx) => {
+                const r = idx % 3;
+                let q = null;
+                const phraseObj = {
+                    id: item.id,
+                    sr_lat: item.phrase_sr,
+                    sr_cyr: item.phrase_cyr,
+                    en: item.phrase_en,
+                    example_sr: item.phrase_sr,
+                    example_en: item.phrase_en,
+                    phonetic: item.phrase_phonetic,
+                    emoji: item.emoji
+                };
+
+                if (r === 0 || r === 2) {
+                    // Word Order for assembling phrase
+                    q = this.generateWordOrder(phraseObj);
+                }
+                if (!q) {
+                    // Phrase Translation MCQ
+                    const distractors = this.getRandomDistractors(catalog, item, 2);
+                    q = {
+                        type: 'multiple_choice',
+                        q: `Translate phrase: "${item.phrase_en}"`,
+                        q_rev: `Prevedi frazu: "${item.phrase_sr}"`,
+                        options: this.shuffle([
+                            item.phrase_sr,
+                            distractors[0]?.phrase_sr || 'hvala lepo',
+                            distractors[1]?.phrase_sr || 'dobro jutro'
+                        ]),
+                        options_rev: this.shuffle([
+                            item.phrase_en,
+                            distractors[0]?.phrase_en || 'thank you very much',
+                            distractors[1]?.phrase_en || 'good morning'
+                        ]),
+                        correct: item.phrase_sr,
+                        correct_rev: item.phrase_en,
+                        explanation: `💡 <b>"${item.phrase_sr}"</b> = "${item.phrase_en}" (Osnovna reč: <i>${item.sr_lat}</i>)`,
+                        explanation_rev: `💡 <b>"${item.phrase_en}"</b> = "${item.phrase_sr}" (Core word: <i>${item.en}</i>)`
+                    };
+                }
+                if (q) {
+                    q.wordId = item.id;
+                    questions.push(q);
+                }
+            });
+        } else {
+            // STAGE 3: SENTENCE PRODUCTION (Complete thoughts: Fill Blank, Word Order, Sentence Translation)
+            batch.forEach((item, idx) => {
+                const r = idx % 3;
+                let q = null;
+                const sentObj = {
+                    id: item.id,
+                    sr_lat: item.sr_lat,
+                    en: item.en,
+                    example_sr: item.sentence_sr,
+                    example_en: item.sentence_en,
+                    phonetic: item.sentence_phonetic,
+                    emoji: item.emoji
+                };
+
+                if (r === 0 || r === 2) {
+                    // Fill in the blank (anchor word blanked out)
+                    q = this.generateFillBlank(sentObj);
+                }
+                if (!q) {
+                    // Sentence Word Order
+                    q = this.generateWordOrder(sentObj);
+                }
+                if (!q) {
+                    // Fallback to sentence translation MCQ
+                    const distractors = this.getRandomDistractors(catalog, item, 2);
+                    q = {
+                        type: 'multiple_choice',
+                        q: `Translate sentence: "${item.sentence_en}"`,
+                        q_rev: `Prevedi rečenicu: "${item.sentence_sr}"`,
+                        options: this.shuffle([
+                            item.sentence_sr,
+                            distractors[0]?.sentence_sr || 'Kako ste?',
+                            distractors[1]?.sentence_sr || 'Dobro sam.'
+                        ]),
+                        options_rev: this.shuffle([
+                            item.sentence_en,
+                            distractors[0]?.sentence_en || 'How are you?',
+                            distractors[1]?.sentence_en || 'I am well.'
+                        ]),
+                        correct: item.sentence_sr,
+                        correct_rev: item.sentence_en,
+                        explanation: `💡 <b>"${item.sentence_sr}"</b> = "${item.sentence_en}"`,
+                        explanation_rev: `💡 <b>"${item.sentence_en}"</b> = "${item.sentence_sr}"`
+                    };
+                }
+                if (q) {
+                    q.wordId = item.id;
+                    questions.push(q);
+                }
+            });
+        }
+
         return questions;
     }
 };
