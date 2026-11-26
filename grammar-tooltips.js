@@ -628,7 +628,8 @@
             }
         },
 
-        // Wrap words inside a sentence with interactive spans (clickable ONLY after answering)
+        // Wrap ONLY target words/phrases inside a question with interactive spans (clickable ONLY after answering).
+        // Instruction prefixes (e.g. "Translate:", "Prevedi:", "Kako se kaže") remain plain, non-pressable text.
         wrapInteractiveWords: function (text) {
             if (!text || typeof text !== 'string') return text;
 
@@ -638,10 +639,40 @@
                 ? 'cursor-pointer underline decoration-dotted decoration-indigo-400 hover:text-indigo-400 font-bold transition-all px-0.5 rounded hover:bg-indigo-50/70 dark:hover:bg-indigo-900/30 active:scale-95'
                 : 'cursor-default font-bold';
 
-            return text.replace(tokenRegex, (word) => {
+            const wrapSegment = (seg) => seg.replace(tokenRegex, (word) => {
                 const clean = word.replace(/'/g, "\\'");
                 return `<span class="grammar-word ${dynamicClasses}" onclick="GrammarEngine.showTooltip(this, '${clean}')" data-word="${clean}">${word}</span>`;
             });
+
+            // 1. Quoted target segments (e.g. Translate: "to be", Kako se kaže "mačka"?):
+            //    only the text inside quotes becomes inspectable; prompt instructions stay static.
+            const quoteRegex = /"([^"]+)"|„([^“]+)[“"]|“([^”]+)”/g;
+            if (quoteRegex.test(text)) {
+                quoteRegex.lastIndex = 0;
+                let out = '';
+                let lastIdx = 0;
+                let m;
+                while ((m = quoteRegex.exec(text)) !== null) {
+                    out += text.slice(lastIdx, m.index);
+                    const fullMatch = m[0];
+                    const inner = m[1] || m[2] || m[3] || '';
+                    const openQ = fullMatch[0];
+                    const closeQ = fullMatch[fullMatch.length - 1];
+                    out += openQ + wrapSegment(inner) + closeQ;
+                    lastIdx = m.index + fullMatch.length;
+                }
+                out += text.slice(lastIdx);
+                return out;
+            }
+
+            // 2. Unquoted prompts starting with a known instruction prefix + ":" (e.g. AI-generated "Translate: apple")
+            const prefixMatch = text.match(/^((?:Translate(?:\s+(?:phrase|sentence|word))?|Prevedi(?:\s+(?:frazu|rečenicu|reč))?|Arrange|Složi\s+rečenicu|Spell|Napiši|Say(?:\s+this(?:\s+sentence)?)?(?:\s+in\s+\w+)?|What\s+is|Šta\s+je|Which\s+picture\s+is|Koja\s+slika\s+je|Add\s+punctuation|Dodaj\s+interpunkciju)\s*:\s*)(.+)$/is);
+            if (prefixMatch) {
+                return prefixMatch[1] + wrapSegment(prefixMatch[2]);
+            }
+
+            // 3. Bare target word or sentence (e.g. fill-blank sentence or picture_choice word)
+            return wrapSegment(text);
         },
 
         // Analyze tapped word for dictionary definition, case, gender, and verb tense

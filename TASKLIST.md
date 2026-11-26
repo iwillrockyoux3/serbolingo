@@ -5,7 +5,7 @@
 > For the full 22-priority roadmap, see [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md).  
 > For the categorized file index, see [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md).
 
-**Last Updated**: November 25, 2026
+**Last Updated**: November 26, 2026
 
 ---
 
@@ -65,6 +65,7 @@
 - [x] Web Audio API AudioContext Decoder & In-Memory Rolling Cache (v21): Eliminated mobile browser user gesture expiry issues across async CORS fetch boundaries by pre-unlocking AudioContext on first touch/speaker tap and decoding raw MP3 byte buffers directly via `AudioContext.decodeAudioData()`; added 100-item in-memory LRU audio cache for instant 0ms replays (`app.js`, `sw.js`, `index.html`)
 - [x] Automated Pre-Flight URL Cache-Buster & Hard Timestamped Rescue Reloader (v22): Completely bypassed aggressive Mobile Chrome V8 bytecode and HTTP disk cache locking. Pre-flight in `index.html` automatically detects version upgrades, purges stale caches, unregisters old SW, and executes a clean `?_v=22` URL replacement. Upgraded `app.purgeCodeCacheAndReload()` in Settings with `sessionStorage` wipe and `?_hard=` timestamped redirect that guarantees fresh code without manual browser menu navigation, while keeping 100% of user XP, streaks, and progress safe (`index.html`, `app.js`, `sw.js`)
 - [x] 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (Priority 53.1 — v23): Created 250-item master dataset across 25 levels × 10 items per level with 1-to-1 spotlight mapping (250 Core Words ➔ 250 Spotlight Phrases ➔ 250 Spotlight Sentences). Built 3-in-1 Stage Hub bottom sheet modal (`#basics-hub-modal`) inside the Osnove bubble with live level and item counters, dedicated `QuestionEngine.generateBasicsLesson` generator for Recognition, Assembly, and Production stages, and Fresh 10 completion screen navigation (`basics-data.js`, `index.html`, `question-engine.js`, `app.js`, `touch-haptics.js`, `sw.js`)
+- [x] Picture Choice 4-Card 2×2 Grid & Scoped Word Inspector Tooltips (v24): Fixed stale `www/` sync and added global emoji distractor fallback in `QuestionEngine.generatePictureChoice` so every category/tier guarantees 4 emoji cards (2×2 grid) with clean quote rendering; restricted `GrammarEngine.wrapInteractiveWords` so only target vocabulary/phrases become clickable after answering while prompt prefixes (`Translate:`, `Prevedi:`, `Kako se kaže`, etc.) stay static (`question-engine.js`, `grammar-tooltips.js`, `app.js`, `index.html`, `sw.js`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system
@@ -92,6 +93,7 @@
 | P1.2 | Add phonetic helpers + gender flags to all entries | 🔧 Content | `seed-data.js` | ✅ DONE |
 | P1.3 | Add bilingual example sentences to all entries | 🔧 Content | `seed-data.js` | ✅ DONE |
 | P1.4 | Omni-Bar Levenshtein Fuzzy Search & Did You Mean (Solid Banner & Unified Lesson Typo Tolerance) | 🆕 New | `app.js` | ✅ DONE |
+| P1.5 | Phase 2 Multi-Answer Grading, Context Hints & Polysemy Patch (116 seed-data entries + 41 basics-data entries with accepted alternates & context hints, unified evaluateAcceptedAnswer pipeline across all 12 question types) | 🆕 New | `app.js`, `question-engine.js`, `seed-data.js`, `basics-data.js` | ✅ DONE |
 | P2.1 | Expand skill tree to 60+ nodes | 🔧 Content | `skill-tree.js` | ⬜ TODO |
 | P2.2 | Add Travel, Business, Dating, Tenses, Cases branches | 🔧 Content | `skill-tree.js` | ⬜ TODO |
 | P5.1 | Add "Cheat Sheet" grammar guides to each skill node | 🔧 Content | `skill-tree.js` | ⬜ TODO |
@@ -186,11 +188,11 @@
 | Entertainment & Media | 5/5 | 0 |
 | AI & Audio | 4/4 | 0 |
 | Gamification & Stats | 7/7 | 0 |
-| Content Expansion (P1-P5, P13-P14, P53) | 2/9 | 7 |
+| Content Expansion (P1-P5, P13-P14, P53) | 3/9 | 6 |
 | New Features (P3-P7, P17, P52, P54-P56) | 7/11 | 4 |
 | Deployment (P18-P20, P39, P40) | 5/8 | 3 |
 | Moonshots (P12.2, P21-P22, P24.2, P43.3, P48-P51) | 10/20 | 10 |
-| **TOTAL** | **50/80** | **30** |
+| **TOTAL** | **51/80** | **29** |
 
 ---
 

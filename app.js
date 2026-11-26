@@ -1375,6 +1375,84 @@ const app = {
         }
         return '';
     },
+    getContextHintHtml: (l, isSrToEn) => {
+        if (!l) return '';
+        const raw = (isSrToEn && l.hint_rev) ? l.hint_rev : (l.hint || '');
+        if (!raw || typeof raw !== 'string' || !raw.trim()) return '';
+        const safe = raw.trim()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        return `<div class="mb-3 flex justify-center"><span class="inline-flex flex-wrap items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/70 text-amber-700 dark:text-amber-300 text-[11px] font-bold max-w-xs text-center"><span>💡</span><span>${safe}</span></span></div>`;
+    },
+    getAcceptedAnswers: (l, isSrToEn) => {
+        if (!l) return [];
+        const primary = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
+        const alt = (isSrToEn && l.alt_correct_rev) ? l.alt_correct_rev : l.alt_correct;
+        const extra = (isSrToEn && l.accepted_rev) ? l.accepted_rev : l.accepted;
+        const out = [];
+        const seen = new Set();
+        const add = (val) => {
+            if (!val || typeof val !== 'string') return;
+            const t = val.trim();
+            const k = t.toLowerCase();
+            if (!t || seen.has(k)) return;
+            seen.add(k);
+            out.push(t);
+        };
+        add(primary);
+        add(alt);
+        if (Array.isArray(extra)) extra.forEach(add);
+        return out;
+    },
+    evaluateAcceptedAnswer: (userStr, acceptedList, allowFuzzy = false) => {
+        const list = Array.isArray(acceptedList) ? acceptedList.filter(v => typeof v === 'string' && v.trim()) : [];
+        if (!userStr || typeof userStr !== 'string' || !list.length) {
+            return { isCorrect: false, matched: null, exactCase: false, usedAlternate: false };
+        }
+        const cleanRaw = (s) => s.trim().toLowerCase().replace(/[.,?!]+$/g, '').replace(/\s+/g, ' ').trim();
+        const normalize = (s) => {
+            if (!s || typeof s !== 'string') return '';
+            const base = (typeof app !== 'undefined' && typeof app._phoneticNormalize === 'function')
+                ? app._phoneticNormalize(s)
+                : s.toLowerCase().trim()
+                    .replace(/y/g, 'j').replace(/w/g, 'v')
+                    .replace(/đ/g, 'dj').replace(/dž/g, 'dz')
+                    .replace(/č/g, 'c').replace(/ć/g, 'c').replace(/š/g, 's').replace(/ž/g, 'z');
+            return base.replace(/[.,?!\/#!$%\^&\*;:{}=\-_`~()'"]/g, '').replace(/\s+/g, ' ').trim();
+        };
+
+        const primaryRaw = cleanRaw(list[0]);
+        const uRaw = cleanRaw(userStr);
+        if (!uRaw) return { isCorrect: false, matched: null, exactCase: false, usedAlternate: false };
+
+        for (const cand of list) {
+            if (uRaw === cleanRaw(cand)) {
+                return { isCorrect: true, matched: cand, exactCase: true, usedAlternate: cleanRaw(cand) !== primaryRaw };
+            }
+        }
+
+        const uNorm = normalize(userStr);
+        if (uNorm) {
+            for (const cand of list) {
+                if (uNorm === normalize(cand)) {
+                    return { isCorrect: true, matched: cand, exactCase: false, usedAlternate: cleanRaw(cand) !== primaryRaw };
+                }
+            }
+            if (allowFuzzy && typeof app !== 'undefined' && typeof app._levenshtein === 'function') {
+                for (const cand of list) {
+                    const tNorm = normalize(cand);
+                    if (tNorm.length >= 4 && app._levenshtein(uNorm, tNorm) <= 1) {
+                        return { isCorrect: true, matched: cand, exactCase: false, usedAlternate: cleanRaw(cand) !== primaryRaw };
+                    }
+                }
+            }
+        }
+
+        return { isCorrect: false, matched: null, exactCase: false, usedAlternate: false };
+    },
     startBasicsLesson: async (stage = 'words', requestedPage = null, mode = 'standard') => {
         try {
             app.closeBasicsHub();
@@ -1952,10 +2030,12 @@ const app = {
             const qSub = qParts[2] || '';
             
             const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
+            const contextHint = (typeof app.getContextHintHtml === 'function') ? app.getContextHintHtml(l, isSrToEn) : '';
 
             area.innerHTML = `
                 <div class="text-center w-full max-w-xs">
                     ${workoutBadge}
+                    ${contextHint}
                     <h2 class="text-lg font-bold text-slate-500 dark:text-slate-400 mb-2">${qHeader}</h2>
                     <div class="text-2xl font-black text-slate-800 dark:text-white mb-6">${app.formatQuestionText(qWord)}</div>
                     
@@ -1980,6 +2060,7 @@ const app = {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
             const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
             const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
+            const contextHint = (typeof app.getContextHintHtml === 'function') ? app.getContextHintHtml(l, isSrToEn) : '';
             
             // Format the question: Split by \n\n to show the translation on top, and the blanked sentence below
             const parts = questionText.split('\n\n');
@@ -1988,6 +2069,7 @@ const app = {
             
             area.innerHTML = `
                 ${workoutBadge}
+                ${contextHint}
                 <h2 class="text-xl font-black mb-2 text-slate-700 dark:text-slate-100">${app.formatQuestionText(mainText)}</h2>
                 <div class="text-lg font-bold text-slate-500 mb-8">${app.formatQuestionText(blankText)}</div>
                 <div class="w-full max-w-xs">
@@ -2004,11 +2086,13 @@ const app = {
             const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
             const scrambled = (isSrToEn && l.scrambled_rev) ? l.scrambled_rev : l.scrambled;
             const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
+            const contextHint = (typeof app.getContextHintHtml === 'function') ? app.getContextHintHtml(l, isSrToEn) : '';
             
             // We need a drop zone and a word bank
             state.userSelection = []; // it will be an array of words
             area.innerHTML = `
                 ${workoutBadge}
+                ${contextHint}
                 <h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2>
                 <div class="w-full max-w-md flex flex-col gap-6">
                     <div id="word-order-answer" class="min-h-[60px] p-4 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 flex flex-wrap gap-2 items-center justify-center">
@@ -2184,9 +2268,13 @@ const app = {
             const keyboard = "QWERTYUIOPASDFGHJKLZXCVBNMČĆŽŠĐ".split('');
             // Only show Serbian letters if learning Serbian
             const keys = (isSrToEn) ? "QWERTYUIOPASDFGHJKLZXCVBNM".split('') : keyboard;
+            const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
+            const contextHint = (typeof app.getContextHintHtml === 'function') ? app.getContextHintHtml(l, isSrToEn) : '';
 
             area.innerHTML = `
-                <h2 class="text-xl font-black mb-4 text-slate-700 dark:text-slate-100">${questionText}</h2>
+                ${workoutBadge}
+                ${contextHint}
+                <h2 class="text-xl font-black mb-4 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2>
                 <div class="w-full max-w-sm flex flex-col gap-6 items-center">
                     <div id="hangman-figure" class="text-4xl h-16 flex items-center justify-center font-black text-red-500"></div>
                     <div id="hangman-word" class="flex gap-2 flex-wrap justify-center font-black text-2xl text-slate-800 dark:text-slate-100">
@@ -2224,21 +2312,33 @@ const app = {
             document.getElementById('check-btn').classList.add('hidden'); // auto-checks
         } else if (l.type === 'picture_choice') {
             const isSrToEn = state.settings.learningDirection === 'sr_to_en';
-            const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
+            const rawQuestion = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
+            const cleanQuestion = String(rawQuestion || '')
+                .replace(/^(?:What is|Šta je)\s+"([^"]+)"\??$/i, '$1')
+                .replace(/^"|"$/g, '')
+                .trim();
             const optionsArray = (isSrToEn && l.options_rev) ? l.options_rev : l.options;
+            const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
+            const contextHint = (typeof app.getContextHintHtml === 'function') ? app.getContextHintHtml(l, isSrToEn) : '';
 
             area.innerHTML = `
                 <div class="text-center w-full max-w-sm">
+                    ${workoutBadge}
+                    ${contextHint}
                     <p class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Which picture is...</p>
-                    <h2 class="text-2xl font-black mb-8 text-slate-800 dark:text-white">"${questionText}"</h2>
+                    <h2 class="text-2xl font-black mb-8 text-slate-800 dark:text-white">"${app.formatQuestionText(cleanQuestion)}"</h2>
                     <div class="grid grid-cols-2 gap-4">
-                        ${optionsArray.map(opt => `
-                            <button onclick="app.selectOption(this, '${opt.text.replace(/'/g, "\\'")}')" 
+                        ${optionsArray.map(opt => {
+                            const safeOptAttr = String(opt.text).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+                            const safeOptJs = String(opt.text).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            return `
+                            <button data-option="${safeOptAttr}" onclick="app.selectOption(this, '${safeOptJs}')" 
                                 class="option-btn flex flex-col items-center justify-center gap-2 p-6 bg-white dark:bg-slate-800 border-3 border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm active:scale-95 transition-all hover:border-blue-400 dark:hover:border-blue-500">
                                 <span class="text-5xl">${opt.emoji}</span>
                                 <span class="text-xs font-bold text-slate-500 dark:text-slate-400">${opt.text}</span>
                             </button>
-                        `).join('')}
+                        `;
+                        }).join('')}
                     </div>
                 </div>
             `;
@@ -2249,12 +2349,14 @@ const app = {
             const optionsArray = (isSrToEn && l.options_rev) ? l.options_rev : l.options;
 
             const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
+            const contextHint = (typeof app.getContextHintHtml === 'function') ? app.getContextHintHtml(l, isSrToEn) : '';
 
             area.innerHTML = `
                 <div class="text-center w-full max-w-sm">
                     ${workoutBadge}
+                    ${contextHint}
                     <p class="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">${isSrToEn ? 'Šta čuješ?' : 'What do you hear?'}</p>
-                    <button id="listening-speaker-btn" onclick="if (app.unlockAudioContext) app.unlockAudioContext(); app.speakPhrase('${audioWord.replace(/'/g, "\\'")}', '${audioLang}'); if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');" 
+                    <button id="listening-speaker-btn" onclick="if (app.unlockAudioContext) app.unlockAudioContext(); app.speakPhrase('${audioWord.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}', '${audioLang}'); if (typeof TouchHaptics !== 'undefined') TouchHaptics.vibrate('tap');" 
                         class="w-24 h-24 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/50 border-4 border-blue-200 dark:border-blue-700 flex items-center justify-center text-5xl shadow-md transition-all active:scale-90 hover:scale-105 hover:bg-blue-200 dark:hover:bg-blue-800 mb-2 cursor-pointer select-none">
                         🔊
                     </button>
@@ -2270,7 +2372,11 @@ const app = {
                     <div id="listening-revealed-text" class="hidden text-sm font-black text-blue-600 dark:text-blue-400 mb-4 p-2.5 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-200 dark:border-blue-800"></div>
 
                     <div class="grid w-full gap-3">
-                        ${optionsArray.map(o => `<button onclick="app.selectOption(this, '${o.replace(/'/g, "\\'")}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`).join('')}
+                        ${optionsArray.map(o => {
+                            const safeOptAttr = String(o).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+                            const safeOptJs = String(o).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            return `<button data-option="${safeOptAttr}" onclick="app.selectOption(this, '${safeOptJs}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`;
+                        }).join('')}
                     </div>
                 </div>
             `;
@@ -2302,12 +2408,16 @@ const app = {
 
                     <!-- Reply Options -->
                     <div class="grid w-full gap-3 mt-2">
-                        ${optionsArray.map(o => `
-                            <button onclick="app.selectOption(this, '${o.replace(/'/g, "\\'")}')" 
+                        ${optionsArray.map(o => {
+                            const safeOptAttr = String(o).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+                            const safeOptJs = String(o).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            return `
+                            <button data-option="${safeOptAttr}" onclick="app.selectOption(this, '${safeOptJs}')" 
                                 class="option-btn py-3 px-4 rounded-2xl border-2 font-bold text-xs text-left text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800 transition-all">
                                 💬 ${o}
                             </button>
-                        `).join('')}
+                        `;
+                        }).join('')}
                     </div>
                 </div>
             `;
@@ -2400,9 +2510,14 @@ const app = {
             const questionText = (isSrToEn && l.q_rev) ? l.q_rev : l.q;
             const optionsArray = (isSrToEn && l.options_rev) ? l.options_rev : l.options;
             const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
+            const contextHint = (typeof app.getContextHintHtml === 'function') ? app.getContextHintHtml(l, isSrToEn) : '';
 
-            area.innerHTML = `${workoutBadge}<h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2><div class="grid w-full max-w-xs gap-3">` +
-                optionsArray.map(o => `<button onclick="app.selectOption(this, '${String(o).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`).join('') + `</div>`;
+            area.innerHTML = `${workoutBadge}${contextHint}<h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2><div class="grid w-full max-w-xs gap-3">` +
+                optionsArray.map(o => {
+                    const safeOptAttr = String(o).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+                    const safeOptJs = String(o).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    return `<button data-option="${safeOptAttr}" onclick="app.selectOption(this, '${safeOptJs}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`;
+                }).join('') + `</div>`;
         }
     },
     moveWordOrderTile: (btn, word) => {
@@ -3274,29 +3389,17 @@ const app = {
         try {
             const l = ACTIVE_LESSON[state.currentLessonIndex];
             let isC = false;
+            let evalResult = { isCorrect: false, matched: null, exactCase: true, usedAlternate: false };
 
             const normalize = (s) => {
                 if (!s || typeof s !== 'string') return "";
-                if (typeof app !== 'undefined' && typeof app._phoneticNormalize === 'function') {
-                    return app._phoneticNormalize(s);
-                }
-                let str = s.toLowerCase().trim();
-                str = str.replace(/y/g, "j").replace(/w/g, "v");
-                str = str.replace(/đ/g, "dj").replace(/dž/g, "dz");
-                str = str.replace(/č/g, "c").replace(/ć/g, "c").replace(/š/g, "s").replace(/ž/g, "z");
-                return str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
-            };
-
-            const isTypoMatch = (userStr, targetStr) => {
-                if (!userStr || !targetStr) return false;
-                const uNorm = normalize(userStr);
-                const tNorm = normalize(targetStr);
-                if (uNorm === tNorm) return true;
-                // Flexible 1-character typo tolerance for words of 4+ characters (e.g. yabuka -> jabuka)
-                if (tNorm.length >= 4 && typeof app !== 'undefined' && typeof app._levenshtein === 'function') {
-                    if (app._levenshtein(uNorm, tNorm) <= 1) return true;
-                }
-                return false;
+                const base = (typeof app !== 'undefined' && typeof app._phoneticNormalize === 'function')
+                    ? app._phoneticNormalize(s)
+                    : s.toLowerCase().trim()
+                        .replace(/y/g, "j").replace(/w/g, "v")
+                        .replace(/đ/g, "dj").replace(/dž/g, "dz")
+                        .replace(/č/g, "c").replace(/ć/g, "c").replace(/š/g, "s").replace(/ž/g, "z");
+                return base.replace(/[.,?!\/#!$%\^&\*;:{}=\-_`~()'"]/g, "").replace(/\s+/g, " ").trim();
             };
 
             if (l.type.startsWith('alphabet_')) {
@@ -3327,9 +3430,9 @@ const app = {
                 }
             } else if (l.type === 'speaking' || l.type === 'fill_blank') {
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';
-                const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
-                const altText = (isSrToEn && l.alt_correct_rev) ? l.alt_correct_rev : l.alt_correct;
-                isC = isTypoMatch(state.userSelection || "", correctText || "") || (altText ? isTypoMatch(state.userSelection || "", altText) : false);
+                const acceptedList = app.getAcceptedAnswers(l, isSrToEn);
+                evalResult = app.evaluateAcceptedAnswer(state.userSelection || "", acceptedList, true);
+                isC = evalResult.isCorrect;
                 
                 const inputElement = document.getElementById('fill-blank-input');
                 if (inputElement) {
@@ -3342,11 +3445,12 @@ const app = {
                 }
             } else if (l.type === 'word_order') {
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';
-                const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
+                const acceptedList = app.getAcceptedAnswers(l, isSrToEn);
                 
                 // state.userSelection is an array of words
                 const userSentence = (state.userSelection || []).join(' ');
-                isC = normalize(userSentence) === normalize(correctText);
+                evalResult = app.evaluateAcceptedAnswer(userSentence, acceptedList, false);
+                isC = evalResult.isCorrect;
                 
                 // Lock buttons
                 document.querySelectorAll('#word-order-answer button').forEach(btn => {
@@ -3370,14 +3474,17 @@ const app = {
                 isC = true;
             } else if (l.type === 'spelling_voice') {
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';
-                const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
+                const acceptedList = app.getAcceptedAnswers(l, isSrToEn);
+                const correctText = acceptedList[0] || ((isSrToEn && l.correct_rev) ? l.correct_rev : l.correct);
                 const targetLang = (isSrToEn && l.targetLang_rev) ? l.targetLang_rev : l.targetLang;
                 
                 let userS = normalize(state.userSelection || "");
-                let cText = normalize(correctText);
                 
                 // Allow exact match, or if they spelled it out then said the word (kucakuca)
-                isC = (userS === cText) || (userS === cText + cText) || userS.endsWith(cText);
+                isC = acceptedList.some(cand => {
+                    const cText = normalize(cand);
+                    return cText && ((userS === cText) || (userS === cText + cText) || userS.endsWith(cText));
+                });
                 
                 // Reveal all letters on check
                 document.querySelectorAll('.spelling-letter').forEach(span => {
@@ -3414,17 +3521,18 @@ const app = {
                 // Disable the bank
                 document.querySelectorAll('#punc-bank button').forEach(b => b.disabled = true);
             } else if (l.type === 'picture_choice' || l.type === 'listening' || l.type === 'dialogue') {
-                // These all use selectOption, same pattern as multiple_choice
+                // These all use selectOption, supporting accepted alternates when defined
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';
-                const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
-                isC = normalize(state.userSelection || "") === normalize(correctText);
+                const acceptedList = app.getAcceptedAnswers(l, isSrToEn);
+                evalResult = app.evaluateAcceptedAnswer(state.userSelection || "", acceptedList, false);
+                isC = evalResult.isCorrect;
                 // Lock and highlight all option buttons
                 document.querySelectorAll('.option-btn').forEach(btn => {
                     btn.disabled = true;
                     btn.classList.add('opacity-50', 'cursor-not-allowed');
-                    // Highlight the correct answer green
-                    const btnText = btn.innerText.replace(/^💬\s*/, '').trim(); // Strip dialogue emoji prefix
-                    if (normalize(btnText) === normalize(correctText)) {
+                    // Highlight accepted answer(s) green
+                    const btnText = btn.getAttribute('data-option') || btn.innerText.replace(/^💬\s*/, '').trim();
+                    if (app.evaluateAcceptedAnswer(btnText, acceptedList, false).isCorrect) {
                         btn.classList.remove('opacity-50');
                         btn.classList.add('bg-green-100', 'border-green-500', 'text-green-700', 'dark:bg-green-900', 'dark:border-green-500', 'dark:text-green-300');
                     } else if (btn.classList.contains('selected') && !isC) {
@@ -3434,16 +3542,19 @@ const app = {
                 });
             } else {
                 const isSrToEn = state.settings.learningDirection === 'sr_to_en';
-                const correctText = (isSrToEn && l.correct_rev) ? l.correct_rev : l.correct;
-                isC = isTypoMatch(state.userSelection || "", correctText || "");
+                const acceptedList = app.getAcceptedAnswers(l, isSrToEn);
+                evalResult = app.evaluateAcceptedAnswer(state.userSelection || "", acceptedList, true);
+                isC = evalResult.isCorrect;
                 // Lock answers for multiple choice
                 document.querySelectorAll('.option-btn').forEach(btn => {
                     btn.disabled = true;
                     btn.classList.add('opacity-50', 'cursor-not-allowed');
-                    const btnText = btn.innerText.replace(/^💬\s*/, '').trim();
-                    if (isTypoMatch(btnText, correctText)) { // Fixed: compare with typo tolerance & case-insensitivity
+                    const btnText = btn.getAttribute('data-option') || btn.innerText.replace(/^💬\s*/, '').trim();
+                    if (app.evaluateAcceptedAnswer(btnText, acceptedList, true).isCorrect) {
+                        btn.classList.remove('opacity-50');
                         btn.classList.add('bg-green-100', 'border-green-500', 'text-green-700', 'dark:bg-green-900', 'dark:border-green-500', 'dark:text-green-300');
                     } else if (btn.classList.contains('selected') && !isC) {
+                        btn.classList.remove('opacity-50');
                         btn.classList.add('bg-red-100', 'border-red-500', 'text-red-700', 'dark:bg-red-900', 'dark:border-red-500', 'dark:text-red-300');
                     }
                 });
@@ -3562,13 +3673,28 @@ const app = {
                 displayCorrect = l.correct_rev;
             }
 
-            // Priority 31: Gentle Typo Feedback detection
+            // Priority 31 + Phase 2: Gentle Typo Feedback detection (checks ALL accepted alternates first)
             let hasTypoWarning = false;
+            let typoTarget = displayCorrect;
+            let matchedAlternate = null;
             if (isC && state.userSelection && typeof state.userSelection === 'string' && displayCorrect) {
-                const uRaw = state.userSelection.trim();
-                const cRaw = displayCorrect.trim();
-                if (uRaw.toLowerCase() !== cRaw.toLowerCase()) {
-                    hasTypoWarning = true;
+                const acceptedList = app.getAcceptedAnswers(l, isSrToEn);
+                if (acceptedList.length > 0 && (l.type === 'speaking' || l.type === 'fill_blank' || l.type === 'picture_choice' || l.type === 'listening' || l.type === 'dialogue' || l.type === 'multiple_choice' || !l.type)) {
+                    const checkRes = (evalResult && evalResult.matched) ? evalResult : app.evaluateAcceptedAnswer(state.userSelection, acceptedList, true);
+                    if (checkRes.matched) {
+                        if (!checkRes.exactCase) {
+                            hasTypoWarning = true;
+                            typoTarget = checkRes.matched;
+                        } else if (checkRes.usedAlternate) {
+                            matchedAlternate = checkRes.matched;
+                        }
+                    }
+                } else {
+                    const uRaw = state.userSelection.trim();
+                    const cRaw = displayCorrect.trim();
+                    if (uRaw.toLowerCase() !== cRaw.toLowerCase()) {
+                        hasTypoWarning = true;
+                    }
                 }
             }
 
@@ -3585,14 +3711,15 @@ const app = {
                     }
                     document.getElementById('feedback-title').innerText = "Tačno sa greškom!";
                     document.getElementById('feedback-title').className = "font-black text-sm text-amber-600 dark:text-amber-400";
-                    document.getElementById('feedback-msg').innerHTML = `⚠️ Obrati pažnju: pravilno se piše "${displayCorrect}"<p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni reči gore u pitanju za gramatičko objašnjenje</p>`;
+                    document.getElementById('feedback-msg').innerHTML = `⚠️ Obrati pažnju: pravilno se piše "${typoTarget}"<p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni reči gore u pitanju za gramatičko objašnjenje</p>`;
                     document.getElementById('feedback-msg').className = "text-[11px] font-bold text-amber-700 dark:text-amber-300";
                     document.getElementById('feedback-icon').innerText = "⚠️";
-                    app.showToast(`Pazi na pravopis: ${displayCorrect}`, "warning");
+                    app.showToast(`Pazi na pravopis: ${typoTarget}`, "warning");
                 } else {
+                    const altLabel = matchedAlternate ? `("${matchedAlternate}" · i "${displayCorrect}")` : `("${displayCorrect}")`;
                     document.getElementById('feedback-title').innerText = "Bravo!";
                     document.getElementById('feedback-title').className = "font-black text-sm text-green-700 dark:text-green-400";
-                    document.getElementById('feedback-msg').innerHTML = `+10 XP <span class="text-slate-500 dark:text-slate-400 font-normal">("${displayCorrect}")</span><p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni reči gore u pitanju za gramatičko objašnjenje</p>`;
+                    document.getElementById('feedback-msg').innerHTML = `+10 XP <span class="text-slate-500 dark:text-slate-400 font-normal">${altLabel}</span><p class="text-[10px] text-slate-400 dark:text-slate-400 mt-1 font-normal">💡 Dodirni reči gore u pitanju za gramatičko objašnjenje</p>`;
                     document.getElementById('feedback-msg').className = "text-[11px] font-bold text-green-600 dark:text-green-300";
                     document.getElementById('feedback-icon').innerText = "✅";
                 }
@@ -5674,7 +5801,7 @@ CRITICAL CONSTRAINTS:
             if (window.sessionStorage) {
                 try { sessionStorage.clear(); } catch(e){}
             }
-            localStorage.setItem('serbolingo_app_version', '23');
+            localStorage.setItem('serbolingo_app_version', '24');
             // Force bypass of Chrome mobile HTTP disk cache via timestamped redirect
             const freshUrl = window.location.origin + window.location.pathname + '?_hard=' + Date.now();
             window.location.replace(freshUrl);

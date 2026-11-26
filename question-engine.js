@@ -9,16 +9,45 @@ const QuestionEngine = {
         return arr;
     },
 
-    // Get N random elements from array excluding target and avoiding duplicate meanings
+    // Phase 2 helper: merge primary + alternate answers without duplicates
+    _buildAccepted(primary, list) {
+        const out = [];
+        const seen = new Set();
+        const add = (val) => {
+            if (!val || typeof val !== 'string') return;
+            const clean = val.trim();
+            const key = clean.toLowerCase();
+            if (!clean || seen.has(key)) return;
+            seen.add(key);
+            out.push(clean);
+        };
+        add(primary);
+        if (Array.isArray(list)) list.forEach(add);
+        return out;
+    },
+
+    // Get N random elements from array excluding target and avoiding duplicate meanings/synonyms
     getRandomDistractors(array, target, count) {
         const targetId = typeof target === 'object' && target ? target.id : target;
         const targetWord = typeof target === 'object' && target ? target : (array || []).find(w => w.id === targetId);
 
-        const targetEn = targetWord && targetWord.en ? targetWord.en.trim().toLowerCase() : '';
-        const targetSr = targetWord && targetWord.sr_lat ? targetWord.sr_lat.trim().toLowerCase() : '';
+        const seenEn = new Set();
+        const seenSr = new Set();
+        const registerWordKeys = (w, enSet, srSet) => {
+            if (!w) return;
+            if (w.en) enSet.add(w.en.trim().toLowerCase());
+            if (Array.isArray(w.accepted_en)) w.accepted_en.forEach(v => v && enSet.add(v.trim().toLowerCase()));
+            if (w.sr_lat) srSet.add(w.sr_lat.trim().toLowerCase());
+            if (Array.isArray(w.accepted_sr)) w.accepted_sr.forEach(v => v && srSet.add(v.trim().toLowerCase()));
+        };
+        registerWordKeys(targetWord, seenEn, seenSr);
 
-        const seenEn = new Set(targetEn ? [targetEn] : []);
-        const seenSr = new Set(targetSr ? [targetSr] : []);
+        const overlapsTargetOrSeen = (w) => {
+            const enForms = [w.en, ...(Array.isArray(w.accepted_en) ? w.accepted_en : [])].filter(Boolean).map(v => v.trim().toLowerCase());
+            const srForms = [w.sr_lat, ...(Array.isArray(w.accepted_sr) ? w.accepted_sr : [])].filter(Boolean).map(v => v.trim().toLowerCase());
+            return enForms.some(e => seenEn.has(e)) || srForms.some(s => seenSr.has(s));
+        };
+
         const distractors = [];
 
         // 1. Pass 1: Gather distinct distractors from the current category array
@@ -28,10 +57,9 @@ const QuestionEngine = {
             const wEn = (w.en || '').trim().toLowerCase();
             const wSr = (w.sr_lat || '').trim().toLowerCase();
             if (!wEn || !wSr) continue;
-            if (seenEn.has(wEn) || seenSr.has(wSr)) continue;
+            if (overlapsTargetOrSeen(w)) continue;
 
-            seenEn.add(wEn);
-            seenSr.add(wSr);
+            registerWordKeys(w, seenEn, seenSr);
             distractors.push(w);
             if (distractors.length >= count) break;
         }
@@ -49,10 +77,9 @@ const QuestionEngine = {
                     const wEn = (w.en || '').trim().toLowerCase();
                     const wSr = (w.sr_lat || '').trim().toLowerCase();
                     if (!wEn || !wSr) continue;
-                    if (seenEn.has(wEn) || seenSr.has(wSr)) continue;
+                    if (overlapsTargetOrSeen(w)) continue;
 
-                    seenEn.add(wEn);
-                    seenSr.add(wSr);
+                    registerWordKeys(w, seenEn, seenSr);
                     distractors.push(w);
                     if (distractors.length >= count) break;
                 }
@@ -101,10 +128,14 @@ const QuestionEngine = {
             type: 'multiple_choice',
             q: q_enToSr,
             q_rev: q_srToEn,
+            hint: word.context_hint || '',
+            hint_rev: word.context_hint_sr || word.context_hint || '',
             options: options_enToSr,
             options_rev: options_srToEn,
             correct: correct_enToSr,
             correct_rev: correct_srToEn,
+            accepted: this._buildAccepted(correct_enToSr, word.accepted_sr),
+            accepted_rev: this._buildAccepted(correct_srToEn, word.accepted_en),
             guide: guide_enToSr,
             guide_rev: guide_srToEn,
             explanation: `<div class="flex flex-col gap-1 text-sm mt-1">
@@ -126,8 +157,12 @@ const QuestionEngine = {
             type: 'speaking',
             q: `How do you say this in Serbian?\n"${word.en}"\n(Tap mic to speak)`,
             q_rev: `Kako se ovo kaže na engleskom?\n"${word.sr_lat}"\n(Tap mic to speak)`,
+            hint: word.context_hint || '',
+            hint_rev: word.context_hint_sr || word.context_hint || '',
             correct: word.sr_lat,
             correct_rev: word.en,
+            accepted: this._buildAccepted(word.sr_lat, word.accepted_sr),
+            accepted_rev: this._buildAccepted(word.en, word.accepted_en),
             // Voice targets
             targetLang: 'sr-RS',
             targetLang_rev: 'en-US'
@@ -143,6 +178,8 @@ const QuestionEngine = {
             q_rev: `Say this sentence in English:\n"${word.example_sr}"\n(Tap mic to speak)`,
             correct: word.example_sr,
             correct_rev: word.example_en,
+            accepted: this._buildAccepted(word.example_sr, word.accepted_sr),
+            accepted_rev: this._buildAccepted(word.example_en, word.accepted_en),
             targetLang: 'sr-RS',
             targetLang_rev: 'en-US'
         };
@@ -150,41 +187,70 @@ const QuestionEngine = {
 
     // Generates a Picture Choice question (Emoji Choice)
     generatePictureChoice(word, allWords) {
-        // Needs 3 distractors with emojis, strictly deduplicated by text
-        const targetEn = (word.en || '').trim().toLowerCase();
-        const targetSr = (word.sr_lat || '').trim().toLowerCase();
-        const seenEn = new Set([targetEn]);
-        const seenSr = new Set([targetSr]);
-        const distractors = [];
+        // Needs 3 distractors with emojis (4 options total for 2x2 grid), strictly deduplicated by text and synonyms
+        const seenEn = new Set();
+        const seenSr = new Set();
+        const registerWordKeys = (w) => {
+            if (!w) return;
+            if (w.en) seenEn.add(w.en.trim().toLowerCase());
+            if (Array.isArray(w.accepted_en)) w.accepted_en.forEach(v => v && seenEn.add(v.trim().toLowerCase()));
+            if (w.sr_lat) seenSr.add(w.sr_lat.trim().toLowerCase());
+            if (Array.isArray(w.accepted_sr)) w.accepted_sr.forEach(v => v && seenSr.add(v.trim().toLowerCase()));
+        };
+        registerWordKeys(word);
 
-        const pool = (allWords || []).filter(w => w.id !== word.id && w.emoji);
-        const shuffled = this.shuffle(pool);
-        for (const w of shuffled) {
-            const wEn = (w.en || '').trim().toLowerCase();
-            const wSr = (w.sr_lat || '').trim().toLowerCase();
-            if (!wEn || !wSr || seenEn.has(wEn) || seenSr.has(wSr)) continue;
-            seenEn.add(wEn);
-            seenSr.add(wSr);
-            distractors.push(w);
-            if (distractors.length >= 3) break;
+        const distractors = [];
+        const usedIds = new Set([word.id]);
+        const tryGatherFromPool = (sourcePool) => {
+            const pool = (sourcePool || []).filter(w => w && w.id && !usedIds.has(w.id) && w.emoji);
+            const shuffled = this.shuffle(pool);
+            for (const w of shuffled) {
+                const enForms = [w.en, ...(Array.isArray(w.accepted_en) ? w.accepted_en : [])].filter(Boolean).map(v => v.trim().toLowerCase());
+                const srForms = [w.sr_lat, ...(Array.isArray(w.accepted_sr) ? w.accepted_sr : [])].filter(Boolean).map(v => v.trim().toLowerCase());
+                if (!enForms.length || !srForms.length) continue;
+                if (enForms.some(e => seenEn.has(e)) || srForms.some(s => seenSr.has(s))) continue;
+
+                registerWordKeys(w);
+                usedIds.add(w.id);
+                distractors.push(w);
+                if (distractors.length >= 3) break;
+            }
+        };
+
+        // Pass 1: Gather from current category / catalog pool
+        tryGatherFromPool(allWords);
+
+        // Pass 2 (Fallback): Guarantee 3 distractors (4 cards total) even for tiny categories
+        if (distractors.length < 3 && typeof window !== 'undefined' && Array.isArray(window.SEED_DATA)) {
+            tryGatherFromPool(window.SEED_DATA);
         }
-        
-        // If we don't have enough distinct distractors with emojis, fallback to standard multiple choice structure
+        if (distractors.length < 3 && typeof window !== 'undefined' && Array.isArray(window.BASICS_CATALOG)) {
+            tryGatherFromPool(window.BASICS_CATALOG);
+        }
+        if (distractors.length < 3 && typeof DICTIONARY !== 'undefined' && Array.isArray(DICTIONARY)) {
+            tryGatherFromPool(DICTIONARY);
+        }
+
+        // If we still don't have enough distinct distractors with emojis, fallback to standard multiple choice structure
         if (distractors.length < 3) {
             return this.generateMultipleChoice(word, allWords);
         }
-        
+
         let options = this.shuffle([word, ...distractors]);
-        
+
         return {
             type: 'picture_choice',
             q: word.en,
             q_rev: word.sr_lat,
+            hint: word.context_hint || '',
+            hint_rev: word.context_hint_sr || word.context_hint || '',
             // The options are objects with text and emoji
-            options: options.map(o => ({ text: o.sr_lat, emoji: o.emoji })),
-            options_rev: options.map(o => ({ text: o.en, emoji: o.emoji })),
+            options: options.map(o => ({ text: o.sr_lat, emoji: o.emoji || '✨' })),
+            options_rev: options.map(o => ({ text: o.en, emoji: o.emoji || '✨' })),
             correct: word.sr_lat,
             correct_rev: word.en,
+            accepted: this._buildAccepted(word.sr_lat, word.accepted_sr),
+            accepted_rev: this._buildAccepted(word.en, word.accepted_en),
         };
     },
 
@@ -206,6 +272,8 @@ const QuestionEngine = {
             type: 'listening',
             q_audio: word.sr_lat, // Hear Serbian word
             q_audio_rev: word.sr_lat, // Hear Serbian word
+            hint: word.context_hint || '',
+            hint_rev: word.context_hint_sr || word.context_hint || '',
             
             // Audio targets for Voice Synthesis: Always authentic Serbian
             audioLang: 'sr-RS',
@@ -215,6 +283,8 @@ const QuestionEngine = {
             options_rev: options_srToEn,
             correct: word.en,
             correct_rev: word.en,
+            accepted: this._buildAccepted(word.en, word.accepted_en),
+            accepted_rev: this._buildAccepted(word.en, word.accepted_en),
         };
     },
 
@@ -283,14 +353,29 @@ const QuestionEngine = {
         let q_srToEn = `Prevedi: "${word.example_sr}"\n\n${enBlankSentence}`;
         let correct_srToEn = enAnswer;
 
+        const extraSr = [...(Array.isArray(word.accepted_sr) ? word.accepted_sr : [])];
+        const extraEn = [...(Array.isArray(word.accepted_en) ? word.accepted_en : [])];
+        if (typeof word.en === 'string' && word.en.toLowerCase().startsWith('to ')) {
+            extraEn.push(word.en.slice(3).trim());
+        }
+        extraEn.forEach(e => {
+            if (typeof e === 'string' && e.toLowerCase().startsWith('to ')) {
+                extraEn.push(e.slice(3).trim());
+            }
+        });
+
         return {
             type: 'fill_blank',
             q: q_enToSr,
             q_rev: q_srToEn,
+            hint: word.context_hint || '',
+            hint_rev: word.context_hint_sr || word.context_hint || '',
             correct: correct_enToSr,
             correct_rev: correct_srToEn,
             alt_correct: word.sr_lat,
             alt_correct_rev: word.en,
+            accepted: this._buildAccepted(correct_enToSr, [word.sr_lat, ...extraSr]),
+            accepted_rev: this._buildAccepted(correct_srToEn, [word.en, ...extraEn]),
             explanation: `💡 The missing word was "${correct_enToSr}" (${word.en}).`,
             explanation_rev: `💡 The missing word was "${correct_srToEn}" (${word.sr_lat}).`
         };
@@ -304,15 +389,21 @@ const QuestionEngine = {
 
         // We scramble the target sentence
         const scramble = (sentence) => this.shuffle(sentence.replace(/[.,!?]/g, '').split(' '));
+        const cleanSr = word.example_sr.replace(/[.,!?]/g, '');
+        const cleanEn = word.example_en.replace(/[.,!?]/g, '');
 
         return {
             type: 'word_order',
             q: `Arrange: "${word.example_en}"`,
             q_rev: `Složi rečenicu: "${word.example_sr}"`,
+            hint: word.context_hint || '',
+            hint_rev: word.context_hint_sr || word.context_hint || '',
             scrambled: scramble(word.example_sr),
             scrambled_rev: scramble(word.example_en),
-            correct: word.example_sr.replace(/[.,!?]/g, ''),
-            correct_rev: word.example_en.replace(/[.,!?]/g, ''),
+            correct: cleanSr,
+            correct_rev: cleanEn,
+            accepted: this._buildAccepted(cleanSr, (word.accepted_sr || []).map(s => String(s).replace(/[.,!?]/g, ''))),
+            accepted_rev: this._buildAccepted(cleanEn, (word.accepted_en || []).map(s => String(s).replace(/[.,!?]/g, ''))),
             explanation: `💡 The correct order is: "${word.example_sr}"`,
             explanation_rev: `💡 The correct order is: "${word.example_en}"`
         };
@@ -326,6 +417,8 @@ const QuestionEngine = {
             q_rev: `Slovkaj naglas:\n"${word.sr_lat}"\n(Tap mic)`,
             correct: word.sr_lat,
             correct_rev: word.en,
+            accepted: this._buildAccepted(word.sr_lat, word.accepted_sr),
+            accepted_rev: this._buildAccepted(word.en, word.accepted_en),
             targetLang: 'sr-RS',
             targetLang_rev: 'en-US',
             explanation: `💡 Listen to the correct spelling!`,
@@ -377,6 +470,8 @@ const QuestionEngine = {
             type: 'hangman',
             q: `Spell: "${word.en}"`,
             q_rev: `Napiši: "${word.sr_lat}"`,
+            hint: word.context_hint || '',
+            hint_rev: word.context_hint_sr || word.context_hint || '',
             correct: cleanSr,
             correct_rev: cleanEn,
             explanation: `💡 The correct spelling is "${word.sr_lat}".`,
@@ -1007,6 +1102,10 @@ const QuestionEngine = {
                     en: item.phrase_en,
                     example_sr: item.phrase_sr,
                     example_en: item.phrase_en,
+                    accepted_sr: item.phrase_accepted_sr,
+                    accepted_en: item.phrase_accepted_en,
+                    context_hint: item.context_hint,
+                    context_hint_sr: item.context_hint_sr,
                     phonetic: item.phrase_phonetic,
                     emoji: item.emoji
                 };
@@ -1029,6 +1128,8 @@ const QuestionEngine = {
                         type: 'multiple_choice',
                         q: `Translate phrase: "${item.phrase_en}"`,
                         q_rev: `Prevedi frazu: "${item.phrase_sr}"`,
+                        hint: item.context_hint || '',
+                        hint_rev: item.context_hint_sr || item.context_hint || '',
                         options: this.shuffle([
                             item.phrase_sr,
                             distractors[0]?.phrase_sr || 'hvala lepo',
@@ -1041,6 +1142,8 @@ const QuestionEngine = {
                         ]),
                         correct: item.phrase_sr,
                         correct_rev: item.phrase_en,
+                        accepted: this._buildAccepted(item.phrase_sr, item.phrase_accepted_sr),
+                        accepted_rev: this._buildAccepted(item.phrase_en, item.phrase_accepted_en),
                         explanation: `💡 <b>"${item.phrase_sr}"</b> = "${item.phrase_en}" (Osnovna reč: <i>${item.sr_lat}</i>)`,
                         explanation_rev: `💡 <b>"${item.phrase_en}"</b> = "${item.phrase_sr}" (Core word: <i>${item.en}</i>)`
                     };
@@ -1060,14 +1163,18 @@ const QuestionEngine = {
                     en: item.en,
                     example_sr: item.sentence_sr,
                     example_en: item.sentence_en,
+                    accepted_sr: item.accepted_sr,
+                    accepted_en: item.accepted_en,
+                    context_hint: item.context_hint,
+                    context_hint_sr: item.context_hint_sr,
                     phonetic: item.sentence_phonetic,
                     emoji: item.emoji
                 };
 
                 if (mode === 'hard') {
                     if (idx % 2 === 0) q = this.generateFillBlank(sentObj);
-                    else q = this.generateWordOrder(sentObj);
-                    if (!q) q = this.generateWordOrder(sentObj) || this.generateFillBlank(sentObj);
+                    else q = this.generateWordOrder({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en });
+                    if (!q) q = this.generateWordOrder({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en }) || this.generateFillBlank(sentObj);
                 } else {
                     const r = idx % 3;
                     if (r === 0 || r === 2) {
@@ -1076,7 +1183,7 @@ const QuestionEngine = {
                     }
                     if (!q) {
                         // Sentence Word Order
-                        q = this.generateWordOrder(sentObj);
+                        q = this.generateWordOrder({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en });
                     }
                 }
                 if (!q) {
@@ -1086,6 +1193,8 @@ const QuestionEngine = {
                         type: 'multiple_choice',
                         q: `Translate sentence: "${item.sentence_en}"`,
                         q_rev: `Prevedi rečenicu: "${item.sentence_sr}"`,
+                        hint: item.context_hint || '',
+                        hint_rev: item.context_hint_sr || item.context_hint || '',
                         options: this.shuffle([
                             item.sentence_sr,
                             distractors[0]?.sentence_sr || 'Kako ste?',
@@ -1098,6 +1207,8 @@ const QuestionEngine = {
                         ]),
                         correct: item.sentence_sr,
                         correct_rev: item.sentence_en,
+                        accepted: this._buildAccepted(item.sentence_sr, item.sentence_accepted_sr),
+                        accepted_rev: this._buildAccepted(item.sentence_en, item.sentence_accepted_en),
                         explanation: `💡 <b>"${item.sentence_sr}"</b> = "${item.sentence_en}"`,
                         explanation_rev: `💡 <b>"${item.sentence_en}"</b> = "${item.sentence_sr}"`
                     };

@@ -1,8 +1,8 @@
 // [SHIELD_DAEMON: VALIDATED]
-// 🛡️ SerboLingo Basics 3-Stage Master Catalog
+// 🛡️ SerboLingo Basics 3-Stage Master Catalog (v2 — Canonical Polysemy & Multi-Answer Cleanup)
 // 250 Core Words ➔ 250 Spotlight Phrases ➔ 250 Spotlight Sentences
 // 25 Levels × 10 Items per Level (Perfect 1-to-1 Symmetry)
-window.BASICS_DATA_VERSION = 1;
+window.BASICS_DATA_VERSION = 2;
 window.BASICS_CATALOG = [
   {
     "id": "b1",
@@ -67,7 +67,7 @@ window.BASICS_CATALOG = [
     "order": 4,
     "sr_lat": "molim",
     "sr_cyr": "молим",
-    "en": "please / you are welcome",
+    "en": "please",
     "phonetic": "MOH-leem",
     "emoji": "🤝",
     "pos": "polite",
@@ -78,7 +78,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Jednu kafu, molim vas.",
     "sentence_cyr": "Једну кафу, молим вас.",
     "sentence_en": "One coffee, please.",
-    "sentence_phonetic": "YEHD-noo KAH-foo, MOH-leem vahs."
+    "sentence_phonetic": "YEHD-noo KAH-foo, MOH-leem vahs.",
+    "accepted_en": [
+      "please",
+      "you are welcome",
+      "here you go"
+    ],
+    "context_hint": "polite request (also \"you are welcome\")"
   },
   {
     "id": "b5",
@@ -105,7 +111,7 @@ window.BASICS_CATALOG = [
     "order": 6,
     "sr_lat": "ne",
     "sr_cyr": "не",
-    "en": "no / not",
+    "en": "no",
     "phonetic": "neh",
     "emoji": "❌",
     "pos": "particle",
@@ -116,7 +122,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Ne hvala, nisam gladan.",
     "sentence_cyr": "Не хвала, нисам гладан.",
     "sentence_en": "No thank you, I am not hungry.",
-    "sentence_phonetic": "Neh HVAH-lah, NEE-sahm GLAH-dahn."
+    "sentence_phonetic": "Neh HVAH-lah, NEE-sahm GLAH-dahn.",
+    "accepted_en": [
+      "no",
+      "not"
+    ],
+    "context_hint": "refusal / negation"
   },
   {
     "id": "b7",
@@ -124,7 +135,7 @@ window.BASICS_CATALOG = [
     "order": 7,
     "sr_lat": "izvinite",
     "sr_cyr": "извините",
-    "en": "excuse me / sorry",
+    "en": "excuse me",
     "phonetic": "eez-VEE-nee-teh",
     "emoji": "🙇",
     "pos": "polite",
@@ -135,7 +146,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Izvinite, gde je toalet?",
     "sentence_cyr": "Извините, где је тоалет?",
     "sentence_en": "Excuse me, where is the restroom?",
-    "sentence_phonetic": "Eez-VEE-nee-teh, gdehy yeh toh-ah-LEHT?"
+    "sentence_phonetic": "Eez-VEE-nee-teh, gdehy yeh toh-ah-LEHT?",
+    "accepted_en": [
+      "excuse me",
+      "sorry",
+      "pardon me"
+    ],
+    "context_hint": "getting attention / polite apology"
   },
   {
     "id": "b8",
@@ -295,7 +312,7 @@ window.BASICS_CATALOG = [
     "order": 6,
     "sr_lat": "vi",
     "sr_cyr": "ви",
-    "en": "you (formal/plural)",
+    "en": "you",
     "phonetic": "vee",
     "emoji": "👥",
     "pos": "pronoun",
@@ -306,7 +323,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Da li ste vi iz Beograda?",
     "sentence_cyr": "Да ли сте ви из Београда?",
     "sentence_en": "Are you from Belgrade?",
-    "sentence_phonetic": "Dah lee steh vee eez Beh-OH-grah-dah?"
+    "sentence_phonetic": "Dah lee steh vee eez Beh-OH-grah-dah?",
+    "accepted_en": [
+      "you",
+      "you all"
+    ],
+    "context_hint": "formal or plural \"you\""
   },
   {
     "id": "b17",
@@ -333,7 +355,7 @@ window.BASICS_CATALOG = [
     "order": 8,
     "sr_lat": "čovek",
     "sr_cyr": "човек",
-    "en": "man / human",
+    "en": "man",
     "phonetic": "CHOH-vehk",
     "emoji": "🧍‍♂️",
     "pos": "noun",
@@ -344,7 +366,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Taj čovek radi u bolnici.",
     "sentence_cyr": "Тај човек ради у болници.",
     "sentence_en": "That man works at the hospital.",
-    "sentence_phonetic": "Tie CHOH-vehk RAH-dee oo BOHL-nee-tsee."
+    "sentence_phonetic": "Tie CHOH-vehk RAH-dee oo BOHL-nee-tsee.",
+    "accepted_en": [
+      "man",
+      "human",
+      "person"
+    ],
+    "context_hint": "adult male / person"
   },
   {
     "id": "b19",
@@ -352,7 +380,7 @@ window.BASICS_CATALOG = [
     "order": 9,
     "sr_lat": "žena",
     "sr_cyr": "жена",
-    "en": "woman / wife",
+    "en": "wife",
     "phonetic": "ZHEH-nah",
     "emoji": "🧍‍♀️",
     "pos": "noun",
@@ -363,7 +391,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Moja žena voli kafu.",
     "sentence_cyr": "Моја жена воли кафу.",
     "sentence_en": "My wife loves coffee.",
-    "sentence_phonetic": "MOH-yah ZHEH-nah VOH-lee KAH-foo."
+    "sentence_phonetic": "MOH-yah ZHEH-nah VOH-lee KAH-foo.",
+    "accepted_en": [
+      "wife",
+      "woman"
+    ],
+    "context_hint": "also means \"woman\""
   },
   {
     "id": "b20",
@@ -542,7 +575,7 @@ window.BASICS_CATALOG = [
     "order": 9,
     "sr_lat": "voleti",
     "sr_cyr": "волети",
-    "en": "to love / like",
+    "en": "to love",
     "phonetic": "VOH-leh-tee",
     "emoji": "❤️",
     "pos": "verb",
@@ -553,7 +586,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Mnogo volim ovaj lep grad.",
     "sentence_cyr": "Много волим овај леп град.",
     "sentence_en": "I love this beautiful city a lot.",
-    "sentence_phonetic": "MNOH-goh VOH-leem OH-vay lehp grahd."
+    "sentence_phonetic": "MNOH-goh VOH-leem OH-vay lehp grahd.",
+    "accepted_en": [
+      "to love",
+      "to like",
+      "love",
+      "like"
+    ]
   },
   {
     "id": "b30",
@@ -561,7 +600,7 @@ window.BASICS_CATALOG = [
     "order": 10,
     "sr_lat": "raditi",
     "sr_cyr": "радити",
-    "en": "to work / do",
+    "en": "to work",
     "phonetic": "RAH-dee-tee",
     "emoji": "💼",
     "pos": "verb",
@@ -572,7 +611,14 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Šta radiš večeras?",
     "sentence_cyr": "Шта радиш вечерас?",
     "sentence_en": "What are you doing tonight?",
-    "sentence_phonetic": "Shtah RAH-deesh VEH-cheh-rahs?"
+    "sentence_phonetic": "Shtah RAH-deesh VEH-cheh-rahs?",
+    "accepted_en": [
+      "to work",
+      "to do",
+      "work",
+      "do"
+    ],
+    "context_hint": "work (also \"do\" in questions)"
   },
   {
     "id": "b31",
@@ -998,7 +1044,7 @@ window.BASICS_CATALOG = [
     "order": 3,
     "sr_lat": "veliki",
     "sr_cyr": "велики",
-    "en": "big / large",
+    "en": "big",
     "phonetic": "VEH-lee-kee",
     "emoji": "🐘",
     "pos": "adjective",
@@ -1009,7 +1055,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Beograd je veliki i živ grad.",
     "sentence_cyr": "Београд је велики и жив град.",
     "sentence_en": "Belgrade is a big and lively city.",
-    "sentence_phonetic": "Beh-OH-grahd yeh VEH-lee-kee ee zheev grahd."
+    "sentence_phonetic": "Beh-OH-grahd yeh VEH-lee-kee ee zheev grahd.",
+    "accepted_en": [
+      "big",
+      "large",
+      "great"
+    ]
   },
   {
     "id": "b54",
@@ -1017,7 +1068,7 @@ window.BASICS_CATALOG = [
     "order": 4,
     "sr_lat": "mali",
     "sr_cyr": "мали",
-    "en": "small / little",
+    "en": "small",
     "phonetic": "MAH-lee",
     "emoji": "🐁",
     "pos": "adjective",
@@ -1028,7 +1079,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Gledam mali čamac na reci.",
     "sentence_cyr": "Гледам мали чамац на реци.",
     "sentence_en": "I watch a small boat on the river.",
-    "sentence_phonetic": "GLEH-dahm MAH-lee CHAH-mahts nah REH-tsee."
+    "sentence_phonetic": "GLEH-dahm MAH-lee CHAH-mahts nah REH-tsee.",
+    "accepted_en": [
+      "small",
+      "little",
+      "tiny"
+    ]
   },
   {
     "id": "b55",
@@ -1074,7 +1130,7 @@ window.BASICS_CATALOG = [
     "order": 7,
     "sr_lat": "lep",
     "sr_cyr": "леп",
-    "en": "beautiful / nice",
+    "en": "beautiful",
     "phonetic": "lehp",
     "emoji": "🌺",
     "pos": "adjective",
@@ -1085,7 +1141,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Danas je predivan i lep dan.",
     "sentence_cyr": "Данас је предиван и леп дан.",
     "sentence_en": "Today is a gorgeous and beautiful day.",
-    "sentence_phonetic": "DAH-nahs yeh PREH-dee-vahn ee lehp dahn."
+    "sentence_phonetic": "DAH-nahs yeh PREH-dee-vahn ee lehp dahn.",
+    "accepted_en": [
+      "beautiful",
+      "nice",
+      "pretty"
+    ]
   },
   {
     "id": "b58",
@@ -1207,7 +1268,7 @@ window.BASICS_CATALOG = [
     "order": 4,
     "sr_lat": "lak",
     "sr_cyr": "лак",
-    "en": "easy / light",
+    "en": "easy",
     "phonetic": "lahk",
     "emoji": "🪶",
     "pos": "adjective",
@@ -1218,7 +1279,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Ovaj srpski čas je bio lak.",
     "sentence_cyr": "Овај српски час је био лак.",
     "sentence_en": "This Serbian class was easy.",
-    "sentence_phonetic": "OH-vay SRP-skee chahs yeh BEE-oh lahk."
+    "sentence_phonetic": "OH-vay SRP-skee chahs yeh BEE-oh lahk.",
+    "accepted_en": [
+      "easy",
+      "light",
+      "simple"
+    ],
+    "context_hint": "effort (also \"light\" weight)"
   },
   {
     "id": "b65",
@@ -1226,9 +1293,9 @@ window.BASICS_CATALOG = [
     "order": 5,
     "sr_lat": "težak",
     "sr_cyr": "тежак",
-    "en": "difficult / heavy",
+    "en": "difficult",
     "phonetic": "TEH-zhahk",
-    "emoji": "🏋️",
+    "emoji": "🧩",
     "pos": "adjective",
     "phrase_sr": "težak jezik",
     "phrase_cyr": "тежак језик",
@@ -1237,7 +1304,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Padeži su teški, ali zanimljivi.",
     "sentence_cyr": "Падежи су тешки, али занимљиви.",
     "sentence_en": "Cases are difficult, but interesting.",
-    "sentence_phonetic": "PAH-deh-zhee soo TEHSH-kee, AH-lee zah-NEEM-lyee-vee."
+    "sentence_phonetic": "PAH-deh-zhee soo TEHSH-kee, AH-lee zah-NEEM-lyee-vee.",
+    "accepted_en": [
+      "difficult",
+      "hard",
+      "heavy"
+    ],
+    "context_hint": "effort / complexity (also \"heavy\" weight)"
   },
   {
     "id": "b66",
@@ -1568,7 +1641,7 @@ window.BASICS_CATALOG = [
     "order": 3,
     "sr_lat": "prodavnica",
     "sr_cyr": "продавница",
-    "en": "store / shop",
+    "en": "store",
     "phonetic": "proh-DAHV-nee-tsah",
     "emoji": "🏪",
     "pos": "noun",
@@ -1579,7 +1652,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Idem u prodavnicu po hleb.",
     "sentence_cyr": "Идем у продавницу по хлеб.",
     "sentence_en": "I'm going to the store for bread.",
-    "sentence_phonetic": "EE-dehm oo proh-DAHV-nee-tsoo poh hlehb."
+    "sentence_phonetic": "EE-dehm oo proh-DAHV-nee-tsoo poh hlehb.",
+    "accepted_en": [
+      "store",
+      "shop",
+      "grocery store"
+    ]
   },
   {
     "id": "b84",
@@ -1783,12 +1861,16 @@ window.BASICS_CATALOG = [
     "pos": "number",
     "phrase_sr": "četiri sata",
     "phrase_cyr": "четири сата",
-    "phrase_en": "four hours / o'clock",
+    "phrase_en": "four o'clock",
     "phrase_phonetic": "CHEH-tee-ree SAH-tah",
     "sentence_sr": "Sada je tačno četiri sata.",
     "sentence_cyr": "Сада је тачно четири сата.",
     "sentence_en": "It is exactly four o'clock now.",
-    "sentence_phonetic": "SAH-dah yeh TAHCH-noh CHEH-tee-ree SAH-tah."
+    "sentence_phonetic": "SAH-dah yeh TAHCH-noh CHEH-tee-ree SAH-tah.",
+    "phrase_accepted_en": [
+      "four o'clock",
+      "four hours"
+    ]
   },
   {
     "id": "b95",
@@ -2024,7 +2106,7 @@ window.BASICS_CATALOG = [
     "order": 7,
     "sr_lat": "koliko",
     "sr_cyr": "колико",
-    "en": "how much / how many",
+    "en": "how much",
     "phonetic": "KOH-lee-koh",
     "emoji": "🔢",
     "pos": "question",
@@ -2035,7 +2117,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Koliko košta ova kafa?",
     "sentence_cyr": "Колико кошта ова кафа?",
     "sentence_en": "How much does this coffee cost?",
-    "sentence_phonetic": "KOH-lee-koh KOHSH-tah OH-vah KAH-fah?"
+    "sentence_phonetic": "KOH-lee-koh KOHSH-tah OH-vah KAH-fah?",
+    "accepted_en": [
+      "how much",
+      "how many"
+    ],
+    "context_hint": "price or quantity"
   },
   {
     "id": "b108",
@@ -2100,7 +2187,7 @@ window.BASICS_CATALOG = [
     "order": 1,
     "sr_lat": "vreme",
     "sr_cyr": "време",
-    "en": "time / weather",
+    "en": "weather",
     "phonetic": "VREH-meh",
     "emoji": "🕒",
     "pos": "noun",
@@ -2111,7 +2198,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Danas je divno sunčano vreme.",
     "sentence_cyr": "Данас је дивно сунчано време.",
     "sentence_en": "Today the weather is wonderfully sunny.",
-    "sentence_phonetic": "DAH-nahs yeh DEEV-noh SOON-chah-noh VREH-meh."
+    "sentence_phonetic": "DAH-nahs yeh DEEV-noh SOON-chah-noh VREH-meh.",
+    "accepted_en": [
+      "weather",
+      "time"
+    ],
+    "context_hint": "climate / forecast (also \"time\")"
   },
   {
     "id": "b112",
@@ -2195,7 +2287,7 @@ window.BASICS_CATALOG = [
     "order": 6,
     "sr_lat": "sat",
     "sr_cyr": "сат",
-    "en": "hour / clock",
+    "en": "hour",
     "phonetic": "saht",
     "emoji": "⏱️",
     "pos": "noun",
@@ -2206,7 +2298,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Čekam te već jedan sat.",
     "sentence_cyr": "Чекам те већ један сат.",
     "sentence_en": "I've been waiting for you for an hour already.",
-    "sentence_phonetic": "CHEH-kahm teh vetch YEH-dahn saht."
+    "sentence_phonetic": "CHEH-kahm teh vetch YEH-dahn saht.",
+    "accepted_en": [
+      "hour",
+      "o'clock",
+      "clock"
+    ],
+    "context_hint": "time duration (60 minutes)"
   },
   {
     "id": "b117",
@@ -2385,7 +2483,7 @@ window.BASICS_CATALOG = [
     "order": 6,
     "sr_lat": "u",
     "sr_cyr": "у",
-    "en": "in / into",
+    "en": "in",
     "phonetic": "oo",
     "emoji": "📥",
     "pos": "preposition",
@@ -2396,7 +2494,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Knjiga je u torbi.",
     "sentence_cyr": "Књига је у торби.",
     "sentence_en": "The book is in the bag.",
-    "sentence_phonetic": "KNYEE-gah yeh oo TOHR-bee."
+    "sentence_phonetic": "KNYEE-gah yeh oo TOHR-bee.",
+    "accepted_en": [
+      "in",
+      "into",
+      "inside"
+    ]
   },
   {
     "id": "b127",
@@ -2404,7 +2507,7 @@ window.BASICS_CATALOG = [
     "order": 7,
     "sr_lat": "na",
     "sr_cyr": "на",
-    "en": "on / at",
+    "en": "on",
     "phonetic": "nah",
     "emoji": "🔝",
     "pos": "preposition",
@@ -2415,7 +2518,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Telefon leži na stolu.",
     "sentence_cyr": "Телефон лежи на столу.",
     "sentence_en": "The phone lies on the table.",
-    "sentence_phonetic": "Teh-LEH-fohn LEH-zhee nah STOH-loo."
+    "sentence_phonetic": "Teh-LEH-fohn LEH-zhee nah STOH-loo.",
+    "accepted_en": [
+      "on",
+      "at",
+      "upon"
+    ]
   },
   {
     "id": "b128",
@@ -2518,7 +2626,7 @@ window.BASICS_CATALOG = [
     "order": 3,
     "sr_lat": "tražiti",
     "sr_cyr": "тражити",
-    "en": "to search / ask for",
+    "en": "to look for",
     "phonetic": "TRAH-zhee-tee",
     "emoji": "🔍",
     "pos": "verb",
@@ -2529,7 +2637,14 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Tražim put do centra grada.",
     "sentence_cyr": "Тражим пут до центра града.",
     "sentence_en": "I am looking for the way to downtown.",
-    "sentence_phonetic": "TRAH-zheem poot doh TSEHN-trah GRAH-dah."
+    "sentence_phonetic": "TRAH-zheem poot doh TSEHN-trah GRAH-dah.",
+    "accepted_en": [
+      "to look for",
+      "to search",
+      "to ask for",
+      "look for",
+      "search"
+    ]
   },
   {
     "id": "b134",
@@ -2594,7 +2709,7 @@ window.BASICS_CATALOG = [
     "order": 7,
     "sr_lat": "učiti",
     "sr_cyr": "учити",
-    "en": "to study / learn",
+    "en": "to learn",
     "phonetic": "OO-chee-tee",
     "emoji": "📚",
     "pos": "verb",
@@ -2605,7 +2720,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Svaki dan učim nove reči.",
     "sentence_cyr": "Сваки дан учим нове речи.",
     "sentence_en": "Every day I learn new words.",
-    "sentence_phonetic": "SVAH-kee dahn OO-cheem NOH-veh REH-chee."
+    "sentence_phonetic": "SVAH-kee dahn OO-cheem NOH-veh REH-chee.",
+    "accepted_en": [
+      "to learn",
+      "to study",
+      "learn",
+      "study"
+    ]
   },
   {
     "id": "b138",
@@ -2725,20 +2846,24 @@ window.BASICS_CATALOG = [
     "id": "b144",
     "level": 15,
     "order": 4,
-    "sr_lat": "riba",
-    "sr_cyr": "риба",
-    "en": "fish",
-    "phonetic": "REE-bah",
-    "emoji": "🐟",
+    "sr_lat": "piletina",
+    "sr_cyr": "пилетина",
+    "en": "chicken",
+    "phonetic": "pee-leh-TEE-nah",
+    "emoji": "🍗",
     "pos": "noun",
-    "phrase_sr": "rečna riba",
-    "phrase_cyr": "речна риба",
-    "phrase_en": "river fish",
-    "phrase_phonetic": "REHCH-nah REE-bah",
-    "sentence_sr": "Dunavska riba je veoma ukusna.",
-    "sentence_cyr": "Дунавска риба је веома укусна.",
-    "sentence_en": "Danube fish is very tasty.",
-    "sentence_phonetic": "Doo-NAHV-skah REE-bah yeh VEH-oh-mah OO-koos-nah."
+    "phrase_sr": "pečena piletina",
+    "phrase_cyr": "печена пилетина",
+    "phrase_en": "roasted chicken",
+    "phrase_phonetic": "peh-CHEH-nah pee-leh-TEE-nah",
+    "sentence_sr": "Piletina sa krompirom je ukusna.",
+    "sentence_cyr": "Пилетина са кромпиром је укусна.",
+    "sentence_en": "Chicken with potatoes is delicious.",
+    "sentence_phonetic": "pee-leh-TEE-nah sah krohm-PEE-rohm yeh oo-KOOS-nah.",
+    "accepted_en": [
+      "chicken",
+      "poultry"
+    ]
   },
   {
     "id": "b145",
@@ -2841,7 +2966,7 @@ window.BASICS_CATALOG = [
     "order": 10,
     "sr_lat": "čorba",
     "sr_cyr": "чорба",
-    "en": "thick soup / stew",
+    "en": "stew",
     "phonetic": "CHOHR-bah",
     "emoji": "🍲",
     "pos": "noun",
@@ -2852,7 +2977,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Teleća čorba je omiljeno jelo.",
     "sentence_cyr": "Телећа чорба је омиљено јело.",
     "sentence_en": "Veal soup is a favorite dish.",
-    "sentence_phonetic": "Teh-LEH-chah CHOHR-bah yeh oh-MEE-lyeh-noh YEH-loh."
+    "sentence_phonetic": "Teh-LEH-chah CHOHR-bah yeh oh-MEE-lyeh-noh YEH-loh.",
+    "accepted_en": [
+      "stew",
+      "thick soup",
+      "soup"
+    ]
   },
   {
     "id": "b151",
@@ -2860,7 +2990,7 @@ window.BASICS_CATALOG = [
     "order": 1,
     "sr_lat": "majica",
     "sr_cyr": "мајица",
-    "en": "t-shirt / shirt",
+    "en": "t-shirt",
     "phonetic": "MY-ee-tsah",
     "emoji": "👕",
     "pos": "noun",
@@ -2871,7 +3001,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Obukao sam čistu belu majicu.",
     "sentence_cyr": "Обукао сам чисту белу мајицу.",
     "sentence_en": "I put on a clean white t-shirt.",
-    "sentence_phonetic": "Oh-BOO-kah-oh sahm CHEES-too BEH-loo MY-ee-tsoo."
+    "sentence_phonetic": "Oh-BOO-kah-oh sahm CHEES-too BEH-loo MY-ee-tsoo.",
+    "accepted_en": [
+      "t-shirt",
+      "shirt",
+      "tee"
+    ]
   },
   {
     "id": "b152",
@@ -2879,7 +3014,7 @@ window.BASICS_CATALOG = [
     "order": 2,
     "sr_lat": "pantalone",
     "sr_cyr": "панталоне",
-    "en": "trousers / pants",
+    "en": "trousers",
     "phonetic": "pahn-tah-LOH-neh",
     "emoji": "👖",
     "pos": "noun",
@@ -2890,7 +3025,11 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Kupio sam crne pantalone.",
     "sentence_cyr": "Купио сам црне панталоне.",
     "sentence_en": "I bought black trousers.",
-    "sentence_phonetic": "KOO-pee-oh sahm TSR-neh pahn-tah-LOH-neh."
+    "sentence_phonetic": "KOO-pee-oh sahm TSR-neh pahn-tah-LOH-neh.",
+    "accepted_en": [
+      "trousers",
+      "pants"
+    ]
   },
   {
     "id": "b153",
@@ -2936,7 +3075,7 @@ window.BASICS_CATALOG = [
     "order": 5,
     "sr_lat": "kapa",
     "sr_cyr": "капа",
-    "en": "cap / hat",
+    "en": "hat",
     "phonetic": "KAH-pah",
     "emoji": "🧢",
     "pos": "noun",
@@ -2947,7 +3086,11 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Nosim kapu kada pada sneg.",
     "sentence_cyr": "Носим капу када пада снег.",
     "sentence_en": "I wear a hat when it snows.",
-    "sentence_phonetic": "NOH-seem KAH-poo KAH-dah PAH-dah snehg."
+    "sentence_phonetic": "NOH-seem KAH-poo KAH-dah PAH-dah snehg.",
+    "accepted_en": [
+      "hat",
+      "cap"
+    ]
   },
   {
     "id": "b156",
@@ -3029,20 +3172,29 @@ window.BASICS_CATALOG = [
     "id": "b160",
     "level": 16,
     "order": 10,
-    "sr_lat": "sat",
-    "sr_cyr": "сат",
-    "en": "watch / clock",
-    "phonetic": "saht",
+    "sr_lat": "ručni sat",
+    "sr_cyr": "ручни сат",
+    "en": "wristwatch",
+    "phonetic": "ROOCH-nee saht",
     "emoji": "⌚",
     "pos": "noun",
-    "phrase_sr": "ručni sat",
-    "phrase_cyr": "ручни сат",
-    "phrase_en": "wrist watch",
-    "phrase_phonetic": "ROOCH-nee saht",
-    "sentence_sr": "Moj novi sat radi tačno.",
-    "sentence_cyr": "Мој нови сат ради тачно.",
-    "sentence_en": "My new watch runs accurately.",
-    "sentence_phonetic": "Moy NOH-vee saht RAH-dee TAHCH-noh."
+    "phrase_sr": "novi ručni sat",
+    "phrase_cyr": "нови ручни сат",
+    "phrase_en": "new wristwatch",
+    "phrase_phonetic": "NOH-vee ROOCH-nee saht",
+    "sentence_sr": "Moj novi ručni sat radi tačno.",
+    "sentence_cyr": "Мој нови ручни сат ради тачно.",
+    "sentence_en": "My new wristwatch runs accurately.",
+    "sentence_phonetic": "moy NOH-vee ROOCH-nee saht RAH-dee TAHCH-noh.",
+    "accepted_en": [
+      "wristwatch",
+      "watch",
+      "wrist watch"
+    ],
+    "accepted_sr": [
+      "ručni sat",
+      "sat"
+    ]
   },
   {
     "id": "b161",
@@ -3164,7 +3316,7 @@ window.BASICS_CATALOG = [
     "order": 7,
     "sr_lat": "put",
     "sr_cyr": "пут",
-    "en": "road / journey",
+    "en": "journey",
     "phonetic": "poot",
     "emoji": "🛤️",
     "pos": "noun",
@@ -3175,7 +3327,14 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Želim vam srećan i miran put.",
     "sentence_cyr": "Желим вам срећан и миран пут.",
     "sentence_en": "I wish you safe and peaceful travels.",
-    "sentence_phonetic": "ZHEH-leem vahm SREH-chahn ee MEE-rahn poot."
+    "sentence_phonetic": "ZHEH-leem vahm SREH-chahn ee MEE-rahn poot.",
+    "accepted_en": [
+      "journey",
+      "road",
+      "way",
+      "trip"
+    ],
+    "context_hint": "trip or physical road"
   },
   {
     "id": "b168",
@@ -3221,7 +3380,7 @@ window.BASICS_CATALOG = [
     "order": 10,
     "sr_lat": "putovanje",
     "sr_cyr": "путовање",
-    "en": "travel / trip",
+    "en": "trip",
     "phonetic": "poo-toh-VAH-nyeh",
     "emoji": "🗺️",
     "pos": "noun",
@@ -3232,7 +3391,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Ovo putovanje je nezaboravno.",
     "sentence_cyr": "Ово путовање је незаборавно.",
     "sentence_en": "This trip is unforgettable.",
-    "sentence_phonetic": "OH-voh poo-toh-VAH-nyeh yeh neh-zah-boh-RAHV-noh."
+    "sentence_phonetic": "OH-voh poo-toh-VAH-nyeh yeh neh-zah-boh-RAHV-noh.",
+    "accepted_en": [
+      "trip",
+      "travel",
+      "journey"
+    ]
   },
   {
     "id": "b171",
@@ -3392,7 +3556,7 @@ window.BASICS_CATALOG = [
     "order": 9,
     "sr_lat": "drvo",
     "sr_cyr": "дрво",
-    "en": "tree / wood",
+    "en": "tree",
     "phonetic": "DR-voh",
     "emoji": "🌳",
     "pos": "noun",
@@ -3403,7 +3567,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Ptice pevaju na drvetu.",
     "sentence_cyr": "Птице певају на дрвету.",
     "sentence_en": "Birds are singing on the tree.",
-    "sentence_phonetic": "PTEE-tseh PEH-vah-yoo nah DR-veh-too."
+    "sentence_phonetic": "PTEE-tseh PEH-vah-yoo nah DR-veh-too.",
+    "accepted_en": [
+      "tree",
+      "wood"
+    ],
+    "context_hint": "living tree (also \"wood\" material)"
   },
   {
     "id": "b180",
@@ -3639,7 +3808,7 @@ window.BASICS_CATALOG = [
     "order": 2,
     "sr_lat": "ruka",
     "sr_cyr": "рука",
-    "en": "arm / hand",
+    "en": "hand",
     "phonetic": "ROO-kah",
     "emoji": "✋",
     "pos": "noun",
@@ -3650,7 +3819,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Daj mi ruku da pređemo ulicu.",
     "sentence_cyr": "Дај ми руку да пређемо улицу.",
     "sentence_en": "Give me your hand so we cross the street.",
-    "sentence_phonetic": "Dye mee ROO-koo dah PREH-jeh-moh OO-lee-tsoo."
+    "sentence_phonetic": "Dye mee ROO-koo dah PREH-jeh-moh OO-lee-tsoo.",
+    "accepted_en": [
+      "hand",
+      "arm"
+    ],
+    "context_hint": "covers both hand and arm"
   },
   {
     "id": "b193",
@@ -3658,7 +3832,7 @@ window.BASICS_CATALOG = [
     "order": 3,
     "sr_lat": "noga",
     "sr_cyr": "нога",
-    "en": "leg / foot",
+    "en": "leg",
     "phonetic": "NOH-gah",
     "emoji": "🦵",
     "pos": "noun",
@@ -3669,7 +3843,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Bole me noge od dugog hoda.",
     "sentence_cyr": "Боле ме ноге од дугог хода.",
     "sentence_en": "My legs hurt from the long walk.",
-    "sentence_phonetic": "BOH-leh mee NOH-geh ohd DOO-gohg HOH-dah."
+    "sentence_phonetic": "BOH-leh mee NOH-geh ohd DOO-gohg HOH-dah.",
+    "accepted_en": [
+      "leg",
+      "foot"
+    ],
+    "context_hint": "covers both leg and foot"
   },
   {
     "id": "b194",
@@ -3810,7 +3989,7 @@ window.BASICS_CATALOG = [
     "order": 1,
     "sr_lat": "posao",
     "sr_cyr": "посао",
-    "en": "job / work",
+    "en": "job",
     "phonetic": "POH-sah-oh",
     "emoji": "💼",
     "pos": "noun",
@@ -3821,7 +4000,11 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Volim svoj svakodnevni posao.",
     "sentence_cyr": "Волим свој свакодневни посао.",
     "sentence_en": "I love my daily job.",
-    "sentence_phonetic": "VOH-leem svoy svah-KOH-dnehv-nee POH-sah-oh."
+    "sentence_phonetic": "VOH-leem svoy svah-KOH-dnehv-nee POH-sah-oh.",
+    "accepted_en": [
+      "job",
+      "work"
+    ]
   },
   {
     "id": "b202",
@@ -3905,7 +4088,7 @@ window.BASICS_CATALOG = [
     "order": 6,
     "sr_lat": "pismo",
     "sr_cyr": "писмо",
-    "en": "letter / alphabet",
+    "en": "script",
     "phonetic": "PEES-moh",
     "emoji": "✉️",
     "pos": "noun",
@@ -3916,7 +4099,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Ćirilica je prelepo staro pismo.",
     "sentence_cyr": "Ћирилица је прелепо старо писмо.",
     "sentence_en": "Cyrillic is a beautiful ancient script.",
-    "sentence_phonetic": "Chee-REE-lee-tsah yeh PREH-leh-poh STAH-roh PEES-moh."
+    "sentence_phonetic": "Chee-REE-lee-tsah yeh PREH-leh-poh STAH-roh PEES-moh.",
+    "accepted_en": [
+      "script",
+      "alphabet",
+      "letter"
+    ],
+    "context_hint": "writing system (also \"letter\")"
   },
   {
     "id": "b207",
@@ -3924,7 +4113,7 @@ window.BASICS_CATALOG = [
     "order": 7,
     "sr_lat": "zadatak",
     "sr_cyr": "задатак",
-    "en": "task / assignment",
+    "en": "task",
     "phonetic": "ZAH-dah-tahk",
     "emoji": "📋",
     "pos": "noun",
@@ -3935,7 +4124,11 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Završio sam sve zadatke za danas.",
     "sentence_cyr": "Завршио сам све задатке за данас.",
     "sentence_en": "I finished all assignments for today.",
-    "sentence_phonetic": "Zah-VR-shee-oh sahm sveh zah-DAHT-keh zah DAH-nahs."
+    "sentence_phonetic": "Zah-VR-shee-oh sahm sveh zah-DAHT-keh zah DAH-nahs.",
+    "accepted_en": [
+      "task",
+      "assignment"
+    ]
   },
   {
     "id": "b208",
@@ -3962,7 +4155,7 @@ window.BASICS_CATALOG = [
     "order": 9,
     "sr_lat": "šef",
     "sr_cyr": "шеф",
-    "en": "boss / manager",
+    "en": "boss",
     "phonetic": "shehf",
     "emoji": "👑",
     "pos": "noun",
@@ -3973,7 +4166,11 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Šef je pohvalio naš tim.",
     "sentence_cyr": "Шеф је похвалио наш тим.",
     "sentence_en": "The boss praised our team.",
-    "sentence_phonetic": "Shehf yeh poh-HVAH-lee-oh nahsh teem."
+    "sentence_phonetic": "Shehf yeh poh-HVAH-lee-oh nahsh teem.",
+    "accepted_en": [
+      "boss",
+      "manager"
+    ]
   },
   {
     "id": "b210",
@@ -4095,7 +4292,7 @@ window.BASICS_CATALOG = [
     "order": 6,
     "sr_lat": "želja",
     "sr_cyr": "жеља",
-    "en": "wish / desire",
+    "en": "wish",
     "phonetic": "ZHEH-lyah",
     "emoji": "💫",
     "pos": "noun",
@@ -4106,7 +4303,11 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Moja želja je da govorim srpski.",
     "sentence_cyr": "Моја жеља је да говорим српски.",
     "sentence_en": "My wish is to speak Serbian.",
-    "sentence_phonetic": "MOH-yah ZHEH-lyah yeh dah GOH-voh-reem SRP-skee."
+    "sentence_phonetic": "MOH-yah ZHEH-lyah yeh dah GOH-voh-reem SRP-skee.",
+    "accepted_en": [
+      "wish",
+      "desire"
+    ]
   },
   {
     "id": "b217",
@@ -4209,7 +4410,7 @@ window.BASICS_CATALOG = [
     "order": 2,
     "sr_lat": "račun",
     "sr_cyr": "рачун",
-    "en": "bill / receipt",
+    "en": "bill",
     "phonetic": "RAH-choon",
     "emoji": "🧾",
     "pos": "noun",
@@ -4220,7 +4421,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Konobar, donesite nam račun molim.",
     "sentence_cyr": "Конобар, донесите нам рачун молим.",
     "sentence_en": "Waiter, bring us the bill please.",
-    "sentence_phonetic": "KOH-noh-bahr, doh-NEH-see-teh nahm RAH-choon MOH-leem."
+    "sentence_phonetic": "KOH-noh-bahr, doh-NEH-see-teh nahm RAH-choon MOH-leem.",
+    "accepted_en": [
+      "bill",
+      "receipt",
+      "check"
+    ]
   },
   {
     "id": "b223",
@@ -4494,7 +4700,7 @@ window.BASICS_CATALOG = [
     "order": 7,
     "sr_lat": "nedelja",
     "sr_cyr": "недеља",
-    "en": "Sunday / week",
+    "en": "Sunday",
     "phonetic": "NEH-deh-lyah",
     "emoji": "☀️",
     "pos": "noun",
@@ -4505,7 +4711,12 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Nedeljom ručamo sa porodicom.",
     "sentence_cyr": "Недељом ручамо са породицом.",
     "sentence_en": "On Sundays we have lunch with family.",
-    "sentence_phonetic": "NEH-deh-lyohm ROO-chah-moh sah poh-ROH-dee-tsohm."
+    "sentence_phonetic": "NEH-deh-lyohm ROO-chah-moh sah poh-ROH-dee-tsohm.",
+    "accepted_en": [
+      "Sunday",
+      "week"
+    ],
+    "context_hint": "day of week (also \"week\")"
   },
   {
     "id": "b238",
@@ -4570,7 +4781,7 @@ window.BASICS_CATALOG = [
     "order": 1,
     "sr_lat": "društvo",
     "sr_cyr": "друштво",
-    "en": "friends / company / society",
+    "en": "company",
     "phonetic": "DROOSH-tvoh",
     "emoji": "👥",
     "pos": "noun",
@@ -4581,7 +4792,13 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Večeras sam sa dobrim društvom.",
     "sentence_cyr": "Вечерас сам са добрим друштвом.",
     "sentence_en": "Tonight I am with good company.",
-    "sentence_phonetic": "Veh-CHEH-rahs sahm sah DOH-breem DROOSH-tvohm."
+    "sentence_phonetic": "Veh-CHEH-rahs sahm sah DOH-breem DROOSH-tvohm.",
+    "accepted_en": [
+      "company",
+      "friends",
+      "society"
+    ],
+    "context_hint": "social group / friends"
   },
   {
     "id": "b242",
@@ -4741,7 +4958,7 @@ window.BASICS_CATALOG = [
     "order": 10,
     "sr_lat": "hrabrost",
     "sr_cyr": "храброст",
-    "en": "courage / bravery",
+    "en": "courage",
     "phonetic": "HRAH-brohst",
     "emoji": "🦁",
     "pos": "noun",
@@ -4752,6 +4969,10 @@ window.BASICS_CATALOG = [
     "sentence_sr": "Potrebna je hrabrost za nove početke.",
     "sentence_cyr": "Потребна је храброст за нове почетке.",
     "sentence_en": "Courage is needed for new beginnings.",
-    "sentence_phonetic": "POHT-rehb-nah yeh HRAH-brohst zah NOH-veh poh-CHEHT-keh."
+    "sentence_phonetic": "POHT-rehb-nah yeh HRAH-brohst zah NOH-veh poh-CHEHT-keh.",
+    "accepted_en": [
+      "courage",
+      "bravery"
+    ]
   }
 ];

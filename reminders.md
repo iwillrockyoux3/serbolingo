@@ -62,6 +62,13 @@
 - [x] **Omni-Bar "Fuzzy Search" & Typo Tolerance (DONE)**:
   - [x] **Space-optimized Levenshtein Distance & Phonetic Normalization (DONE)**: Unified phonetic matching (y <-> j, w <-> v, bald Latin, diacritics) and 1-character typo tolerance across Omni-Bar search and lesson questions/fill-in-the-blank with gentle "Tačno sa greškom!" guidance.
   - [x] **Solid High-Contrast Suggestion Banner (DONE)**: Solid, non-transparent "💡 Da li ste mislili / Did you mean: [Predlog]?" interactive suggestion banner when typing errors are made (e.g. typing "yabuka" auto-matches and suggests "jabuka").
+- [x] **Phase 2: Multi-Answer Grading, Context Hints & Polysemy Patch (DONE)**:
+  - [x] **Unified `evaluateAcceptedAnswer` Pipeline**: 3 helper methods (`getContextHintHtml`, `getAcceptedAnswers`, `evaluateAcceptedAnswer`) in `app.js` handling exact → phonetic → fuzzy matching across all 12 question types.
+  - [x] **Context Hint Rendering**: Amber 💡 pill displayed on polysemic words across speaking, fill_blank, word_order, hangman, picture_choice, listening, and MCQ question types.
+  - [x] **Polysemy Data Patch**: 116 seed-data entries enriched with `accepted_en`/`accepted_sr` alternates and `context_hint` disambiguation (107 entries with accepted fields, 71 with context hints). 41 basics-data entries already had accepted fields (19 with context hints).
+  - [x] **Cross-File Conflict Resolution**: 44 conflicts identified and resolved (e.g., `sto` = table/hundred, `težak` = difficult/heavy, `žena` = woman/wife, `da` = yes/that, `nedelja` = Sunday/week, `sat` = hour/watch/clock).
+  - [x] **Question Engine `_buildAccepted` Helper**: Propagates accepted alternates from word data onto all generated question objects (MCQ, fill_blank, word_order, speaking, listening, picture_choice, hangman, spelling_voice).
+  - [x] **Typo Feedback Upgrade**: Checks ALL accepted alternates before flagging a typo; shows matched alternate in feedback (e.g., `("heavy" · i "difficult")`).
 
 ## ✅ Priority 2: Giant Skill Tree Expansion
 - [x] Sprawling Tree Structure (skill-tree.js): Expanded to 82 multi-unit nodes covering Beginner to Advanced mastery, including Travel, Business, Dating, Tenses, and all 7 Cases.
@@ -749,24 +756,28 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 ---
 
 ## ✅ 🪜 Priority 53: 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (250 Core Words, Phrases & Sentences Hub) (DONE)
-> **Status**: Completed (Curriculum Progression & Anti-Boredom Architecture — v23)  
-> **Concept**: Overhaul the introductory learning loop to eliminate repetitive 10-word cycling by expanding the beginner lexicon to 250 high-frequency words structured in an intra-lesson 3-stage progressive difficulty ladder (Recognition ➔ Assembly ➔ Production).
+<div style="color:#888">
 
-- [x] **1. Expanded 250 Beginner Lexicon Pool (basics-data.js)**:
-  - [x] Broadens the introductory tier to 250 high-frequency words across 25 levels × 10 items per level covering Greetings, Pronouns, Verbs, Food, Home, City, Nature, Emotions, and Socializing with 100% Cyrillic/Latin script parity and phonetics (`window.BASICS_CATALOG`).
-- [x] **2. 1-to-1 Spotlight System for Phrases & Sentences**:
-  - [x] Every single word has exactly 1 dedicated phrase (250 Spotlight Phrases) and 1 dedicated sentence (250 Spotlight Sentences) built from that exact vocabulary word.
-- [x] **3. 3-in-1 Stage Hub Bottom Sheet Modal (#basics-hub-modal)**:
-  - [x] Intercepts taps on the "Osnove (Basics)" bubble in the Skill Tree.
-  - [x] Allows learners to freely choose between:
-    - 🔤 **Faza 1: Reči (Core Words)**: Word recognition with MCQ, picture choice, and native audio.
-    - 💬 **Faza 2: Fraze (Phrase Assembly)**: Assembling learned words into 2-3 word blocks with word ordering, phrase MCQ, and listening.
-    - 📝 **Faza 3: Rečenice (Full Sentences)**: Producing complete thoughts with fill-in-the-blank (anchor word missing), sentence unscramble, and listening.
-  - [x] Live progress tracking per stage (`Nivo X/25 • Y/250 naučeno`) with animated gradient progress bars.
-- [x] **4. Fresh 10 Pagination & Lesson Flow**:
-  - [x] Dedicated `QuestionEngine.generateBasicsLesson` engine generating 10 balanced questions per level.
-  - [x] Seamless Fresh 10 completion screen (`➡️ Sledećih 10 lekcija`, `⬅️ Prethodnih 10`, `🔁 Ponovi ovih 10`, `🏠 Završi i vrati se na stablo`).
-  - [x] Integrated with Skill Tree crown progression, XP rewards, haptics, and swipe-to-dismiss physics.
+> <span style="color:#888">**Status**: Completed (Curriculum Progression & Anti-Boredom Architecture — v23)</span>  
+> <span style="color:#888">**Concept**: Overhaul the introductory learning loop to eliminate repetitive 10-word cycling by expanding the beginner lexicon to 250 high-frequency words structured in an intra-lesson 3-stage progressive difficulty ladder (Recognition ➔ Assembly ➔ Production).</span>
+
+- [x] <span style="color:#888">**1. Expanded 250 Beginner Lexicon Pool (basics-data.js)**:</span>
+  - [x] <span style="color:#888">Broadens the introductory tier to 250 high-frequency words across 25 levels × 10 items per level covering Greetings, Pronouns, Verbs, Food, Home, City, Nature, Emotions, and Socializing with 100% Cyrillic/Latin script parity and phonetics (`window.BASICS_CATALOG`).</span>
+- [x] <span style="color:#888">**2. 1-to-1 Spotlight System for Phrases & Sentences**:</span>
+  - [x] <span style="color:#888">Every single word has exactly 1 dedicated phrase (250 Spotlight Phrases) and 1 dedicated sentence (250 Spotlight Sentences) built from that exact vocabulary word.</span>
+- [x] <span style="color:#888">**3. 3-in-1 Stage Hub Bottom Sheet Modal (#basics-hub-modal)**:</span>
+  - [x] <span style="color:#888">Intercepts taps on the "Osnove (Basics)" bubble in the Skill Tree.</span>
+  - [x] <span style="color:#888">Allows learners to freely choose between:</span>
+    - <span style="color:#888">🔤 **Faza 1: Reči (Core Words)**: Word recognition with MCQ, picture choice, and native audio.</span>
+    - <span style="color:#888">💬 **Faza 2: Fraze (Phrase Assembly)**: Assembling learned words into 2-3 word blocks with word ordering, phrase MCQ, and listening.</span>
+    - <span style="color:#888">📝 **Faza 3: Rečenice (Full Sentences)**: Producing complete thoughts with fill-in-the-blank (anchor word missing), sentence unscramble, and listening.</span>
+  - [x] <span style="color:#888">Live progress tracking per stage (`Nivo X/25 • Y/250 naučeno`) with animated gradient progress bars.</span>
+- [x] <span style="color:#888">**4. Fresh 10 Pagination & Lesson Flow**:</span>
+  - [x] <span style="color:#888">Dedicated `QuestionEngine.generateBasicsLesson` engine generating 10 balanced questions per level.</span>
+  - [x] <span style="color:#888">Seamless Fresh 10 completion screen (`➡️ Sledećih 10 lekcija`, `⬅️ Prethodnih 10`, `🔁 Ponovi ovih 10`, `🏠 Završi i vrati se na stablo`).</span>
+  - [x] <span style="color:#888">Integrated with Skill Tree crown progression, XP rewards, haptics, and swipe-to-dismiss physics.</span>
+
+</div>
 
 ---
 
@@ -861,6 +872,10 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Service Worker Bump to v22**: Updated `sw.js` cache to `serbolingo-app-v22` and all 34 script tags in `index.html` to `v22`.
   - **3-Stage Basics Hub & 250 Core Lexicon (v23)**: Implemented Priority 53 with 250 Core Words, 250 Spotlight Phrases, and 250 Spotlight Sentences mapped 1-to-1 (`basics-data.js`). Added 3-in-1 Stage Hub modal (`#basics-hub-modal`) inside the Osnove skill tree bubble, dedicated `QuestionEngine.generateBasicsLesson` for Recognition (words), Assembly (phrases), and Production (sentences) stages, Fresh 10 pagination controls, unified question workout badges, and bump to v23 across PWA Service Worker, pre-flight cache buster, and Android Capacitor sync.
   - **Service Worker Bump to v23**: Updated `sw.js` cache to `serbolingo-app-v23` and all 36 script tags in `index.html` to `v23`.
+- **2026-11-26**:
+  - **4-Card Picture Choice Guarantee & Clean Prompt Rendering (v24)**: Added global `SEED_DATA` / `BASICS_CATALOG` emoji distractor fallback in `QuestionEngine.generatePictureChoice` (1 target + 3 unique distractors = 4 cards for 2×2 grid across all 5,031 seed and 250 basics items), stripped legacy nested `"What is \"...\"?"` wrappers in `app.js`, enabled post-answer grammar inspection on `picture_choice` and `hangman` target words, and resynced `www/` web assets.
+  - **Scoped Post-Answer Grammar Tooltips (v24)**: Updated `GrammarEngine.wrapInteractiveWords` in `grammar-tooltips.js` so prompt instruction prefixes (`Translate:`, `Prevedi:`, `Kako se kaže`, `Arrange:`, `Spell:`, etc.) remain plain static text while only the tested target words/phrases inside quotes (or after colon prefixes) turn clickable after submitting an answer.
+  - **Service Worker Bump to v24**: Updated `CURRENT_APP_VERSION`, `sw.js` cache (`serbolingo-app-v24`), all `<script src="...?v=24">` tags in `index.html`, and Settings rescue button (`app.purgeCodeCacheAndReload`).
 
 
 
