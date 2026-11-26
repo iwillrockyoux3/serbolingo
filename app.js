@@ -24,6 +24,11 @@ const state = {
         phrases: { page: 0, completed: 0 },
         sentences: { page: 0, completed: 0 }
     },
+    basicsMastery: {
+        words: {},
+        phrases: {},
+        sentences: {}
+    },
     basicsWorkout: null
 };
 let apiKey = "";
@@ -316,6 +321,13 @@ const app = {
                     sentences: { page: 0, completed: 0 }
                 };
             }
+            if (!state.basicsMastery) {
+                state.basicsMastery = { words: {}, phrases: {}, sentences: {} };
+            } else {
+                if (!state.basicsMastery.words) state.basicsMastery.words = {};
+                if (!state.basicsMastery.phrases) state.basicsMastery.phrases = {};
+                if (!state.basicsMastery.sentences) state.basicsMastery.sentences = {};
+            }
 
             // Migrate legacy state or ensure settings exist
             if (!state.settings) state.settings = { darkMode: true, volume: { sfx: 1.0, tts: 1.0 } };
@@ -344,6 +356,7 @@ const app = {
             if (!state.settings) state.settings = { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, appLanguage: 'sr_lat', learningDirection: 'sr_to_en' };
             state.quests = generateDailyQuests();
             state.mistakeLog = {};
+            state.basicsMastery = { words: {}, phrases: {}, sentences: {} };
             state.badges = [];
             state.inventory = { xpBoosts: 0 };
             state.gems = 50;
@@ -1334,16 +1347,35 @@ const app = {
             };
             const label = stageLabels[state.basicsWorkout.stage] || stageLabels.words;
             const stageText = isSrToEn ? label.sr : label.en;
+            const bMode = state.basicsWorkout.mode || 'standard';
+            const subBadge = bMode === 'hard'
+                ? '🔥 HARD MODE'
+                : (bMode === 'mastery'
+                    ? (isSrToEn ? '🧠 PAMETNI MIX' : '🧠 SMART MIX')
+                    : (isSrToEn ? `Nivo ${state.basicsWorkout.page + 1}/${state.basicsWorkout.totalPages}` : `Level ${state.basicsWorkout.page + 1}/${state.basicsWorkout.totalPages}`));
+            const pillClass = bMode === 'hard'
+                ? 'bg-orange-50 dark:bg-orange-950/50 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-300'
+                : (bMode === 'mastery'
+                    ? 'bg-indigo-50 dark:bg-indigo-950/50 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300'
+                    : 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300');
             return `
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-[10px] font-black text-emerald-700 dark:text-emerald-300 uppercase tracking-widest mb-3">
-                    <span>🌱</span>
-                    <span>Osnove • ${stageText} • ${isSrToEn ? `Nivo ${state.basicsWorkout.page + 1}/${state.basicsWorkout.totalPages}` : `Level ${state.basicsWorkout.page + 1}/${state.basicsWorkout.totalPages}`}</span>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border ${pillClass} text-[10px] font-black uppercase tracking-widest mb-3">
+                    <span>${bMode === 'hard' ? '🔥' : (bMode === 'mastery' ? '🧠' : '🌱')}</span>
+                    <span>Osnove • ${stageText} • ${subBadge}</span>
+                </div>
+            `;
+        }
+        if (state.lessonMode === 'hard') {
+            return `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/50 border border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-300 text-[10px] font-black uppercase tracking-widest mb-3">
+                    <span>🔥</span>
+                    <span>${isSrToEn ? 'Hard Mode • Bez pomoći' : 'Hard Mode • Active Recall'}</span>
                 </div>
             `;
         }
         return '';
     },
-    startBasicsLesson: async (stage = 'words', requestedPage = null) => {
+    startBasicsLesson: async (stage = 'words', requestedPage = null, mode = 'standard') => {
         try {
             app.closeBasicsHub();
 
@@ -1360,10 +1392,14 @@ const app = {
             if (!state.basicsProgress[stage]) {
                 state.basicsProgress[stage] = { page: 0, completed: 0 };
             }
+            state.basicsMastery = state.basicsMastery || { words: {}, phrases: {}, sentences: {} };
+            if (!state.basicsMastery[stage]) state.basicsMastery[stage] = {};
 
             const totalPages = 25;
             let page = 0;
-            if (requestedPage !== null && requestedPage !== undefined) {
+            if (mode === 'mastery' || mode === 'hard' || requestedPage === -1) {
+                page = state.basicsProgress[stage].page || 0;
+            } else if (requestedPage !== null && requestedPage !== undefined) {
                 page = Number(requestedPage);
             } else if (state.basicsProgress[stage].page !== undefined) {
                 page = Number(state.basicsProgress[stage].page);
@@ -1371,7 +1407,8 @@ const app = {
             if (page >= totalPages) page = 0;
             if (page < 0) page = 0;
 
-            ACTIVE_LESSON = window.QuestionEngine.generateBasicsLesson(stage, page);
+            const genPage = (mode === 'mastery' || mode === 'hard' || requestedPage === -1) ? -1 : page;
+            ACTIVE_LESSON = window.QuestionEngine.generateBasicsLesson(stage, genPage, 10, mode);
             if (!ACTIVE_LESSON || !ACTIVE_LESSON.length) {
                 app.showToast('Nije moguće generisati lekciju za osnove.', 'error');
                 return;
@@ -1379,17 +1416,18 @@ const app = {
 
             state.basicsWorkout = {
                 stage: stage,
+                mode: mode,
                 page: page,
                 totalPages: totalPages,
                 batchSize: 10,
-                totalItems: 250,
+                totalItems: window.BASICS_CATALOG.length || 250,
                 currentBatchCount: ACTIVE_LESSON.length
             };
 
             state.cantSpeak = false;
             state.cantListen = false;
-            state.lessonMode = 'standard';
-            state.currentLevelKey = `basics_${stage}_${page}`;
+            state.lessonMode = mode;
+            state.currentLevelKey = `basics_${stage}_${mode === 'standard' ? page : mode}`;
             state.currentSkillId = 'basics';
             state.currentLessonIndex = 0;
             state.lastLessonMistakes = 0;
@@ -1406,21 +1444,26 @@ const app = {
     basicsWorkoutNext: () => {
         if (!state.basicsWorkout) return;
         const bw = state.basicsWorkout;
+        if (bw.mode === 'mastery' || bw.mode === 'hard') {
+            app.startBasicsLesson(bw.stage, -1, bw.mode);
+            return;
+        }
         const nextPage = bw.page + 1;
         if (nextPage < bw.totalPages) {
-            app.startBasicsLesson(bw.stage, nextPage);
+            app.startBasicsLesson(bw.stage, nextPage, 'standard');
         } else {
-            app.startBasicsLesson(bw.stage, 0);
+            app.startBasicsLesson(bw.stage, -1, 'mastery');
         }
     },
     basicsWorkoutPrev: () => {
         if (!state.basicsWorkout) return;
         const bw = state.basicsWorkout;
         const prevPage = Math.max(0, bw.page - 1);
-        app.startBasicsLesson(bw.stage, prevPage);
+        app.startBasicsLesson(bw.stage, prevPage, 'standard');
     },
     endBasicsWorkout: () => {
         state.basicsWorkout = null;
+        state.lessonMode = 'standard';
         app.navigate('home');
         if (typeof SkillTreeEngine !== 'undefined' && SkillTreeEngine.render) {
             SkillTreeEngine.render('skill-tree-container');
@@ -1444,18 +1487,29 @@ const app = {
         };
         const stageInfo = stageLabels[bw.stage] || stageLabels.words;
         const stageTitle = isSrToEn ? stageInfo.sr : stageInfo.en;
+        const bMode = bw.mode || 'standard';
 
         const startItem = (bw.page * bw.batchSize) + 1;
         const endItem = Math.min((bw.page + 1) * bw.batchSize, bw.totalItems);
         const hasNext = (bw.page + 1) < bw.totalPages;
         const hasPrev = bw.page > 0;
 
+        // Compute true per-stage mastery breakdown across all 250 items
+        const stageMap = (state.basicsMastery && state.basicsMastery[bw.stage]) ? state.basicsMastery[bw.stage] : {};
+        const breakdown = (window.QuestionEngine && window.QuestionEngine.getMasteryBreakdown)
+            ? window.QuestionEngine.getMasteryBreakdown(window.BASICS_CATALOG || [], stageMap)
+            : { total: bw.totalItems, masteredCount: 0, needsPracticeCount: 0, unseenCount: bw.totalItems, allMastered: false };
+
         // Update progress in state
         if (!state.basicsProgress) state.basicsProgress = {};
         if (!state.basicsProgress[bw.stage]) state.basicsProgress[bw.stage] = { page: 0, completed: 0 };
-        state.basicsProgress[bw.stage].completed = Math.max(state.basicsProgress[bw.stage].completed, endItem);
-        if (hasNext) {
-            state.basicsProgress[bw.stage].page = bw.page + 1;
+        if (bMode === 'standard') {
+            state.basicsProgress[bw.stage].completed = Math.max(state.basicsProgress[bw.stage].completed, endItem, breakdown.masteredCount);
+            if (hasNext) {
+                state.basicsProgress[bw.stage].page = bw.page + 1;
+            }
+        } else {
+            state.basicsProgress[bw.stage].completed = Math.max(state.basicsProgress[bw.stage].completed, breakdown.masteredCount);
         }
         app.saveStats();
 
@@ -1474,10 +1528,12 @@ const app = {
         const bar = document.getElementById('lesson-progress-bar');
         if (bar) bar.style.width = '100%';
 
+        const pctMastered = breakdown.total > 0 ? Math.round((breakdown.masteredCount / breakdown.total) * 100) : 0;
+
         area.innerHTML = `
-            <div class="w-full max-w-sm flex flex-col items-center gap-5 text-center fade-in py-4">
-                <div class="w-20 h-20 rounded-3xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-4xl shadow-md border-2 border-emerald-200 dark:border-emerald-800 animate-bounce">
-                    🌱
+            <div class="w-full max-w-sm flex flex-col items-center gap-4 text-center fade-in py-4">
+                <div class="w-20 h-20 rounded-3xl ${bMode === 'hard' ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-300 border-orange-200 dark:border-orange-800' : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'} flex items-center justify-center text-4xl shadow-md border-2 animate-bounce">
+                    ${bMode === 'hard' ? '🔥' : (bMode === 'mastery' ? '🧠' : '🌱')}
                 </div>
 
                 <div>
@@ -1485,44 +1541,70 @@ const app = {
                         ${isSrToEn ? 'Odlično odrađeno!' : 'Great Job!'}
                     </h2>
                     <p class="text-xs font-bold text-slate-400 dark:text-slate-500 mt-1">
-                        Osnove • ${stageTitle}
+                        Osnove • ${stageTitle}${bMode === 'hard' ? ' • Hard Mode' : (bMode === 'mastery' ? ' • Smart Mix' : '')}
                     </p>
                 </div>
 
-                <div class="w-full bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border-2 border-slate-200/80 dark:border-slate-700/60 shadow-sm">
-                    <div class="flex justify-between items-center text-xs font-black text-slate-600 dark:text-slate-300 mb-2">
-                        <span>${isSrToEn ? `Nivo ${bw.page + 1} od ${bw.totalPages}` : `Level ${bw.page + 1} of ${bw.totalPages}`}</span>
-                        <span class="text-emerald-600 dark:text-emerald-400 font-bold">${isSrToEn ? `Stavke ${startItem}–${endItem} od ${bw.totalItems}` : `Items ${startItem}–${endItem} of ${bw.totalItems}`}</span>
+                <div class="w-full bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border-2 border-slate-200/80 dark:border-slate-700/60 shadow-sm space-y-2.5">
+                    <div class="flex justify-between items-center text-xs font-black text-slate-600 dark:text-slate-300">
+                        <span>${bMode === 'standard' ? (isSrToEn ? `Nivo ${bw.page + 1} od ${bw.totalPages}` : `Level ${bw.page + 1} of ${bw.totalPages}`) : (isSrToEn ? 'Pametna rotacija reči' : 'Smart Mastery Pool')}</span>
+                        <span class="text-emerald-600 dark:text-emerald-400 font-bold">${breakdown.masteredCount}/${breakdown.total} ${isSrToEn ? 'savladano' : 'mastered'} (${pctMastered}%)</span>
                     </div>
                     <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500" style="width: ${((bw.page + 1) / bw.totalPages) * 100}%"></div>
+                        <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500" style="width: ${bMode === 'standard' ? Math.max(pctMastered, ((bw.page + 1) / bw.totalPages) * 100) : pctMastered}%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400 pt-1">
+                        <span>🟢 ${breakdown.masteredCount} ${isSrToEn ? 'Savladano' : 'Mastered'}</span>
+                        <span>🟡 ${breakdown.needsPracticeCount} ${isSrToEn ? 'Za vežbu' : 'Needs Practice'}</span>
+                        <span>⚪ ${breakdown.unseenCount} ${isSrToEn ? 'Novo' : 'Unseen'}</span>
                     </div>
                 </div>
 
-                <div class="w-full flex flex-col gap-2.5 mt-2">
-                    ${hasNext ? `
+                <div class="w-full flex flex-col gap-2.5 mt-1">
+                    ${bMode === 'standard' && hasNext ? `
                         <button onclick="app.basicsWorkoutNext()" class="w-full py-3.5 px-4 rounded-xl bg-green-500 hover:bg-green-600 text-white font-black text-sm uppercase tracking-wide shadow-[0_4px_0_rgb(21,128,61)] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2">
                             <span>➡️</span>
                             <span>${isSrToEn ? `Sledećih 10 lekcija (Nivo ${bw.page + 2})` : `Next 10 Lessons (Level ${bw.page + 2})`}</span>
                         </button>
                     ` : `
-                        <button onclick="app.basicsWorkoutNext()" class="w-full py-3.5 px-4 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-black text-sm uppercase tracking-wide shadow-[0_4px_0_rgb(29,78,216)] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2">
-                            <span>🔄</span>
-                            <span>${isSrToEn ? 'Ponovi ispočetka (Nivo 1)' : 'Restart from Beginning'}</span>
+                        <button onclick="app.startBasicsLesson('${bw.stage}', -1, '${bMode === 'hard' ? 'hard' : 'mastery'}')" class="w-full py-3.5 px-4 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-black text-sm uppercase tracking-wide shadow-[0_4px_0_rgb(67,56,202)] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2">
+                            <span>🧠</span>
+                            <span>${isSrToEn ? 'Još 10 Novih / Slabih Reči' : 'Next 10 Unseen / Weak Words'}</span>
                         </button>
                     `}
 
-                    <button onclick="app.basicsWorkoutPrev()" ${!hasPrev ? 'disabled' : ''} class="w-full py-3 px-4 rounded-xl ${hasPrev ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 cursor-pointer shadow-sm active:translate-y-0.5' : 'bg-slate-50 dark:bg-slate-800/40 text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-50'} border border-slate-200 dark:border-slate-700 font-black text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-2">
-                        <span>⬅️</span>
-                        <span>${isSrToEn ? 'Prethodnih 10 lekcija' : 'Previous 10 Lessons'}</span>
-                    </button>
+                    ${bMode === 'standard' ? `
+                        <button onclick="app.startBasicsLesson('${bw.stage}', -1, 'mastery')" class="w-full py-3 px-4 rounded-xl bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border-2 border-indigo-200 dark:border-indigo-800/60 font-black text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer">
+                            <span>🧠</span>
+                            <span>${isSrToEn ? 'Pametno Ponavljanje (Preskoči naučeno)' : 'Smart Mix (Skip Mastered)'}</span>
+                        </button>
+                    ` : ''}
 
-                    <button onclick="app.startBasicsLesson('${bw.stage}', ${bw.page})" class="w-full py-2.5 px-4 rounded-xl bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 font-black text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
-                        <span>🔁</span>
-                        <span>${isSrToEn ? 'Ponovi ovih 10 ponovo' : 'Replay these 10'}</span>
-                    </button>
+                    ${breakdown.allMastered ? `
+                        <button onclick="app.startBasicsLesson('${bw.stage}', -1, 'hard')" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-black text-xs uppercase tracking-wide shadow-[0_3px_0_rgb(154,52,18)] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer">
+                            <span>🔥</span>
+                            <span>${isSrToEn ? 'Hard Mode (Aktivno pisanje bez pomoći)' : 'Hard Mode (Active Recall Unlocked!)'}</span>
+                        </button>
+                    ` : `
+                        <div class="w-full py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-dashed border-slate-300 dark:border-slate-700 text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                            🔒 ${isSrToEn ? `Hard Mode se otključava na 250/250 (${breakdown.masteredCount}/250)` : `Hard Mode unlocks at 250/250 mastery (${breakdown.masteredCount}/250)`}
+                        </div>
+                    `}
 
-                    <button onclick="app.endBasicsWorkout()" class="w-full mt-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-black text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-sm">
+                    ${bMode === 'standard' ? `
+                        <div class="flex gap-2">
+                            <button onclick="app.basicsWorkoutPrev()" ${!hasPrev ? 'disabled' : ''} class="flex-1 py-2.5 px-3 rounded-xl ${hasPrev ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 cursor-pointer' : 'bg-slate-50 dark:bg-slate-800/40 text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-50'} border border-slate-200 dark:border-slate-700 font-black text-[11px] uppercase tracking-wide transition-all flex items-center justify-center gap-1">
+                                <span>⬅️</span>
+                                <span>${isSrToEn ? 'Prethodnih 10' : 'Prev 10'}</span>
+                            </button>
+                            <button onclick="app.startBasicsLesson('${bw.stage}', ${bw.page}, 'standard')" class="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 font-black text-[11px] uppercase tracking-wide transition-all flex items-center justify-center gap-1 cursor-pointer">
+                                <span>🔁</span>
+                                <span>${isSrToEn ? 'Ponovi Nivo' : 'Replay Level'}</span>
+                            </button>
+                        </div>
+                    ` : ''}
+
+                    <button onclick="app.endBasicsWorkout()" class="w-full mt-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-black text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-sm">
                         <span>🏠</span>
                         <span>${isSrToEn ? 'Završi i vrati se na stablo' : 'Finish & Return to Tree'}</span>
                     </button>
@@ -1933,7 +2015,7 @@ const app = {
                         <!-- Words move here when clicked -->
                     </div>
                     <div id="word-order-bank" class="flex flex-wrap gap-2 justify-center">
-                        ${scrambled.map((w, i) => `<button id="word-tile-${i}" onclick="app.moveWordOrderTile(this, '${w}')" class="px-4 py-2 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-700 dark:text-slate-200 shadow-sm active:scale-95 transition-transform">${w}</button>`).join('')}
+                        ${scrambled.map((w, i) => `<button id="word-tile-${i}" onclick="app.moveWordOrderTile(this, '${String(w).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')" class="px-4 py-2 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-700 dark:text-slate-200 shadow-sm active:scale-95 transition-transform">${w}</button>`).join('')}
                     </div>
                 </div>
             `;
@@ -2320,7 +2402,7 @@ const app = {
             const workoutBadge = (typeof app.getWorkoutBadgeHtml === 'function') ? app.getWorkoutBadgeHtml(isSrToEn) : '';
 
             area.innerHTML = `${workoutBadge}<h2 class="text-xl font-black mb-8 text-slate-700 dark:text-slate-100">${app.formatQuestionText(questionText)}</h2><div class="grid w-full max-w-xs gap-3">` +
-                optionsArray.map(o => `<button onclick="app.selectOption(this, '${o}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`).join('') + `</div>`;
+                optionsArray.map(o => `<button onclick="app.selectOption(this, '${String(o).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`).join('') + `</div>`;
         }
     },
     moveWordOrderTile: (btn, word) => {
@@ -3380,15 +3462,21 @@ const app = {
                     window.LeagueEngine.recordUserXp(earnedXp);
                 }
                 
-                // Priority 6: True SuperMemo-2 SRS Logic - record correct review
-                if (l.wordId) {
+                // Priority 6 + Phase 1: True SuperMemo-2 SRS Logic & Basics per-stage mastery tracking
+                const trackIds = Array.isArray(l.wordIds) && l.wordIds.length ? l.wordIds : (l.wordId ? [l.wordId] : []);
+                trackIds.forEach(tid => {
                     if (window.SrsEngine && typeof window.SrsEngine.recordReview === 'function') {
-                        window.SrsEngine.recordReview(l.wordId, true, 5);
-                    } else if (state.mistakeLog[l.wordId]) {
-                        state.mistakeLog[l.wordId]--;
-                        if (state.mistakeLog[l.wordId] <= 0) delete state.mistakeLog[l.wordId];
+                        window.SrsEngine.recordReview(tid, true, 5);
+                    } else if (state.mistakeLog[tid]) {
+                        state.mistakeLog[tid]--;
+                        if (state.mistakeLog[tid] <= 0) delete state.mistakeLog[tid];
                     }
-                }
+                    if (state.basicsWorkout && state.basicsWorkout.stage) {
+                        state.basicsMastery = state.basicsMastery || { words: {}, phrases: {}, sentences: {} };
+                        state.basicsMastery[state.basicsWorkout.stage] = state.basicsMastery[state.basicsWorkout.stage] || {};
+                        state.basicsMastery[state.basicsWorkout.stage][tid] = 'mastered';
+                    }
+                });
                 
                 // Phase 4: Quest logic
                 app.updateQuestProgress('grinder', 10);
@@ -3442,14 +3530,20 @@ const app = {
                 state.hearts--;
                 state.lastLessonMistakes = (state.lastLessonMistakes || 0) + 1;
                 
-                // Priority 6: True SuperMemo-2 SRS Logic - record failed review
-                if (l.wordId) {
+                // Priority 6 + Phase 1: True SuperMemo-2 SRS Logic & Basics per-stage weakness tracking
+                const trackIds = Array.isArray(l.wordIds) && l.wordIds.length ? l.wordIds : (l.wordId ? [l.wordId] : []);
+                trackIds.forEach(tid => {
                     if (window.SrsEngine && typeof window.SrsEngine.recordReview === 'function') {
-                        window.SrsEngine.recordReview(l.wordId, false, 1);
+                        window.SrsEngine.recordReview(tid, false, 1);
                     } else {
-                        state.mistakeLog[l.wordId] = (state.mistakeLog[l.wordId] || 0) + 1;
+                        state.mistakeLog[tid] = (state.mistakeLog[tid] || 0) + 1;
                     }
-                }
+                    if (state.basicsWorkout && state.basicsWorkout.stage) {
+                        state.basicsMastery = state.basicsMastery || { words: {}, phrases: {}, sentences: {} };
+                        state.basicsMastery[state.basicsWorkout.stage] = state.basicsMastery[state.basicsWorkout.stage] || {};
+                        state.basicsMastery[state.basicsWorkout.stage][tid] = 'needs_practice';
+                    }
+                });
             }
 
             const fb = document.getElementById('feedback-area');
@@ -3635,10 +3729,125 @@ const app = {
         }
 
         if (state.currentSkillId === 'mistakes') {
+            state.lessonMode = 'standard';
             app.navigate('mistakes');
+        } else if (state.currentSkillId && state.currentSkillId !== 'alphabet' && state.currentLevelKey !== 'PRACTICE') {
+            app.renderSkillLessonCompletion(state.currentSkillId);
         } else {
+            state.lessonMode = 'standard';
             app.navigate('home');
         }
+    },
+    endSkillLesson: () => {
+        state.lessonMode = 'standard';
+        app.navigate('home');
+        if (typeof SkillTreeEngine !== 'undefined' && SkillTreeEngine.render) {
+            SkillTreeEngine.render('skill-tree-container');
+        } else if (app.renderSkillTree) {
+            app.renderSkillTree();
+        }
+    },
+    renderSkillLessonCompletion: async (skillId) => {
+        const skill = (typeof SKILL_TREE !== 'undefined') ? SKILL_TREE.find(s => s.id === skillId) : null;
+        if (!skill) {
+            app.endSkillLesson();
+            return;
+        }
+
+        const area = document.getElementById('lesson-content-area');
+        if (!area) {
+            app.endSkillLesson();
+            return;
+        }
+
+        let allWords = [];
+        try {
+            if (window.appDb && window.appDb.getWordsByCategory) {
+                allWords = await window.appDb.getWordsByCategory(skill.category);
+            }
+        } catch (e) {}
+        if (!allWords || !allWords.length) {
+            allWords = (window.SEED_DATA || []).filter(w => w.category === skill.category);
+        }
+
+        const breakdown = (window.QuestionEngine && window.QuestionEngine.getMasteryBreakdown)
+            ? window.QuestionEngine.getMasteryBreakdown(allWords)
+            : { total: allWords.length, masteredCount: 0, needsPracticeCount: 0, unseenCount: allWords.length, allMastered: false };
+
+        const isSrToEn = state.settings.learningDirection === 'sr_to_en';
+        const displayName = isSrToEn ? skill.name : skill.nameEn;
+        const pct = breakdown.total > 0 ? Math.round((breakdown.masteredCount / breakdown.total) * 100) : 0;
+        const crown = (typeof SkillTreeEngine !== 'undefined' && SkillTreeEngine.getCrownLevel) ? SkillTreeEngine.getCrownLevel(skill.id) : 0;
+        const remainingCount = breakdown.needsPracticeCount + breakdown.unseenCount;
+        const isHard = state.lessonMode === 'hard';
+
+        setTimeout(() => app.fireConfetti(), 200);
+        const footer = document.getElementById('lesson-footer');
+        if (footer) footer.classList.add('hidden');
+        const bar = document.getElementById('lesson-progress-bar');
+        if (bar) bar.style.width = '100%';
+
+        area.innerHTML = `
+            <div class="w-full max-w-sm flex flex-col items-center gap-4 text-center fade-in py-4">
+                <div class="w-20 h-20 rounded-3xl ${isHard ? 'bg-orange-100 dark:bg-orange-900/50 border-orange-200 dark:border-orange-800' : 'bg-blue-100 dark:bg-blue-900/50 border-blue-200 dark:border-blue-800'} flex items-center justify-center text-4xl shadow-md border-2 animate-bounce">
+                    ${isHard ? '🔥' : (skill.emoji || '⭐')}
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-black text-slate-800 dark:text-white">
+                        ${isSrToEn ? 'Lekcija završena!' : 'Lesson Complete!'}
+                    </h2>
+                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 mt-1">
+                        ${displayName} • ${'👑'.repeat(Math.min(crown, 5)) || '🌱'} ${isHard ? '• Hard Mode' : ''}
+                    </p>
+                </div>
+
+                <div class="w-full bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border-2 border-slate-200/80 dark:border-slate-700/60 shadow-sm space-y-2.5">
+                    <div class="flex justify-between items-center text-xs font-black text-slate-600 dark:text-slate-300">
+                        <span>${isSrToEn ? 'Savladane reči' : 'Topic Mastery'}</span>
+                        <span class="text-emerald-600 dark:text-emerald-400 font-bold">${breakdown.masteredCount}/${breakdown.total} (${pct}%)</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400 pt-1">
+                        <span>🟢 ${breakdown.masteredCount} ${isSrToEn ? 'Savladano' : 'Mastered'}</span>
+                        <span>🟡 ${breakdown.needsPracticeCount} ${isSrToEn ? 'Za vežbu' : 'Needs Practice'}</span>
+                        <span>⚪ ${breakdown.unseenCount} ${isSrToEn ? 'Novo' : 'Unseen'}</span>
+                    </div>
+                </div>
+
+                <div class="w-full flex flex-col gap-2.5 mt-1">
+                    ${!breakdown.allMastered ? `
+                        <button onclick="app.startSkillLesson('${skill.id}', 'standard')" class="w-full py-3.5 px-4 rounded-xl bg-green-500 hover:bg-green-600 text-white font-black text-sm uppercase tracking-wide shadow-[0_4px_0_rgb(21,128,61)] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2">
+                            <span>➡️</span>
+                            <span>${isSrToEn ? `Sledećih ${Math.min(10, remainingCount)} Novih / Slabih Reči` : `Next ${Math.min(10, remainingCount)} Unseen / Weak Words`}</span>
+                        </button>
+                    ` : `
+                        <button onclick="app.startSkillLesson('${skill.id}', 'standard')" class="w-full py-3.5 px-4 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-black text-sm uppercase tracking-wide shadow-[0_4px_0_rgb(29,78,216)] active:translate-y-1 active:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2">
+                            <span>🔄</span>
+                            <span>${isSrToEn ? 'Ponovi Sve Reči (Review Mix)' : 'Review Mode (All Words)'}</span>
+                        </button>
+                    `}
+
+                    ${breakdown.allMastered ? `
+                        <button onclick="app.startSkillLesson('${skill.id}', 'hard')" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-black text-xs uppercase tracking-wide shadow-[0_3px_0_rgb(154,52,18)] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer">
+                            <span>🔥</span>
+                            <span>${isSrToEn ? 'Hard Mode (Pisanje bez ponuđenih odgovora)' : 'Hard Mode (Active Recall Unlocked!)'}</span>
+                        </button>
+                    ` : `
+                        <div class="w-full py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-dashed border-slate-300 dark:border-slate-700 text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                            🔒 ${isSrToEn ? `Hard Mode otključava se na 100% savladanih reči (${breakdown.masteredCount}/${breakdown.total})` : `Hard Mode unlocks at 100% mastery (${breakdown.masteredCount}/${breakdown.total})`}
+                        </div>
+                    `}
+
+                    <button onclick="app.endSkillLesson()" class="w-full mt-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-black text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-sm">
+                        <span>🏠</span>
+                        <span>${isSrToEn ? 'Završi i vrati se na stablo' : 'Finish & Return to Tree'}</span>
+                    </button>
+                </div>
+            </div>
+        `;
     },
     checkAchievements: () => {
         let newUnlock = false;
@@ -3731,12 +3940,21 @@ const app = {
 
         const updateStageUI = (stage, elPrefix) => {
             const p = state.basicsProgress[stage] || { page: 0, completed: 0 };
+            const stageMap = (state.basicsMastery && state.basicsMastery[stage]) ? state.basicsMastery[stage] : {};
+            const catalog = window.BASICS_CATALOG || [];
+            const breakdown = (window.QuestionEngine && window.QuestionEngine.getMasteryBreakdown && catalog.length)
+                ? window.QuestionEngine.getMasteryBreakdown(catalog, stageMap)
+                : null;
+            const total = breakdown ? breakdown.total : 250;
+            const masteredOrDone = breakdown ? Math.max(breakdown.masteredCount, p.completed || 0) : (p.completed || 0);
             const pageEl = document.getElementById(`${elPrefix}-level`);
             const countEl = document.getElementById(`${elPrefix}-count`);
             const barEl = document.getElementById(`${elPrefix}-bar`);
-            if (pageEl) pageEl.textContent = `Nivo ${p.page + 1}/25`;
-            if (countEl) countEl.textContent = `${p.completed}/250 naučeno`;
-            if (barEl) barEl.style.width = `${Math.min(100, (p.completed / 250) * 100)}%`;
+            if (pageEl) pageEl.textContent = `Nivo ${(p.page || 0) + 1}/25`;
+            if (countEl) countEl.textContent = breakdown
+                ? `${breakdown.masteredCount}/${total} savladano`
+                : `${masteredOrDone}/250 naučeno`;
+            if (barEl) barEl.style.width = `${Math.min(100, (masteredOrDone / total) * 100)}%`;
         };
 
         updateStageUI('words', 'basics-words');
@@ -5037,6 +5255,7 @@ const app = {
         if (confirm(t('lesson_quit'))) {
             state.tierWorkout = null;
             state.basicsWorkout = null;
+            state.lessonMode = 'standard';
             app.navigate(state.currentSkillId === 'mistakes' ? 'mistakes' : 'home');
         }
     },

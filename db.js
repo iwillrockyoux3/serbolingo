@@ -304,10 +304,24 @@ const db = {
     },
 
     getWord(id) {
+        const findInFallback = () => {
+            const fromSeed = (window.SEED_DATA || []).find(w => w.id === id);
+            if (fromSeed) return fromSeed;
+            const fromBasics = (window.BASICS_CATALOG || []).find(w => w.id === id);
+            if (fromBasics) {
+                return {
+                    ...fromBasics,
+                    example_sr: fromBasics.example_sr || fromBasics.sentence_sr,
+                    example_en: fromBasics.example_en || fromBasics.sentence_en,
+                    category: 'basics'
+                };
+            }
+            return null;
+        };
+
         return new Promise((resolve) => {
             if (!this._db) {
-                const found = (window.SEED_DATA || []).find(w => w.id === id);
-                return resolve(found || null);
+                return resolve(findInFallback());
             }
             try {
                 const transaction = this._db.transaction(['dictionary'], 'readonly');
@@ -316,16 +330,11 @@ const db = {
 
                 request.onsuccess = () => {
                     if (request.result) return resolve(request.result);
-                    const found = (window.SEED_DATA || []).find(w => w.id === id);
-                    resolve(found || null);
+                    resolve(findInFallback());
                 };
-                request.onerror = () => {
-                    const found = (window.SEED_DATA || []).find(w => w.id === id);
-                    resolve(found || null);
-                };
+                request.onerror = () => resolve(findInFallback());
             } catch (e) {
-                const found = (window.SEED_DATA || []).find(w => w.id === id);
-                resolve(found || null);
+                resolve(findInFallback());
             }
         });
     },

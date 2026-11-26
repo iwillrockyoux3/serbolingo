@@ -217,7 +217,18 @@
             ]);
 
             dueOrMistakeIds.forEach(id => {
-                const found = seedData.find(w => w.id === id);
+                let found = seedData.find(w => w.id === id);
+                if (!found && Array.isArray(window.BASICS_CATALOG)) {
+                    const b = window.BASICS_CATALOG.find(w => w.id === id);
+                    if (b) {
+                        found = {
+                            ...b,
+                            example_sr: b.example_sr || b.sentence_sr,
+                            example_en: b.example_en || b.sentence_en,
+                            category: 'basics'
+                        };
+                    }
+                }
                 if (found) candidates.push(found);
             });
 

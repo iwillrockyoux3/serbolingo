@@ -414,6 +414,7 @@ const QuestionEngine = {
             q: `Match the pairs`,
             q_rev: `Spoj parove`,
             pairs: pairWords.length,
+            wordIds: pairWords.map(w => w.id).filter(Boolean),
             leftCol,
             rightCol,
             explanation: `💡 Keep practicing to recognize these pairs faster!`,
@@ -484,15 +485,91 @@ const QuestionEngine = {
         };
     },
 
+    // Phase 1 Mastery Pooling: Classify words into Needs Practice, Unseen, and Mastered
+    getMasteryBreakdown(words, customMap = null) {
+        const list = Array.isArray(words) ? words : [];
+        const srsData = (typeof state !== 'undefined' && state.srsData) ? state.srsData : {};
+        const mistakeLog = (typeof state !== 'undefined' && state.mistakeLog) ? state.mistakeLog : {};
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        const needsPractice = [];
+        const unseen = [];
+        const mastered = [];
+
+        for (const w of list) {
+            if (!w || !w.id) continue;
+            if (customMap && typeof customMap === 'object') {
+                const status = customMap[w.id];
+                if (status === 'needs_practice') {
+                    needsPractice.push(w);
+                } else if (status === 'mastered') {
+                    mastered.push(w);
+                } else {
+                    unseen.push(w);
+                }
+                continue;
+            }
+
+            const mCount = mistakeLog[w.id] || 0;
+            const srs = srsData[w.id];
+            if (mCount > 0 || (srs && (srs.repetitions === 0 || (srs.nextReview && srs.nextReview <= todayStr)))) {
+                needsPractice.push(w);
+            } else if (!srs) {
+                unseen.push(w);
+            } else {
+                mastered.push(w);
+            }
+        }
+
+        const total = needsPractice.length + unseen.length + mastered.length;
+        return {
+            total,
+            needsPracticeCount: needsPractice.length,
+            unseenCount: unseen.length,
+            masteredCount: mastered.length,
+            allMastered: total > 0 && needsPractice.length === 0 && unseen.length === 0,
+            needsPractice,
+            unseen,
+            mastered
+        };
+    },
+
+    // Picks up to `count` words prioritizing Needs Practice -> Unseen -> Mastered (Review)
+    selectMasteryWords(words, count = 10, customMap = null) {
+        const srsData = (typeof state !== 'undefined' && state.srsData) ? state.srsData : {};
+        const mistakeLog = (typeof state !== 'undefined' && state.mistakeLog) ? state.mistakeLog : {};
+        const b = this.getMasteryBreakdown(words, customMap);
+
+        const weakSorted = this.shuffle(b.needsPractice).sort((x, y) => {
+            const mx = mistakeLog[x.id] || 0;
+            const my = mistakeLog[y.id] || 0;
+            if (my !== mx) return my - mx;
+            const sx = (srsData[x.id] && srsData[x.id].strength) || 30;
+            const sy = (srsData[y.id] && srsData[y.id].strength) || 30;
+            return sx - sy;
+        });
+
+        const unseenSorted = this.shuffle(b.unseen).sort((x, y) => (x.difficulty || 1) - (y.difficulty || 1));
+
+        const masteredSorted = this.shuffle(b.mastered).sort((x, y) => {
+            const sx = (srsData[x.id] && srsData[x.id].strength) || 100;
+            const sy = (srsData[y.id] && srsData[y.id].strength) || 100;
+            return sx - sy;
+        });
+
+        return weakSorted.concat(unseenSorted, masteredSorted).slice(0, count);
+    },
+
     // Generates a set of questions for a category, mixing types based on mode:
-    // mode = 'standard' (Default: 100% text-friendly, quiet-safe, zero surprise audio/mic requirements)
+    // mode = 'standard' (Balanced variety with SRS Mastery Pooling)
+    // mode = 'hard' (Active recall only: fill-blank, word-order, hangman - unlocked on 100% mastery)
     // mode = 'listening' (Dedicated Ear Training Lab: 100% audio recognition & comprehension)
     // mode = 'speaking' (Dedicated Speaking Lab: 100% microphone pronunciation)
     async generateLesson(categoryName, dbInstance, count = 10, mode = 'standard') {
         if (categoryName === 'basics' || categoryName === 'basics_words' || categoryName === 'basics_phrases' || categoryName === 'basics_sentences') {
             const stage = categoryName === 'basics_phrases' ? 'phrases' : (categoryName === 'basics_sentences' ? 'sentences' : 'words');
             const page = (typeof state !== 'undefined' && state.basicsProgress && state.basicsProgress[stage]) ? state.basicsProgress[stage].page : 0;
-            return this.generateBasicsLesson(stage, page, count);
+            return this.generateBasicsLesson(stage, page, count, mode);
         }
 
         const allWords = await dbInstance.getWordsByCategory(categoryName);
@@ -501,10 +578,8 @@ const QuestionEngine = {
             return [];
         }
 
-        let selectedWords = this.shuffle(allWords).slice(0, count);
-        
-        // Sort by difficulty (progression: easy to hard)
-        selectedWords.sort((a, b) => (a.difficulty || 1) - (b.difficulty || 1));
+        // Pull weak & unseen words first so mastered prompts never loop endlessly on replay
+        let selectedWords = this.selectMasteryWords(allWords, count);
         
         // SPECIALIZED TRAINING MECHANICS
         if (categoryName === 'spelling') {
@@ -544,21 +619,25 @@ const QuestionEngine = {
             });
         }
 
-        // Matching pairs only in standard or listening modes
-        const injectMatching = (mode !== 'speaking') && (Math.random() < 0.4);
-        // Dialogue only in standard or listening modes
-        const injectDialogue = (mode !== 'speaking') && (Math.random() < 0.35);
-        let matchingIncluded = false;
+        // Matching pairs and dialogue only in standard or listening modes (never in speaking or hard recall)
+        const injectMatching = (mode !== 'speaking' && mode !== 'hard') && (Math.random() < 0.4);
+        const injectDialogue = (mode !== 'speaking' && mode !== 'hard') && (Math.random() < 0.35);
         
         const lessonQuestions = selectedWords.map((word, index) => {
-            if (injectMatching && !matchingIncluded && index >= selectedWords.length - 4) {
-                return null;
-            }
-
             const rand = Math.random();
             let q = null;
             
-            if (mode === 'speaking') {
+            if (mode === 'hard') {
+                // Active Recall Hard Mode: typing blanks, word order, and hangman spelling only (no MCQ)
+                const hasEx = !!(word.example_en && word.example_sr);
+                const slot = index % 3;
+                if (hasEx && slot === 0) q = this.generateFillBlank(word);
+                else if (hasEx && slot === 1) q = this.generateWordOrder(word);
+                else q = this.generateHangman(word);
+
+                if (!q && hasEx) q = this.generateFillBlank(word) || this.generateWordOrder(word);
+                if (!q) q = this.generateHangman(word) || this.generateMultipleChoice(word, allWords);
+            } else if (mode === 'speaking') {
                 // Dedicated Speaking Lab
                 if (word.example_en && word.example_sr && rand < 0.45) {
                     q = this.generateSpeakingSentence(word);
@@ -589,9 +668,10 @@ const QuestionEngine = {
             return q;
         }).filter(q => q !== null);
         
-        // Inject matching pairs
+        // Inject matching pairs (prefer selected unmastered words so pairs reinforce active lesson targets)
         if (injectMatching) {
-            const matchingQ = this.generateMatchingPairs(this.shuffle(allWords));
+            const matchPool = selectedWords.length >= 4 ? selectedWords : allWords;
+            const matchingQ = this.generateMatchingPairs(matchPool);
             if (matchingQ) {
                 const insertIndex = Math.floor(Math.random() * lessonQuestions.length);
                 lessonQuestions.splice(insertIndex, 0, matchingQ);
@@ -599,7 +679,7 @@ const QuestionEngine = {
         }
 
         // Inject dialogue
-        if (injectDialogue) {
+        if (injectDialogue && selectedWords[0]) {
             const dialogueQ = this.generateDialogue(selectedWords[0], allWords);
             if (dialogueQ) {
                 dialogueQ.wordId = selectedWords[0].id;
@@ -608,7 +688,7 @@ const QuestionEngine = {
             }
         }
         
-        // Trim to exactly 'count' questions if extras were added
+        // Trim to exactly 'count' questions
         return lessonQuestions.slice(0, count);
     },
 
@@ -855,56 +935,61 @@ const QuestionEngine = {
 
     // Priority 53: Dedicated 3-Stage Basics Lesson Generator
     // 250 Core Words ➔ 250 Spotlight Phrases ➔ 250 Spotlight Sentences (1-to-1 Mapping)
-    generateBasicsLesson: function (stage = 'words', page = 0, count = 10) {
+    // Supports mode: 'standard' (Level 1-25), 'mastery' (Needs Practice -> Unseen), 'hard' (Active Recall)
+    generateBasicsLesson: function (stage = 'words', page = 0, count = 10, mode = 'standard') {
         const catalog = (typeof window !== 'undefined' && Array.isArray(window.BASICS_CATALOG))
             ? window.BASICS_CATALOG
             : [];
         if (!catalog.length) return [];
 
-        const level = (page !== null && page !== undefined) ? (Number(page) + 1) : 1;
-        let batch = catalog.filter(item => item.level === level);
-        if (!batch.length) {
-            const start = Math.max(0, page * 10);
-            batch = catalog.slice(start, start + 10);
-        }
-        if (!batch.length) {
-            batch = catalog.slice(0, 10);
+        const stageMap = (typeof state !== 'undefined' && state.basicsMastery && state.basicsMastery[stage])
+            ? state.basicsMastery[stage]
+            : null;
+
+        let batch = [];
+        if (mode === 'mastery' || mode === 'hard' || page === -1) {
+            batch = this.selectMasteryWords(catalog, count, stageMap);
+        } else {
+            const level = (page !== null && page !== undefined) ? (Number(page) + 1) : 1;
+            batch = catalog.filter(item => item.level === level);
+            if (!batch.length) {
+                const start = Math.max(0, Number(page) * 10);
+                batch = catalog.slice(start, start + 10);
+            }
+            if (!batch.length) {
+                batch = catalog.slice(0, 10);
+            }
         }
 
         const questions = [];
 
         if (stage === 'words') {
-            // STAGE 1: RECOGNITION (Word by word: Multiple Choice, Picture Choice, Listening)
+            // STAGE 1: RECOGNITION (or HARD active recall using spotlight sentence + hangman)
             batch.forEach((item, idx) => {
-                const r = idx % 4;
                 let q = null;
-                if (r === 0 || r === 2) {
-                    q = this.generateMultipleChoice(item, catalog);
-                } else if (r === 1) {
-                    // Picture / Visual Recognition
-                    const distractors = this.getRandomDistractors(catalog, item, 2);
-                    q = {
-                        type: 'picture_choice',
-                        q: `What is "${item.en}"?`,
-                        q_rev: `Šta je "${item.sr_lat}"?`,
-                        options: this.shuffle([
-                            { text: item.sr_lat, emoji: item.emoji || '✨' },
-                            ...distractors.map(d => ({ text: d.sr_lat, emoji: d.emoji || '📦' }))
-                        ]),
-                        options_rev: this.shuffle([
-                            { text: item.en, emoji: item.emoji || '✨' },
-                            ...distractors.map(d => ({ text: d.en, emoji: d.emoji || '📦' }))
-                        ]),
-                        correct: item.sr_lat,
-                        correct_rev: item.en,
-                        explanation: `💡 <b>${item.sr_lat}</b> means <b>${item.en}</b>.`,
-                        explanation_rev: `💡 <b>${item.en}</b> znači <b>${item.sr_lat}</b>.`
+                if (mode === 'hard') {
+                    const wordWithEx = {
+                        ...item,
+                        example_sr: item.sentence_sr,
+                        example_en: item.sentence_en
                     };
+                    if (idx % 2 === 0 && wordWithEx.example_en && wordWithEx.example_sr) {
+                        q = this.generateFillBlank(wordWithEx);
+                    }
+                    if (!q) q = this.generateHangman(item);
+                    if (!q) q = this.generateMultipleChoice(item, catalog);
                 } else {
-                    q = this.generateListening(item, catalog);
-                }
-                if (!q) {
-                    q = this.generateMultipleChoice(item, catalog);
+                    const r = idx % 4;
+                    if (r === 0 || r === 2) {
+                        q = this.generateMultipleChoice(item, catalog);
+                    } else if (r === 1) {
+                        q = this.generatePictureChoice(item, catalog);
+                    } else {
+                        q = this.generateListening(item, catalog);
+                    }
+                    if (!q) {
+                        q = this.generateMultipleChoice(item, catalog);
+                    }
                 }
                 if (q) {
                     q.wordId = item.id;
@@ -912,9 +997,8 @@ const QuestionEngine = {
                 }
             });
         } else if (stage === 'phrases') {
-            // STAGE 2: PHRASE ASSEMBLY (Combining words: Word Order, Phrase MCQ, Listening)
+            // STAGE 2: PHRASE ASSEMBLY (Word Order, Phrase MCQ / Hard: Word Order + Hangman + FillBlank)
             batch.forEach((item, idx) => {
-                const r = idx % 3;
                 let q = null;
                 const phraseObj = {
                     id: item.id,
@@ -927,12 +1011,19 @@ const QuestionEngine = {
                     emoji: item.emoji
                 };
 
-                if (r === 0 || r === 2) {
-                    // Word Order for assembling phrase
-                    q = this.generateWordOrder(phraseObj);
+                if (mode === 'hard') {
+                    if (idx % 2 === 0) q = this.generateWordOrder(phraseObj);
+                    else q = this.generateHangman(phraseObj);
+                    if (!q) q = this.generateWordOrder(phraseObj) || this.generateHangman(phraseObj);
+                } else {
+                    const r = idx % 3;
+                    if (r === 0 || r === 2) {
+                        // Word Order for assembling phrase
+                        q = this.generateWordOrder(phraseObj);
+                    }
                 }
                 if (!q) {
-                    // Phrase Translation MCQ
+                    // Phrase Translation MCQ fallback
                     const distractors = this.getRandomDistractors(catalog, item, 2);
                     q = {
                         type: 'multiple_choice',
@@ -960,9 +1051,8 @@ const QuestionEngine = {
                 }
             });
         } else {
-            // STAGE 3: SENTENCE PRODUCTION (Complete thoughts: Fill Blank, Word Order, Sentence Translation)
+            // STAGE 3: SENTENCE PRODUCTION (Fill Blank, Word Order, Sentence Translation)
             batch.forEach((item, idx) => {
-                const r = idx % 3;
                 let q = null;
                 const sentObj = {
                     id: item.id,
@@ -974,13 +1064,20 @@ const QuestionEngine = {
                     emoji: item.emoji
                 };
 
-                if (r === 0 || r === 2) {
-                    // Fill in the blank (anchor word blanked out)
-                    q = this.generateFillBlank(sentObj);
-                }
-                if (!q) {
-                    // Sentence Word Order
-                    q = this.generateWordOrder(sentObj);
+                if (mode === 'hard') {
+                    if (idx % 2 === 0) q = this.generateFillBlank(sentObj);
+                    else q = this.generateWordOrder(sentObj);
+                    if (!q) q = this.generateWordOrder(sentObj) || this.generateFillBlank(sentObj);
+                } else {
+                    const r = idx % 3;
+                    if (r === 0 || r === 2) {
+                        // Fill in the blank (anchor word blanked out)
+                        q = this.generateFillBlank(sentObj);
+                    }
+                    if (!q) {
+                        // Sentence Word Order
+                        q = this.generateWordOrder(sentObj);
+                    }
                 }
                 if (!q) {
                     // Fallback to sentence translation MCQ
