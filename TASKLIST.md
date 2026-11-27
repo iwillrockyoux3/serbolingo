@@ -5,7 +5,7 @@
 > For the full 22-priority roadmap, see [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md).  
 > For the categorized file index, see [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md).
 
-**Last Updated**: November 26, 2026
+**Last Updated**: November 27, 2026
 
 ---
 
@@ -66,6 +66,8 @@
 - [x] Automated Pre-Flight URL Cache-Buster & Hard Timestamped Rescue Reloader (v22): Completely bypassed aggressive Mobile Chrome V8 bytecode and HTTP disk cache locking. Pre-flight in `index.html` automatically detects version upgrades, purges stale caches, unregisters old SW, and executes a clean `?_v=22` URL replacement. Upgraded `app.purgeCodeCacheAndReload()` in Settings with `sessionStorage` wipe and `?_hard=` timestamped redirect that guarantees fresh code without manual browser menu navigation, while keeping 100% of user XP, streaks, and progress safe (`index.html`, `app.js`, `sw.js`)
 - [x] 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (Priority 53.1 — v23): Created 250-item master dataset across 25 levels × 10 items per level with 1-to-1 spotlight mapping (250 Core Words ➔ 250 Spotlight Phrases ➔ 250 Spotlight Sentences). Built 3-in-1 Stage Hub bottom sheet modal (`#basics-hub-modal`) inside the Osnove bubble with live level and item counters, dedicated `QuestionEngine.generateBasicsLesson` generator for Recognition, Assembly, and Production stages, and Fresh 10 completion screen navigation (`basics-data.js`, `index.html`, `question-engine.js`, `app.js`, `touch-haptics.js`, `sw.js`)
 - [x] Picture Choice 4-Card 2×2 Grid & Scoped Word Inspector Tooltips (v24): Fixed stale `www/` sync and added global emoji distractor fallback in `QuestionEngine.generatePictureChoice` so every category/tier guarantees 4 emoji cards (2×2 grid) with clean quote rendering; restricted `GrammarEngine.wrapInteractiveWords` so only target vocabulary/phrases become clickable after answering while prompt prefixes (`Translate:`, `Prevedi:`, `Kako se kaže`, etc.) stay static (`question-engine.js`, `grammar-tooltips.js`, `app.js`, `index.html`, `sw.js`)
+- [x] Full Option B Exercise Variety Across All 3 Basics Stages (v25): Restored 🎙️ Mic Speaking (`generateSpeaking` & `generateSpeakingSentence`), 🎯 Hangman (words & concise phrases ≤18 chars), 🎧 Listening across Stages 2–3, 🔗 Matching Pairs (4 pairs in Stages 1–2, compact 3 sentence pairs in Stage 3 with mobile-friendly button sizing), and 💬 Mini-Dialogues in `QuestionEngine.generateBasicsLesson`, plus Hard mode speaking recall (`question-engine.js`, `app.js`, `index.html`, `sw.js`)
+- [x] Tactical Diamond Hint Engine (Priority 52 — v26): Added `💡 Pomoć (-5 💎)` footer lifeline (`hint-engine.js`) with atomic `LeagueEngine.spendGems(5)` deduction, 350ms double-tap debounce + single-use lock, zero XP/heart/streak penalty, 50/50 option elimination preserving 1 correct + ≥1 distractor across MCQ/picture/listening/dialogue/alphabet, Unicode-safe first-letter scaffolding (Latin diacritics + Cyrillic) for typing/speaking/cloze (`cloze.js`), sequential next-word highlight for `word_order`, and free-of-mistake letter reveal for `hangman` (`hint-engine.js`, `app.js`, `cloze.js`, `index.html`, `sw.js`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system
@@ -170,7 +172,7 @@
 | P32.3 | Time-Based Variable Dopamine Badges ("Night Owl" & "Accuracy Bonus") | 🆕 New | ✅ DONE |
 | P40.2 | 1-Tap Messaging App Deck Sharing (WhatsApp/Viber) | 🆕 New | ✅ DONE |
 | P51.1 | Zero-Dollar Organic Marketing, ASO & Community Launch Playbook | 🆕 New | ⬜ FUTURE |
-| P52.1 | Tactical Diamond Hint Engine (Scaffolded Lifelines & Word Discovery) | 🆕 New | `question-engine.js`, `shop-engine.js`, `app.js` | ⬜ TODO |
+| P52.1 | Tactical Diamond Hint Engine (Scaffolded Lifelines & Word Discovery) | 🆕 New | `hint-engine.js`, `app.js`, `cloze.js`, `index.html`, `sw.js` | ✅ DONE |
 | P53.1 | 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (250 Core Words, Phrases & Sentences Hub) | 🆕 New | `basics-data.js`, `index.html`, `question-engine.js`, `app.js` | ✅ DONE |
 | P54.1 | "Učionica" Virtual School Syllabus & Homeroom Academy (Standalone Mode) | 🆕 New | `index.html`, `app.js`, `classroom.js` | ⬜ TODO |
 | P55.1 | Spoken Voice-to-Voice AI Language Tutor (Native Walkie-Talkie Loop) | 🆕 New | `app.js`, `voice-tutor.js`, `index.html` | ⬜ TODO |
@@ -189,10 +191,10 @@
 | AI & Audio | 4/4 | 0 |
 | Gamification & Stats | 7/7 | 0 |
 | Content Expansion (P1-P5, P13-P14, P53) | 3/9 | 6 |
-| New Features (P3-P7, P17, P52, P54-P56) | 7/11 | 4 |
+| New Features (P3-P7, P17, P52, P54-P56) | 8/11 | 3 |
 | Deployment (P18-P20, P39, P40) | 5/8 | 3 |
 | Moonshots (P12.2, P21-P22, P24.2, P43.3, P48-P51) | 10/20 | 10 |
-| **TOTAL** | **51/80** | **29** |
+| **TOTAL** | **52/80** | **28** |
 
 ---
 

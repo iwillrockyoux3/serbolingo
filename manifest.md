@@ -5,8 +5,8 @@
 > Before creating ANY new file or feature, scan this index first.  
 > **FILE-AS-TRUTH**: If this manifest seems incomplete, scan the actual source code on disk.
 
-**Last Updated**: November 26, 2026  
-**Total Source Files**: 19 · **Total Lines**: ~21,000+ · **Total Size**: ~1.4 MB
+**Last Updated**: November 27, 2026  
+**Total Source Files**: 20 · **Total Lines**: ~21,500+ · **Total Size**: ~1.4 MB
 
 ---
 
@@ -14,11 +14,11 @@
 
 | File | Lines | Size | Description |
 |:-----|------:|-----:|:------------|
-| [`index.html`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/index.html) | 2,962 | 228 KB | Main SPA shell — all 12 views, modals, nav, SVG icons, CDN imports, script asset tags versioned to v24, automated URL cache-busting pre-flight script in head, 1-click hard timestamp rescue button in Settings, no-referrer meta policy for unblocked mobile audio, 3-Stage Basics Hub modal (`#basics-hub-modal`) |
-| [`app.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/app.js) | 6,004 | 315 KB | Core controller — state management, auth, navigation, Omni-Bar search, daily reset, XP/streak/hearts, Chart.js stats, Skill Tree with Option 2 dual-action audio, Web Audio API AudioContext decoder, 100-item rolling audio cache, Fresh 10 pagination for tier workouts and 3-stage Basics Hub, hard timestamp purgeCodeCacheAndReload rescue method (v24), Quiet Mode safety valves, CORS audio blob streaming pipeline, Phase 2 multi-answer grading helpers (`getContextHintHtml`, `getAcceptedAnswers`, `evaluateAcceptedAnswer`), clean target-word rendering for `picture_choice` & `hangman` |
+| [`index.html`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/index.html) | 2,973 | 230 KB | Main SPA shell — all 12 views, modals, nav, SVG icons, CDN imports, script asset tags versioned to v26, automated URL cache-busting pre-flight script in head, 1-click hard timestamp rescue button in Settings, `#hint-btn` in lesson action footer, no-referrer meta policy for unblocked mobile audio, 3-Stage Basics Hub modal (`#basics-hub-modal`) |
+| [`app.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/app.js) | 6,022 | 316 KB | Core controller — state management, auth, navigation, Omni-Bar search, daily reset, XP/streak/hearts, Chart.js stats, Skill Tree with Option 2 dual-action audio, Web Audio API AudioContext decoder, 100-item rolling audio cache, Fresh 10 pagination for tier workouts and 3-stage Basics Hub, hard timestamp purgeCodeCacheAndReload rescue method (v26), Quiet Mode safety valves, CORS audio blob streaming pipeline, Phase 2 multi-answer grading helpers (`getContextHintHtml`, `getAcceptedAnswers`, `evaluateAcceptedAnswer`), `HintEngine` lesson hooks, clean target-word rendering for `picture_choice` & `hangman`, mobile-compact matching tile sizing |
 | [`db.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/db.js) | 422 | 15 KB | IndexedDB engine & migration manager (`SerboLingoDB` v7) — non-destructive schema upgrades, versioned background upserts, 60 FPS chunked batches, dictionary search/indexing |
 | [`styles.css`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/styles.css) | 607 | 14 KB | Tailwind extensions — custom animations (confetti, arcade-fall/flip/pulse), 3D squishy buttons, progress ring, radar chart, dark mode theme |
-| [`sw.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/sw.js) | 181 | 6.1 KB | PWA Service Worker (v24) — Pre-caches app shell with all v24 assets (including `basics-data.js?v=24`), instant skipWaiting + clients.claim, Lingva API bypass, legacy cache deletion, 100% offline fallback |
+| [`sw.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/sw.js) | 182 | 6.2 KB | PWA Service Worker (v26) — Pre-caches app shell with all v26 assets (including `hint-engine.js?v=26`), instant skipWaiting + clients.claim, Lingva API bypass, legacy cache deletion, 100% offline fallback |
 | [`manifest.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.json) | 80 | 2.1 KB | Web App Manifest — Standalone display mode, theme colors, responsive app icons, PWA quick action shortcuts array |
 | [`icon.svg`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/icon.svg) | 57 | 3 KB | SerboLingo master vector brand icon — Serbian flag tricolor squircle, SL monogram & gold XP lightning badge |
 | [`capacitor.config.json`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/capacitor.config.json) | 16 | 0.4 KB | Capacitor mobile runtime config (`com.serbolingo.app`, splash screen, Android scheme & webDir: www) |
@@ -40,9 +40,10 @@
 | File | Lines | Size | Description |
 |:-----|------:|-----:|:------------|
 | [`skill-tree.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/skill-tree.js) | 675 | 68 KB | 15-tier curriculum (Foundation → C1/C2 Nuances), 5-crown progression (3 lessons/crown), prerequisite logic, bilingual grammar guides per node |
-| [`question-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/question-engine.js) | 1,228 | 56 KB | 12+ question type generator with Option B rich variety distribution in standard mode, Phase 2 `_buildAccepted` helper for propagating `accepted_en`/`accepted_sr` onto all question objects, global fallback guaranteeing 4-card 2×2 grids for `picture_choice`, dedicated ear training (`listening`) and voice lab (`speaking`), 3-stage Basics lesson generator (`generateBasicsLesson`), punctuation-stripped Hangman generator, distractor deduplication, and `generateQuestionsFromWords` tier batcher |
+| [`question-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/question-engine.js) | 1,353 | 62 KB | 12+ question type generator with Option B rich variety distribution in standard mode and across all 3 Basics stages (`speaking`, `hangman`, `listening`, 4-card `picture_choice`, 3/4-pair `matching_pairs`, `dialogue`, `fill_blank`, `word_order`, `mcq`), Phase 2 `_buildAccepted` helper, global fallback guaranteeing 4-card 2×2 grids, dedicated ear training (`listening`) and voice lab (`speaking`), punctuation-stripped Hangman generator, distractor deduplication, and `generateQuestionsFromWords` tier batcher |
 | [`alphabet-data.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/alphabet-data.js) | 73 | 7 KB | Complete 30-letter Serbian alphabet matrix — Latin + Cyrillic with anchor words, emojis, phonetics |
 | [`grammar-tooltips.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/grammar-tooltips.js) | 1,321 | 71 KB | Smart Grammar Tooltips & Interactive Word Inspector — Deep linguistic engine (SR_CORE_GRAMMAR, EN_CORE_GRAMMAR, SEED_DATA indexing), scoped post-answer target-word wrapping (`wrapInteractiveWords` excludes prompt prefixes like `Translate:`), gender/tense/case badges, collocations, syntax notes, bilingual audio & examples |
+| [`hint-engine.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/hint-engine.js) | 433 | 20 KB | Tactical Diamond Hint Engine (Priority 52) — Atomic 5 💎 hint spending via `LeagueEngine`, 350ms debounce & single-use lock, 50/50 option elimination across MCQ/picture/listening/dialogue/alphabet, Unicode-safe first-letter scaffolding (Latin diacritics + Cyrillic) for typing/speaking/cloze, `word_order` word hint, and free-of-mistake `hangman` letter reveal |
 | [`grammar-sandbox.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/grammar-sandbox.js) | 570 | 28 KB | Interactive Grammar Sandbox & 2-in-1 Sentence Hub (Priority 41) — Word-by-word sentence trainer (50+ curated sentences) + Color-coded Lego SVO grammar blocks (blue/red/green/purple) |
 
 ## [04_AUDIO] — TTS, Speech Recognition & Pitch Analysis
@@ -81,7 +82,7 @@
 
 | [`karaoke.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/karaoke.js) | 572 | 28 KB | Bilingual speech-recognition reader — levels A1-B2, live word tracking, word translations, TTS replay |
 | [`rhythm.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/rhythm.js) | 567 | 26 KB | Music lyrics synchronizer — YouTube IFrame API playback + SpeechRecognition singing/recitation scoring |
-| [`cloze.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/cloze.js) | 552 | 26 KB | Fill-in-the-blank context trainer (Priority 13 Upgrade) — 4,400+ dynamic sentences from seed-data.js, 14 thematic study channels, 100% Cyrillic/Latin script parity, SR ↔ EN direction toggle, stem-aware blank extraction, typo tolerance (bald Latin, phonetics, Levenshtein), mobile diacritic bar, TTS audio & infinite mode |
+| [`cloze.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/cloze.js) | 876 | 51 KB | Fill-in-the-blank context trainer (Priority 13 & 52) — 4,400+ dynamic sentences from seed-data.js, 14 thematic study channels, 100% Cyrillic/Latin script parity, SR ↔ EN direction toggle, stem-aware blank extraction, typo tolerance (bald Latin, phonetics, Levenshtein), mobile diacritic bar, `💡 -5 💎` first-letter scaffold button, TTS audio & infinite mode |
 | [`slang.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/slang.js) | 350 | 22 KB | Authentic Cultural Idioms & Slang (Priority 30) — Belgrade/Izreke/Nežnost/Kafana/Južni database, cultural context notes, quiz engine, mistakeLog & SRS Flashcards sync |
 | [`stories.js`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/stories.js) | 352 | 18 KB | Branching RPG-style interactive dialogue stories — multiple conversation paths |
 
@@ -104,9 +105,9 @@
 | File | Lines | Description |
 |:-----|------:|:------------|
 | [`GEMINI.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/GEMINI.md) | 159 | Technical Constitution v3.0 — Shield Daemon Protocol, 11 governance sections |
-| [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md) | 883 | Master roadmap — 56 priorities, competitor benchmarks, CEFR goals |
-| [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md) | 123 | This file — categorized source index |
-| [`TASKLIST.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/TASKLIST.md) | 205 | Active work tracker |
+| [`reminders.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/reminders.md) | 891 | Master roadmap — 56 priorities, competitor benchmarks, CEFR goals |
+| [`manifest.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/manifest.md) | 124 | This file — categorized source index |
+| [`TASKLIST.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/TASKLIST.md) | 207 | Active work tracker |
 | [`.antigravity/README.md`](file:///c:/Users/iwillrockyouxD/Downloads/serbolingo%20app/.antigravity/README.md) | — | Infrastructure directory readme |
 
 ---

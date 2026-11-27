@@ -638,10 +638,16 @@ const ClozeEngine = {
                             }).join('')}
                         </div>
 
-                        <!-- Submit Button -->
-                        <button id="cloze-submit" onclick="ClozeEngine.submitAnswer()" class="w-full p-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl text-lg font-black text-white active:scale-95 transition-all shadow-lg shadow-blue-600/30 mt-1">
-                            Proveri Odgovor ✓
-                        </button>
+                        <!-- Submit & Tactical Diamond Hint Row -->
+                        <div class="flex items-center gap-2 mt-1">
+                            <button id="cloze-hint-btn" onclick="window.HintEngine && HintEngine.useClozeHint()" title="Otkrij prvo slovo za 5 dijamanata"
+                                class="shrink-0 py-4 px-3.5 bg-amber-500/15 hover:bg-amber-500/25 border-2 border-amber-400/60 text-amber-300 rounded-2xl text-xs font-black shadow-[0_0_12px_rgba(245,158,11,0.22)] active:scale-95 transition-all flex items-center gap-1 whitespace-nowrap">
+                                <span>💡</span> <span>-5 💎</span> <span id="cloze-hint-gems" class="text-[10px] text-cyan-300">(${window.HintEngine ? HintEngine.getUserGems() : 50})</span>
+                            </button>
+                            <button id="cloze-submit" onclick="ClozeEngine.submitAnswer()" class="flex-1 p-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl text-lg font-black text-white active:scale-95 transition-all shadow-lg shadow-blue-600/30">
+                                Proveri Odgovor ✓
+                            </button>
+                        </div>
                         
                         <!-- Dynamic Result / Hint Notice -->
                         <div id="cloze-feedback" class="min-h-[28px] text-sm font-bold transition-all"></div>
@@ -725,6 +731,8 @@ const ClozeEngine = {
 
         input.disabled = true;
         submitBtn.disabled = true;
+        const hintBtn = document.getElementById('cloze-hint-btn');
+        if (hintBtn) hintBtn.disabled = true;
 
         const result = this.checkMatch(guess, targetAnswer, s.baseWord, isSr);
 

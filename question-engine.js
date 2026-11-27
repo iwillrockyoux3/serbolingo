@@ -176,6 +176,8 @@ const QuestionEngine = {
             type: 'speaking',
             q: `Say this sentence in Serbian:\n"${word.example_en}"\n(Tap mic to speak)`,
             q_rev: `Say this sentence in English:\n"${word.example_sr}"\n(Tap mic to speak)`,
+            hint: word.context_hint || '',
+            hint_rev: word.context_hint_sr || word.context_hint || '',
             correct: word.example_sr,
             correct_rev: word.example_en,
             accepted: this._buildAccepted(word.example_sr, word.accepted_sr),
@@ -480,8 +482,8 @@ const QuestionEngine = {
     },
 
     // Generates a Matching Pairs question object
-    // Takes an array of words and selects up to 4 strictly unique pairs (no duplicate text)
-    generateMatchingPairs(words) {
+    // Takes an array of words and selects up to `maxPairs` (default 4) strictly unique pairs (no duplicate text)
+    generateMatchingPairs(words, maxPairs = 4) {
         if (!words || words.length < 2) return null;
         
         const seenEn = new Set();
@@ -496,7 +498,7 @@ const QuestionEngine = {
             seenEn.add(wEn);
             seenSr.add(wSr);
             pairWords.push(w);
-            if (pairWords.length >= 4) break;
+            if (pairWords.length >= maxPairs) break;
         }
 
         if (pairWords.length < 2) return null;
@@ -1058,8 +1060,106 @@ const QuestionEngine = {
 
         const questions = [];
 
+        // Helper builders for Stage 2 phrases & Stage 3 sentences so every QuestionEngine generator works cleanly
+        const toPhraseObj = (it) => ({
+            id: it.id,
+            sr_lat: it.phrase_sr,
+            sr_cyr: it.phrase_cyr,
+            en: it.phrase_en,
+            example_sr: it.phrase_sr,
+            example_en: it.phrase_en,
+            accepted_sr: it.phrase_accepted_sr,
+            accepted_en: it.phrase_accepted_en,
+            context_hint: it.context_hint,
+            context_hint_sr: it.context_hint_sr,
+            phonetic: it.phrase_phonetic,
+            emoji: it.emoji,
+            category: 'basics'
+        });
+
+        const toSentListenObj = (it) => ({
+            id: it.id,
+            sr_lat: it.sentence_sr,
+            sr_cyr: it.sentence_cyr,
+            en: it.sentence_en,
+            example_sr: it.sentence_sr,
+            example_en: it.sentence_en,
+            accepted_sr: it.sentence_accepted_sr,
+            accepted_en: it.sentence_accepted_en,
+            context_hint: it.context_hint,
+            context_hint_sr: it.context_hint_sr,
+            phonetic: it.sentence_phonetic,
+            emoji: it.emoji,
+            category: 'basics'
+        });
+
+        const buildPhraseMcq = (item) => {
+            const distractors = this.getRandomDistractors(catalog, item, 2);
+            return {
+                type: 'multiple_choice',
+                q: `Translate phrase: "${item.phrase_en}"`,
+                q_rev: `Prevedi frazu: "${item.phrase_sr}"`,
+                hint: item.context_hint || '',
+                hint_rev: item.context_hint_sr || item.context_hint || '',
+                options: this.shuffle([
+                    item.phrase_sr,
+                    distractors[0]?.phrase_sr || 'hvala lepo',
+                    distractors[1]?.phrase_sr || 'dobro jutro'
+                ]),
+                options_rev: this.shuffle([
+                    item.phrase_en,
+                    distractors[0]?.phrase_en || 'thank you very much',
+                    distractors[1]?.phrase_en || 'good morning'
+                ]),
+                correct: item.phrase_sr,
+                correct_rev: item.phrase_en,
+                accepted: this._buildAccepted(item.phrase_sr, item.phrase_accepted_sr),
+                accepted_rev: this._buildAccepted(item.phrase_en, item.phrase_accepted_en),
+                explanation: `💡 <b>"${item.phrase_sr}"</b> = "${item.phrase_en}" (Osnovna reč: <i>${item.sr_lat}</i>)`,
+                explanation_rev: `💡 <b>"${item.phrase_en}"</b> = "${item.phrase_sr}" (Core word: <i>${item.en}</i>)`
+            };
+        };
+
+        const buildSentenceMcq = (item) => {
+            const distractors = this.getRandomDistractors(catalog, item, 2);
+            return {
+                type: 'multiple_choice',
+                q: `Translate sentence: "${item.sentence_en}"`,
+                q_rev: `Prevedi rečenicu: "${item.sentence_sr}"`,
+                hint: item.context_hint || '',
+                hint_rev: item.context_hint_sr || item.context_hint || '',
+                options: this.shuffle([
+                    item.sentence_sr,
+                    distractors[0]?.sentence_sr || 'Kako ste?',
+                    distractors[1]?.sentence_sr || 'Dobro sam.'
+                ]),
+                options_rev: this.shuffle([
+                    item.sentence_en,
+                    distractors[0]?.sentence_en || 'How are you?',
+                    distractors[1]?.sentence_en || 'I am well.'
+                ]),
+                correct: item.sentence_sr,
+                correct_rev: item.sentence_en,
+                accepted: this._buildAccepted(item.sentence_sr, item.sentence_accepted_sr),
+                accepted_rev: this._buildAccepted(item.sentence_en, item.sentence_accepted_en),
+                explanation: `💡 <b>"${item.sentence_sr}"</b> = "${item.sentence_en}"`,
+                explanation_rev: `💡 <b>"${item.sentence_en}"</b> = "${item.sentence_sr}"`
+            };
+        };
+
         if (stage === 'words') {
-            // STAGE 1: RECOGNITION (or HARD active recall using spotlight sentence + hangman)
+            // STAGE 1: RECOGNITION + FULL OPTION B VARIETY (MCQ, Picture Choice, Listening, Mic Speaking, Hangman, Matching Pairs, Dialogue)
+            const slots = this.shuffle([
+                'picture', 'picture',
+                'listening', 'listening',
+                'speaking', 'speaking',
+                'hangman',
+                'mcq', 'mcq', 'mcq'
+            ]);
+            const injectMatching = (mode !== 'hard') && (Math.random() < 0.45);
+            const injectDialogue = (mode !== 'hard') && (Math.random() < 0.35);
+            let bonusSlotIdx = 0;
+
             batch.forEach((item, idx) => {
                 let q = null;
                 if (mode === 'hard') {
@@ -1068,93 +1168,126 @@ const QuestionEngine = {
                         example_sr: item.sentence_sr,
                         example_en: item.sentence_en
                     };
-                    if (idx % 2 === 0 && wordWithEx.example_en && wordWithEx.example_sr) {
+                    const hSlot = idx % 3;
+                    if (hSlot === 0 && wordWithEx.example_en && wordWithEx.example_sr) {
                         q = this.generateFillBlank(wordWithEx);
-                    }
-                    if (!q) q = this.generateHangman(item);
-                    if (!q) q = this.generateMultipleChoice(item, catalog);
-                } else {
-                    const r = idx % 4;
-                    if (r === 0 || r === 2) {
-                        q = this.generateMultipleChoice(item, catalog);
-                    } else if (r === 1) {
-                        q = this.generatePictureChoice(item, catalog);
+                    } else if (hSlot === 1) {
+                        q = this.generateHangman(item);
                     } else {
+                        q = this.generateSpeaking(item);
+                    }
+                    if (!q) q = this.generateHangman(item) || this.generateMultipleChoice(item, catalog);
+                } else {
+                    const kind = slots[idx % slots.length];
+                    if (kind === 'picture') {
+                        q = this.generatePictureChoice(item, catalog);
+                    } else if (kind === 'listening') {
                         q = this.generateListening(item, catalog);
+                    } else if (kind === 'speaking') {
+                        q = this.generateSpeaking(item);
+                    } else if (kind === 'hangman') {
+                        q = this.generateHangman(item);
+                    } else if (kind === 'mcq') {
+                        if (injectMatching && bonusSlotIdx === 0) {
+                            const matchPool = batch.length >= 4 ? batch : catalog;
+                            q = this.generateMatchingPairs(matchPool, 4);
+                            bonusSlotIdx++;
+                        } else if (injectDialogue && bonusSlotIdx <= 1) {
+                            q = this.generateDialogue(item, catalog);
+                            bonusSlotIdx = 2;
+                        }
+                        if (!q) q = this.generateMultipleChoice(item, catalog);
                     }
                     if (!q) {
                         q = this.generateMultipleChoice(item, catalog);
                     }
                 }
                 if (q) {
-                    q.wordId = item.id;
+                    q.wordId = q.wordId || item.id;
                     questions.push(q);
                 }
             });
         } else if (stage === 'phrases') {
-            // STAGE 2: PHRASE ASSEMBLY (Word Order, Phrase MCQ / Hard: Word Order + Hangman + FillBlank)
+            // STAGE 2: PHRASE ASSEMBLY + FULL VARIETY (Word Order, Phrase MCQ, Listening, Mic Speaking, Hangman, Matching Pairs, Dialogue)
+            const phrasePool = catalog.map(toPhraseObj);
+            const batchPhrases = batch.map(toPhraseObj);
+            const slots = this.shuffle([
+                'word_order', 'word_order', 'word_order',
+                'listening', 'listening',
+                'speaking', 'speaking',
+                'hangman',
+                'mcq', 'mcq'
+            ]);
+            // Guarantee the hangman slot lands on a concise phrase (<= 18 chars) when one exists in batch
+            const hIdx = slots.indexOf('hangman');
+            if (hIdx !== -1 && batchPhrases[hIdx]) {
+                const hLen = (batchPhrases[hIdx].sr_lat || '').replace(/[^a-zA-ZčćžšđČĆŽŠĐ\s]/g, '').trim().length;
+                if (hLen > 18) {
+                    const swapIdx = batchPhrases.findIndex((p, i) => i !== hIdx && (slots[i] === 'word_order' || slots[i] === 'mcq') && (p.sr_lat || '').replace(/[^a-zA-ZčćžšđČĆŽŠĐ\s]/g, '').trim().length <= 18);
+                    if (swapIdx !== -1) [slots[hIdx], slots[swapIdx]] = [slots[swapIdx], slots[hIdx]];
+                }
+            }
+            const injectMatching = (mode !== 'hard') && (Math.random() < 0.45);
+            const injectDialogue = (mode !== 'hard') && (Math.random() < 0.35);
+            let bonusSlotIdx = 0;
+
             batch.forEach((item, idx) => {
                 let q = null;
-                const phraseObj = {
-                    id: item.id,
-                    sr_lat: item.phrase_sr,
-                    sr_cyr: item.phrase_cyr,
-                    en: item.phrase_en,
-                    example_sr: item.phrase_sr,
-                    example_en: item.phrase_en,
-                    accepted_sr: item.phrase_accepted_sr,
-                    accepted_en: item.phrase_accepted_en,
-                    context_hint: item.context_hint,
-                    context_hint_sr: item.context_hint_sr,
-                    phonetic: item.phrase_phonetic,
-                    emoji: item.emoji
-                };
+                const phraseObj = batchPhrases[idx];
 
                 if (mode === 'hard') {
-                    if (idx % 2 === 0) q = this.generateWordOrder(phraseObj);
-                    else q = this.generateHangman(phraseObj);
+                    const hSlot = idx % 3;
+                    if (hSlot === 0) q = this.generateWordOrder(phraseObj);
+                    else if (hSlot === 1) q = this.generateHangman(phraseObj);
+                    else q = this.generateSpeaking(phraseObj);
                     if (!q) q = this.generateWordOrder(phraseObj) || this.generateHangman(phraseObj);
                 } else {
-                    const r = idx % 3;
-                    if (r === 0 || r === 2) {
-                        // Word Order for assembling phrase
+                    const kind = slots[idx % slots.length];
+                    if (kind === 'word_order') {
                         q = this.generateWordOrder(phraseObj);
+                    } else if (kind === 'listening') {
+                        q = this.generateListening(phraseObj, phrasePool);
+                    } else if (kind === 'speaking') {
+                        q = this.generateSpeaking(phraseObj);
+                    } else if (kind === 'hangman') {
+                        const cleanLen = (phraseObj.sr_lat || '').replace(/[^a-zA-ZčćžšđČĆŽŠĐ\s]/g, '').trim().length;
+                        if (cleanLen <= 18) {
+                            q = this.generateHangman(phraseObj);
+                        }
+                    } else if (kind === 'mcq') {
+                        if (injectMatching && bonusSlotIdx === 0) {
+                            const matchPool = batchPhrases.length >= 4 ? batchPhrases : phrasePool;
+                            q = this.generateMatchingPairs(matchPool, 4);
+                            bonusSlotIdx++;
+                        } else if (injectDialogue && bonusSlotIdx <= 1) {
+                            q = this.generateDialogue(phraseObj, phrasePool);
+                            bonusSlotIdx = 2;
+                        }
                     }
                 }
                 if (!q) {
-                    // Phrase Translation MCQ fallback
-                    const distractors = this.getRandomDistractors(catalog, item, 2);
-                    q = {
-                        type: 'multiple_choice',
-                        q: `Translate phrase: "${item.phrase_en}"`,
-                        q_rev: `Prevedi frazu: "${item.phrase_sr}"`,
-                        hint: item.context_hint || '',
-                        hint_rev: item.context_hint_sr || item.context_hint || '',
-                        options: this.shuffle([
-                            item.phrase_sr,
-                            distractors[0]?.phrase_sr || 'hvala lepo',
-                            distractors[1]?.phrase_sr || 'dobro jutro'
-                        ]),
-                        options_rev: this.shuffle([
-                            item.phrase_en,
-                            distractors[0]?.phrase_en || 'thank you very much',
-                            distractors[1]?.phrase_en || 'good morning'
-                        ]),
-                        correct: item.phrase_sr,
-                        correct_rev: item.phrase_en,
-                        accepted: this._buildAccepted(item.phrase_sr, item.phrase_accepted_sr),
-                        accepted_rev: this._buildAccepted(item.phrase_en, item.phrase_accepted_en),
-                        explanation: `💡 <b>"${item.phrase_sr}"</b> = "${item.phrase_en}" (Osnovna reč: <i>${item.sr_lat}</i>)`,
-                        explanation_rev: `💡 <b>"${item.phrase_en}"</b> = "${item.phrase_sr}" (Core word: <i>${item.en}</i>)`
-                    };
+                    q = buildPhraseMcq(item);
                 }
                 if (q) {
-                    q.wordId = item.id;
+                    q.wordId = q.wordId || item.id;
                     questions.push(q);
                 }
             });
         } else {
-            // STAGE 3: SENTENCE PRODUCTION (Fill Blank, Word Order, Sentence Translation)
+            // STAGE 3: SENTENCE PRODUCTION + FULL VARIETY (Fill Blank, Word Order, Sentence MCQ, Listening, Mic Speaking Sentence, 3-Pair Matching, Dialogue)
+            const sentListenPool = catalog.map(toSentListenObj);
+            const batchSentListen = batch.map(toSentListenObj);
+            const slots = this.shuffle([
+                'fill_blank', 'fill_blank',
+                'word_order', 'word_order',
+                'listening', 'listening',
+                'speaking', 'speaking',
+                'mcq', 'mcq'
+            ]);
+            const injectMatching = (mode !== 'hard') && (Math.random() < 0.45);
+            const injectDialogue = (mode !== 'hard') && (Math.random() < 0.35);
+            let bonusSlotIdx = 0;
+
             batch.forEach((item, idx) => {
                 let q = null;
                 const sentObj = {
@@ -1170,51 +1303,43 @@ const QuestionEngine = {
                     phonetic: item.sentence_phonetic,
                     emoji: item.emoji
                 };
+                const sentListenObj = batchSentListen[idx];
 
                 if (mode === 'hard') {
-                    if (idx % 2 === 0) q = this.generateFillBlank(sentObj);
-                    else q = this.generateWordOrder({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en });
+                    const hSlot = idx % 3;
+                    if (hSlot === 0) q = this.generateFillBlank(sentObj);
+                    else if (hSlot === 1) q = this.generateWordOrder({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en });
+                    else q = this.generateSpeakingSentence({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en });
                     if (!q) q = this.generateWordOrder({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en }) || this.generateFillBlank(sentObj);
                 } else {
-                    const r = idx % 3;
-                    if (r === 0 || r === 2) {
-                        // Fill in the blank (anchor word blanked out)
+                    const kind = slots[idx % slots.length];
+                    if (kind === 'fill_blank') {
                         q = this.generateFillBlank(sentObj);
+                    } else if (kind === 'word_order') {
+                        q = this.generateWordOrder({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en });
+                    } else if (kind === 'listening') {
+                        q = this.generateListening(sentListenObj, sentListenPool);
+                    } else if (kind === 'speaking') {
+                        q = this.generateSpeakingSentence({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en });
+                    } else if (kind === 'mcq') {
+                        if (injectMatching && bonusSlotIdx === 0) {
+                            const matchPool = batchSentListen.length >= 3 ? batchSentListen : sentListenPool;
+                            q = this.generateMatchingPairs(matchPool, 3);
+                            bonusSlotIdx++;
+                        } else if (injectDialogue && bonusSlotIdx <= 1) {
+                            q = this.generateDialogue(sentListenObj, sentListenPool);
+                            bonusSlotIdx = 2;
+                        }
                     }
-                    if (!q) {
-                        // Sentence Word Order
+                    if (!q && kind !== 'mcq') {
                         q = this.generateWordOrder({ ...sentObj, accepted_sr: item.sentence_accepted_sr, accepted_en: item.sentence_accepted_en });
                     }
                 }
                 if (!q) {
-                    // Fallback to sentence translation MCQ
-                    const distractors = this.getRandomDistractors(catalog, item, 2);
-                    q = {
-                        type: 'multiple_choice',
-                        q: `Translate sentence: "${item.sentence_en}"`,
-                        q_rev: `Prevedi rečenicu: "${item.sentence_sr}"`,
-                        hint: item.context_hint || '',
-                        hint_rev: item.context_hint_sr || item.context_hint || '',
-                        options: this.shuffle([
-                            item.sentence_sr,
-                            distractors[0]?.sentence_sr || 'Kako ste?',
-                            distractors[1]?.sentence_sr || 'Dobro sam.'
-                        ]),
-                        options_rev: this.shuffle([
-                            item.sentence_en,
-                            distractors[0]?.sentence_en || 'How are you?',
-                            distractors[1]?.sentence_en || 'I am well.'
-                        ]),
-                        correct: item.sentence_sr,
-                        correct_rev: item.sentence_en,
-                        accepted: this._buildAccepted(item.sentence_sr, item.sentence_accepted_sr),
-                        accepted_rev: this._buildAccepted(item.sentence_en, item.sentence_accepted_en),
-                        explanation: `💡 <b>"${item.sentence_sr}"</b> = "${item.sentence_en}"`,
-                        explanation_rev: `💡 <b>"${item.sentence_en}"</b> = "${item.sentence_sr}"`
-                    };
+                    q = buildSentenceMcq(item);
                 }
                 if (q) {
-                    q.wordId = item.id;
+                    q.wordId = q.wordId || item.id;
                     questions.push(q);
                 }
             });

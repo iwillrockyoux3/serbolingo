@@ -735,23 +735,27 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 
 ---
 
-## 💎 Priority 52: Tactical Diamond Hint Engine (Scaffolded Lifelines & Word Discovery)
-> **Status**: Planned (In-Lesson Assistance & Gem Sink)  
-> **Concept**: A non-punitive assistance mechanism allowing learners to spend consumable Diamonds/Gems (never XP) to overcome recall blocks ("tip-of-the-tongue" phenomenon) through first-letter hints or 50/50 option elimination.
+## ✅ 💎 Priority 52: Tactical Diamond Hint Engine (Scaffolded Lifelines & Word Discovery) (DONE)
+<div style="color:#888">
 
-- [ ] **1. Consumable Gem Economy & Safe Pricing**:
-  - [ ] Deducts 5 💎 atomically from `state.diamonds` / `state.gems` upon hint activation.
-  - [ ] Keeps user XP, leaderboard rank, hearts, and streak 100% protected (zero penalty).
-  - [ ] Integrated debounce & confirmation safeguard to prevent accidental double-tap gem deductions.
-- [ ] **2. Scaffolded First-Letter Retrieval (Typing & Fill-in-the-Blank)**:
-  - [ ] For cloze, spelling, and translation typing inputs, reveals the first letter and underscores for remaining letters (e.g., `P _ _ _ _`).
-  - [ ] Full script parity: respects Serbian Latin diacritics (č, ć, ž, š, đ) and Cyrillic script.
-- [ ] **3. 50/50 Multiple-Choice Distractor Elimination**:
-  - [ ] For multiple choice, listening options, and picture choice questions, greys out / strikes through 2 incorrect options.
-  - [ ] Leaves 1 correct answer and 1 plausible distractor to preserve active learner evaluation.
-- [ ] **4. Tactile UI & Feedback**:
-  - [ ] `💡 Pomoć (-5 💎)` button positioned unobtrusively in the active question action footer.
-  - [ ] Subtle gold glow, micro-haptic pulse (`TouchHaptics.vibrate('tap')`), and remaining diamond balance badge.
+> <span style="color:#888">**Status**: Completed (In-Lesson Assistance & Gem Sink — v26)</span>  
+> <span style="color:#888">**Concept**: A non-punitive assistance mechanism allowing learners to spend consumable Diamonds/Gems (never XP) to overcome recall blocks ("tip-of-the-tongue" phenomenon) through first-letter hints or 50/50 option elimination.</span>
+
+- [x] <span style="color:#888">**1. Consumable Gem Economy & Safe Pricing (`hint-engine.js`)**:</span>
+  - [x] <span style="color:#888">Deducts 5 💎 atomically via `LeagueEngine.spendGems` / `state.gems` upon hint activation.</span>
+  - [x] <span style="color:#888">Keeps user XP, leaderboard rank, hearts, and streak 100% protected (zero penalty).</span>
+  - [x] <span style="color:#888">Integrated 350ms debounce & single-use lock per question to prevent accidental double-tap gem deductions.</span>
+- [x] <span style="color:#888">**2. Scaffolded First-Letter Retrieval (Typing, Fill-in-the-Blank, Cloze, Speaking, Word Order & Hangman)**:</span>
+  - [x] <span style="color:#888">Reveals the first letter + underscores (`p _ _ _ _`) across typing (`fill_blank`), speaking, and `cloze.js`, plus next-word tile highlight in `word_order` and free letter reveal in `hangman`.</span>
+  - [x] <span style="color:#888">Full Unicode parity: preserves Serbian Latin diacritics (č, ć, ž, š, đ) and Cyrillic script.</span>
+- [x] <span style="color:#888">**3. 50/50 Multiple-Choice Distractor Elimination**:</span>
+  - [x] <span style="color:#888">Eliminates `min(2, wrong - 1)` incorrect options (strikes out 2 wrong choices on 4-option picture/listening/alphabet questions, or 1 wrong choice on 3-option MCQ/dialogue questions).</span>
+  - [x] <span style="color:#888">Always preserves 1 correct answer (including polysemy alternates) and ≥1 plausible distractor.</span>
+- [x] <span style="color:#888">**4. Tactile UI & Feedback**:</span>
+  - [x] <span style="color:#888">`💡 Pomoć -5💎` button positioned unobtrusively in `#lesson-action-row` and Cloze submit bar.</span>
+  - [x] <span style="color:#888">Subtle gold glow, micro-haptic pulse (`TouchHaptics.vibrate('tap')`), and live remaining diamond balance badge.</span>
+
+</div>
 
 ---
 
@@ -876,6 +880,10 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **4-Card Picture Choice Guarantee & Clean Prompt Rendering (v24)**: Added global `SEED_DATA` / `BASICS_CATALOG` emoji distractor fallback in `QuestionEngine.generatePictureChoice` (1 target + 3 unique distractors = 4 cards for 2×2 grid across all 5,031 seed and 250 basics items), stripped legacy nested `"What is \"...\"?"` wrappers in `app.js`, enabled post-answer grammar inspection on `picture_choice` and `hangman` target words, and resynced `www/` web assets.
   - **Scoped Post-Answer Grammar Tooltips (v24)**: Updated `GrammarEngine.wrapInteractiveWords` in `grammar-tooltips.js` so prompt instruction prefixes (`Translate:`, `Prevedi:`, `Kako se kaže`, `Arrange:`, `Spell:`, etc.) remain plain static text while only the tested target words/phrases inside quotes (or after colon prefixes) turn clickable after submitting an answer.
   - **Service Worker Bump to v24**: Updated `CURRENT_APP_VERSION`, `sw.js` cache (`serbolingo-app-v24`), all `<script src="...?v=24">` tags in `index.html`, and Settings rescue button (`app.purgeCodeCacheAndReload`).
+- **2026-11-27**:
+  - **Restored Full Exercise Variety Across All 3 Basics Stages (v25)**: Upgraded `QuestionEngine.generateBasicsLesson` so Stage 1 (`Reči`), Stage 2 (`Fraze`), and Stage 3 (`Rečenice`) all include 🎙️ Mic Speaking (`generateSpeaking` / `generateSpeakingSentence`), 🎯 Hangman (words & concise phrases ≤18 chars with swap guarantee), 🎧 Listening (including phrase & full-sentence audio), 🔗 Matching Pairs (4 pairs in Stages 1–2; compact 3 sentence pairs in Stage 3 via `maxPairs` parameter & adaptive `app.js` button sizing), and 💬 Mini-Dialogues, plus speaking recall in Hard mode.
+  - **Service Worker Bump to v25**: Updated `CURRENT_APP_VERSION`, `sw.js` cache (`serbolingo-app-v25`), `#basics-hub-modal` subtitles, all `<script src="...?v=25">` tags in `index.html`, Settings rescue button, and `www/` sync.
+  - **Tactical Diamond Hint Engine (Priority 52 — v26)**: Built standalone `hint-engine.js` (`HintEngine`) + `💡 Pomoć -5💎` footer controls in `#lesson-footer` (`index.html`), `app.js`, and Cloze (`cloze.js`). Supports atomic 5-gem spend, 350ms double-tap debounce + single-use lock, 50/50 distractor elimination across option questions, Unicode-safe first-letter scaffolding (`č, ć, ž, š, đ`, Cyrillic), `word_order` next-word highlight, free-of-mistake `hangman` reveal, and Service Worker/cache bump to `v26` synced across all 49 `www/` assets.
 
 
 

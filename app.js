@@ -1976,10 +1976,14 @@ const app = {
         }
         return text;
     },
+    getActiveQuestion: () => (ACTIVE_LESSON && ACTIVE_LESSON[state.currentLessonIndex]) ? ACTIVE_LESSON[state.currentLessonIndex] : null,
     renderQuestion: () => {
         if (typeof GrammarEngine !== 'undefined') {
             if (GrammarEngine.setAnswered) GrammarEngine.setAnswered(false);
             if (GrammarEngine.hideTooltip) GrammarEngine.hideTooltip();
+        }
+        if (window.HintEngine && typeof window.HintEngine.resetQuestionHint === 'function') {
+            window.HintEngine.resetQuestionHint(null);
         }
         if (!ACTIVE_LESSON || ACTIVE_LESSON.length === 0) {
             alert("Lesson data missing. Returning to home.");
@@ -2120,7 +2124,7 @@ const app = {
                         <h2 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-6 uppercase tracking-widest">${txt.whichWord}</h2>
                         <div class="grid grid-cols-2 gap-3 w-full">
                             ${l.options.map((opt, i) => `
-                                <button onclick="app.selectOption(this, '${opt.upper}')" id="opt-${i}"
+                                <button data-option="${opt.upper}" onclick="app.selectOption(this, '${opt.upper}')" id="opt-${i}"
                                     class="option-btn p-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm text-center active:scale-95 transition-all hover:border-blue-400 flex items-center justify-center">
                                     <div class="text-6xl">${opt.emoji}</div>
                                 </button>
@@ -2135,7 +2139,7 @@ const app = {
                         <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 mb-6 uppercase tracking-widest">${txt.whichLetter}</h3>
                         <div class="grid grid-cols-2 gap-3 w-full">
                             ${l.options.map((opt, i) => `
-                                <button onclick="app.selectOption(this, '${opt.upper}')" id="opt-${i}"
+                                <button data-option="${opt.upper}" onclick="app.selectOption(this, '${opt.upper}')" id="opt-${i}"
                                     class="option-btn p-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm text-center active:scale-95 transition-all hover:border-blue-400 flex items-center justify-center">
                                     <div class="text-5xl font-black text-slate-800 dark:text-white ${fontClass}">${opt.upper}</div>
                                 </button>
@@ -2298,14 +2302,19 @@ const app = {
                 totalPairs: l.pairs
             };
 
+            const isLongTile = [...(l.leftCol || []), ...(l.rightCol || [])].some(item => String(item.text || '').length > 20);
+            const tileClass = isLongTile
+                ? 'p-2.5 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold text-xs leading-snug text-slate-700 dark:text-slate-200 shadow-sm active:scale-95 transition-all text-center break-words'
+                : 'p-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold text-sm text-slate-700 dark:text-slate-200 shadow-sm active:scale-95 transition-all text-center break-words';
+
             area.innerHTML = `
                 <h2 class="text-xl font-black mb-6 text-slate-700 dark:text-slate-100">${questionText}</h2>
-                <div class="flex gap-4 w-full max-w-sm">
+                <div class="flex gap-3 w-full max-w-sm">
                     <div class="flex flex-col gap-3 w-1/2">
-                        ${l.leftCol.map(item => `<button id="match-l-${item.id}" onclick="app.selectMatchingPair(this, '${item.id}', 'left')" class="p-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold text-sm text-slate-700 dark:text-slate-200 shadow-sm active:scale-95 transition-all text-center break-words">${item.text}</button>`).join('')}
+                        ${l.leftCol.map(item => `<button id="match-l-${item.id}" onclick="app.selectMatchingPair(this, '${item.id}', 'left')" class="${tileClass}">${item.text}</button>`).join('')}
                     </div>
                     <div class="flex flex-col gap-3 w-1/2">
-                        ${l.rightCol.map(item => `<button id="match-r-${item.id}" onclick="app.selectMatchingPair(this, '${item.id}', 'right')" class="p-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl font-bold text-sm text-slate-700 dark:text-slate-200 shadow-sm active:scale-95 transition-all text-center break-words">${item.text}</button>`).join('')}
+                        ${l.rightCol.map(item => `<button id="match-r-${item.id}" onclick="app.selectMatchingPair(this, '${item.id}', 'right')" class="${tileClass}">${item.text}</button>`).join('')}
                     </div>
                 </div>
             `;
@@ -2518,6 +2527,9 @@ const app = {
                     const safeOptJs = String(o).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     return `<button data-option="${safeOptAttr}" onclick="app.selectOption(this, '${safeOptJs}')" class="option-btn py-3 rounded-xl border-2 font-black text-xs text-slate-700 border-slate-200 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">${o}</button>`;
                 }).join('') + `</div>`;
+        }
+        if (window.HintEngine && typeof window.HintEngine.resetQuestionHint === 'function') {
+            window.HintEngine.resetQuestionHint(l);
         }
     },
     moveWordOrderTile: (btn, word) => {
@@ -3746,6 +3758,9 @@ const app = {
             }
 
             app.updateStatsUI(); app.saveStats();
+            if (window.HintEngine && typeof window.HintEngine.onQuestionAnswered === 'function') {
+                window.HintEngine.onQuestionAnswered();
+            }
             document.getElementById('check-btn').classList.add('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
 
@@ -4189,6 +4204,9 @@ const app = {
         document.getElementById('xp-display').innerText = state.xp;
         document.getElementById('hearts-display').innerText = state.hearts;
         document.getElementById('streak-display').innerText = state.streak;
+        if (window.HintEngine && typeof window.HintEngine.updateBalanceUI === 'function') {
+            window.HintEngine.updateBalanceUI();
+        }
         
         // Priority 37: Sync Streak Retention Header & Banner
         if (window.StreakEngine) {
@@ -5801,7 +5819,7 @@ CRITICAL CONSTRAINTS:
             if (window.sessionStorage) {
                 try { sessionStorage.clear(); } catch(e){}
             }
-            localStorage.setItem('serbolingo_app_version', '24');
+            localStorage.setItem('serbolingo_app_version', '26');
             // Force bypass of Chrome mobile HTTP disk cache via timestamped redirect
             const freshUrl = window.location.origin + window.location.pathname + '?_hard=' + Date.now();
             window.location.replace(freshUrl);
