@@ -68,6 +68,7 @@
 - [x] Picture Choice 4-Card 2×2 Grid & Scoped Word Inspector Tooltips (v24): Fixed stale `www/` sync and added global emoji distractor fallback in `QuestionEngine.generatePictureChoice` so every category/tier guarantees 4 emoji cards (2×2 grid) with clean quote rendering; restricted `GrammarEngine.wrapInteractiveWords` so only target vocabulary/phrases become clickable after answering while prompt prefixes (`Translate:`, `Prevedi:`, `Kako se kaže`, etc.) stay static (`question-engine.js`, `grammar-tooltips.js`, `app.js`, `index.html`, `sw.js`)
 - [x] Full Option B Exercise Variety Across All 3 Basics Stages (v25): Restored 🎙️ Mic Speaking (`generateSpeaking` & `generateSpeakingSentence`), 🎯 Hangman (words & concise phrases ≤18 chars), 🎧 Listening across Stages 2–3, 🔗 Matching Pairs (4 pairs in Stages 1–2, compact 3 sentence pairs in Stage 3 with mobile-friendly button sizing), and 💬 Mini-Dialogues in `QuestionEngine.generateBasicsLesson`, plus Hard mode speaking recall (`question-engine.js`, `app.js`, `index.html`, `sw.js`)
 - [x] Tactical Diamond Hint Engine (Priority 52 — v26): Added `💡 Pomoć (-5 💎)` footer lifeline (`hint-engine.js`) with atomic `LeagueEngine.spendGems(5)` deduction, 350ms double-tap debounce + single-use lock, zero XP/heart/streak penalty, 50/50 option elimination preserving 1 correct + ≥1 distractor across MCQ/picture/listening/dialogue/alphabet, Unicode-safe first-letter scaffolding (Latin diacritics + Cyrillic) for typing/speaking/cloze (`cloze.js`), sequential next-word highlight for `word_order`, and free-of-mistake letter reveal for `hangman` (`hint-engine.js`, `app.js`, `cloze.js`, `index.html`, `sw.js`)
+- [x] "Učionica" Virtual School Syllabus & Homeroom Academy (Priority 54 — v27): Added Dual-Track Home switcher (`🌳 Stablo Veština` vs `🏫 Učionica`), 2-semester × 4-week × 5-day structured curriculum (40 periods), Profesorka Ana homeroom persona, 5-part daily period flow (Roll Call with yesterday recap ➔ Whiteboard cards with `1.0x`/`0.75x` audio speed toggle + grammar callout ➔ Guided Practice ➔ Hint-free Pop Quiz / Friday Cumulative Exam ➔ 3-card Evening Homework Pack), Dnevnik & Svedočanstvo report cards (5/A–1/F across Vocab, Grammar, Pronunciation), shareable/downloadable Semester Diploma certificates (offline PNG Canvas & Web Share), and automatic Dopunska Nastava (Office Hours) review gate on `<60%` Friday exams (`classroom.js`, `index.html`, `app.js`, `hint-engine.js`, `touch-haptics.js`, `sw.js`)
 
 ### Gamification & Stats
 - [x] XP / Streak / Hearts / Crowns system
@@ -174,7 +175,7 @@
 | P51.1 | Zero-Dollar Organic Marketing, ASO & Community Launch Playbook | 🆕 New | ⬜ FUTURE |
 | P52.1 | Tactical Diamond Hint Engine (Scaffolded Lifelines & Word Discovery) | 🆕 New | `hint-engine.js`, `app.js`, `cloze.js`, `index.html`, `sw.js` | ✅ DONE |
 | P53.1 | 3-Stage Lesson Difficulty Ladder & Expanded Beginner Lexicon (250 Core Words, Phrases & Sentences Hub) | 🆕 New | `basics-data.js`, `index.html`, `question-engine.js`, `app.js` | ✅ DONE |
-| P54.1 | "Učionica" Virtual School Syllabus & Homeroom Academy (Standalone Mode) | 🆕 New | `index.html`, `app.js`, `classroom.js` | ⬜ TODO |
+| P54.1 | "Učionica" Virtual School Syllabus & Homeroom Academy (Standalone Mode) | 🆕 New | `index.html`, `app.js`, `classroom.js`, `hint-engine.js`, `touch-haptics.js`, `sw.js` | ✅ DONE |
 | P55.1 | Spoken Voice-to-Voice AI Language Tutor (Native Walkie-Talkie Loop) | 🆕 New | `app.js`, `voice-tutor.js`, `index.html` | ⬜ TODO |
 | P56.1 | 3-Day Streak ➔ 30-Minute VIP "God Mode" All-Access Pass | 🆕 New | `app.js`, `index.html`, `streak-retention.js` | ⬜ TODO |
 
@@ -191,10 +192,10 @@
 | AI & Audio | 4/4 | 0 |
 | Gamification & Stats | 7/7 | 0 |
 | Content Expansion (P1-P5, P13-P14, P53) | 3/9 | 6 |
-| New Features (P3-P7, P17, P52, P54-P56) | 8/11 | 3 |
+| New Features (P3-P7, P17, P52, P54-P56) | 9/11 | 2 |
 | Deployment (P18-P20, P39, P40) | 5/8 | 3 |
 | Moonshots (P12.2, P21-P22, P24.2, P43.3, P48-P51) | 10/20 | 10 |
-| **TOTAL** | **52/80** | **28** |
+| **TOTAL** | **53/80** | **27** |
 
 ---
 

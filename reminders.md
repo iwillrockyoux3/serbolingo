@@ -786,25 +786,26 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
 ---
 
 ## 🏫 Priority 54: "Učionica" Virtual School Syllabus & Homeroom Academy (Standalone Mode)
-> **Status**: Planned (Structured Academic Track alongside Skill Tree)  
+> **Status**: ✅ COMPLETED (v27 — Structured Academic Track alongside Skill Tree)  
 > **Concept**: A dedicated, standalone school classroom experience alongside the casual Skill Tree. Mimics a real academic semester with daily 15–20 minute structured periods (Warm-up, Whiteboard lecture, Guided practice, Pop quiz, Homework), weekly Friday exams, and A/B/C report cards.
 
-- [ ] **1. Dual-Track Mode Switcher (Skill Tree vs. Učionica)**:
-  - [ ] Top-level switcher on the home screen: 🌳 *Stablo Veština* (Casual, gamified) vs. 🏫 *Učionica* (Structured, academic).
-  - [ ] 100% synchronized state: XP, Diamonds, streaks, and learned vocabulary sync between both modes.
-- [ ] **2. Academic Syllabus Architecture (Semesters & Weeks)**:
-  - [ ] Structured into Semesters (e.g., *Semestar 1: Osnovna Škola*), 4-week thematic blocks, and 5 daily periods per week.
-  - [ ] Week 1: Sounds & Cyrillic/Latin Alphabet; Week 2: Numbers & Politeness; Week 3: Essential Nouns; Week 4: Sentences & Verb "To Be".
-- [ ] **3. The 5-Part Daily Period (15–20 Mins)**:
-  - [ ] **1. Roll Call & Warm-Up (2 min)**: Teacher greets student by name, recalls yesterday's core concept.
-  - [ ] **2. The Whiteboard / Lecture (4 min)**: Interactive blackboard with visual cards, grammar callouts, and audio explanations.
-  - [ ] **3. Guided Practice (5 min)**: Interactive step-by-step exercises with gentle teacher coaching.
-  - [ ] **4. Pop Quiz (5 min)**: Independent verification of the day's lesson without hints.
-  - [ ] **5. Homework & Dismissal (2 min)**: Quick 3-card review pack unlocked for later evening reinforcement.
-- [ ] **4. Friday Exams, Report Cards & Office Hours (Dopunska Nastava)**:
-  - [ ] **Friday Cumulative Exam**: Comprehensive test of the week's material.
-  - [ ] **Dnevnik & Svedočanstvo (Report Cards)**: Letter grades (**A, B, C / 5, 4, 3**) evaluating Pronunciation, Vocabulary, and Grammar.
-  - [ ] **Office Hours (Dopunska Nastava)**: Friendly 5-minute remedial lesson triggered automatically if a Friday exam is failed before unlocking Monday.
+- [x] **1. Dual-Track Mode Switcher (Skill Tree vs. Učionica)**:
+  - [x] Top-level switcher on the home screen: 🌳 *Stablo Veština* (Casual, gamified) vs. 🏫 *Učionica* (Structured, academic) in `index.html` + `classroom.js`.
+  - [x] 100% synchronized state: XP, Diamonds, streaks, daily history, leagues, and learned vocabulary sync between both modes (`app.js`, `classroom.js`).
+- [x] **2. Academic Syllabus Architecture (Semesters & Weeks)**:
+  - [x] Structured into Semesters (*Semestar 1: Osnovna Škola* & *Semestar 2: Srednja Škola*), 4-week thematic blocks, and 5 daily periods per week (40 total periods).
+  - [x] Week 1: Sounds & Cyrillic/Latin Alphabet; Week 2: Numbers & Politeness; Week 3: Essential Nouns; Week 4: Sentences & Verb "To Be" (+ Semestar 2 Weeks 5–8).
+- [x] **3. The 5-Part Daily Period (15–20 Mins)**:
+  - [x] **1. Roll Call & Warm-Up (2 min)**: Profesorka Ana greets student by name and recalls yesterday's core concept + audio sample.
+  - [x] **2. The Whiteboard / Lecture (4 min)**: Interactive chalkboard with visual vocabulary/alphabet cards, grammar callouts, `1.0x` / `0.75x` speed toggle, and TTS `app.speakPhrase` audio explanations.
+  - [x] **3. Guided Practice (5 min)**: 5 interactive exercises via `QuestionEngine` with teacher guidance and hints enabled.
+  - [x] **4. Pop Quiz (5 min)**: Independent verification of the day's lesson without hints (`HintEngine` disabled during `classroom_quiz` & `classroom_exam`).
+  - [x] **5. Homework & Dismissal (2 min)**: Grade calculation + 3-card evening review pack saved per day and accessible in the week drawer.
+- [x] **4. Friday Exams, Report Cards & Office Hours (Dopunska Nastava)**:
+  - [x] **Friday Cumulative Exam**: 10-question comprehensive test of the week's material (60% passing threshold).
+  - [x] **Dnevnik & Svedočanstvo (Report Cards)**: Letter/numeric grades (**5/A, 4/B, 3/C, 2/D, 1/F**) evaluating real per-domain Pronunciation, Vocabulary, and Grammar accuracy.
+  - [x] **Office Hours (Dopunska Nastava)**: Friendly 5-minute remedial review triggered automatically if a Friday exam scores `<60%` before unlocking next Monday.
+  - [x] **Semester Graduation Diplomas & Slow Audio (v27 Plus-One)**: Celebratory bilingual **Semester Diploma Certificates** on passing Semester Finals (viewable in Dnevnik & Semester header, offline PNG canvas export + Web Share/Clipboard copy) and persisted **`1.0x` / `0.75x` audio speed toggle** across Whiteboard lecture & Roll Call cards (`app.speakPhrase` rate support).
 
 ---
 
@@ -884,6 +885,7 @@ rhythm.js script tag added to index.html. Launch tile added in Arcade grid ("Muz
   - **Restored Full Exercise Variety Across All 3 Basics Stages (v25)**: Upgraded `QuestionEngine.generateBasicsLesson` so Stage 1 (`Reči`), Stage 2 (`Fraze`), and Stage 3 (`Rečenice`) all include 🎙️ Mic Speaking (`generateSpeaking` / `generateSpeakingSentence`), 🎯 Hangman (words & concise phrases ≤18 chars with swap guarantee), 🎧 Listening (including phrase & full-sentence audio), 🔗 Matching Pairs (4 pairs in Stages 1–2; compact 3 sentence pairs in Stage 3 via `maxPairs` parameter & adaptive `app.js` button sizing), and 💬 Mini-Dialogues, plus speaking recall in Hard mode.
   - **Service Worker Bump to v25**: Updated `CURRENT_APP_VERSION`, `sw.js` cache (`serbolingo-app-v25`), `#basics-hub-modal` subtitles, all `<script src="...?v=25">` tags in `index.html`, Settings rescue button, and `www/` sync.
   - **Tactical Diamond Hint Engine (Priority 52 — v26)**: Built standalone `hint-engine.js` (`HintEngine`) + `💡 Pomoć -5💎` footer controls in `#lesson-footer` (`index.html`), `app.js`, and Cloze (`cloze.js`). Supports atomic 5-gem spend, 350ms double-tap debounce + single-use lock, 50/50 distractor elimination across option questions, Unicode-safe first-letter scaffolding (`č, ć, ž, š, đ`, Cyrillic), `word_order` next-word highlight, free-of-mistake `hangman` reveal, and Service Worker/cache bump to `v26` synced across all 49 `www/` assets.
+  - **"Učionica" Virtual School Syllabus & Homeroom Academy (Priority 54 — v27)**: Created standalone `classroom.js` (`ClassroomEngine`) + Dual-Track Home switcher (`🌳 Stablo Veština` vs `🏫 Učionica`) in `index.html`, integrated into `app.js` (`startClassroomLesson`, `checkAnswer`, `finishLesson`, `endLesson`, `navigate`, `setLearningDirection`, plus `speakPhrase` `rateOverride`), disabled hints during `classroom_quiz` & `classroom_exam` in `hint-engine.js`, guarded modal swipe conflicts in `touch-haptics.js`, and bumped Service Worker/cache/URL cache-buster to `v27` synced across all 50 `www/` assets. Feature delivers 2 Semesters × 4 Weeks × 5 Daily Periods (40 periods), 5-part period flow (Roll Call w/ yesterday recall, Whiteboard w/ TTS, `1.0x`/`0.75x` audio speed toggle & grammar callouts, Guided Practice, Pop Quiz / Friday Cumulative Exam, 3-card Evening Homework Pack), Dnevnik & Svedočanstvo report cards (Vocabulary/Grammar/Pronunciation), downloadable/shareable Semester Diploma certificates (PNG canvas + Web Share), and Dopunska Nastava (Office Hours) remedial gate on `<60%` Friday exams.
 
 
 

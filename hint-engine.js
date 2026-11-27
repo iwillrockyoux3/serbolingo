@@ -82,6 +82,11 @@
 
         supportsHint: function (q) {
             if (!q || !q.type) return false;
+            const st = window.appState || window.state;
+            // Priority 54: Pop Quizzes and Friday Cumulative Exams test without hints
+            if (st && (st.lessonMode === 'classroom_quiz' || st.lessonMode === 'classroom_exam')) {
+                return false;
+            }
             const supported = new Set([
                 'multiple_choice',
                 'picture_choice',

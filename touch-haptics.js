@@ -108,7 +108,7 @@
         },
 
         isModalOpen: function () {
-            return !!document.querySelector('[id$="-modal"]:not(.hidden), .celebration-overlay:not(.hidden)');
+            return !!document.querySelector('[id$="-modal"]:not(.hidden), #classroom-lesson-overlay:not(.hidden), .celebration-overlay:not(.hidden)');
         },
 
         getActiveNavTab: function () {

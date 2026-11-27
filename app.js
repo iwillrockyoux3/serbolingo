@@ -29,7 +29,20 @@ const state = {
         phrases: {},
         sentences: {}
     },
-    basicsWorkout: null
+    basicsWorkout: null,
+    classroom: {
+        activeMode: false,
+        completedDays: {},
+        reportCards: {},
+        diplomas: {},
+        homeworkPacks: {},
+        homeworkDone: {},
+        officeHoursNeeded: {},
+        officeHoursDone: {},
+        fridayScores: {},
+        audioSpeed: 1.0,
+        totalClassroomXP: 0
+    }
 };
 let apiKey = "";
 
@@ -351,6 +364,26 @@ const app = {
             if (!state.unlockedAvatars) state.unlockedAvatars = [];
             if (!state.unlockedTitles) state.unlockedTitles = [];
             if (state.equippedTitle === undefined) state.equippedTitle = null;
+            if (!state.classroom) {
+                state.classroom = {
+                    activeMode: false,
+                    completedDays: {},
+                    reportCards: {},
+                    diplomas: {},
+                    homeworkPacks: {},
+                    homeworkDone: {},
+                    officeHoursNeeded: {},
+                    officeHoursDone: {},
+                    fridayScores: {},
+                    audioSpeed: 1.0,
+                    totalClassroomXP: 0
+                };
+            }
+            if (!state.classroom.diplomas) state.classroom.diplomas = {};
+            if (typeof state.classroom.audioSpeed !== 'number') state.classroom.audioSpeed = 1.0;
+            if (state.lessonMode && state.lessonMode.startsWith('classroom_')) {
+                state.lessonMode = 'standard';
+            }
         } else {
             // Apply defaults if no stats exist
             if (!state.settings) state.settings = { darkMode: true, volume: { sfx: 1.0, tts: 1.0 }, appLanguage: 'sr_lat', learningDirection: 'sr_to_en' };
@@ -855,6 +888,9 @@ const app = {
         if (vid === 'home') {
             app.renderSkillTree();
             app.renderQuests();
+            if (window.ClassroomEngine && typeof window.ClassroomEngine.renderHomeTrack === 'function') {
+                window.ClassroomEngine.renderHomeTrack();
+            }
             if (window.PlacementEngine && window.PlacementEngine.renderHomeBanner) {
                 window.PlacementEngine.renderHomeBanner();
             }
@@ -898,6 +934,27 @@ const app = {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-blue-500', 'text-slate-400'));
         const navBtn = document.getElementById(`nav-${vid}`);
         if (navBtn) navBtn.classList.replace('text-slate-400', 'text-blue-500');
+    },
+    startClassroomLesson: (questions, opts = {}) => {
+        if (!Array.isArray(questions) || !questions.length) {
+            app.showToast('Nema dovoljno pitanja za ovaj čas.', 'error');
+            return;
+        }
+        ACTIVE_LESSON = questions;
+        state.tierWorkout = null;
+        state.basicsWorkout = null;
+        state.cantSpeak = false;
+        state.cantListen = false;
+        state.lessonMode = opts.mode || 'classroom_practice';
+        state._classroomBadge = opts.badge || null;
+        state.currentLevelKey = opts.levelKey || state.lessonMode;
+        state.currentSkillId = 'classroom';
+        state.currentLessonIndex = 0;
+        state.lastLessonMistakes = 0;
+        state.currentLessonXpEarned = 0;
+        app.saveStats();
+        app.navigate('lesson');
+        app.renderQuestion();
     },
     startLevel: async (k) => {
         if (state.user && state.user.isGuest && k !== 'BEGINNER') {
@@ -1362,6 +1419,14 @@ const app = {
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border ${pillClass} text-[10px] font-black uppercase tracking-widest mb-3">
                     <span>${bMode === 'hard' ? '🔥' : (bMode === 'mastery' ? '🧠' : '🌱')}</span>
                     <span>Osnove • ${stageText} • ${subBadge}</span>
+                </div>
+            `;
+        }
+        if (state.lessonMode && state.lessonMode.startsWith('classroom_')) {
+            const label = state._classroomBadge || (isSrToEn ? '🏫 Učionica' : '🏫 Classroom');
+            return `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-[10px] font-black uppercase tracking-widest mb-3">
+                    <span>${label}</span>
                 </div>
             `;
         }
@@ -2946,8 +3011,11 @@ const app = {
         }
     },
 
-    speakPhrase: (text, lang = 'en-US') => {
+    speakPhrase: (text, lang = 'en-US', rateOverride = null) => {
         if (!text || typeof text !== 'string') return;
+        const playbackRate = (typeof rateOverride === 'number' && rateOverride > 0)
+            ? Math.min(2.0, Math.max(0.5, rateOverride))
+            : null;
         // Universal Audio Sanitizer: strip phonetic guides [like-this], (/like-this/), and notes
         text = text.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/\/.*?\//g, '').trim();
         if (!text) return;
@@ -3040,7 +3108,7 @@ const app = {
                         const u = new SpeechSynthesisUtterance(cleanSrText);
                         u.lang = 'sr-RS';
                         u.volume = ttsVol;
-                        u.rate = 0.85;
+                        u.rate = playbackRate || 0.85;
 
                         const allVoices = (window._cachedVoices && window._cachedVoices.length)
                             ? window._cachedVoices
@@ -3083,6 +3151,7 @@ const app = {
                         const audio = new Audio();
                         audio.referrerPolicy = "no-referrer";
                         audio.volume = ttsVol;
+                        if (playbackRate) audio.playbackRate = playbackRate;
                         audio.onended = () => {
                             resetVisual();
                             if (state.currentAudio === audio) state.currentAudio = null;
@@ -3129,6 +3198,9 @@ const app = {
                                 }
                                 const source = ctx.createBufferSource();
                                 source.buffer = decodedBuffer;
+                                if (playbackRate && source.playbackRate) {
+                                    source.playbackRate.value = playbackRate;
+                                }
                                 const gainNode = ctx.createGain();
                                 gainNode.gain.value = ttsVol;
                                 source.connect(gainNode);
@@ -3163,6 +3235,7 @@ const app = {
                         const blobUrl = URL.createObjectURL(blob);
                         const blobAudio = new Audio(blobUrl);
                         blobAudio.volume = ttsVol;
+                        if (playbackRate) blobAudio.playbackRate = playbackRate;
                         blobAudio.onended = () => {
                             resetVisual();
                             URL.revokeObjectURL(blobUrl);
@@ -3246,6 +3319,7 @@ const app = {
                     const audioUrl = URL.createObjectURL(blob);
                     const cloudAudio = new Audio(audioUrl);
                     cloudAudio.volume = ttsVol;
+                    if (playbackRate) cloudAudio.playbackRate = playbackRate;
                     cloudAudio.onended = () => { resetVisual(); URL.revokeObjectURL(audioUrl); };
                     cloudAudio.onerror = () => { resetVisual(); URL.revokeObjectURL(audioUrl); };
                     const playPromise = cloudAudio.play();
@@ -3272,6 +3346,7 @@ const app = {
             u.lang = 'en-US';
             if (enVoice) u.voice = enVoice;
             u.volume = ttsVol;
+            if (playbackRate) u.rate = playbackRate;
             u.onend = resetVisual;
             u.onerror = (e) => {
                 if (e && (e.error === 'not-allowed' || e.name === 'NotAllowedError')) {
@@ -3669,6 +3744,10 @@ const app = {
                 });
             }
 
+            if (state.lessonMode && state.lessonMode.startsWith('classroom_') && window.ClassroomEngine && typeof window.ClassroomEngine.recordAnswer === 'function') {
+                window.ClassroomEngine.recordAnswer(l, isC);
+            }
+
             const fb = document.getElementById('feedback-area');
             fb.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'dark:bg-green-900/40', 'dark:bg-red-900/40');
 
@@ -3818,7 +3897,7 @@ const app = {
         }
 
         // Record skill tree progress
-        if (state.currentSkillId && state.currentLevelKey !== 'PRACTICE') {
+        if (state.currentSkillId && state.currentSkillId !== 'classroom' && state.currentLevelKey !== 'PRACTICE') {
             const result = SkillTreeEngine.recordLessonComplete(state.currentSkillId, state.lastLessonPerfect);
             if (result && result.lessonsInCrown === 0 && result.crown > 0) {
                 // Crown leveled up!
@@ -3859,6 +3938,12 @@ const app = {
         
         // Priority 32.3: Time-Based & Dopamine Badges (Noćna Ptica, Rani Starosedelac, Perfekcionista)
         app.checkTimeBadges();
+
+        if (state.lessonMode && state.lessonMode.startsWith('classroom_') && window.ClassroomEngine && typeof window.ClassroomEngine.handleAppLessonFinished === 'function') {
+            state._classroomBadge = null;
+            window.ClassroomEngine.handleAppLessonFinished();
+            return;
+        }
         
         if (state.tierWorkout) {
             app.renderTierWorkoutCompletion();
@@ -5400,7 +5485,12 @@ const app = {
         if (confirm(t('lesson_quit'))) {
             state.tierWorkout = null;
             state.basicsWorkout = null;
+            state._classroomBadge = null;
+            const wasClassroom = state.lessonMode && state.lessonMode.startsWith('classroom_');
             state.lessonMode = 'standard';
+            if (wasClassroom && window.ClassroomEngine && typeof window.ClassroomEngine.abortActiveLesson === 'function') {
+                window.ClassroomEngine.abortActiveLesson();
+            }
             app.navigate(state.currentSkillId === 'mistakes' ? 'mistakes' : 'home');
         }
     },
@@ -5462,6 +5552,10 @@ const app = {
         // Refresh Explore Hub to load the correct library
         if (window.ExploreHub && typeof window.ExploreHub.refresh === 'function') {
             window.ExploreHub.refresh();
+        }
+        // Refresh Učionica Classroom labels & view if active
+        if (window.ClassroomEngine && typeof window.ClassroomEngine.renderHomeTrack === 'function') {
+            window.ClassroomEngine.renderHomeTrack();
         }
     },
     // ─── HARDCORE IMMERSION ENGINE (Priority 34) ───
@@ -5819,7 +5913,7 @@ CRITICAL CONSTRAINTS:
             if (window.sessionStorage) {
                 try { sessionStorage.clear(); } catch(e){}
             }
-            localStorage.setItem('serbolingo_app_version', '26');
+            localStorage.setItem('serbolingo_app_version', '27');
             // Force bypass of Chrome mobile HTTP disk cache via timestamped redirect
             const freshUrl = window.location.origin + window.location.pathname + '?_hard=' + Date.now();
             window.location.replace(freshUrl);
